@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Doncellas — Doncellas Elite en Guadalajara</title>
+  <meta name="description" content="La plataforma de Doncellas más exclusiva de Guadalajara. Encuentra el servicio de Doncella perfecto, agenda citas y disfruta de una experiencia única." />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#C9A84C" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Doncellas" />
+  <link rel="apple-touch-icon" href="/assets/icons/icon-192.png" />
+</head>
+<body>
+
+<!-- ── PWA Install Banner (mobile only) ── -->
+<div class="pwa-install-banner" id="pwaInstallBanner" role="region" aria-label="Instalar aplicación">
+  <div class="pwa-install-mark">D</div>
+  <div class="pwa-install-copy">
+    <strong>Instala Doncellas</strong>
+    <span>en tu celular — rápida y sin distracciones</span>
+  </div>
+  <button class="pwa-install-cta" id="pwaInstallBtn" type="button">Instalar</button>
+  <button class="pwa-install-close" id="pwaDismissBtn" type="button" aria-label="Cerrar banner de instalación">
+    <i class="fas fa-times"></i>
+  </button>
+</div>
+
+<!-- ── Navigation ── -->
+<nav class="nav" id="mainNav">
+  <a href="index.html" class="nav-logo">Doncel<span>las</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html" class="active">Inicio</a></li>
+    <li><a href="modelos.html">Doncellas</a></li>
+    <li><a href="categorias.html">Categorías</a></li>
+  </ul>
+  <div class="nav-cta">
+    <button class="btn btn-gold btn-sm" onclick="openModal('loginModal')"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</button>
+    <button class="nav-menu-btn" id="navMenuBtn" aria-label="Menú">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ── Hero ── -->
+<section class="hero" id="hero">
+  <!-- Slides generadas por JS desde modelos con promo -->
+  <div class="hero-slides" id="heroSlides"></div>
+
+  <div class="hero-content" id="heroMainContent"></div>
+
+  <div class="hero-stats" id="heroStats" style="opacity:0;transition:opacity .55s ease">
+    <div class="hero-stat">
+      <div class="hero-stat-n" data-count="240">0</div>
+      <div class="hero-stat-l">Doncellas</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-n" data-count="98">0</div>
+      <div class="hero-stat-l">% Verificadas</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-n" data-count="4800">0</div>
+      <div class="hero-stat-l">Citas/mes</div>
+    </div>
+  </div>
+
+  <div class="hero-dots" id="heroDots"></div>
+</section>
+
+<!-- ── Search Bar ── -->
+<div class="search-bar-wrap">
+  <button class="search-bar-toggle" id="searchToggle" aria-label="Buscar" aria-expanded="false">
+    <i class="fas fa-search"></i>
+  </button>
+  <form class="search-bar" id="searchForm">
+    <i class="fas fa-search" style="color:var(--t3);font-size:.9rem"></i>
+    <input type="text" id="searchInput" placeholder="Busca por nombre, zona o categoría…" autocomplete="off" />
+    <div class="search-divider"></div>
+    <div class="search-filter">
+      <i class="fas fa-filter" style="font-size:.75rem"></i>
+      <select id="searchZona" aria-label="Zona">
+        <option value="">Toda la ciudad</option>
+        <option>Zona Rosa</option>
+        <option>Providencia</option>
+        <option>Chapultepec</option>
+        <option>Tlaquepaque</option>
+        <option>Zapopan</option>
+      </select>
+    </div>
+    <div class="search-divider"></div>
+    <div class="search-filter">
+      <i class="fas fa-tag" style="font-size:.75rem"></i>
+      <select id="searchCat" aria-label="Categoría">
+        <option value="">Todas</option>
+        <option>Universitaria</option>
+        <option>Milf</option>
+        <option>Petite</option>
+        <option>Nalgona</option>
+        <option>Voluptuosa</option>
+        <option>Chichona</option>
+        <option>Extranjera</option>
+        <option>Jovencita</option>
+        <option>Fit</option>
+        <option>Natural</option>
+        <option>Tuneada</option>
+        <option>Chaparrita</option>
+        <option>Alta</option>
+      </select>
+    </div>
+    <button type="submit" class="btn btn-gold">Buscar</button>
+  </form>
+</div>
+
+<!-- ── Featured Models ── -->
+<section class="section">
+  <div class="section-head">
+    <div>
+      <p class="section-label">Selección estelar</p>
+      <h2 class="section-title">Doncellas <span class="gold">Destacadas</span></h2>
+      <div class="divider"></div>
+    </div>
+    <a href="modelos.html" class="btn btn-outline btn-sm">
+      Ver todas <i class="fas fa-arrow-right"></i>
+    </a>
+  </div>
+
+  <div class="h-carousel-wrap">
+    <button class="h-carousel-nav h-carousel-prev" data-target="featuredCarousel" aria-label="Anterior">
+      <i class="fas fa-chevron-left"></i>
+    </button>
+    <div class="h-carousel" id="featuredCarousel">
+      <!-- Cards generadas por JS -->
+    </div>
+    <button class="h-carousel-nav h-carousel-next" data-target="featuredCarousel" aria-label="Siguiente">
+      <i class="fas fa-chevron-right"></i>
+    </button>
+  </div>
+</section>
+
+<!-- ── Available Now ── -->
+<section class="section">
+  <div class="section-head">
+    <div>
+      <p class="section-label">
+        <span class="pill pill-available" style="font-size:.65rem">Disponible</span>
+        &nbsp;En este momento
+      </p>
+      <h2 class="section-title">Disponibles <span class="gold">Ahora</span></h2>
+      <div class="divider"></div>
+    </div>
+    <a href="modelos.html?filter=available" class="btn btn-outline btn-sm">Ver todas <i class="fas fa-arrow-right"></i></a>
+  </div>
+  <div class="h-carousel-wrap">
+    <button class="h-carousel-nav h-carousel-prev" data-target="availableCarousel"><i class="fas fa-chevron-left"></i></button>
+    <div class="h-carousel" id="availableCarousel"></div>
+    <button class="h-carousel-nav h-carousel-next" data-target="availableCarousel"><i class="fas fa-chevron-right"></i></button>
+  </div>
+</section>
+
+<!-- ── New Arrivals ── -->
+<section class="section" style="background:linear-gradient(180deg,var(--bg) 0%,var(--surface) 50%,var(--bg) 100%);max-width:100%;padding:5rem 0">
+  <div style="max-width:1400px;margin:0 auto;padding:0 2.5rem">
+    <div class="section-head">
+      <div>
+        <p class="section-label">Recién llegadas</p>
+        <h2 class="section-title">Nuevos <span class="gold">Perfiles</span></h2>
+        <div class="divider"></div>
+      </div>
+    </div>
+    <div class="h-carousel-wrap">
+      <button class="h-carousel-nav h-carousel-prev" data-target="newCarousel"><i class="fas fa-chevron-left"></i></button>
+      <div class="h-carousel" id="newCarousel"></div>
+      <button class="h-carousel-nav h-carousel-next" data-target="newCarousel"><i class="fas fa-chevron-right"></i></button>
+    </div>
+  </div>
+</section>
+
+<!-- ── Con Promo ── -->
+<section class="section" style="background:var(--surface);max-width:100%;padding:4rem 0">
+  <div style="max-width:1400px;margin:0 auto;padding:0 2.5rem">
+    <div class="section-head">
+      <div>
+        <p class="section-label">🔥 Ofertas especiales</p>
+        <h2 class="section-title">Con <span class="gold">Promo</span></h2>
+        <div class="divider"></div>
+      </div>
+      <a href="modelos.html?filter=promo" class="btn btn-outline btn-sm">Ver todas <i class="fas fa-arrow-right"></i></a>
+    </div>
+    <div class="h-carousel-wrap">
+      <button class="h-carousel-nav h-carousel-prev" data-target="promoCarousel"><i class="fas fa-chevron-left"></i></button>
+      <div class="h-carousel" id="promoCarousel"></div>
+      <button class="h-carousel-nav h-carousel-next" data-target="promoCarousel"><i class="fas fa-chevron-right"></i></button>
+    </div>
+  </div>
+</section>
+
+<!-- ── Why Doncellas ── -->
+<section class="section">
+  <div class="text-center mb-3">
+    <p class="section-label">¿Por qué elegirnos?</p>
+    <h2 class="section-title">La experiencia <span class="gold">Doncellas</span></h2>
+    <div class="divider" style="margin:1rem auto 0"></div>
+  </div>
+  <div class="why-doncellas-grid">
+    <div class="profile-card text-center" style="margin-bottom:0">
+      <div style="font-size:2rem;color:var(--gold);margin-bottom:1rem"><i class="fas fa-shield-check"></i></div>
+      <h4 style="margin-bottom:.5rem">Perfiles Verificados</h4>
+      <p class="text-sm">Cada Doncella pasa por un proceso de verificación de identidad y fotografías.</p>
+    </div>
+    <div class="profile-card text-center" style="margin-bottom:0">
+      <div style="font-size:2rem;color:var(--gold);margin-bottom:1rem"><i class="fas fa-clock"></i></div>
+      <h4 style="margin-bottom:.5rem">Disponibilidad Real</h4>
+      <p class="text-sm">Agenda en tiempo real. Sin sorpresas, sin esperas innecesarias.</p>
+    </div>
+    <div class="profile-card text-center" style="margin-bottom:0">
+      <div style="font-size:2rem;color:var(--gold);margin-bottom:1rem"><i class="fas fa-lock"></i></div>
+      <h4 style="margin-bottom:.5rem">Total Discreción</h4>
+      <p class="text-sm">Tu privacidad es nuestra prioridad. Datos protegidos y comunicación encriptada.</p>
+    </div>
+    <div class="profile-card text-center" style="margin-bottom:0">
+      <div style="font-size:2rem;color:var(--gold);margin-bottom:1rem"><i class="fas fa-star"></i></div>
+      <h4 style="margin-bottom:.5rem">Reseñas Reales</h4>
+      <p class="text-sm">Sistema de reseñas verificadas para que tomes la mejor decisión.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA Banner ── -->
+<section style="background:linear-gradient(135deg,#0D0A05 0%,#1A1200 50%,#0A0A0A 100%);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:5rem 2.5rem;text-align:center">
+  <p class="section-label">Únete ahora</p>
+  <h2 style="font-size:clamp(1.8rem,4vw,3rem);margin-bottom:1rem">¿Quieres ser una de nuestras Doncellas? <span class="gold">Crece con nosotros</span></h2>
+  <p style="color:var(--t2);max-width:500px;margin:0 auto 2rem">Publica tu perfil, gestiona tu agenda y conecta con clientes premium en Guadalajara.</p>
+  <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+    <a href="https://wa.me/523312345678?text=Hola%2C%20quiero%20publicar%20mi%20perfil%20en%20Doncellas" target="_blank" class="btn btn-wa btn-lg"><i class="fab fa-whatsapp"></i> Contáctanos</a>
+  </div>
+</section>
+
+<!-- ── Footer ── -->
+<footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="nav-logo">Doncel<span>las</span></div>
+      <p>La plataforma de Doncellas más exclusiva de Guadalajara. Elegancia, discreción y experiencias únicas.</p>
+      <div class="footer-social" style="margin-top:1.25rem">
+        <a href="#" class="social-icon" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="#" class="social-icon" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+        <a href="https://t.me/doncellas" target="_blank" class="social-icon" aria-label="Telegram"><i class="fab fa-telegram"></i></a>
+        <a href="https://wa.me/523312345678" target="_blank" class="social-icon" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+      </div>
+    </div>
+    <div>
+      <p class="footer-heading">Plataforma</p>
+      <ul class="footer-links">
+        <li><a href="modelos.html">Doncellas</a></li>
+        <li><a href="categorias.html">Categorías</a></li>
+        <li><a href="membresias.html">Membresías</a></li>
+        <li><a href="#" onclick="openModal('loginModal')">Iniciar Sesión</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="footer-heading">Para Doncellas</p>
+      <ul class="footer-links">
+        <li><a href="panel-modelo.html">Mi Panel</a></li>
+        <li><a href="membresias.html">Planes</a></li>
+        <li><a href="#">Referidos</a></li>
+        <li><a href="#">Soporte</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="footer-heading">Legal</p>
+      <ul class="footer-links">
+        <li><a href="#">Términos de Uso</a></li>
+        <li><a href="#">Privacidad</a></li>
+        <li><a href="#">Cookies</a></li>
+        <li><a href="#">Contacto</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Doncellas. Todos los derechos reservados. Solo mayores de 18 años.</span>
+    <span>Guadalajara, Jalisco, México 🇲🇽</span>
+  </div>
+</footer>
+
+<!-- ── Floating contact buttons ── -->
+<div class="float-btns">
+  <a href="https://t.me/doncellas" target="_blank" class="float-btn float-btn-telegram" aria-label="Telegram">
+    <i class="fab fa-telegram"></i>
+  </a>
+  <a href="https://wa.me/523312345678" target="_blank" class="float-btn float-btn-wa" aria-label="WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+</div>
+
+<!-- ── Login Modal ── -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 class="modal-title">Iniciar Sesión</h3>
+      <button class="modal-close" onclick="closeModal('loginModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div id="loginError" style="display:none;background:rgba(224,80,80,.12);border:1px solid rgba(224,80,80,.3);border-radius:var(--r-md);padding:.75rem 1rem;margin-bottom:1rem;font-size:.85rem;color:var(--red)">
+      <i class="fas fa-exclamation-circle"></i> Usuario o contraseña incorrectos.
+    </div>
+    <div class="form-group">
+      <label class="form-label">Correo electrónico</label>
+      <input type="email" class="form-input" id="loginEmail" placeholder="tu@correo.com" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Contraseña</label>
+      <input type="password" class="form-input" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()" />
+    </div>
+    <button class="btn btn-gold w-full" style="justify-content:center;margin-top:.5rem" onclick="doLogin()">
+      <i class="fas fa-sign-in-alt"></i> Entrar
+    </button>
+    <div style="margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--border)">
+      <p style="font-size:.72rem;color:var(--t3);margin-bottom:.6rem;text-align:center;letter-spacing:.04em;text-transform:uppercase">Cuentas de demostración</p>
+      <div style="display:flex;flex-direction:column;gap:.4rem">
+        <button class="btn btn-ghost btn-sm" style="justify-content:flex-start;font-size:.75rem" onclick="fillLogin('admin@doncellas.mx','admin123')">
+          <i class="fas fa-shield-alt" style="color:var(--gold)"></i> Administrador — admin@doncellas.mx
+        </button>
+        <button class="btn btn-ghost btn-sm" style="justify-content:flex-start;font-size:.75rem" onclick="fillLogin('valentina@doncellas.mx','modelo123')">
+          <i class="fas fa-user" style="color:var(--gold)"></i> Doncella — valentina@doncellas.mx
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Toast Container ── -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- ── Mobile Bottom Navigation ── -->
+<nav class="bottom-nav" aria-label="Navegación principal">
+  <a href="index.html" class="bottom-nav-item active">
+    <i class="fas fa-home"></i><span>Inicio</span>
+  </a>
+  <a href="modelos.html" class="bottom-nav-item">
+    <i class="fas fa-users"></i><span>Escorts</span>
+  </a>
+  <a href="categorias.html" class="bottom-nav-item">
+    <i class="fas fa-star"></i><span>Categorías</span>
+  </a>
+  <a href="#" class="bottom-nav-item" onclick="openModal('loginModal');return false;">
+    <i class="fas fa-user"></i><span>Mi cuenta</span>
+  </a>
+</nav>
+
+<script src="app.js"></script>
+<script>
+  // ── PWA: Service Worker registration ──
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+        .then(reg => console.log('SW registrado'))
+        .catch(err => console.log('SW error:', err));
+    });
+  }
+
+  // ── PWA: Install prompt handling ──
+  let deferredPWAPrompt = null;
+  const pwaBanner    = document.getElementById('pwaInstallBanner');
+  const pwaInstall   = document.getElementById('pwaInstallBtn');
+  const pwaDismiss   = document.getElementById('pwaDismissBtn');
+  const pwaDismissed = localStorage.getItem('pwaBannerDismissed') === '1';
+  const pwaInstalled = window.matchMedia('(display-mode: standalone)').matches ||
+                       window.navigator.standalone === true;
+
+  if (pwaBanner && !pwaDismissed && !pwaInstalled) {
+    // Show the banner by default on mobile (CSS toggles desktop off).
+    pwaBanner.classList.add('is-visible');
+  }
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPWAPrompt = e;
+    if (pwaBanner && !pwaDismissed && !pwaInstalled) pwaBanner.classList.add('is-visible');
+  });
+
+  if (pwaInstall) {
+    pwaInstall.addEventListener('click', async () => {
+      if (deferredPWAPrompt) {
+        deferredPWAPrompt.prompt();
+        const choice = await deferredPWAPrompt.userChoice;
+        if (choice.outcome === 'accepted') {
+          localStorage.setItem('pwaBannerDismissed', '1');
+          pwaBanner.classList.remove('is-visible');
+        }
+        deferredPWAPrompt = null;
+      } else {
+        // Fallback: show instructions (iOS doesn't fire beforeinstallprompt).
+        alert('Para instalar: toca el botón Compartir y selecciona "Agregar a pantalla de inicio".');
+      }
+    });
+  }
+  if (pwaDismiss) {
+    pwaDismiss.addEventListener('click', () => {
+      localStorage.setItem('pwaBannerDismissed', '1');
+      pwaBanner.classList.remove('is-visible');
+    });
+  }
+
+  // ── Mobile search bar toggle ──
+  const searchToggle = document.getElementById('searchToggle');
+  const searchForm   = document.getElementById('searchForm');
+  if (searchToggle && searchForm) {
+    searchToggle.addEventListener('click', () => {
+      const isOpen = searchForm.classList.toggle('mobile-open');
+      searchToggle.setAttribute('aria-expanded', isOpen);
+      searchToggle.querySelector('i').className = isOpen ? 'fas fa-times' : 'fas fa-search';
+    });
+  }
+</script>
+</body>
+</html>

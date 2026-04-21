@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Panel Admin — Doncellas</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#C9A84C" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Doncellas" />
+  <link rel="apple-touch-icon" href="/assets/icons/icon-192.png" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    .admin-layout { padding-top: var(--nav-h); }
+    .admin-sidebar { position: fixed; top: var(--nav-h); left: 0; height: calc(100vh - var(--nav-h)); z-index: 100; }
+    .admin-main { margin-left: 260px; }
+    @media(max-width:900px){ .admin-main{ margin-left:0; } }
+    .review-action-row { display:flex; gap:.5rem; margin-top:.5rem; }
+    .inline-status { display:inline-flex; align-items:center; gap:.35rem; font-size:.78rem; }
+  </style>
+</head>
+<body>
+
+<nav class="nav scrolled" id="mainNav">
+  <a href="index.html" class="nav-logo">Doncel<span>las</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Inicio</a></li>
+    <li><a href="modelos.html">Doncellas</a></li>
+    <li><a href="categorias.html">Categorías</a></li>
+  </ul>
+  <div style="display:flex;align-items:center;gap:1rem">
+    <span style="font-size:.8rem;color:var(--t2)">Panel Administrador</span>
+    <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--gold-dk),var(--gold));display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;color:#000;cursor:pointer">A</div>
+  </div>
+</nav>
+
+<div class="admin-layout">
+
+  <!-- Sidebar -->
+  <aside class="admin-sidebar">
+    <p class="admin-nav-section">Principal</p>
+    <div class="admin-nav-item active" onclick="showAdminPage('dashboard')">
+      <i class="fas fa-chart-line fa-fw"></i> Dashboard
+    </div>
+    <div class="admin-nav-item" onclick="showAdminPage('modelos')">
+      <i class="fas fa-users fa-fw"></i> Doncellas
+      <span class="badge">3</span>
+    </div>
+    <div class="admin-nav-item" onclick="showAdminPage('contenido')">
+      <i class="fas fa-photo-video fa-fw"></i> Contenido
+    </div>
+    <div class="admin-nav-item" onclick="showAdminPage('citas')">
+      <i class="fas fa-calendar-alt fa-fw"></i> Citas
+    </div>
+    <div class="admin-nav-item" onclick="showAdminPage('resenas')">
+      <i class="fas fa-star fa-fw"></i> Reseñas
+      <span class="badge">7</span>
+    </div>
+
+    <p class="admin-nav-section">Finanzas</p>
+    <div class="admin-nav-item" onclick="showAdminPage('ingresos')">
+      <i class="fas fa-dollar-sign fa-fw"></i> Ingresos
+    </div>
+    <div class="admin-nav-item" onclick="showAdminPage('membresias-admin')">
+      <i class="fas fa-crown fa-fw"></i> Membresías
+    </div>
+    <div class="admin-nav-item" onclick="showAdminPage('pagos')">
+      <i class="fas fa-credit-card fa-fw"></i> Pagos
+    </div>
+
+    <p class="admin-nav-section">Configuración</p>
+    <div class="admin-nav-item" onclick="showAdminPage('configuracion')">
+      <i class="fas fa-cog fa-fw"></i> Configuración
+    </div>
+    <div class="admin-nav-item" onclick="showAdminPage('moderacion')">
+      <i class="fas fa-shield-alt fa-fw"></i> Moderación
+    </div>
+    <div style="padding:1.5rem">
+      <a href="index.html" class="btn btn-outline btn-sm w-full" style="justify-content:center">
+        <i class="fas fa-external-link-alt"></i> Ver sitio
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main content -->
+  <main class="admin-main">
+
+    <!-- ── Dashboard ── -->
+    <div class="admin-page active" id="page-dashboard">
+      <div style="margin-bottom:2rem">
+        <h2 class="admin-page-title">Dashboard</h2>
+        <p class="admin-page-sub">Resumen general de la plataforma — Abril 2026</p>
+      </div>
+
+      <!-- KPIs -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-icon gold"><i class="fas fa-dollar-sign"></i></div>
+          <div class="kpi-label">Ingresos del mes</div>
+          <div class="kpi-value">$284,500</div>
+          <div class="kpi-delta up"><i class="fas fa-arrow-up"></i> +18.3% vs mes anterior</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon green"><i class="fas fa-calendar-check"></i></div>
+          <div class="kpi-label">Citas completadas</div>
+          <div class="kpi-value">1,248</div>
+          <div class="kpi-delta up"><i class="fas fa-arrow-up"></i> +12.1%</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon blue"><i class="fas fa-users"></i></div>
+          <div class="kpi-label">Doncellas activas</div>
+          <div class="kpi-value">240</div>
+          <div class="kpi-delta up"><i class="fas fa-arrow-up"></i> +8 nuevas</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon red"><i class="fas fa-crown"></i></div>
+          <div class="kpi-label">Miembros VIP</div>
+          <div class="kpi-value">892</div>
+          <div class="kpi-delta up"><i class="fas fa-arrow-up"></i> +45 este mes</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon gold"><i class="fas fa-star"></i></div>
+          <div class="kpi-label">Rating promedio</div>
+          <div class="kpi-value">4.7</div>
+          <div class="kpi-delta up"><i class="fas fa-arrow-up"></i> +0.1</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon green"><i class="fas fa-comments"></i></div>
+          <div class="kpi-label">Reseñas pendientes</div>
+          <div class="kpi-value">7</div>
+          <div class="kpi-delta down">Requieren revisión</div>
+        </div>
+      </div>
+
+      <!-- Charts row -->
+      <div style="display:grid;grid-template-columns:2fr 1fr;gap:1.5rem;margin-bottom:1.5rem">
+        <div class="chart-card">
+          <div class="chart-header">
+            <span class="chart-title">Ingresos Mensuales</span>
+            <div class="chart-tabs">
+              <button class="chart-tab active" onclick="setChartPeriod('7d',this)">7D</button>
+              <button class="chart-tab" onclick="setChartPeriod('30d',this)">30D</button>
+              <button class="chart-tab" onclick="setChartPeriod('90d',this)">90D</button>
+              <button class="chart-tab" onclick="setChartPeriod('1a',this)">1A</button>
+            </div>
+          </div>
+          <div class="chart-canvas-wrap">
+            <canvas id="revenueChart"></canvas>
+          </div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header">
+            <span class="chart-title">Distribución</span>
+          </div>
+          <div class="chart-canvas-wrap">
+            <canvas id="distChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Second charts row -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem">
+        <div class="chart-card">
+          <div class="chart-header">
+            <span class="chart-title">Citas por día</span>
+          </div>
+          <div class="chart-canvas-wrap">
+            <canvas id="citasChart"></canvas>
+          </div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header">
+            <span class="chart-title">Nuevas membresías</span>
+          </div>
+          <div class="chart-canvas-wrap">
+            <canvas id="membChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent activity table -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <span class="chart-title">Actividad Reciente</span>
+          <button class="btn btn-outline btn-sm">Ver todo</button>
+        </div>
+        <div class="admin-table-wrap">
+          <table class="admin-table" id="activityTable">
+            <thead>
+              <tr>
+                <th>Evento</th>
+                <th>Doncella / Usuario</th>
+                <th>Monto</th>
+                <th>Fecha</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody id="activityTbody"><!-- Built by JS --></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Modelos ── -->
+    <div class="admin-page" id="page-modelos">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem">
+        <div>
+          <h2 class="admin-page-title">Gestión de Doncellas</h2>
+          <p class="admin-page-sub">240 Doncellas registradas</p>
+        </div>
+        <button class="btn btn-gold" onclick="openModal('addModeloModal')">
+          <i class="fas fa-plus"></i> Agregar Doncella
+        </button>
+      </div>
+
+      <div class="admin-search">
+        <input type="text" class="admin-search-input" placeholder="Buscar por nombre, zona, categoría…" id="modelosSearchInput" />
+        <select class="filter-select">
+          <option>Todas las zonas</option>
+          <option>Zona Rosa</option>
+          <option>Providencia</option>
+        </select>
+        <select class="filter-select">
+          <option>Todo estado</option>
+          <option>Activa</option>
+          <option>Pendiente</option>
+          <option>Suspendida</option>
+        </select>
+        <select class="filter-select">
+          <option>Todas membresías</option>
+          <option>Básica</option>
+          <option>Premium</option>
+          <option>Elite</option>
+        </select>
+      </div>
+
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Doncella</th>
+              <th>Zona</th>
+              <th>Categoría</th>
+              <th>Plan</th>
+              <th>Citas/mes</th>
+              <th>Ingresos</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="modelosTbody"><!-- Built by JS --></tbody>
+        </table>
+      </div>
+
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:1rem;font-size:.8rem;color:var(--t2);flex-wrap:wrap;gap:.5rem">
+        <span>Mostrando 1–20 de 240</span>
+        <div style="display:flex;gap:.4rem">
+          <button class="tbl-btn"><i class="fas fa-chevron-left"></i></button>
+          <button class="tbl-btn" style="background:var(--gold);color:#000;border-color:var(--gold)">1</button>
+          <button class="tbl-btn">2</button>
+          <button class="tbl-btn">3</button>
+          <button class="tbl-btn"><i class="fas fa-chevron-right"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Citas (Calendar) ── -->
+    <div class="admin-page" id="page-citas">
+      <h2 class="admin-page-title">Calendario de Citas</h2>
+      <p class="admin-page-sub">Vista de todas las citas agendadas</p>
+
+      <div style="display:grid;grid-template-columns:1fr 300px;gap:1.5rem">
+        <div class="chart-card">
+          <!-- Full calendar -->
+          <div class="calendar-header" style="margin-bottom:1rem">
+            <button class="calendar-nav-btn" id="adminCalPrev"><i class="fas fa-chevron-left"></i></button>
+            <span class="calendar-month" id="adminCalLabel" style="font-size:1.1rem"></span>
+            <button class="calendar-nav-btn" id="adminCalNext"><i class="fas fa-chevron-right"></i></button>
+          </div>
+          <!-- Day labels -->
+          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:.5rem">
+            <div class="calendar-day-name">Dom</div>
+            <div class="calendar-day-name">Lun</div>
+            <div class="calendar-day-name">Mar</div>
+            <div class="calendar-day-name">Mié</div>
+            <div class="calendar-day-name">Jue</div>
+            <div class="calendar-day-name">Vie</div>
+            <div class="calendar-day-name">Sáb</div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px" id="adminCalGrid">
+            <!-- Built by JS -->
+          </div>
+        </div>
+
+        <div>
+          <div class="chart-card">
+            <div class="chart-title" style="margin-bottom:1rem">Citas de hoy</div>
+            <div id="todayCitas" style="display:flex;flex-direction:column;gap:.75rem">
+              <!-- Built by JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Reseñas ── -->
+    <div class="admin-page" id="page-resenas">
+      <h2 class="admin-page-title">Gestión de Reseñas</h2>
+      <p class="admin-page-sub">Modera las reseñas antes de publicarlas</p>
+
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('resenas','pendientes',this)">Pendientes <span class="pill pill-busy" style="margin-left:.35rem;font-size:.6rem">7</span></button>
+        <button class="tab-btn" onclick="switchTab('resenas','aprobadas',this)">Aprobadas</button>
+        <button class="tab-btn" onclick="switchTab('resenas','rechazadas',this)">Rechazadas</button>
+      </div>
+
+      <div class="tab-panel active" id="resenas-pendientes">
+        <div id="pendingReviewsList" style="display:flex;flex-direction:column;gap:1rem">
+          <!-- Built by JS -->
+        </div>
+      </div>
+      <div class="tab-panel" id="resenas-aprobadas">
+        <p style="color:var(--t2);text-align:center;padding:3rem">Las reseñas aprobadas aparecen aquí.</p>
+      </div>
+      <div class="tab-panel" id="resenas-rechazadas">
+        <p style="color:var(--t2);text-align:center;padding:3rem">Las reseñas rechazadas aparecen aquí.</p>
+      </div>
+    </div>
+
+    <!-- ── Ingresos ── -->
+    <div class="admin-page" id="page-ingresos">
+      <h2 class="admin-page-title">Reporte de Ingresos</h2>
+      <p class="admin-page-sub">Historial financiero completo</p>
+
+      <div class="kpi-grid" style="margin-bottom:1.5rem">
+        <div class="kpi-card">
+          <div class="kpi-icon gold"><i class="fas fa-calendar-week"></i></div>
+          <div class="kpi-label">Esta semana</div>
+          <div class="kpi-value">$67,200</div>
+          <div class="kpi-delta up"><i class="fas fa-arrow-up"></i> +11%</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon green"><i class="fas fa-calendar-alt"></i></div>
+          <div class="kpi-label">Este mes</div>
+          <div class="kpi-value">$284,500</div>
+          <div class="kpi-delta up"><i class="fas fa-arrow-up"></i> +18%</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon blue"><i class="fas fa-calendar"></i></div>
+          <div class="kpi-label">Este año</div>
+          <div class="kpi-value">$1.2M</div>
+          <div class="kpi-delta up"><i class="fas fa-arrow-up"></i> +34%</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon red"><i class="fas fa-hand-holding-usd"></i></div>
+          <div class="kpi-label">Comisión plataforma</div>
+          <div class="kpi-value">$56,900</div>
+          <div class="kpi-delta up">20% promedio</div>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-header">
+          <span class="chart-title">Ingresos por fuente</span>
+        </div>
+        <div class="chart-canvas-wrap" style="height:280px">
+          <canvas id="ingresosChart"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-card mt-2">
+        <div class="chart-header">
+          <span class="chart-title">Transacciones recientes</span>
+          <button class="btn btn-outline btn-sm"><i class="fas fa-download"></i> Exportar CSV</button>
+        </div>
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead><tr>
+              <th>#</th><th>Modelo</th><th>Tipo</th><th>Monto</th><th>Comisión</th><th>Fecha</th><th>Método</th>
+            </tr></thead>
+            <tbody id="txTbody"><!-- Built by JS --></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Membresías Admin ── -->
+    <div class="admin-page" id="page-membresias-admin">
+      <h2 class="admin-page-title">Gestión de Membresías</h2>
+      <p class="admin-page-sub">892 miembros activos</p>
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-icon gold"><i class="fas fa-gem"></i></div>
+          <div class="kpi-label">Plan Elite</div>
+          <div class="kpi-value">234</div>
+          <div class="kpi-delta up">$1,499/mes</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon green"><i class="fas fa-crown"></i></div>
+          <div class="kpi-label">Plan Premium</div>
+          <div class="kpi-value">415</div>
+          <div class="kpi-delta up">$799/mes</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon blue"><i class="fas fa-star"></i></div>
+          <div class="kpi-label">Plan Básico</div>
+          <div class="kpi-value">243</div>
+          <div class="kpi-delta up">$299/mes</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon red"><i class="fas fa-times-circle"></i></div>
+          <div class="kpi-label">Cancelaciones</div>
+          <div class="kpi-value">28</div>
+          <div class="kpi-delta down">Este mes</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Pagos ── -->
+    <div class="admin-page" id="page-pagos">
+      <h2 class="admin-page-title">Historial de Pagos</h2>
+      <p class="admin-page-sub">Todas las transacciones procesadas</p>
+      <div class="chart-card">
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead><tr>
+              <th>ID</th><th>Usuario</th><th>Concepto</th><th>Monto</th><th>Método</th><th>Estado</th><th>Fecha</th>
+            </tr></thead>
+            <tbody id="pagosTbody"><!-- Built by JS --></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Configuración ── -->
+    <div class="admin-page" id="page-configuracion">
+      <h2 class="admin-page-title">Configuración</h2>
+      <p class="admin-page-sub">Ajustes generales de la plataforma</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
+        <div class="chart-card">
+          <h4 style="margin-bottom:1rem">General</h4>
+          <div class="form-group">
+            <label class="form-label">Nombre de la plataforma</label>
+            <input class="form-input" value="Doncellas" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Comisión plataforma (%)</label>
+            <input class="form-input" type="number" value="20" min="0" max="100" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Ciudad principal</label>
+            <input class="form-input" value="Guadalajara, Jalisco" />
+          </div>
+          <button class="btn btn-gold">Guardar cambios</button>
+        </div>
+        <div class="chart-card">
+          <h4 style="margin-bottom:1rem">Notificaciones</h4>
+          <div style="display:flex;flex-direction:column;gap:.75rem">
+            <div class="switch-wrap">
+              <label class="switch"><input type="checkbox" checked><span class="switch-slider"></span></label>
+              <span class="switch-label">Nuevas reseñas por correo</span>
+            </div>
+            <div class="switch-wrap">
+              <label class="switch"><input type="checkbox" checked><span class="switch-slider"></span></label>
+              <span class="switch-label">Alertas de pagos fallidos</span>
+            </div>
+            <div class="switch-wrap">
+              <label class="switch"><input type="checkbox"><span class="switch-slider"></span></label>
+              <span class="switch-label">Resumen diario por WhatsApp</span>
+            </div>
+            <div class="switch-wrap">
+              <label class="switch"><input type="checkbox" checked><span class="switch-slider"></span></label>
+              <span class="switch-label">Nuevas altas de Doncellas</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Contenido ── -->
+    <div class="admin-page" id="page-contenido">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem">
+        <div>
+          <h2 class="admin-page-title">Gestión de Contenido</h2>
+          <p class="admin-page-sub">Administra fotos y videos de los perfiles</p>
+        </div>
+      </div>
+
+      <div class="admin-search" style="margin-bottom:1.5rem">
+        <input type="text" class="admin-search-input" placeholder="Buscar Doncella…" id="contentSearchInput"
+               oninput="filterContentGrid(this.value)" />
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem" id="contentModelGrid">
+        <!-- Built by JS -->
+      </div>
+    </div>
+
+    <!-- ── Moderación ── -->
+    <div class="admin-page" id="page-moderacion">
+      <h2 class="admin-page-title">Moderación de Contenido</h2>
+      <p class="admin-page-sub">Revisa el contenido reportado por usuarios</p>
+      <div class="chart-card">
+        <p style="color:var(--t2);text-align:center;padding:2rem">No hay contenido pendiente de moderación.</p>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Add Modelo Modal -->
+<div class="modal-overlay" id="addModeloModal">
+  <div class="modal" style="max-width:640px">
+    <div class="modal-header">
+      <h3 class="modal-title"><i class="fas fa-user-plus" style="color:var(--gold)"></i> Agregar Doncella</h3>
+      <button class="modal-close" onclick="closeModal('addModeloModal')"><i class="fas fa-times"></i></button>
+    </div>
+
+    <!-- Datos del perfil -->
+    <p style="font-size:.7rem;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.75rem">Datos del perfil</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+      <div class="form-group">
+        <label class="form-label">Nombre artístico</label>
+        <input class="form-input" id="newNombre" placeholder="Ej. Valentina R." />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Edad</label>
+        <input class="form-input" type="number" id="newEdad" placeholder="18+" min="18" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Zona</label>
+        <select class="form-input" id="newZona">
+          <option>Zona Rosa</option>
+          <option>Providencia</option>
+          <option>Chapultepec</option>
+          <option>Tlaquepaque</option>
+          <option>Zapopan</option>
+          <option>Centro Histórico</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Categoría</label>
+        <select class="form-input" id="newCat">
+          <option>Universitaria</option>
+          <option>Milf</option>
+          <option>Petite</option>
+          <option>Nalgona</option>
+          <option>Voluptuosa</option>
+          <option>Chichona</option>
+          <option>Extranjera</option>
+          <option>Jovencita</option>
+          <option>Fit</option>
+          <option>Natural</option>
+          <option>Tuneada</option>
+          <option>Chaparrita</option>
+          <option>Alta</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Plan</label>
+        <select class="form-input" id="newPlan">
+          <option>Básico</option>
+          <option>Premium</option>
+          <option>Elite</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Tarifa por hora (MXN)</label>
+        <input class="form-input" type="number" id="newTarifa" placeholder="Ej. 2500" min="500" />
+      </div>
+      <div class="form-group" style="grid-column:span 2">
+        <label class="form-label">Teléfono WhatsApp / Telegram</label>
+        <input class="form-input" id="newTel" placeholder="+52 33 1234 5678" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Descripción del perfil</label>
+      <textarea class="form-input" id="newDesc" rows="2" placeholder="Breve descripción…"></textarea>
+    </div>
+
+    <!-- Credenciales de acceso -->
+    <div style="border-top:1px solid var(--border);margin:.75rem 0 1rem;padding-top:1rem">
+      <p style="font-size:.7rem;color:var(--gold);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.75rem"><i class="fas fa-key"></i> Credenciales de acceso al panel</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+        <div class="form-group">
+          <label class="form-label">Correo (usuario)</label>
+          <input class="form-input" id="newEmail" placeholder="nombre@doncellas.mx" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Contraseña</label>
+          <div style="display:flex;gap:.5rem">
+            <input class="form-input" id="newPass" type="text" placeholder="Generar o escribir…" style="flex:1" />
+            <button class="btn btn-ghost btn-sm" onclick="generarPassword()" title="Generar contraseña segura" style="flex-shrink:0">
+              <i class="fas fa-sync-alt"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Generated credentials box -->
+      <div id="credencialesBox" style="display:none;background:rgba(201,168,76,.07);border:1px solid rgba(201,168,76,.3);border-radius:var(--r-md);padding:.85rem 1rem;margin-top:.25rem">
+        <p style="font-size:.72rem;color:var(--t2);margin-bottom:.4rem"><i class="fas fa-check-circle" style="color:var(--green)"></i> Credenciales listas — compártalas con la Doncella de forma segura</p>
+        <div style="display:flex;gap:1.5rem;font-size:.8rem">
+          <div><span style="color:var(--t3)">Usuario: </span><strong id="credEmail" style="color:var(--gold)">—</strong></div>
+          <div><span style="color:var(--t3)">Contraseña: </span><strong id="credPass" style="color:var(--gold);font-family:monospace">—</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:.75rem;justify-content:flex-end">
+      <button class="btn btn-ghost" onclick="closeModal('addModeloModal')">Cancelar</button>
+      <button class="btn btn-gold" onclick="saveNewModelo()">
+        <i class="fas fa-user-plus"></i> Crear cuenta y guardar
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Mobile Bottom Navigation -->
+<nav class="bottom-nav" aria-label="Navegación principal">
+  <a href="index.html" class="bottom-nav-item"><i class="fas fa-home"></i><span>Inicio</span></a>
+  <a href="modelos.html" class="bottom-nav-item"><i class="fas fa-users"></i><span>Escorts</span></a>
+  <a href="categorias.html" class="bottom-nav-item"><i class="fas fa-star"></i><span>Categorías</span></a>
+  <a href="panel-admin.html" class="bottom-nav-item active"><i class="fas fa-user"></i><span>Mi cuenta</span></a>
+</nav>
+<script src="app.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  }
+</script>
+</body>
+</html>

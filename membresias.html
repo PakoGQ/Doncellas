@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Membresías — Doncellas</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#C9A84C" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Doncellas" />
+  <link rel="apple-touch-icon" href="/assets/icons/icon-192.png" />
+  <style>
+    .billing-toggle {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      justify-content: center;
+      margin-bottom: 3rem;
+    }
+    .billing-label {
+      font-size: .88rem;
+      color: var(--t2);
+      transition: var(--transition);
+    }
+    .billing-label.active { color: var(--gold); font-weight: 600; }
+    .save-badge {
+      background: rgba(76,175,130,.15);
+      color: var(--green);
+      border: 1px solid rgba(76,175,130,.3);
+      font-size: .68rem;
+      font-weight: 700;
+      padding: .2rem .65rem;
+      border-radius: 999px;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+    .compare-table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+    .compare-table th, .compare-table td {
+      padding: .9rem 1rem;
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+    }
+    .compare-table th:first-child,
+    .compare-table td:first-child { text-align: left; }
+    .compare-table th {
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      color: var(--t1);
+      background: var(--surface);
+    }
+    .compare-table th.featured { color: var(--gold); border-top: 2px solid var(--gold); }
+    .compare-table td { color: var(--t2); }
+    .compare-table .check-icon { color: var(--green); }
+    .compare-table .x-icon { color: var(--t3); }
+    .faq-item {
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      margin-bottom: .75rem;
+      overflow: hidden;
+    }
+    .faq-q {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.1rem 1.25rem;
+      cursor: pointer;
+      font-size: .92rem;
+      font-weight: 500;
+      background: var(--card);
+      transition: var(--transition);
+    }
+    .faq-q:hover { background: var(--card-hover); }
+    .faq-q .arrow { transition: transform .3s; color: var(--t2); }
+    .faq-q.open { color: var(--gold); }
+    .faq-q.open .arrow { transform: rotate(180deg); color: var(--gold); }
+    .faq-a {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .4s ease;
+      background: var(--card);
+      border-top: 0;
+    }
+    .faq-a.open { max-height: 300px; border-top: 1px solid var(--border); }
+    .faq-a-inner { padding: 1rem 1.25rem; color: var(--t2); font-size: .85rem; line-height: 1.7; }
+    .payment-method-btn {
+      border: 2px solid var(--border);
+      border-radius: var(--r-md);
+      padding: .75rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      font-size: .85rem;
+      color: var(--t2);
+      transition: var(--transition);
+      cursor: pointer;
+      background: var(--surface);
+    }
+    .payment-method-btn:hover, .payment-method-btn.selected {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: var(--gold-glow);
+    }
+    .testimonial-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 1.5rem;
+    }
+    .testimonial-card blockquote {
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      font-style: italic;
+      color: var(--t1);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+    .trust-badge {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      font-size: .78rem;
+      color: var(--t2);
+    }
+    .trust-badge i { color: var(--gold); }
+  </style>
+</head>
+<body>
+
+<nav class="nav" id="mainNav">
+  <a href="index.html" class="nav-logo">Doncel<span>las</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Inicio</a></li>
+    <li><a href="modelos.html">Doncellas</a></li>
+    <li><a href="categorias.html">Categorías</a></li>
+    <li><a href="membresias.html" class="active">Membresías</a></li>
+  </ul>
+  <div class="nav-cta">
+    <button class="btn btn-ghost btn-sm" onclick="openModal('loginModal')">Iniciar sesión</button>
+    <button class="nav-menu-btn" id="navMenuBtn"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- Hero -->
+<div class="mem-hero" style="padding-top:calc(var(--nav-h) + 5rem)">
+  <p class="section-label"><i class="fas fa-crown"></i> Planes exclusivos</p>
+  <h1>Elige tu <span class="gold">experiencia</span></h1>
+  <p style="color:var(--t2);margin-top:.75rem;font-size:1rem">
+    Accede a perfiles exclusivos, funciones avanzadas y la mejor experiencia en Guadalajara.
+  </p>
+
+  <!-- Billing toggle -->
+  <div class="billing-toggle">
+    <span class="billing-label active" id="lblMensual">Mensual</span>
+    <label class="switch">
+      <input type="checkbox" id="billingToggle" onchange="toggleBilling(this)" />
+      <span class="switch-slider"></span>
+    </label>
+    <span class="billing-label" id="lblAnual">Anual <span class="save-badge">Ahorra 20%</span></span>
+  </div>
+</div>
+
+<!-- Plans grid -->
+<div class="mem-grid">
+
+  <!-- Básico -->
+  <div class="mem-card" id="card-basico">
+    <p class="mem-plan-name"><i class="fas fa-star" style="color:var(--t3);margin-right:.4rem"></i>Básico</p>
+    <p style="font-size:.82rem;color:var(--t2);margin-bottom:.25rem">Para empezar a explorar</p>
+    <div class="mem-price">
+      <div class="mem-price-n"><sup>$</sup><span class="price-amount" data-monthly="299" data-annual="239">299</span></div>
+      <div class="mem-price-period">MXN / mes</div>
+    </div>
+    <div class="mem-divider"></div>
+    <ul class="mem-features">
+      <li class="mem-feature"><i class="fas fa-check check"></i> Ver perfiles básicos</li>
+      <li class="mem-feature"><i class="fas fa-check check"></i> Búsqueda y filtros</li>
+      <li class="mem-feature"><i class="fas fa-check check"></i> 5 contactos por mes</li>
+      <li class="mem-feature"><i class="fas fa-check check"></i> Acceso a calendario</li>
+      <li class="mem-feature"><i class="fas fa-times cross"></i> <span style="color:var(--t3)">Fotos premium</span></li>
+      <li class="mem-feature"><i class="fas fa-times cross"></i> <span style="color:var(--t3)">Chat privado</span></li>
+      <li class="mem-feature"><i class="fas fa-times cross"></i> <span style="color:var(--t3)">Descuentos exclusivos</span></li>
+    </ul>
+    <button class="btn btn-outline w-full" onclick="selectPlan('Básico','299')">
+      <i class="fas fa-arrow-right"></i> Comenzar
+    </button>
+  </div>
+
+  <!-- Premium (featured) -->
+  <div class="mem-card featured" id="card-premium">
+    <div class="mem-popular-badge">Más Popular</div>
+    <p class="mem-plan-name" style="color:var(--gold)"><i class="fas fa-crown" style="margin-right:.4rem"></i>Premium</p>
+    <p style="font-size:.82rem;color:var(--t2);margin-bottom:.25rem">La experiencia completa</p>
+    <div class="mem-price">
+      <div class="mem-price-n" style="color:var(--gold-lt)"><sup>$</sup><span class="price-amount" data-monthly="799" data-annual="639">799</span></div>
+      <div class="mem-price-period">MXN / mes</div>
+    </div>
+    <div class="mem-divider"></div>
+    <ul class="mem-features">
+      <li class="mem-feature"><i class="fas fa-check check"></i> Todo lo del plan Básico</li>
+      <li class="mem-feature"><i class="fas fa-check check"></i> Perfiles y fotos premium</li>
+      <li class="mem-feature"><i class="fas fa-check check"></i> Contactos ilimitados</li>
+      <li class="mem-feature"><i class="fas fa-check check"></i> Chat privado cifrado</li>
+      <li class="mem-feature"><i class="fas fa-check check"></i> Descuentos exclusivos 15%</li>
+      <li class="mem-feature"><i class="fas fa-check check"></i> Prioridad en reservas</li>
+      <li class="mem-feature"><i class="fas fa-times cross"></i> <span style="color:var(--t3)">Concierge personal</span></li>
+    </ul>
+    <button class="btn btn-gold w-full" onclick="selectPlan('Premium','799')">
+      <i class="fas fa-crown"></i> Obtener Premium
+    </button>
+  </div>
+
+  <!-- Elite -->
+  <div class="mem-card" id="card-elite">
+    <p class="mem-plan-name" style="color:var(--gold-lt)"><i class="fas fa-gem" style="margin-right:.4rem"></i>Elite</p>
+    <p style="font-size:.82rem;color:var(--t2);margin-bottom:.25rem">Exclusividad absoluta</p>
+    <div class="mem-price">
+      <div class="mem-price-n" style="color:var(--gold-lt)"><sup>$</sup><span class="price-amount" data-monthly="1499" data-annual="1199">1,499</span></div>
+      <div class="mem-price-period">MXN / mes</div>
+    </div>
+    <div class="mem-divider"></div>
+    <ul class="mem-features">
+      <li class="mem-feature"><i class="fas fa-check check"></i> Todo lo del plan Premium</li>
+      <li class="mem-feature"><i class="fas fa-check check"></i> Concierge personal 24/7</li>
+      <li class="mem-feature"><i class="fas fa-check check"></i> Acceso a perfiles privados</li>
+      <li class="mem-feature"><i class="fas fa-check check"></i> Descuentos exclusivos 25%</li>
+      <li class="mem-feature"><i class="fas fa-check check"></i> Evento mensual VIP</li>
+      <li class="mem-feature"><i class="fas fa-check check"></i> Perfil verificado con badge</li>
+      <li class="mem-feature"><i class="fas fa-check check"></i> Soporte prioritario</li>
+    </ul>
+    <button class="btn btn-outline w-full" onclick="selectPlan('Elite','1499')"
+            style="border-color:var(--gold-lt);color:var(--gold-lt)">
+      <i class="fas fa-gem"></i> Obtener Elite
+    </button>
+  </div>
+
+</div>
+
+<!-- Payment form -->
+<div class="payment-form" id="paymentForm" style="margin-bottom:3rem">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem">
+    <h3 style="font-family:var(--font-serif)">Pago seguro</h3>
+    <button class="btn btn-ghost btn-sm" onclick="document.getElementById('paymentForm').classList.remove('active')">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+
+  <!-- Selected plan summary -->
+  <div style="background:rgba(201,168,76,.06);border:1px solid var(--border-h);border-radius:var(--r-md);padding:1rem;margin-bottom:1.5rem;display:flex;justify-content:space-between;align-items:center">
+    <div>
+      <div style="font-size:.75rem;color:var(--t2);text-transform:uppercase;letter-spacing:.06em">Plan seleccionado</div>
+      <div style="font-family:var(--font-serif);font-size:1.1rem;color:var(--gold)" id="selectedPlanName">—</div>
+    </div>
+    <div style="font-family:var(--font-serif);font-size:1.5rem;color:var(--gold)" id="selectedPlanPrice">—</div>
+  </div>
+
+  <!-- Payment method -->
+  <div style="margin-bottom:1.25rem">
+    <label class="form-label">Método de pago</label>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem">
+      <button class="payment-method-btn selected" onclick="selectPayMethod(this,'card')">
+        <i class="fas fa-credit-card"></i> Tarjeta
+      </button>
+      <button class="payment-method-btn" onclick="selectPayMethod(this,'oxxo')">
+        <i class="fas fa-store"></i> OXXO
+      </button>
+      <button class="payment-method-btn" onclick="selectPayMethod(this,'spei')">
+        <i class="fas fa-university"></i> SPEI
+      </button>
+    </div>
+  </div>
+
+  <!-- Card fields -->
+  <div id="cardFields">
+    <div class="form-group">
+      <label class="form-label">Nombre en la tarjeta</label>
+      <input type="text" class="form-input" placeholder="Nombre completo" autocomplete="cc-name" />
+    </div>
+    <div class="form-group card-input-wrap">
+      <label class="form-label">Número de tarjeta</label>
+      <input type="text" class="form-input" placeholder="1234 5678 9012 3456"
+             maxlength="19" autocomplete="cc-number" id="cardNumber" oninput="formatCardNumber(this)" />
+      <div class="card-icons">
+        <i class="fab fa-cc-visa"></i>
+        <i class="fab fa-cc-mastercard"></i>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Fecha de expiración</label>
+        <input type="text" class="form-input" placeholder="MM / AA" maxlength="7" autocomplete="cc-exp" id="cardExp" oninput="formatExpiry(this)" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">CVV</label>
+        <input type="text" class="form-input" placeholder="•••" maxlength="4" autocomplete="cc-csc" />
+      </div>
+    </div>
+  </div>
+
+  <!-- OXXO fields -->
+  <div id="oxxoFields" class="hidden">
+    <div class="form-group">
+      <label class="form-label">Correo electrónico</label>
+      <input type="email" class="form-input" placeholder="tu@correo.com" />
+    </div>
+    <p style="font-size:.82rem;color:var(--t2);margin-top:.5rem">Recibirás una referencia de pago en tu correo. Válida por 72 horas.</p>
+  </div>
+
+  <!-- SPEI fields -->
+  <div id="speiFields" class="hidden">
+    <div class="form-group">
+      <label class="form-label">Correo electrónico</label>
+      <input type="email" class="form-input" placeholder="tu@correo.com" />
+    </div>
+    <p style="font-size:.82rem;color:var(--t2);margin-top:.5rem">Recibirás los datos CLABE para realizar la transferencia. El acceso se activa en menos de 2 horas.</p>
+  </div>
+
+  <!-- Email (always visible) -->
+  <div class="form-group" id="emailField">
+    <label class="form-label">Correo electrónico</label>
+    <input type="email" class="form-input" placeholder="tu@correo.com" autocomplete="email" />
+  </div>
+
+  <button class="btn btn-gold w-full btn-lg" style="justify-content:center;margin-top:.5rem" onclick="processPago()">
+    <i class="fas fa-lock"></i> Pagar ahora
+  </button>
+
+  <div class="payment-secure">
+    <i class="fas fa-shield-alt" style="color:var(--green)"></i>
+    Pago 100% seguro con cifrado SSL de 256 bits
+  </div>
+
+  <div style="display:flex;justify-content:center;gap:1rem;margin-top:.75rem;font-size:1.4rem;color:var(--t3)">
+    <i class="fab fa-cc-visa"></i>
+    <i class="fab fa-cc-mastercard"></i>
+    <i class="fab fa-cc-amex"></i>
+    <i class="fas fa-university"></i>
+  </div>
+</div>
+
+<!-- Comparison table -->
+<div style="max-width:900px;margin:0 auto 5rem;padding:0 2rem">
+  <h2 class="text-center mb-3">Comparación <span class="gold">detallada</span></h2>
+  <div style="overflow-x:auto;border:1px solid var(--border);border-radius:var(--r-lg)">
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Función</th>
+          <th>Básico</th>
+          <th class="featured">Premium</th>
+          <th>Elite</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Ver perfiles</td><td>Básicos</td><td>Todos</td><td>+ Privados</td></tr>
+        <tr><td>Galería de fotos</td><td>3 fotos</td><td>Ilimitadas</td><td>Ilimitadas</td></tr>
+        <tr><td>Contactos mensuales</td><td>5</td><td>Ilimitados</td><td>Ilimitados</td></tr>
+        <tr><td>Chat privado</td><td><i class="fas fa-times x-icon"></i></td><td><i class="fas fa-check check-icon"></i></td><td><i class="fas fa-check check-icon"></i></td></tr>
+        <tr><td>Calendario de citas</td><td><i class="fas fa-check check-icon"></i></td><td><i class="fas fa-check check-icon"></i></td><td><i class="fas fa-check check-icon"></i></td></tr>
+        <tr><td>Descuentos exclusivos</td><td><i class="fas fa-times x-icon"></i></td><td>15%</td><td>25%</td></tr>
+        <tr><td>Concierge personal</td><td><i class="fas fa-times x-icon"></i></td><td><i class="fas fa-times x-icon"></i></td><td>24/7</td></tr>
+        <tr><td>Eventos VIP</td><td><i class="fas fa-times x-icon"></i></td><td><i class="fas fa-times x-icon"></i></td><td>Mensual</td></tr>
+        <tr><td>Soporte</td><td>Email</td><td>Chat</td><td>Prioritario</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Testimonials -->
+<section style="background:var(--surface);border-top:1px solid var(--border);padding:5rem 2rem">
+  <div style="max-width:900px;margin:0 auto">
+    <p class="section-label text-center">Testimonios</p>
+    <h2 class="text-center mb-3">Lo que dicen nuestros <span class="gold">miembros</span></h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem">
+      <div class="testimonial-card">
+        <div class="stars" style="margin-bottom:.75rem">
+          <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+          <i class="fas fa-star"></i><i class="fas fa-star"></i>
+        </div>
+        <blockquote>"La plataforma más discreta y profesional que he usado. El plan Premium vale cada peso."</blockquote>
+        <div style="display:flex;align-items:center;gap:.6rem">
+          <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--gold-dk),var(--gold));display:flex;align-items:center;justify-content:center;font-weight:700;color:#000;font-size:.8rem">CR</div>
+          <div>
+            <div style="font-size:.85rem;font-weight:600">C. Reyes</div>
+            <div style="font-size:.72rem;color:var(--t2)">Miembro Premium desde 2024</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="stars" style="margin-bottom:.75rem">
+          <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+          <i class="fas fa-star"></i><i class="fas fa-star"></i>
+        </div>
+        <blockquote>"El concierge del plan Elite es increíble. Todo queda listo sin que yo tenga que preocuparme."</blockquote>
+        <div style="display:flex;align-items:center;gap:.6rem">
+          <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#7030A0,#9050C0);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:.8rem">AM</div>
+          <div>
+            <div style="font-size:.85rem;font-weight:600">A. Mendoza</div>
+            <div style="font-size:.72rem;color:var(--t2)">Miembro Elite desde 2023</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="stars" style="margin-bottom:.75rem">
+          <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+          <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+        </div>
+        <blockquote>"Empecé con el plan Básico y en una semana actualicé a Premium. La diferencia es enorme."</blockquote>
+        <div style="display:flex;align-items:center;gap:.6rem">
+          <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#304070,#5070A0);display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:.8rem">JL</div>
+          <div>
+            <div style="font-size:.85rem;font-weight:600">J. López</div>
+            <div style="font-size:.72rem;color:var(--t2)">Miembro Premium desde 2025</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Trust badges -->
+<div style="max-width:700px;margin:3rem auto;padding:0 2rem;display:flex;justify-content:center;flex-wrap:wrap;gap:2rem">
+  <div class="trust-badge"><i class="fas fa-lock"></i> SSL 256-bit</div>
+  <div class="trust-badge"><i class="fas fa-shield-alt"></i> Datos protegidos</div>
+  <div class="trust-badge"><i class="fas fa-sync-alt"></i> Cancela cuando quieras</div>
+  <div class="trust-badge"><i class="fas fa-undo"></i> Garantía 7 días</div>
+  <div class="trust-badge"><i class="fas fa-headset"></i> Soporte 24/7</div>
+</div>
+
+<!-- FAQ -->
+<div style="max-width:700px;margin:0 auto 5rem;padding:0 2rem">
+  <h2 class="text-center mb-3">Preguntas <span class="gold">frecuentes</span></h2>
+  <div id="faqList">
+    <!-- Built by JS -->
+  </div>
+</div>
+
+<!-- Login Modal -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 class="modal-title">Iniciar Sesión</h3>
+      <button class="modal-close" onclick="closeModal('loginModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Correo electrónico</label>
+      <input type="email" class="form-input" placeholder="tu@correo.com" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Contraseña</label>
+      <input type="password" class="form-input" placeholder="••••••••" />
+    </div>
+    <button class="btn btn-gold w-full" style="justify-content:center">
+      <i class="fas fa-sign-in-alt"></i> Entrar
+    </button>
+  </div>
+</div>
+
+<!-- Success Modal -->
+<div class="modal-overlay" id="successModal">
+  <div class="modal" style="text-align:center">
+    <div style="font-size:3rem;color:var(--green);margin-bottom:1rem"><i class="fas fa-check-circle"></i></div>
+    <h3 class="modal-title" style="margin-bottom:.5rem">¡Pago exitoso!</h3>
+    <p style="color:var(--t2);margin-bottom:1.5rem">Tu membresía ha sido activada. Revisa tu correo para los detalles.</p>
+    <a href="modelos.html" class="btn btn-gold" style="display:inline-flex">
+      <i class="fas fa-users"></i> Explorar Modelos
+    </a>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="nav-logo">Doncel<span>las</span></div>
+      <p>La plataforma de Doncellas más exclusiva de Guadalajara.</p>
+    </div>
+    <div><p class="footer-heading">Plataforma</p>
+      <ul class="footer-links">
+        <li><a href="modelos.html">Doncellas</a></li>
+        <li><a href="categorias.html">Categorías</a></li>
+      </ul>
+    </div>
+    <div><p class="footer-heading">Para Doncellas</p>
+      <ul class="footer-links">
+        <li><a href="panel-modelo.html">Mi Panel</a></li>
+        <li><a href="membresias.html">Planes</a></li>
+      </ul>
+    </div>
+    <div><p class="footer-heading">Legal</p>
+      <ul class="footer-links">
+        <li><a href="#">Términos</a></li>
+        <li><a href="#">Privacidad</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Doncellas. Solo mayores de 18 años.</span>
+  </div>
+</footer>
+
+<div class="float-btns">
+  <a href="https://t.me/doncellas" target="_blank" class="float-btn float-btn-telegram" aria-label="Telegram"><i class="fab fa-telegram"></i></a>
+  <a href="https://wa.me/523312345678" target="_blank" class="float-btn float-btn-wa" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Mobile Bottom Navigation -->
+<nav class="bottom-nav" aria-label="Navegación principal">
+  <a href="index.html" class="bottom-nav-item"><i class="fas fa-home"></i><span>Inicio</span></a>
+  <a href="modelos.html" class="bottom-nav-item"><i class="fas fa-users"></i><span>Escorts</span></a>
+  <a href="categorias.html" class="bottom-nav-item"><i class="fas fa-star"></i><span>Categorías</span></a>
+  <a href="#" class="bottom-nav-item active" onclick="openModal('loginModal');return false;"><i class="fas fa-user"></i><span>Mi cuenta</span></a>
+</nav>
+<div class="modal-overlay" id="loginModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 class="modal-title">Iniciar Sesión</h3>
+      <button class="modal-close" onclick="closeModal('loginModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div id="loginError" style="display:none;background:rgba(224,80,80,.12);border:1px solid rgba(224,80,80,.3);border-radius:var(--r-md);padding:.75rem 1rem;margin-bottom:1rem;font-size:.85rem;color:var(--red)"><i class="fas fa-exclamation-circle"></i> Usuario o contraseña incorrectos.</div>
+    <div class="form-group"><label class="form-label">Correo</label><input type="email" class="form-input" id="loginEmail" placeholder="tu@correo.com" /></div>
+    <div class="form-group"><label class="form-label">Contraseña</label><input type="password" class="form-input" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()" /></div>
+    <button class="btn btn-gold w-full" style="justify-content:center;margin-top:.5rem" onclick="doLogin()"><i class="fas fa-sign-in-alt"></i> Entrar</button>
+    <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:.35rem">
+      <button class="btn btn-ghost btn-sm" style="font-size:.75rem" onclick="fillLogin('admin@doncellas.mx','admin123')"><i class="fas fa-shield-alt" style="color:var(--gold)"></i> Admin demo</button>
+      <button class="btn btn-ghost btn-sm" style="font-size:.75rem" onclick="fillLogin('valentina@doncellas.mx','modelo123')"><i class="fas fa-user" style="color:var(--gold)"></i> Doncella demo</button>
+    </div>
+  </div>
+</div>
+<script src="app.js"></script>
+<script>
+function toggleBilling(el) {
+  const isAnnual = el.checked;
+  document.getElementById('lblMensual').classList.toggle('active', !isAnnual);
+  document.getElementById('lblAnual').classList.toggle('active', isAnnual);
+  document.querySelectorAll('.price-amount').forEach(el => {
+    el.textContent = isAnnual
+      ? Number(el.dataset.annual).toLocaleString('es-MX')
+      : Number(el.dataset.monthly).toLocaleString('es-MX');
+  });
+}
+
+function selectPlan(name, price) {
+  document.getElementById('selectedPlanName').textContent = `Plan ${name}`;
+  document.getElementById('selectedPlanPrice').textContent = `$${Number(price).toLocaleString('es-MX')} MXN`;
+  const form = document.getElementById('paymentForm');
+  form.classList.add('active');
+  form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function selectPayMethod(btn, method) {
+  document.querySelectorAll('.payment-method-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  document.getElementById('cardFields').classList.toggle('hidden', method !== 'card');
+  document.getElementById('oxxoFields').classList.toggle('hidden', method !== 'oxxo');
+  document.getElementById('speiFields').classList.toggle('hidden', method !== 'spei');
+  document.getElementById('emailField').classList.toggle('hidden', method === 'card');
+}
+
+function formatCardNumber(input) {
+  let v = input.value.replace(/\D/g, '').substring(0, 16);
+  input.value = v.replace(/(.{4})/g, '$1 ').trim();
+}
+
+function formatExpiry(input) {
+  let v = input.value.replace(/\D/g, '').substring(0, 4);
+  if (v.length >= 2) v = v.substring(0, 2) + ' / ' + v.substring(2);
+  input.value = v;
+}
+
+function processPago() {
+  showToast('Procesando pago…', 'info');
+  setTimeout(() => {
+    document.getElementById('paymentForm').classList.remove('active');
+    openModal('successModal');
+  }, 2000);
+}
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  }
+</script>
+</body>
+</html>

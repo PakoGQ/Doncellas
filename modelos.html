@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Doncellas — Doncellas Guadalajara</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#C9A84C" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Doncellas" />
+  <link rel="apple-touch-icon" href="/assets/icons/icon-192.png" />
+</head>
+<body>
+
+<nav class="nav" id="mainNav">
+  <a href="index.html" class="nav-logo">Doncel<span>las</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Inicio</a></li>
+    <li><a href="modelos.html" class="active">Doncellas</a></li>
+    <li><a href="categorias.html">Categorías</a></li>
+  </ul>
+  <div class="nav-cta">
+    <button class="btn btn-gold btn-sm" onclick="openModal('loginModal')"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</button>
+    <button class="nav-menu-btn" id="navMenuBtn" aria-label="Menú">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Page Header -->
+<div style="padding:calc(var(--nav-h) + 3rem) 2.5rem 2rem;max-width:1400px;margin:0 auto;display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:1rem">
+  <div>
+    <p class="section-label"><i class="fas fa-users"></i> Directorio completo</p>
+    <h1 style="font-size:clamp(1.8rem,3vw,2.8rem)">Nuestras <span class="gold">Doncellas</span></h1>
+    <p class="text-muted mt-1" id="resultsCount">Cargando perfiles…</p>
+  </div>
+  <div style="display:flex;gap:.75rem;align-items:center;flex-wrap:wrap">
+    <div style="display:flex;gap:.4rem">
+      <button class="tbl-btn active" id="viewGrid" title="Vista cuadrícula"><i class="fas fa-th"></i></button>
+      <button class="tbl-btn" id="viewList" title="Vista lista"><i class="fas fa-list"></i></button>
+    </div>
+    <select class="filter-select" id="sortSelect">
+      <option value="featured">Destacadas</option>
+      <option value="new">Más nuevas</option>
+      <option value="rating">Mejor calificadas</option>
+      <option value="price-asc">Precio ↑</option>
+      <option value="price-desc">Precio ↓</option>
+    </select>
+  </div>
+</div>
+
+<!-- Search Bar -->
+<div style="max-width:1400px;margin:0 auto;padding:0 2.5rem .75rem">
+  <div class="modelos-search-wrap">
+    <i class="fas fa-search modelos-search-icon"></i>
+    <input type="text" id="modelosSearch" class="modelos-search-input" placeholder="Buscar por nombre, zona, categoría o etiqueta…" autocomplete="off" />
+    <button class="btn btn-ghost btn-sm" id="modelosSearchClear" style="display:none;padding:.4rem .75rem" onclick="document.getElementById('modelosSearch').value='';renderModelos();this.style.display='none'"><i class="fas fa-times"></i></button>
+  </div>
+</div>
+
+<!-- Filters -->
+<div style="max-width:1400px;margin:0 auto;padding:0 2.5rem">
+  <div class="filters-bar">
+    <div class="filter-group">
+      <label><i class="fas fa-map-marker-alt"></i> Zona</label>
+      <select class="filter-select" id="fZona">
+        <option value="">Todas</option>
+        <option>Zona Rosa</option>
+        <option>Providencia</option>
+        <option>Chapultepec</option>
+        <option>Tlaquepaque</option>
+        <option>Zapopan</option>
+        <option>Centro Histórico</option>
+      </select>
+    </div>
+    <div class="filter-divider"></div>
+    <div class="filter-group">
+      <label><i class="fas fa-tag"></i> Categoría</label>
+      <select class="filter-select" id="fCat">
+        <option value="">Todas</option>
+        <option>Universitaria</option>
+        <option>Milf</option>
+        <option>Petite</option>
+        <option>Nalgona</option>
+        <option>Voluptuosa</option>
+        <option>Chichona</option>
+        <option>Extranjera</option>
+        <option>Jovencita</option>
+        <option>Fit</option>
+        <option>Natural</option>
+        <option>Tuneada</option>
+        <option>Chaparrita</option>
+        <option>Alta</option>
+      </select>
+    </div>
+    <div class="filter-divider"></div>
+    <div class="filter-group">
+      <label><i class="fas fa-dollar-sign"></i> Tarifa</label>
+      <select class="filter-select" id="fPrice">
+        <option value="">Cualquiera</option>
+        <option value="0-2000">Hasta $2,000</option>
+        <option value="2000-5000">$2,000 – $5,000</option>
+        <option value="5000-10000">$5,000 – $10,000</option>
+        <option value="10000+">$10,000+</option>
+      </select>
+    </div>
+    <div class="filter-divider"></div>
+    <div class="filter-group">
+      <label><i class="fas fa-ruler-vertical"></i> Disponibilidad</label>
+      <div class="filter-toggle-group">
+        <button class="filter-toggle active" data-filter-avail="all">Todas</button>
+        <button class="filter-toggle" data-filter-avail="available">Disponible</button>
+        <button class="filter-toggle" data-filter-avail="busy">No Disponible</button>
+      </div>
+    </div>
+    <div class="filter-divider"></div>
+    <div class="filter-group">
+      <label><i class="fas fa-star"></i> Rating</label>
+      <select class="filter-select" id="fRating">
+        <option value="">Cualquiera</option>
+        <option value="4">4+ estrellas</option>
+        <option value="4.5">4.5+ estrellas</option>
+        <option value="5">5 estrellas</option>
+      </select>
+    </div>
+    <button class="btn btn-ghost btn-sm" id="clearFilters" style="margin-left:auto">
+      <i class="fas fa-times"></i> Limpiar
+    </button>
+  </div>
+</div>
+
+<!-- Active filter pills -->
+<div style="max-width:1400px;margin:0 auto;padding:.5rem 2.5rem" id="activeFilters" class="hidden">
+  <div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:center">
+    <span class="text-xs text-muted">Filtros activos:</span>
+  </div>
+</div>
+
+<!-- Grid -->
+<div style="max-width:1400px;margin:0 auto;padding:1.5rem 2.5rem 5rem">
+  <div class="model-grid" id="modelosGrid"></div>
+</div>
+
+<div class="float-btns">
+  <a href="https://t.me/doncellas" target="_blank" class="float-btn float-btn-telegram" aria-label="Telegram"><i class="fab fa-telegram"></i></a>
+  <a href="https://wa.me/523312345678" target="_blank" class="float-btn float-btn-wa" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Mobile Bottom Navigation -->
+<nav class="bottom-nav" aria-label="Navegación principal">
+  <a href="index.html" class="bottom-nav-item"><i class="fas fa-home"></i><span>Inicio</span></a>
+  <a href="modelos.html" class="bottom-nav-item active"><i class="fas fa-users"></i><span>Escorts</span></a>
+  <a href="categorias.html" class="bottom-nav-item"><i class="fas fa-star"></i><span>Categorías</span></a>
+  <a href="#" class="bottom-nav-item" onclick="openModal('loginModal');return false;"><i class="fas fa-user"></i><span>Mi cuenta</span></a>
+</nav>
+
+<!-- Login Modal -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 class="modal-title">Iniciar Sesión</h3>
+      <button class="modal-close" onclick="closeModal('loginModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div id="loginError" style="display:none;background:rgba(224,80,80,.12);border:1px solid rgba(224,80,80,.3);border-radius:var(--r-md);padding:.75rem 1rem;margin-bottom:1rem;font-size:.85rem;color:var(--red)">
+      <i class="fas fa-exclamation-circle"></i> Usuario o contraseña incorrectos.
+    </div>
+    <div class="form-group">
+      <label class="form-label">Correo electrónico</label>
+      <input type="email" class="form-input" id="loginEmail" placeholder="tu@correo.com" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Contraseña</label>
+      <input type="password" class="form-input" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()" />
+    </div>
+    <button class="btn btn-gold w-full" style="justify-content:center;margin-top:.5rem" onclick="doLogin()">
+      <i class="fas fa-sign-in-alt"></i> Entrar
+    </button>
+    <div style="margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--border)">
+      <p style="font-size:.72rem;color:var(--t3);margin-bottom:.6rem;text-align:center">Cuentas demo</p>
+      <div style="display:flex;flex-direction:column;gap:.4rem">
+        <button class="btn btn-ghost btn-sm" style="justify-content:flex-start;font-size:.75rem" onclick="fillLogin('admin@doncellas.mx','admin123')"><i class="fas fa-shield-alt" style="color:var(--gold)"></i> Admin</button>
+        <button class="btn btn-ghost btn-sm" style="justify-content:flex-start;font-size:.75rem" onclick="fillLogin('valentina@doncellas.mx','modelo123')"><i class="fas fa-user" style="color:var(--gold)"></i> Doncella</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Quick View Modal -->
+<div class="modal-overlay" id="quickViewModal">
+  <div class="modal" style="max-width:700px">
+    <div class="modal-header">
+      <h3 class="modal-title" id="qvName">—</h3>
+      <button class="modal-close" onclick="closeModal('quickViewModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div id="quickViewContent"></div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Perfil — Doncellas</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#C9A84C" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Doncellas" />
+  <link rel="apple-touch-icon" href="/assets/icons/icon-192.png" />
+</head>
+<body>
+
+<nav class="nav scrolled" id="mainNav">
+  <a href="index.html" class="nav-logo">Doncel<span>las</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Inicio</a></li>
+    <li><a href="modelos.html">Doncellas</a></li>
+    <li><a href="categorias.html">Categorías</a></li>
+  </ul>
+  <div class="nav-cta">
+    <a href="modelos.html" class="btn btn-ghost btn-sm"><i class="fas fa-arrow-left"></i> Volver</a>
+    <button class="btn btn-gold btn-sm" onclick="openModal('loginModal')"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</button>
+    <button class="nav-menu-btn" id="navMenuBtn"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<!-- ── Photo Carousel ── -->
+<div class="profile-hero">
+  <div class="profile-carousel" id="profileCarousel">
+    <div class="profile-carousel-track" id="profileCarouselTrack">
+      <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=1400&q=80&fit=crop" alt="Foto 1" class="profile-carousel-slide" />
+      <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=1400&q=80&fit=crop" alt="Foto 2" class="profile-carousel-slide" />
+      <img src="https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=1400&q=80&fit=crop" alt="Foto 3" class="profile-carousel-slide" />
+      <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=1400&q=80&fit=crop" alt="Foto 4" class="profile-carousel-slide" />
+      <img src="https://images.unsplash.com/photo-1509967419530-da38b4704bc6?w=1400&q=80&fit=crop" alt="Foto 5" class="profile-carousel-slide" />
+    </div>
+    <div class="profile-carousel-overlay"></div>
+
+    <button class="profile-carousel-ctrl prev" id="carouselPrev"><i class="fas fa-chevron-left"></i></button>
+    <button class="profile-carousel-ctrl next" id="carouselNext"><i class="fas fa-chevron-right"></i></button>
+
+    <div class="profile-carousel-counter" id="carouselCounter">1 / 5</div>
+
+    <!-- Thumbnail strip -->
+    <div style="position:absolute;bottom:1rem;left:50%;transform:translateX(-50%);display:flex;gap:.5rem;z-index:3;padding:.5rem" id="thumbStrip">
+      <!-- Built by JS -->
+    </div>
+
+    <div class="profile-info-bar">
+      <div class="profile-name-block">
+        <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.4rem">
+          <span class="pill pill-available" id="profileAvailPill">Disponible</span>
+          <span class="pill pill-gold"><i class="fas fa-check-circle"></i> Verificada</span>
+          <span class="pill pill-new">★ Top 10</span>
+        </div>
+        <h1 class="profile-name" id="profileName">Valentina R.</h1>
+        <div class="profile-meta" id="profileMeta">
+          <span class="profile-meta-item"><i class="fas fa-map-marker-alt"></i> Zona Rosa, Guadalajara</span>
+          <span class="profile-meta-item"><i class="fas fa-birthday-cake"></i> 24 años</span>
+          <span class="profile-meta-item"><i class="fas fa-ruler-vertical"></i> 1.72 m</span>
+          <span class="profile-meta-item stars">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+            <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+            <span style="margin-left:.25rem;color:var(--t2);font-size:.78rem">(127 reseñas)</span>
+          </span>
+        </div>
+      </div>
+      <div class="profile-actions">
+        <button class="btn btn-outline" id="favBtn" onclick="toggleFav(this)">
+          <i class="far fa-heart"></i> Guardar
+        </button>
+        <button class="btn btn-outline" onclick="shareProfile()">
+          <i class="fas fa-share-alt"></i>
+        </button>
+        <a href="https://wa.me/523312345678?text=Hola%2C%20vi%20tu%20perfil%20en%20Doncellas"
+           target="_blank" class="btn btn-wa">
+          <i class="fab fa-whatsapp"></i> WhatsApp
+        </a>
+        <a href="https://t.me/doncellas" target="_blank" class="btn btn-telegram">
+          <i class="fab fa-telegram"></i> Telegram
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Profile Body ── -->
+<div class="profile-body">
+
+  <!-- Left Column -->
+  <div>
+
+    <!-- About -->
+    <div class="profile-card">
+      <h3 class="profile-card-title">Sobre mí</h3>
+      <p style="color:var(--t2);line-height:1.8;font-size:.92rem">
+        Hola, soy Valentina. Modelo profesional con más de 4 años de experiencia en eventos corporativos,
+        desfiles y sesiones fotográficas en Guadalajara. Me caracterizo por mi puntualidad, elegancia y
+        profesionalismo en cada proyecto.
+      </p>
+      <div class="model-card-tags mt-2">
+        <span class="tag">Universitaria</span><span class="tag">Fit</span>
+        <span class="tag">Natural</span><span class="tag">VIP</span>
+        <span class="tag">Bilingüe</span><span class="tag">Fitness</span>
+      </div>
+    </div>
+
+    <!-- 1. GALERÍA (arriba) -->
+    <div class="profile-card">
+      <h3 class="profile-card-title">
+        Galería
+        <div style="display:flex;gap:.5rem;align-items:center">
+          <span style="font-size:.75rem;color:var(--t2)" id="mediaCounter">1 / 12</span>
+          <button class="btn btn-ghost btn-sm" onclick="openModal('galleryModal')"><i class="fas fa-expand"></i> Ver todas</button>
+        </div>
+      </h3>
+      <div style="display:grid;grid-template-columns:1fr 90px;gap:.75rem;align-items:start">
+        <!-- Main display with nav arrows -->
+        <div style="position:relative">
+          <div style="border-radius:var(--r-md);overflow:hidden;background:#000;aspect-ratio:4/3;position:relative" id="mainMediaWrap">
+            <img id="mainMediaImg" src="" alt="Media principal" style="width:100%;height:100%;object-fit:cover;display:block;cursor:zoom-in" onclick="openFullscreen(activeMediaIdx)" />
+            <video id="mainMediaVideo" style="width:100%;height:100%;object-fit:cover;display:none" controls></video>
+            <div id="mainMediaPlayBtn" style="display:none;position:absolute;inset:0;align-items:center;justify-content:center;background:rgba(0,0,0,.4);cursor:pointer" onclick="playMainVideo()">
+              <div style="width:60px;height:60px;border-radius:50%;background:rgba(201,168,76,.9);display:flex;align-items:center;justify-content:center;font-size:1.4rem;color:#000">
+                <i class="fas fa-play" style="margin-left:4px"></i>
+              </div>
+            </div>
+            <div style="position:absolute;top:.5rem;right:.5rem;z-index:2">
+              <button onclick="openFullscreen(activeMediaIdx)" style="background:rgba(0,0,0,.6);border:1px solid var(--border);border-radius:var(--r-sm);color:var(--t2);width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--transition)" title="Pantalla completa"><i class="fas fa-expand" style="font-size:.75rem"></i></button>
+            </div>
+          </div>
+          <!-- Nav arrows outside overflow:hidden -->
+          <button class="media-gallery-nav media-gallery-prev" id="mediaPrev" onclick="navigateMedia(-1)"><i class="fas fa-chevron-left"></i></button>
+          <button class="media-gallery-nav media-gallery-next" id="mediaNext" onclick="navigateMedia(1)"><i class="fas fa-chevron-right"></i></button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:.5rem;max-height:340px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--gold-dk) var(--bg)" id="mediaThumbs"></div>
+      </div>
+    </div>
+
+    <!-- 2. SERVICIOS (izq) | CARACTERÍSTICAS (der) -->
+    <div class="profile-card">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
+        <!-- Servicios -->
+        <div>
+          <h3 class="profile-card-title" style="margin-bottom:1rem">Servicios</h3>
+          <div style="display:flex;flex-direction:column;gap:.5rem" id="serviciosList">
+            <!-- Built by JS -->
+          </div>
+        </div>
+        <!-- Características físicas -->
+        <div>
+          <h3 class="profile-card-title" style="margin-bottom:1rem">Características</h3>
+          <div class="caract-grid" id="caractGrid">
+            <div class="caract-item"><span class="caract-lbl"><i class="fas fa-flag"></i> Nacionalidad</span><span class="caract-val">Mexicana</span></div>
+            <div class="caract-item"><span class="caract-lbl"><i class="fas fa-ruler-vertical"></i> Altura</span><span class="caract-val">1.72 m</span></div>
+            <div class="caract-item"><span class="caract-lbl"><i class="fas fa-birthday-cake"></i> Edad</span><span class="caract-val">24 años</span></div>
+            <div class="caract-item"><span class="caract-lbl"><i class="fas fa-eye"></i> Ojos</span><span class="caract-val">Verde</span></div>
+            <div class="caract-item"><span class="caract-lbl"><i class="fas fa-paint-brush"></i> Cabello</span><span class="caract-val">Castaño</span></div>
+            <div class="caract-item"><span class="caract-lbl"><i class="fas fa-hand-paper"></i> Piel</span><span class="caract-val">Morena clara</span></div>
+            <div class="caract-item"><span class="caract-lbl"><i class="fas fa-arrows-alt-v"></i> Cintura</span><span class="caract-val">62 cm</span></div>
+            <div class="caract-item"><span class="caract-lbl"><i class="fas fa-circle"></i> Caderas</span><span class="caract-val">94 cm</span></div>
+            <div class="caract-item"><span class="caract-lbl"><i class="fas fa-circle-notch"></i> Busto</span><span class="caract-val">88 cm</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reviews -->
+    <div class="profile-card">
+      <h3 class="profile-card-title">
+        Reseñas
+        <span style="font-size:.8rem;font-family:var(--font-sans);color:var(--t2);font-weight:400">127 en total</span>
+      </h3>
+
+      <!-- Rating summary -->
+      <div style="display:flex;gap:2rem;align-items:center;margin-bottom:1.25rem;flex-wrap:wrap">
+        <div style="text-align:center">
+          <div style="font-family:var(--font-serif);font-size:3rem;font-weight:700;color:var(--gold);line-height:1">4.8</div>
+          <div class="stars" style="justify-content:center;margin:.25rem 0">
+            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+            <i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+          </div>
+          <div style="font-size:.72rem;color:var(--t2)">127 reseñas</div>
+        </div>
+        <div style="flex:1;min-width:180px">
+          <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.4rem">
+            <span style="font-size:.75rem;color:var(--t2);width:12px">5</span>
+            <div class="progress-bar" style="flex:1"><div class="progress-fill" style="width:68%"></div></div>
+            <span style="font-size:.72rem;color:var(--t2)">68%</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.4rem">
+            <span style="font-size:.75rem;color:var(--t2);width:12px">4</span>
+            <div class="progress-bar" style="flex:1"><div class="progress-fill" style="width:22%;background:var(--gold-dk)"></div></div>
+            <span style="font-size:.72rem;color:var(--t2)">22%</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.4rem">
+            <span style="font-size:.75rem;color:var(--t2);width:12px">3</span>
+            <div class="progress-bar" style="flex:1"><div class="progress-fill" style="width:7%;background:var(--t3)"></div></div>
+            <span style="font-size:.72rem;color:var(--t2)">7%</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:.5rem">
+            <span style="font-size:.75rem;color:var(--t2);width:12px">1-2</span>
+            <div class="progress-bar" style="flex:1"><div class="progress-fill" style="width:3%;background:var(--red)"></div></div>
+            <span style="font-size:.72rem;color:var(--t2)">3%</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="reviewsList"><!-- Built by JS --></div>
+
+      <button class="btn btn-outline w-full mt-2" style="justify-content:center" id="loadMoreReviews">
+        <i class="fas fa-plus"></i> Cargar más reseñas
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Right Column (Sticky sidebar) -->
+  <div>
+
+    <!-- Pricing card -->
+    <div class="profile-card" style="border-color:var(--border-h)">
+      <h3 class="profile-card-title">Tarifas</h3>
+
+      <!-- Promo banner (visible cuando hay promoción) -->
+      <div id="profilePromoBox" style="display:none;background:linear-gradient(135deg,rgba(201,168,76,.15),rgba(201,168,76,.05));border:1px solid var(--gold);border-radius:var(--r-md);padding:.85rem 1rem;margin-bottom:1rem">
+        <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.25rem">
+          <span style="font-size:1rem">🔥</span>
+          <span style="font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gold)" id="promoLabel">Promoción especial</span>
+        </div>
+        <div style="font-family:var(--font-serif);font-size:1.1rem;color:var(--white)" id="promoTitle">—</div>
+        <div style="font-size:.78rem;color:var(--t2);margin-top:.15rem" id="promoDesc">—</div>
+        <div style="font-size:.68rem;color:var(--t3);margin-top:.3rem" id="promoValid">—</div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:.75rem;margin-bottom:1.25rem">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:.75rem;background:var(--surface);border-radius:var(--r-md);border:1px solid var(--border)">
+          <div><div style="font-size:.82rem;font-weight:500">1 hora</div><div style="font-size:.72rem;color:var(--t2)">Sesión estándar</div></div>
+          <div style="font-family:var(--font-serif);font-size:1.2rem;color:var(--gold);font-weight:700" id="rate1h">$2,500</div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:.75rem;background:var(--surface);border-radius:var(--r-md);border:1px solid var(--border)">
+          <div><div style="font-size:.82rem;font-weight:500">3 horas</div><div style="font-size:.72rem;color:var(--t2)">Evento o sesión extendida</div></div>
+          <div style="font-family:var(--font-serif);font-size:1.2rem;color:var(--gold);font-weight:700" id="rate3h">$6,500</div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:.75rem;background:rgba(201,168,76,.06);border-radius:var(--r-md);border:1px solid var(--border-h)">
+          <div><div style="font-size:.82rem;font-weight:500">Día completo <span class="pill pill-new" style="font-size:.6rem;padding:.15rem .5rem;margin-left:.25rem">Popular</span></div><div style="font-size:.72rem;color:var(--t2)">8 horas, cualquier actividad</div></div>
+          <div style="font-family:var(--font-serif);font-size:1.2rem;color:var(--gold);font-weight:700" id="rateDay">$18,000</div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:.75rem">
+        <a href="https://wa.me/523312345678?text=Hola%20Valentina%2C%20quiero%20agendar%20una%20cita" target="_blank"
+           class="btn btn-wa" style="justify-content:center">
+          <i class="fab fa-whatsapp"></i> WhatsApp
+        </a>
+        <a href="https://t.me/doncellas" target="_blank"
+           class="btn btn-telegram" style="justify-content:center">
+          <i class="fab fa-telegram"></i> Telegram
+        </a>
+      </div>
+      <button class="btn btn-outline w-full" style="justify-content:center;margin-bottom:1rem" onclick="openCalendarModal()">
+        <i class="fas fa-calendar-alt"></i> Ver disponibilidad
+      </button>
+      <!-- Payment methods -->
+      <div style="border-top:1px solid var(--border);padding-top:.85rem">
+        <p style="font-size:.68rem;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.5rem">Métodos de pago aceptados</p>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+          <span style="display:flex;align-items:center;gap:.35rem;font-size:.75rem;color:var(--t2);background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:.35rem .65rem">
+            <i class="fas fa-credit-card" style="color:var(--gold)"></i> Tarjeta
+          </span>
+          <span style="display:flex;align-items:center;gap:.35rem;font-size:.75rem;color:var(--t2);background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:.35rem .65rem">
+            <i class="fas fa-university" style="color:var(--gold)"></i> Transferencia
+          </span>
+          <span style="display:flex;align-items:center;gap:.35rem;font-size:.75rem;color:var(--t2);background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:.35rem .65rem">
+            <i class="fab fa-whatsapp" style="color:#25D366"></i> WhatsApp Pay
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Collapsible Calendar -->
+    <button class="calendar-collapse-btn" id="calToggleBtn" onclick="toggleCalendar()">
+      <i class="fas fa-calendar-check" style="color:var(--gold)"></i>
+      Disponibilidad
+      <i class="fas fa-chevron-down arrow"></i>
+    </button>
+    <div class="calendar-wrap" id="calWrap">
+      <div class="calendar-inner">
+        <div class="calendar-header">
+          <button class="calendar-nav-btn" id="calPrev"><i class="fas fa-chevron-left"></i></button>
+          <span class="calendar-month" id="calMonthLabel"></span>
+          <button class="calendar-nav-btn" id="calNext"><i class="fas fa-chevron-right"></i></button>
+        </div>
+        <div class="calendar-grid" id="calGrid"><!-- Built by JS --></div>
+        <div class="calendar-legend">
+          <div class="calendar-legend-item">
+            <div class="calendar-legend-dot" style="background:var(--green)"></div>
+            Disponible
+          </div>
+          <div class="calendar-legend-item">
+            <div class="calendar-legend-dot" style="background:var(--gold)"></div>
+            Hoy
+          </div>
+          <div class="calendar-legend-item">
+            <div class="calendar-legend-dot" style="background:var(--t3)"></div>
+            No Disponible
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact card -->
+    <div class="profile-card mt-2">
+      <h3 class="profile-card-title">Contacto Rápido</h3>
+      <div style="display:flex;flex-direction:column;gap:.6rem">
+        <a href="https://wa.me/523312345678" target="_blank" class="btn btn-wa" style="justify-content:center">
+          <i class="fab fa-whatsapp"></i> WhatsApp
+        </a>
+        <a href="https://t.me/doncellas" target="_blank" class="btn btn-telegram" style="justify-content:center">
+          <i class="fab fa-telegram"></i> Telegram
+        </a>
+        <button class="btn btn-outline" style="justify-content:center" onclick="showToast('Mensaje enviado', 'success')">
+          <i class="fas fa-envelope"></i> Mensaje interno
+        </button>
+        <button class="btn btn-outline" style="justify-content:center" onclick="reportProfile()">
+          <i class="fas fa-flag"></i> Reportar perfil
+        </button>
+      </div>
+    </div>
+
+    <!-- Similar profiles -->
+    <div class="profile-card mt-2">
+      <h3 class="profile-card-title">Perfiles Similares</h3>
+      <div style="display:flex;flex-direction:column;gap:.75rem" id="similarProfiles">
+        <!-- Built by JS -->
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Gallery Modal -->
+<div class="modal-overlay" id="galleryModal">
+  <div class="modal" style="max-width:900px;max-height:90vh">
+    <div class="modal-header">
+      <h3 class="modal-title">Galería Completa</h3>
+      <button class="modal-close" onclick="closeModal('galleryModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.75rem;overflow-y:auto;max-height:70vh" id="galleryFull">
+      <!-- Built by JS -->
+    </div>
+  </div>
+</div>
+
+<div class="float-btns">
+  <a href="https://t.me/doncellas" target="_blank" class="float-btn float-btn-telegram" aria-label="Telegram"><i class="fab fa-telegram"></i></a>
+  <a href="https://wa.me/523312345678" target="_blank" class="float-btn float-btn-wa" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+</div>
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Mobile Bottom Navigation -->
+<nav class="bottom-nav" aria-label="Navegación principal">
+  <a href="index.html" class="bottom-nav-item"><i class="fas fa-home"></i><span>Inicio</span></a>
+  <a href="modelos.html" class="bottom-nav-item active"><i class="fas fa-users"></i><span>Escorts</span></a>
+  <a href="categorias.html" class="bottom-nav-item"><i class="fas fa-star"></i><span>Categorías</span></a>
+  <a href="#" class="bottom-nav-item" onclick="openModal('loginModal');return false;"><i class="fas fa-user"></i><span>Mi cuenta</span></a>
+</nav>
+<div class="modal-overlay" id="loginModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 class="modal-title">Iniciar Sesión</h3>
+      <button class="modal-close" onclick="closeModal('loginModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div id="loginError" style="display:none;background:rgba(224,80,80,.12);border:1px solid rgba(224,80,80,.3);border-radius:var(--r-md);padding:.75rem 1rem;margin-bottom:1rem;font-size:.85rem;color:var(--red)"><i class="fas fa-exclamation-circle"></i> Usuario o contraseña incorrectos.</div>
+    <div class="form-group"><label class="form-label">Correo</label><input type="email" class="form-input" id="loginEmail" placeholder="tu@correo.com" /></div>
+    <div class="form-group"><label class="form-label">Contraseña</label><input type="password" class="form-input" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()" /></div>
+    <button class="btn btn-gold w-full" style="justify-content:center;margin-top:.5rem" onclick="doLogin()"><i class="fas fa-sign-in-alt"></i> Entrar</button>
+    <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:.35rem">
+      <button class="btn btn-ghost btn-sm" style="font-size:.75rem" onclick="fillLogin('admin@doncellas.mx','admin123')"><i class="fas fa-shield-alt" style="color:var(--gold)"></i> Admin demo</button>
+      <button class="btn btn-ghost btn-sm" style="font-size:.75rem" onclick="fillLogin('valentina@doncellas.mx','modelo123')"><i class="fas fa-user" style="color:var(--gold)"></i> Doncella demo</button>
+    </div>
+  </div>
+</div>
+
+<!-- Fullscreen Viewer -->
+<div id="fullscreenViewer" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.97);z-index:5000;align-items:center;justify-content:center">
+  <button onclick="closeFullscreen()" style="position:absolute;top:1rem;right:1rem;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:1.2rem;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:2"><i class="fas fa-times"></i></button>
+  <div style="position:absolute;top:1rem;left:50%;transform:translateX(-50%);font-size:.82rem;color:rgba(255,255,255,.5)" id="fsCounter">1 / 12</div>
+  <button onclick="navigateFullscreen(-1)" style="position:absolute;left:1.5rem;top:50%;transform:translateY(-50%);width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:1.4rem;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:2;transition:.2s" onmouseover="this.style.background='rgba(201,168,76,.3)'" onmouseout="this.style.background='rgba(255,255,255,.12)'"><i class="fas fa-chevron-left"></i></button>
+  <div style="max-width:90vw;max-height:90vh;display:flex;align-items:center;justify-content:center" id="fsContent">
+    <img id="fsImg" style="max-width:90vw;max-height:90vh;object-fit:contain;border-radius:8px" src="" alt="" />
+    <video id="fsVideo" style="max-width:90vw;max-height:90vh;display:none;border-radius:8px" controls></video>
+  </div>
+  <button onclick="navigateFullscreen(1)" style="position:absolute;right:1.5rem;top:50%;transform:translateY(-50%);width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:1.4rem;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:2;transition:.2s" onmouseover="this.style.background='rgba(201,168,76,.3)'" onmouseout="this.style.background='rgba(255,255,255,.12)'"><i class="fas fa-chevron-right"></i></button>
+  <!-- Play button overlay for video in fullscreen -->
+  <div id="fsPlayBtn" style="display:none;position:absolute;inset:0;align-items:center;justify-content:center;cursor:pointer;z-index:1" onclick="playFsVideo()">
+    <div style="width:80px;height:80px;border-radius:50%;background:rgba(201,168,76,.9);display:flex;align-items:center;justify-content:center;font-size:2rem;color:#000"><i class="fas fa-play" style="margin-left:6px"></i></div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+function toggleFav(btn) {
+  btn.classList.toggle('active');
+  const icon = btn.querySelector('i');
+  if (btn.classList.contains('active')) {
+    icon.className = 'fas fa-heart';
+    icon.style.color = 'var(--red)';
+    btn.innerHTML = '<i class="fas fa-heart" style="color:var(--red)"></i> Guardado';
+    showToast('Perfil guardado en favoritos', 'success');
+  } else {
+    btn.innerHTML = '<i class="far fa-heart"></i> Guardar';
+    showToast('Eliminado de favoritos', 'info');
+  }
+}
+
+function shareProfile() {
+  if (navigator.share) {
+    navigator.share({ title: 'Valentina R. — Doncellas', url: window.location.href });
+  } else {
+    navigator.clipboard.writeText(window.location.href);
+    showToast('Enlace copiado al portapapeles', 'success');
+  }
+}
+
+function openGalleryModal() { openModal('galleryModal'); }
+function openCalendarModal() {
+  const calBtn = document.getElementById('calToggleBtn');
+  if (!calBtn.classList.contains('open')) toggleCalendar();
+  document.getElementById('calWrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function reportProfile() {
+  showToast('Reporte enviado. Gracias por ayudarnos.', 'info');
+}
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  }
+</script>
+</body>
+</html>

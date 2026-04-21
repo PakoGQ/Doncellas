@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Categorías — Doncellas</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#C9A84C" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Doncellas" />
+  <link rel="apple-touch-icon" href="/assets/icons/icon-192.png" />
+  <style>
+    .cat-hero-card {
+      position: relative;
+      border-radius: var(--r-xl);
+      overflow: hidden;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .cat-hero-card:hover { transform: translateY(-4px); box-shadow: var(--shadow), var(--shadow-gold); }
+    .cat-hero-card img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s; }
+    .cat-hero-card:hover img { transform: scale(1.05); }
+    .cat-hero-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(10,10,10,.9) 0%, rgba(10,10,10,.3) 60%, transparent 100%);
+    }
+    .cat-hero-info {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 1.5rem 2rem;
+    }
+    .cat-hero-info h3 { font-size: 1.5rem; margin-bottom: .25rem; }
+    .cat-hero-info p { font-size: .85rem; color: var(--t2); margin-bottom: .75rem; }
+    .cat-hero-info .count { color: var(--gold); font-size: .8rem; }
+
+    .cat-feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+    .cat-feature-grid .cat-hero-card:first-child {
+      grid-column: span 2;
+      grid-row: span 2;
+      height: 520px;
+    }
+    .cat-feature-grid .cat-hero-card {
+      height: 240px;
+    }
+    @media(max-width:900px) {
+      .cat-feature-grid { grid-template-columns: 1fr 1fr; }
+      .cat-feature-grid .cat-hero-card:first-child { grid-column: span 2; height: 300px; }
+      .cat-feature-grid .cat-hero-card { height: 200px; }
+    }
+    @media(max-width:600px) {
+      .cat-feature-grid { grid-template-columns: 1fr; }
+      .cat-feature-grid .cat-hero-card:first-child { grid-column: span 1; height: 260px; }
+    }
+
+    .zone-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      cursor: pointer;
+      transition: var(--transition);
+      text-decoration: none;
+    }
+    .zone-card:hover { border-color: var(--border-h); transform: translateX(4px); }
+    .zone-icon {
+      width: 48px; height: 48px;
+      border-radius: var(--r-md);
+      background: rgba(201,168,76,.1);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gold); font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+    .zone-info h4 { font-size: .95rem; margin-bottom: .15rem; }
+    .zone-info p { font-size: .78rem; color: var(--t2); }
+    .zone-arrow { margin-left: auto; color: var(--t3); font-size: .9rem; transition: var(--transition); }
+    .zone-card:hover .zone-arrow { color: var(--gold); transform: translateX(4px); }
+  </style>
+</head>
+<body>
+
+<nav class="nav" id="mainNav">
+  <a href="index.html" class="nav-logo">Doncel<span>las</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Inicio</a></li>
+    <li><a href="modelos.html">Doncellas</a></li>
+    <li><a href="categorias.html" class="active">Categorías</a></li>
+  </ul>
+  <div class="nav-cta">
+    <button class="btn btn-gold btn-sm" onclick="openModal('loginModal')"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</button>
+    <button class="nav-menu-btn" id="navMenuBtn" aria-label="Menú">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Header -->
+<div class="page-header">
+  <p class="section-label"><i class="fas fa-layer-group"></i> Explora por tipo</p>
+  <h1>Nuestras <span class="gold">Categorías</span></h1>
+  <p style="color:var(--t2);margin-top:.75rem">Encuentra el perfil perfecto según el tipo de experiencia que buscas.</p>
+</div>
+
+<!-- Category search -->
+<div style="max-width:680px;margin:-1rem auto 2.5rem;padding:0 2rem;position:relative">
+  <div style="position:relative">
+    <i class="fas fa-search" style="position:absolute;left:1.25rem;top:50%;transform:translateY(-50%);color:var(--t3);font-size:.9rem;pointer-events:none;z-index:1"></i>
+    <input type="text" id="catSearchInput"
+      placeholder="Busca categorías, zonas o tipos de Doncella…"
+      oninput="onCatSearch(this.value)"
+      autocomplete="off"
+      style="width:100%;padding:.9rem 1.2rem .9rem 3rem;background:var(--card);border:1px solid var(--border);border-radius:100px;color:var(--t1);font-size:.9rem;outline:none;transition:border-color .2s;box-sizing:border-box" />
+  </div>
+  <div id="catSearchDrop"
+    style="display:none;position:absolute;top:calc(100% + .5rem);left:2rem;right:2rem;background:var(--card);border:1px solid var(--border-h);border-radius:var(--r-lg);overflow:hidden;z-index:50;box-shadow:0 12px 40px rgba(0,0,0,.5)">
+  </div>
+</div>
+
+<!-- Main categories grid -->
+<div style="max-width:1400px;margin:0 auto;padding:0 2.5rem 4rem">
+  <div class="cat-feature-grid" id="catFeatureGrid">
+    <!-- Filled by JS -->
+  </div>
+</div>
+
+<!-- All categories list -->
+<section class="section" style="background:var(--surface);max-width:100%;padding:4rem 0">
+  <div style="max-width:1400px;margin:0 auto;padding:0 2.5rem">
+    <p class="section-label">Directorio completo</p>
+    <h2 class="section-title mb-3">Todas las <span class="gold">Especialidades</span></h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem" id="allCatsGrid">
+      <!-- Filled by JS -->
+    </div>
+  </div>
+</section>
+
+<!-- Zones section -->
+<section class="section">
+  <div class="section-head">
+    <div>
+      <p class="section-label"><i class="fas fa-map-marker-alt"></i> Zonas</p>
+      <h2 class="section-title">Por <span class="gold">Ubicación</span></h2>
+      <div class="divider"></div>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem" id="zonesGrid">
+    <!-- Filled by JS -->
+  </div>
+</section>
+
+<!-- Popular tags -->
+<section class="section" style="padding-top:0">
+  <h3 style="margin-bottom:1.25rem">Etiquetas <span class="gold">Populares</span></h3>
+  <div style="display:flex;flex-wrap:wrap;gap:.65rem" id="popularTags"></div>
+</section>
+
+<footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="nav-logo">Doncel<span>las</span></div>
+      <p>La plataforma de Doncellas más exclusiva de Guadalajara.</p>
+    </div>
+    <div>
+      <p class="footer-heading">Plataforma</p>
+      <ul class="footer-links">
+        <li><a href="modelos.html">Doncellas</a></li>
+        <li><a href="categorias.html">Categorías</a></li>
+        <li><a href="membresias.html">Membresías</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="footer-heading">Para Doncellas</p>
+      <ul class="footer-links">
+        <li><a href="panel-modelo.html">Mi Panel</a></li>
+        <li><a href="membresias.html">Planes</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="footer-heading">Legal</p>
+      <ul class="footer-links">
+        <li><a href="#">Términos</a></li>
+        <li><a href="#">Privacidad</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Doncellas. Solo mayores de 18 años.</span>
+  </div>
+</footer>
+
+<div class="float-btns">
+  <a href="https://t.me/doncellas" target="_blank" class="float-btn float-btn-telegram" aria-label="Telegram"><i class="fab fa-telegram"></i></a>
+  <a href="https://wa.me/523312345678" target="_blank" class="float-btn float-btn-wa" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Mobile Bottom Navigation -->
+<nav class="bottom-nav" aria-label="Navegación principal">
+  <a href="index.html" class="bottom-nav-item"><i class="fas fa-home"></i><span>Inicio</span></a>
+  <a href="modelos.html" class="bottom-nav-item"><i class="fas fa-users"></i><span>Escorts</span></a>
+  <a href="categorias.html" class="bottom-nav-item active"><i class="fas fa-star"></i><span>Categorías</span></a>
+  <a href="#" class="bottom-nav-item" onclick="openModal('loginModal');return false;"><i class="fas fa-user"></i><span>Mi cuenta</span></a>
+</nav>
+<div class="modal-overlay" id="loginModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 class="modal-title">Iniciar Sesión</h3>
+      <button class="modal-close" onclick="closeModal('loginModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div id="loginError" style="display:none;background:rgba(224,80,80,.12);border:1px solid rgba(224,80,80,.3);border-radius:var(--r-md);padding:.75rem 1rem;margin-bottom:1rem;font-size:.85rem;color:var(--red)"><i class="fas fa-exclamation-circle"></i> Usuario o contraseña incorrectos.</div>
+    <div class="form-group"><label class="form-label">Correo</label><input type="email" class="form-input" id="loginEmail" placeholder="tu@correo.com" /></div>
+    <div class="form-group"><label class="form-label">Contraseña</label><input type="password" class="form-input" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()" /></div>
+    <button class="btn btn-gold w-full" style="justify-content:center;margin-top:.5rem" onclick="doLogin()"><i class="fas fa-sign-in-alt"></i> Entrar</button>
+    <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:.35rem">
+      <button class="btn btn-ghost btn-sm" style="font-size:.75rem" onclick="fillLogin('admin@doncellas.mx','admin123')"><i class="fas fa-shield-alt" style="color:var(--gold)"></i> Admin demo</button>
+      <button class="btn btn-ghost btn-sm" style="font-size:.75rem" onclick="fillLogin('valentina@doncellas.mx','modelo123')"><i class="fas fa-user" style="color:var(--gold)"></i> Doncella demo</button>
+    </div>
+  </div>
+</div>
+<script src="app.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  }
+</script>
+</body>
+</html>

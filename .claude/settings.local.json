@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(open /Users/pakogq/velvetstage/index.html)",
+      "Bash(perl -pi -e 's/VelvetStage/Doncellas/g; s/Velvet Stage/Doncellas/g; s/Velvet<span>Stage<\\\\/span>/Doncel<span>las<\\\\/span>/g; s/velvetstage\\\\.mx/doncellas\\\\.mx/g; s/t\\\\.me\\\\/velvetstage/t\\\\.me\\\\/doncellas/g' /Users/pakogq/velvetstage/index.html /Users/pakogq/velvetstage/modelos.html /Users/pakogq/velvetstage/categorias.html /Users/pakogq/velvetstage/perfil.html /Users/pakogq/velvetstage/membresias.html /Users/pakogq/velvetstage/panel-admin.html /Users/pakogq/velvetstage/panel-modelo.html /Users/pakogq/velvetstage/app.js)",
+      "Bash(perl *)",
+      "Bash(npx vercel *)",
+      "Bash(python3 *)",
+      "Bash(/usr/bin/python3 *)",
+      "Bash(node -e \"JSON.parse\\(require\\('fs'\\).readFileSync\\('manifest.json','utf8'\\)\\); console.log\\('manifest.json: valid'\\)\")",
+      "Bash(node *)",
+      "Bash(npx *)"
+    ]
+  }
+}

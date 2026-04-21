@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Mi Panel — Doncellas</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#C9A84C" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Doncellas" />
+  <link rel="apple-touch-icon" href="/assets/icons/icon-192.png" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    .modelo-sidebar { position: fixed; top: var(--nav-h); left: 0; height: calc(100vh - var(--nav-h)); z-index: 100; }
+    .modelo-main { margin-left: 240px; }
+    @media(max-width:900px){ .modelo-main{ margin-left:0; } }
+    .stat-mini {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 1.25rem;
+      text-align: center;
+    }
+    .stat-mini-n { font-family: var(--font-serif); font-size: 1.6rem; font-weight: 700; color: var(--gold); }
+    .stat-mini-l { font-size: .72rem; color: var(--t2); text-transform: uppercase; letter-spacing: .06em; }
+    .cita-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r-md);
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .cita-date {
+      text-align: center;
+      background: rgba(201,168,76,.1);
+      border: 1px solid var(--border-h);
+      border-radius: var(--r-md);
+      padding: .5rem .75rem;
+      min-width: 56px;
+    }
+    .cita-date .day { font-family: var(--font-serif); font-size: 1.5rem; color: var(--gold); line-height: 1; }
+    .cita-date .month { font-size: .65rem; color: var(--t2); text-transform: uppercase; letter-spacing: .06em; }
+    .cita-info { flex: 1; }
+    .cita-info h4 { font-size: .9rem; margin-bottom: .15rem; }
+    .cita-info p { font-size: .78rem; color: var(--t2); }
+    .week-grid { display: grid; grid-template-columns: auto repeat(7,1fr); gap: .4rem; font-size: .78rem; }
+    .week-col-header { font-size: .7rem; color: var(--t2); text-align: center; padding-bottom: .25rem; }
+    .week-time { color: var(--t3); font-size: .72rem; padding: .25rem .4rem; white-space: nowrap; }
+    .week-slot {
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      cursor: pointer;
+      min-height: 34px;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .65rem;
+    }
+    .week-slot.on { background: rgba(76,175,130,.12); border-color: rgba(76,175,130,.35); color: var(--green); }
+    .week-slot.booked { background: rgba(201,168,76,.08); border-color: var(--border-h); color: var(--gold); cursor: default; }
+    .week-slot:not(.booked):hover { border-color: var(--gold); }
+    .referral-stat { display:flex; justify-content:space-between; font-size:.85rem; padding:.5rem 0; border-bottom:1px solid var(--border); }
+    .referral-stat:last-child { border-bottom: none; }
+  </style>
+</head>
+<body>
+
+<nav class="nav scrolled" id="mainNav">
+  <a href="index.html" class="nav-logo">Doncel<span>las</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Inicio</a></li>
+    <li><a href="modelos.html">Doncellas</a></li>
+    <li><a href="categorias.html">Categorías</a></li>
+  </ul>
+  <div style="display:flex;align-items:center;gap:.75rem">
+    <button id="modelAvailBtn" onclick="toggleModelAvail()"
+      style="display:flex;align-items:center;gap:.4rem;padding:.3rem .9rem;border-radius:100px;border:1px solid rgba(76,175,130,.4);background:rgba(76,175,130,.08);color:var(--green);font-size:.7rem;font-weight:700;cursor:pointer;transition:all .25s;letter-spacing:.04em;outline:none">
+      <i id="modelAvailDot" class="fas fa-circle" style="font-size:.45rem"></i>
+      <span id="modelAvailLabel">Disponible</span>
+    </button>
+    <span class="pill pill-available" id="modelAvailPill" style="font-size:.65rem">Disponible</span>
+    <span style="font-size:.82rem;color:var(--t2)">Valentina R.</span>
+    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=60&h=60&fit=crop&crop=face"
+         alt="Avatar" style="width:34px;height:34px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);cursor:pointer" />
+  </div>
+</nav>
+
+<div class="modelo-layout">
+
+  <!-- Sidebar -->
+  <aside class="modelo-sidebar">
+    <div class="modelo-profile-mini">
+      <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120&h=120&fit=crop&crop=face" alt="Perfil" />
+      <div class="name">Valentina R.</div>
+      <div class="sub">Plan <span style="color:var(--gold)">Premium</span></div>
+      <div style="margin-top:.5rem">
+        <div class="progress-bar" style="height:4px">
+          <div class="progress-fill" style="width:72%"></div>
+        </div>
+        <div style="font-size:.68rem;color:var(--t2);margin-top:.25rem">Perfil 72% completo</div>
+      </div>
+    </div>
+
+    <p class="admin-nav-section">Mi Panel</p>
+    <div class="admin-nav-item active" onclick="showModeloPage('stats')">
+      <i class="fas fa-chart-bar fa-fw"></i> Estadísticas
+    </div>
+    <div class="admin-nav-item" onclick="showModeloPage('contenido')">
+      <i class="fas fa-images fa-fw"></i> Mi Contenido
+    </div>
+    <div class="admin-nav-item" onclick="showModeloPage('citas')">
+      <i class="fas fa-calendar-alt fa-fw"></i> Mis Citas
+      <span class="badge">3</span>
+    </div>
+    <div class="admin-nav-item" onclick="showModeloPage('disponibilidad')">
+      <i class="fas fa-clock fa-fw"></i> Disponibilidad
+    </div>
+    <div class="admin-nav-item" onclick="showModeloPage('referidos')">
+      <i class="fas fa-users fa-fw"></i> Referidos
+    </div>
+    <div class="admin-nav-item" onclick="showModeloPage('perfil-edit')">
+      <i class="fas fa-user-edit fa-fw"></i> Editar Perfil
+    </div>
+    <div class="admin-nav-item" onclick="showModeloPage('config')">
+      <i class="fas fa-cog fa-fw"></i> Configuración
+    </div>
+
+    <div style="padding:1.5rem">
+      <a href="perfil.html" class="btn btn-outline btn-sm w-full" style="justify-content:center;margin-bottom:.5rem">
+        <i class="fas fa-eye"></i> Ver mi perfil
+      </a>
+      <a href="membresias.html" class="btn btn-gold btn-sm w-full" style="justify-content:center">
+        <i class="fas fa-crown"></i> Mejorar plan
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="modelo-main" style="padding:2rem">
+
+    <!-- ── Estadísticas ── -->
+    <div class="admin-page active" id="page-stats">
+      <h2 class="admin-page-title">Mis Estadísticas</h2>
+      <p class="admin-page-sub">Rendimiento de tu perfil este mes</p>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1rem;margin-bottom:2rem">
+        <div class="stat-mini">
+          <div class="stat-mini-n">$24,500</div>
+          <div class="stat-mini-l">Ingresos mes</div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-mini-n">18</div>
+          <div class="stat-mini-l">Citas completadas</div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-mini-n">4.8</div>
+          <div class="stat-mini-l">Rating</div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-mini-n">1,240</div>
+          <div class="stat-mini-l">Visitas al perfil</div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-mini-n">87</div>
+          <div class="stat-mini-l">Favoritos</div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-mini-n">12</div>
+          <div class="stat-mini-l">Nuevas reseñas</div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:2fr 1fr;gap:1.5rem;margin-bottom:1.5rem">
+        <div class="chart-card">
+          <div class="chart-header">
+            <span class="chart-title">Ingresos semanales</span>
+            <div class="chart-tabs">
+              <button class="chart-tab active">7D</button>
+              <button class="chart-tab">30D</button>
+              <button class="chart-tab">3M</button>
+            </div>
+          </div>
+          <div class="chart-canvas-wrap">
+            <canvas id="modeloRevenueChart"></canvas>
+          </div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header">
+            <span class="chart-title">Fuentes de contacto</span>
+          </div>
+          <div class="chart-canvas-wrap">
+            <canvas id="contactSourceChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
+        <div class="chart-card">
+          <div class="chart-header">
+            <span class="chart-title">Visitas al perfil</span>
+          </div>
+          <div class="chart-canvas-wrap">
+            <canvas id="visitasChart"></canvas>
+          </div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header">
+            <span class="chart-title">Satisfacción del cliente</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:.6rem;margin-top:.5rem">
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:.3rem">
+                <span>Puntualidad</span><span style="color:var(--gold)">4.9</span>
+              </div>
+              <div class="progress-bar"><div class="progress-fill" style="width:98%"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:.3rem">
+                <span>Presentación</span><span style="color:var(--gold)">4.8</span>
+              </div>
+              <div class="progress-bar"><div class="progress-fill" style="width:96%"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:.3rem">
+                <span>Comunicación</span><span style="color:var(--gold)">4.7</span>
+              </div>
+              <div class="progress-bar"><div class="progress-fill" style="width:94%"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:.3rem">
+                <span>Profesionalismo</span><span style="color:var(--gold)">4.9</span>
+              </div>
+              <div class="progress-bar"><div class="progress-fill" style="width:98%"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Contenido ── -->
+    <div class="admin-page" id="page-contenido">
+      <h2 class="admin-page-title">Mi Contenido</h2>
+      <p class="admin-page-sub">Sube y gestiona tus fotos y videos</p>
+
+      <!-- Upload zone -->
+      <div class="upload-zone" id="uploadZone">
+        <input type="file" id="fileInput" accept="image/*,video/*" multiple onchange="handleFileUpload(event)" />
+        <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+        <h4>Arrastra tus fotos aquí</h4>
+        <p>o haz clic para seleccionar archivos</p>
+        <p class="text-xs" style="margin-top:.5rem">PNG, JPG, HEIC, MP4 — máx. 10 MB por archivo</p>
+        <button class="btn btn-gold btn-sm" style="margin-top:1rem;position:relative;z-index:1">
+          <i class="fas fa-folder-open"></i> Explorar archivos
+        </button>
+      </div>
+
+      <div class="upload-preview-grid" id="uploadPreviewGrid"></div>
+
+      <!-- Current gallery -->
+      <div style="margin-top:2rem">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+          <h4>Fotos actuales <span style="font-size:.8rem;color:var(--t2);font-weight:400">(12 fotos)</span></h4>
+          <div style="display:flex;gap:.5rem">
+            <button class="btn btn-outline btn-sm"><i class="fas fa-sort"></i> Ordenar</button>
+            <button class="btn btn-outline btn-sm"><i class="fas fa-trash"></i> Eliminar seleccionadas</button>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.75rem" id="currentGallery">
+          <!-- Built by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Citas ── -->
+    <div class="admin-page" id="page-citas">
+      <h2 class="admin-page-title">Mis Citas</h2>
+      <p class="admin-page-sub">Gestiona tus citas y reservaciones</p>
+
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('citas-modelo','proximas',this)">Próximas <span class="pill pill-gold" style="font-size:.6rem">3</span></button>
+        <button class="tab-btn" onclick="switchTab('citas-modelo','historial',this)">Historial</button>
+        <button class="tab-btn" onclick="switchTab('citas-modelo','pendientes-conf',this)">Por confirmar</button>
+      </div>
+
+      <div class="tab-panel active" id="citas-modelo-proximas">
+        <div style="display:flex;flex-direction:column;gap:.75rem" id="citasProximas">
+          <!-- Built by JS -->
+        </div>
+      </div>
+      <div class="tab-panel" id="citas-modelo-historial">
+        <div style="display:flex;flex-direction:column;gap:.75rem" id="citasHistorial">
+          <!-- Built by JS -->
+        </div>
+      </div>
+      <div class="tab-panel" id="citas-modelo-pendientes-conf">
+        <p style="color:var(--t2);padding:2rem;text-align:center">No hay citas pendientes de confirmación.</p>
+      </div>
+    </div>
+
+    <!-- ── Disponibilidad ── -->
+    <div class="admin-page" id="page-disponibilidad">
+      <h2 class="admin-page-title">Mi Disponibilidad</h2>
+      <p class="admin-page-sub">Configura los horarios en que puedes recibir citas</p>
+
+      <div class="chart-card" style="margin-bottom:1.5rem">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:.75rem">
+          <h4>Estado general</h4>
+          <div class="switch-wrap">
+            <label class="switch"><input type="checkbox" id="availableToggle" checked onchange="toggleAvailability(this)"><span class="switch-slider"></span></label>
+            <span class="switch-label" id="availableLabel">Disponible ahora</span>
+          </div>
+        </div>
+        <p style="font-size:.85rem;color:var(--t2)">Cuando estás activa, tu perfil aparece en los resultados de búsqueda con el indicador de disponibilidad en verde.</p>
+      </div>
+
+      <div class="chart-card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem">
+          <h4>Horario semanal</h4>
+          <div style="display:flex;gap:.5rem">
+            <button class="btn btn-outline btn-sm" onclick="clearAvailability()">Limpiar</button>
+            <button class="btn btn-gold btn-sm" onclick="saveAvailability()">
+              <i class="fas fa-save"></i> Guardar
+            </button>
+          </div>
+        </div>
+        <div style="overflow-x:auto">
+          <div class="week-grid" id="availWeekGrid"><!-- Built by JS --></div>
+        </div>
+        <p class="text-xs text-muted mt-2">Haz clic en los bloques para activar/desactivar tu disponibilidad en ese horario.</p>
+      </div>
+
+      <div class="chart-card mt-2">
+        <h4 style="margin-bottom:1rem">Bloquear fechas específicas</h4>
+        <div style="display:flex;gap:.75rem;flex-wrap:wrap">
+          <input type="date" class="form-input" style="width:auto" id="blockDateInput" />
+          <button class="btn btn-outline" onclick="blockDate()">
+            <i class="fas fa-ban"></i> Bloquear fecha
+          </button>
+        </div>
+        <div style="margin-top:1rem;display:flex;flex-wrap:wrap;gap:.5rem" id="blockedDatesList"></div>
+      </div>
+    </div>
+
+    <!-- ── Referidos ── -->
+    <div class="admin-page" id="page-referidos">
+      <h2 class="admin-page-title">Programa de Referidos</h2>
+      <p class="admin-page-sub">Invita a otras Doncellas y gana comisiones</p>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-bottom:2rem">
+        <div class="stat-mini">
+          <div class="stat-mini-n">7</div>
+          <div class="stat-mini-l">Referidos activos</div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-mini-n">$3,500</div>
+          <div class="stat-mini-l">Comisiones ganadas</div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-mini-n">$500</div>
+          <div class="stat-mini-l">Por cobrar</div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-mini-n">10%</div>
+          <div class="stat-mini-l">Tu comisión</div>
+        </div>
+      </div>
+
+      <div class="chart-card" style="margin-bottom:1.5rem">
+        <h4 style="margin-bottom:.75rem">Tu enlace de referido</h4>
+        <div class="referral-link-box">
+          <i class="fas fa-link" style="color:var(--gold)"></i>
+          <input type="text" value="https://doncellas.mx/ref/valentina-r" readonly id="refLink" />
+          <button class="btn btn-outline btn-sm" onclick="copyRefLink()">
+            <i class="fas fa-copy"></i> Copiar
+          </button>
+          <button class="btn btn-wa btn-sm" onclick="shareRefWhatsApp()">
+            <i class="fab fa-whatsapp"></i>
+          </button>
+        </div>
+        <p class="text-xs text-muted mt-1">Gana el 10% del plan mensual de cada Doncella que se registre con tu enlace durante 12 meses.</p>
+      </div>
+
+      <div class="chart-card">
+        <h4 style="margin-bottom:1rem">Mis referidos</h4>
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead><tr>
+              <th>Doncella</th><th>Registro</th><th>Plan</th><th>Estado</th><th>Comisión</th>
+            </tr></thead>
+            <tbody id="referidosTbody"><!-- Built by JS --></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Editar Perfil ── -->
+    <div class="admin-page" id="page-perfil-edit">
+      <h2 class="admin-page-title">Editar mi Perfil</h2>
+      <p class="admin-page-sub">Mantén tu perfil actualizado para más visibilidad</p>
+
+      <!-- Foto de perfil -->
+      <div class="chart-card" style="margin-bottom:1.5rem">
+        <h4 style="margin-bottom:1rem">Foto de perfil</h4>
+        <div style="display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap">
+          <div style="position:relative;width:100px;height:100px">
+            <img id="profilePhotoPreview"
+                 src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&h=200&fit=crop&crop=face"
+                 alt="Foto de perfil"
+                 style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid var(--gold)" />
+            <label style="position:absolute;bottom:0;right:0;background:var(--gold);color:#000;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:.75rem" title="Cambiar foto">
+              <i class="fas fa-camera"></i>
+              <input type="file" accept="image/*" style="display:none" onchange="previewProfilePhoto(this)" />
+            </label>
+          </div>
+          <div>
+            <p style="font-size:.85rem;color:var(--t2);margin-bottom:.4rem">Sube una foto profesional de al menos 400×400px.</p>
+            <label class="btn btn-outline btn-sm" style="cursor:pointer">
+              <i class="fas fa-upload"></i> Seleccionar foto
+              <input type="file" accept="image/*" style="display:none" onchange="previewProfilePhoto(this)" />
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
+        <div class="chart-card">
+          <h4 style="margin-bottom:1rem">Información básica</h4>
+          <div class="form-group">
+            <label class="form-label">Nombre artístico</label>
+            <input class="form-input" value="Valentina R." />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Descripción</label>
+            <textarea class="form-input" rows="3">Doncella profesional con más de 4 años de experiencia en eventos corporativos y sesiones fotográficas.</textarea>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Edad</label>
+              <input class="form-input" type="number" value="24" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Altura (cm)</label>
+              <input class="form-input" type="number" value="172" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Zona</label>
+            <select class="form-input">
+              <option selected>Zona Rosa</option>
+              <option>Providencia</option>
+              <option>Chapultepec</option>
+            </select>
+          </div>
+          <button class="btn btn-gold" onclick="showToast('Perfil actualizado','success')">
+            <i class="fas fa-save"></i> Guardar cambios
+          </button>
+        </div>
+
+        <div class="chart-card">
+          <h4 style="margin-bottom:1rem">Medidas y apariencia</h4>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Busto (cm)</label>
+              <input class="form-input" type="number" value="88" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Cintura (cm)</label>
+              <input class="form-input" type="number" value="62" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Caderas (cm)</label>
+            <input class="form-input" type="number" value="92" />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Color de ojos</label>
+              <select class="form-input">
+                <option>Café</option><option selected>Miel</option><option>Verde</option>
+                <option>Azul</option><option>Gris</option><option>Avellana</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Color de cabello</label>
+              <select class="form-input">
+                <option selected>Castaño</option><option>Negro</option><option>Rubio</option>
+                <option>Castaño oscuro</option><option>Castaño claro</option><option>Pelirrojo</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Color de piel</label>
+            <select class="form-input">
+              <option>Blanca</option><option selected>Morena clara</option><option>Morena</option>
+              <option>Trigueña</option><option>Canela</option>
+            </select>
+          </div>
+          <button class="btn btn-gold" onclick="showToast('Medidas actualizadas','success')">
+            <i class="fas fa-save"></i> Guardar medidas
+          </button>
+        </div>
+      </div>
+
+      <!-- Servicios -->
+      <div class="chart-card" style="margin-top:1.5rem">
+        <h4 style="margin-bottom:1rem">Servicios ofrecidos</h4>
+        <p style="font-size:.78rem;color:var(--t2);margin-bottom:1rem">Marca <strong style="color:var(--gold)">Sí</strong> para ofrecer el servicio. Marca <strong style="color:var(--gold)">Extra</strong> si tiene un costo adicional.</p>
+
+        <!-- Header row -->
+        <div style="display:grid;grid-template-columns:1fr 80px 80px;gap:.4rem;padding:.35rem .75rem;border-radius:var(--r-md);background:var(--surface);margin-bottom:.5rem">
+          <div style="font-size:.68rem;color:var(--t3);text-transform:uppercase;letter-spacing:.06em">Servicio</div>
+          <div style="font-size:.68rem;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;text-align:center">Sí</div>
+          <div style="font-size:.68rem;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;text-align:center">Extra</div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:.35rem" id="modelServicesList">
+
+          <!-- Relaciones ilimitadas -->
+          <div style="display:grid;grid-template-columns:1fr 80px 80px;gap:.4rem;align-items:center;padding:.55rem .75rem;border:1px solid var(--border);border-radius:var(--r-md);transition:var(--transition)" id="srow-rel"
+               onmouseenter="this.style.borderColor='var(--border-h)'" onmouseleave="this.style.borderColor='var(--border)'">
+            <span style="font-size:.85rem">Relaciones ilimitadas</span>
+            <div style="text-align:center">
+              <input type="checkbox" id="msvc-si-rel" checked style="accent-color:var(--gold);width:17px;height:17px;cursor:pointer"
+                     onchange="toggleExtraCheck('msvc-extra-rel',this.checked)" />
+              <span id="msvc-si-rel-lbl" class="pill pill-available" style="font-size:.6rem;margin-left:.3rem">Sí</span>
+            </div>
+            <div style="text-align:center">
+              <input type="checkbox" id="msvc-extra-rel" style="accent-color:var(--gold);width:17px;height:17px;cursor:pointer"
+                     onchange="toggleExtraLabel('msvc-extra-rel-lbl',this.checked)" />
+              <span id="msvc-extra-rel-lbl" class="pill pill-gold" style="font-size:.6rem;margin-left:.3rem;display:none">Extra</span>
+            </div>
+          </div>
+
+          <!-- Trato de novios -->
+          <div style="display:grid;grid-template-columns:1fr 80px 80px;gap:.4rem;align-items:center;padding:.55rem .75rem;border:1px solid var(--border);border-radius:var(--r-md);transition:var(--transition)"
+               onmouseenter="this.style.borderColor='var(--border-h)'" onmouseleave="this.style.borderColor='var(--border)'">
+            <span style="font-size:.85rem">Trato de novios</span>
+            <div style="text-align:center">
+              <input type="checkbox" id="msvc-si-nov" checked style="accent-color:var(--gold);width:17px;height:17px;cursor:pointer"
+                     onchange="toggleExtraCheck('msvc-extra-nov',this.checked)" />
+              <span id="msvc-si-nov-lbl" class="pill pill-available" style="font-size:.6rem;margin-left:.3rem">Sí</span>
+            </div>
+            <div style="text-align:center">
+              <input type="checkbox" id="msvc-extra-nov" style="accent-color:var(--gold);width:17px;height:17px;cursor:pointer"
+                     onchange="toggleExtraLabel('msvc-extra-nov-lbl',this.checked)" />
+              <span id="msvc-extra-nov-lbl" class="pill pill-gold" style="font-size:.6rem;margin-left:.3rem;display:none">Extra</span>
+            </div>
+          </div>
+
+          <!-- Oral con protección -->
+          <div style="display:grid;grid-template-columns:1fr 80px 80px;gap:.4rem;align-items:center;padding:.55rem .75rem;border:1px solid var(--border);border-radius:var(--r-md);transition:var(--transition)"
+               onmouseenter="this.style.borderColor='var(--border-h)'" onmouseleave="this.style.borderColor='var(--border)'">
+            <span style="font-size:.85rem">Oral con protección</span>
+            <div style="text-align:center">
+              <input type="checkbox" id="msvc-si-ocp" checked style="accent-color:var(--gold);width:17px;height:17px;cursor:pointer"
+                     onchange="toggleExtraCheck('msvc-extra-ocp',this.checked)" />
+              <span id="msvc-si-ocp-lbl" class="pill pill-available" style="font-size:.6rem;margin-left:.3rem">Sí</span>
+            </div>
+            <div style="text-align:center">
+              <input type="checkbox" id="msvc-extra-ocp" style="accent-color:var(--gold);width:17px;height:17px;cursor:pointer"
+                     onchange="toggleExtraLabel('msvc-extra-ocp-lbl',this.checked)" />
+              <span id="msvc-extra-ocp-lbl" class="pill pill-gold" style="font-size:.6rem;margin-left:.3rem;display:none">Extra</span>
+            </div>
+          </div>
+
+          <!-- Oral natural -->
+          <div style="display:grid;grid-template-columns:1fr 80px 80px;gap:.4rem;align-items:center;padding:.55rem .75rem;border:1px solid var(--border);border-radius:var(--r-md);transition:var(--transition)"
+               onmouseenter="this.style.borderColor='var(--border-h)'" onmouseleave="this.style.borderColor='var(--border)'">
+            <span style="font-size:.85rem">Oral natural</span>
+            <div style="text-align:center">
+              <input type="checkbox" id="msvc-si-ocn" style="accent-color:var(--gold);width:17px;height:17px;cursor:pointer"
+                     onchange="toggleExtraCheck('msvc-extra-ocn',this.checked)" />
+              <span id="msvc-si-ocn-lbl" class="pill pill-available" style="font-size:.6rem;margin-left:.3rem;display:none">Sí</span>
+            </div>
+            <div style="text-align:center">
+              <input type="checkbox" id="msvc-extra-ocn" disabled style="accent-color:var(--gold);width:17px;height:17px;cursor:pointer"
+                     onchange="toggleExtraLabel('msvc-extra-ocn-lbl',this.checked)" />
+              <span id="msvc-extra-ocn-lbl" class="pill pill-gold" style="font-size:.6rem;margin-left:.3rem;display:none">Extra</span>
+            </div>
+          </div>
+
+          <!-- Oral terminado -->
+          <div style="display:grid;grid-template-columns:1fr 80px 80px;gap:.4rem;align-items:center;padding:.55rem .75rem;border:1px solid var(--border);border-radius:var(--r-md);transition:var(--transition)"
+               onmouseenter="this.style.borderColor='var(--border-h)'" onmouseleave="this.style.borderColor='var(--border)'">
+            <span style="font-size:.85rem">Oral terminado</span>
+            <div style="text-align:center">
+              <input type="checkbox" id="msvc-si-oct" style="accent-color:var(--gold);width:17px;height:17px;cursor:pointer"
+                     onchange="toggleExtraCheck('msvc-extra-oct',this.checked)" />
+              <span id="msvc-si-oct-lbl" class="pill pill-available" style="font-size:.6rem;margin-left:.3rem;display:none">Sí</span>
+            </div>
+            <div style="text-align:center">
+              <input type="checkbox" id="msvc-extra-oct" disabled style="accent-color:var(--gold);width:17px;height:17px;cursor:pointer"
+                     onchange="toggleExtraLabel('msvc-extra-oct-lbl',this.checked)" />
+              <span id="msvc-extra-oct-lbl" class="pill pill-gold" style="font-size:.6rem;margin-left:.3rem;display:none">Extra</span>
+            </div>
+          </div>
+
+          <!-- Tiro MHM -->
+          <div style="display:grid;grid-template-columns:1fr 80px 80px;gap:.4rem;align-items:center;padding:.55rem .75rem;border:1px solid var(--border);border-radius:var(--r-md);transition:var(--transition)"
+               onmouseenter="this.style.borderColor='var(--border-h)'" onmouseleave="this.style.borderColor='var(--border)'">
+            <span style="font-size:.85rem">Tiro MHM</span>
+            <div style="text-align:center">
+              <input type="checkbox" id="msvc-si-mhm" style="accent-color:var(--gold);width:17px;height:17px;cursor:pointer"
+                     onchange="toggleExtraCheck('msvc-extra-mhm',this.checked)" />
+              <span id="msvc-si-mhm-lbl" class="pill pill-available" style="font-size:.6rem;margin-left:.3rem;display:none">Sí</span>
+            </div>
+            <div style="text-align:center">
+              <input type="checkbox" id="msvc-extra-mhm" disabled style="accent-color:var(--gold);width:17px;height:17px;cursor:pointer"
+                     onchange="toggleExtraLabel('msvc-extra-mhm-lbl',this.checked)" />
+              <span id="msvc-extra-mhm-lbl" class="pill pill-gold" style="font-size:.6rem;margin-left:.3rem;display:none">Extra</span>
+            </div>
+          </div>
+
+          <!-- Tiro HMH -->
+          <div style="display:grid;grid-template-columns:1fr 80px 80px;gap:.4rem;align-items:center;padding:.55rem .75rem;border:1px solid var(--border);border-radius:var(--r-md);transition:var(--transition)"
+               onmouseenter="this.style.borderColor='var(--border-h)'" onmouseleave="this.style.borderColor='var(--border)'">
+            <span style="font-size:.85rem">Tiro HMH</span>
+            <div style="text-align:center">
+              <input type="checkbox" id="msvc-si-hmh" style="accent-color:var(--gold);width:17px;height:17px;cursor:pointer"
+                     onchange="toggleExtraCheck('msvc-extra-hmh',this.checked)" />
+              <span id="msvc-si-hmh-lbl" class="pill pill-available" style="font-size:.6rem;margin-left:.3rem;display:none">Sí</span>
+            </div>
+            <div style="text-align:center">
+              <input type="checkbox" id="msvc-extra-hmh" disabled style="accent-color:var(--gold);width:17px;height:17px;cursor:pointer"
+                     onchange="toggleExtraLabel('msvc-extra-hmh-lbl',this.checked)" />
+              <span id="msvc-extra-hmh-lbl" class="pill pill-gold" style="font-size:.6rem;margin-left:.3rem;display:none">Extra</span>
+            </div>
+          </div>
+
+          <!-- Anal -->
+          <div style="display:grid;grid-template-columns:1fr 80px 80px;gap:.4rem;align-items:center;padding:.55rem .75rem;border:1px solid var(--border);border-radius:var(--r-md);transition:var(--transition)"
+               onmouseenter="this.style.borderColor='var(--border-h)'" onmouseleave="this.style.borderColor='var(--border)'">
+            <span style="font-size:.85rem">Anal</span>
+            <div style="text-align:center">
+              <input type="checkbox" id="msvc-si-anal" style="accent-color:var(--gold);width:17px;height:17px;cursor:pointer"
+                     onchange="toggleExtraCheck('msvc-extra-anal',this.checked)" />
+              <span id="msvc-si-anal-lbl" class="pill pill-available" style="font-size:.6rem;margin-left:.3rem;display:none">Sí</span>
+            </div>
+            <div style="text-align:center">
+              <input type="checkbox" id="msvc-extra-anal" disabled style="accent-color:var(--gold);width:17px;height:17px;cursor:pointer"
+                     onchange="toggleExtraLabel('msvc-extra-anal-lbl',this.checked)" />
+              <span id="msvc-extra-anal-lbl" class="pill pill-gold" style="font-size:.6rem;margin-left:.3rem;display:none">Extra</span>
+            </div>
+          </div>
+
+        </div>
+        <button class="btn btn-gold" style="margin-top:1rem" onclick="saveModelServices()">
+          <i class="fas fa-save"></i> Guardar servicios
+        </button>
+      </div>
+
+      <!-- Tarifas y contacto -->
+      <div class="chart-card" style="margin-top:1.5rem">
+        <h4 style="margin-bottom:1rem">Tarifas y contacto</h4>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem">
+          <div class="form-group">
+            <label class="form-label">Tarifa 1 hora (MXN)</label>
+            <input class="form-input" type="number" value="2500" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tarifa 3 horas (MXN)</label>
+            <input class="form-input" type="number" value="6500" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tarifa día completo (MXN)</label>
+            <input class="form-input" type="number" value="18000" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Etiquetas (separadas por coma)</label>
+          <input class="form-input" value="Universitaria, Fit, Natural, VIP, Bilingüe" />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label"><i class="fab fa-whatsapp" style="color:#25D366"></i> WhatsApp</label>
+            <input class="form-input" value="+52 33 1234 5678" />
+          </div>
+          <div class="form-group">
+            <label class="form-label"><i class="fab fa-telegram" style="color:#229ED9"></i> Telegram</label>
+            <input class="form-input" value="@valentina_vs" placeholder="@usuario" />
+          </div>
+        </div>
+        <button class="btn btn-gold" onclick="showToast('Tarifas actualizadas','success')">
+          <i class="fas fa-save"></i> Guardar tarifas
+        </button>
+      </div>
+    </div>
+
+    <!-- ── Configuración ── -->
+    <div class="admin-page" id="page-config">
+      <h2 class="admin-page-title">Configuración</h2>
+      <p class="admin-page-sub">Ajustes de cuenta y notificaciones</p>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
+        <div class="chart-card">
+          <h4 style="margin-bottom:1rem">Credenciales de acceso</h4>
+          <p style="font-size:.8rem;color:var(--t2);margin-bottom:1rem">Tus credenciales son gestionadas por el administrador. Para cambiarlas, comunícate con soporte.</p>
+          <div class="form-group">
+            <label class="form-label">Correo / usuario</label>
+            <div style="display:flex;align-items:center;gap:.5rem">
+              <input class="form-input" type="email" value="valentina@doncellas.mx" readonly
+                     style="background:var(--surface);color:var(--t2);cursor:default;flex:1" />
+              <button class="btn btn-ghost btn-sm" onclick="navigator.clipboard.writeText('valentina@doncellas.mx');showToast('Copiado','success')" title="Copiar">
+                <i class="fas fa-copy"></i>
+              </button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Contraseña</label>
+            <div style="display:flex;align-items:center;gap:.5rem">
+              <input class="form-input" type="password" value="modelo123" readonly id="passDisplay"
+                     style="background:var(--surface);color:var(--t2);cursor:default;flex:1" />
+              <button class="btn btn-ghost btn-sm" onclick="togglePassVisibility()" title="Mostrar/ocultar">
+                <i class="fas fa-eye" id="passEyeIcon"></i>
+              </button>
+            </div>
+          </div>
+          <p style="font-size:.75rem;color:var(--t3);margin-top:.25rem"><i class="fas fa-lock" style="color:var(--gold)"></i> Solo el administrador puede modificar estas credenciales.</p>
+        </div>
+        <div class="chart-card">
+          <h4 style="margin-bottom:1rem">Notificaciones</h4>
+          <div style="display:flex;flex-direction:column;gap:.75rem">
+            <div class="switch-wrap">
+              <label class="switch"><input type="checkbox" checked><span class="switch-slider"></span></label>
+              <span class="switch-label">Nueva cita por WhatsApp</span>
+            </div>
+            <div class="switch-wrap">
+              <label class="switch"><input type="checkbox" checked><span class="switch-slider"></span></label>
+              <span class="switch-label">Nueva cita por Telegram</span>
+            </div>
+            <div class="switch-wrap">
+              <label class="switch"><input type="checkbox" checked><span class="switch-slider"></span></label>
+              <span class="switch-label">Nueva reseña por correo</span>
+            </div>
+            <div class="switch-wrap">
+              <label class="switch"><input type="checkbox"><span class="switch-slider"></span></label>
+              <span class="switch-label">Recordatorio de cita (1h antes)</span>
+            </div>
+            <div class="switch-wrap">
+              <label class="switch"><input type="checkbox" checked><span class="switch-slider"></span></label>
+              <span class="switch-label">Resumen semanal de estadísticas</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Mobile Bottom Navigation -->
+<nav class="bottom-nav" aria-label="Navegación principal">
+  <a href="index.html" class="bottom-nav-item"><i class="fas fa-home"></i><span>Inicio</span></a>
+  <a href="modelos.html" class="bottom-nav-item"><i class="fas fa-users"></i><span>Escorts</span></a>
+  <a href="categorias.html" class="bottom-nav-item"><i class="fas fa-star"></i><span>Categorías</span></a>
+  <a href="panel-modelo.html" class="bottom-nav-item active"><i class="fas fa-user"></i><span>Mi cuenta</span></a>
+</nav>
+<script src="app.js"></script>
+<script>
+function toggleExtraCheck(extraId, siChecked) {
+  const extraEl = document.getElementById(extraId);
+  const siLblId = extraId.replace('extra', 'si') + '-lbl';
+  const siLbl   = document.getElementById(siLblId);
+  if (!extraEl) return;
+  extraEl.disabled = !siChecked;
+  if (!siChecked) { extraEl.checked = false; toggleExtraLabel(extraId + '-lbl', false); }
+  if (siLbl) siLbl.style.display = siChecked ? 'inline-flex' : 'none';
+}
+
+function toggleExtraLabel(lblId, checked) {
+  const lbl = document.getElementById(lblId);
+  if (lbl) lbl.style.display = checked ? 'inline-flex' : 'none';
+}
+
+function saveModelServices() {
+  showToast('Servicios guardados correctamente', 'success');
+}
+
+function toggleAvailability(el) {
+  const label = document.getElementById('availableLabel');
+  label.textContent = el.checked ? 'Disponible para citas' : 'No disponible';
+  showToast(el.checked ? 'Ahora apareces como Disponible' : 'Ahora apareces como No disponible', el.checked ? 'success' : 'info');
+}
+
+function copyRefLink() {
+  navigator.clipboard.writeText(document.getElementById('refLink').value);
+  showToast('Enlace copiado', 'success');
+}
+
+function shareRefWhatsApp() {
+  const link = document.getElementById('refLink').value;
+  window.open(`https://wa.me/?text=Únete a Doncellas con mi enlace: ${encodeURIComponent(link)}`, '_blank');
+}
+
+function saveAvailability() {
+  showToast('Disponibilidad guardada correctamente', 'success');
+}
+
+function clearAvailability() {
+  document.querySelectorAll('.week-slot.on').forEach(s => s.classList.remove('on'));
+  showToast('Disponibilidad limpiada', 'info');
+}
+
+function blockDate() {
+  const input = document.getElementById('blockDateInput');
+  if (!input.value) return;
+  const list = document.getElementById('blockedDatesList');
+  const pill = document.createElement('span');
+  pill.className = 'pill pill-busy';
+  pill.style.cursor = 'pointer';
+  const d = new Date(input.value + 'T12:00:00');
+  pill.innerHTML = `${d.toLocaleDateString('es-MX',{month:'short',day:'numeric'})} <i class="fas fa-times" style="margin-left:.3rem"></i>`;
+  pill.onclick = () => { list.removeChild(pill); showToast('Fecha desbloqueada','info'); };
+  list.appendChild(pill);
+  input.value = '';
+  showToast('Fecha bloqueada', 'success');
+}
+
+let _modelAvail = true;
+function toggleModelAvail() {
+  _modelAvail = !_modelAvail;
+  const btn   = document.getElementById('modelAvailBtn');
+  const pill  = document.getElementById('modelAvailPill');
+  const label = document.getElementById('modelAvailLabel');
+  if (_modelAvail) {
+    btn.style.borderColor = 'rgba(76,175,130,.4)';
+    btn.style.background  = 'rgba(76,175,130,.08)';
+    btn.style.color       = 'var(--green)';
+    if (label) label.textContent = 'Disponible';
+    if (pill)  { pill.className = 'pill pill-available'; pill.style.fontSize = '.65rem'; pill.textContent = 'Disponible'; }
+  } else {
+    btn.style.borderColor = 'rgba(224,80,80,.4)';
+    btn.style.background  = 'rgba(224,80,80,.08)';
+    btn.style.color       = 'var(--red)';
+    if (label) label.textContent = 'No Disponible';
+    if (pill)  { pill.className = 'pill pill-busy'; pill.style.fontSize = '.65rem'; pill.textContent = 'No Disponible'; }
+  }
+  showToast(_modelAvail ? 'Ahora estás Disponible' : 'Ahora estás No Disponible', 'success');
+}
+
+function previewProfilePhoto(input) {
+  if (!input.files || !input.files[0]) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const preview = document.getElementById('profilePhotoPreview');
+    if (preview) preview.src = e.target.result;
+  };
+  reader.readAsDataURL(input.files[0]);
+  showToast('Foto de perfil actualizada', 'success');
+}
+
+function togglePassVisibility() {
+  const el = document.getElementById('passDisplay');
+  const icon = document.getElementById('passEyeIcon');
+  if (!el || !icon) return;
+  if (el.type === 'password') {
+    el.type = 'text';
+    icon.className = 'fas fa-eye-slash';
+  } else {
+    el.type = 'password';
+    icon.className = 'fas fa-eye';
+  }
+}
+</script>
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  }
+</script>
+</body>
+</html>
