@@ -38,12 +38,29 @@
     <li><a href="categorias.html">Categorías</a></li>
   </ul>
   <div class="nav-cta">
-    <button class="btn btn-gold btn-sm" onclick="openModal('loginModal')"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</button>
-    <button class="nav-menu-btn" id="navMenuBtn" aria-label="Menú">
+    <button class="btn btn-gold btn-sm nav-login-btn" onclick="openModal('loginModal')"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</button>
+    <button class="nav-menu-btn" id="navMenuBtn" aria-label="Menú" aria-controls="mobileDrawer" aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
   </div>
 </nav>
+
+<!-- ── Mobile Drawer (mobile only) ── -->
+<div class="mobile-drawer-overlay" id="mobileDrawerOverlay" aria-hidden="true"></div>
+<aside class="mobile-drawer" id="mobileDrawer" aria-hidden="true">
+  <div class="mobile-drawer-head">
+    <span class="mobile-drawer-title">Menú</span>
+    <button class="mobile-drawer-close" id="mobileDrawerClose" aria-label="Cerrar menú">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+  <ul class="mobile-drawer-links">
+    <li><a href="index.html"><i class="fas fa-home"></i> Inicio</a></li>
+    <li><a href="modelos.html"><i class="fas fa-users"></i> Escorts</a></li>
+    <li><a href="categorias.html"><i class="fas fa-star"></i> Categorías</a></li>
+    <li><a href="membresias.html"><i class="fas fa-crown"></i> Membresías</a></li>
+  </ul>
+</aside>
 
 <!-- ── Hero ── -->
 <section class="hero" id="hero">
@@ -70,6 +87,17 @@
   <div class="hero-dots" id="heroDots"></div>
 </section>
 
+<!-- ── City bar (mobile only — chips de zonas) ── -->
+<div class="city-bar" role="navigation" aria-label="Zonas de Guadalajara">
+  <button type="button" class="city-chip is-active" data-city="">Toda GDL</button>
+  <button type="button" class="city-chip" data-city="Zona Rosa">Zona Rosa</button>
+  <button type="button" class="city-chip" data-city="Providencia">Providencia</button>
+  <button type="button" class="city-chip" data-city="Chapultepec">Chapultepec</button>
+  <button type="button" class="city-chip" data-city="Tlaquepaque">Tlaquepaque</button>
+  <button type="button" class="city-chip" data-city="Zapopan">Zapopan</button>
+  <button type="button" class="city-chip" data-city="Andares">Andares</button>
+</div>
+
 <!-- ── Search Bar ── -->
 <div class="search-bar-wrap">
   <button class="search-bar-toggle" id="searchToggle" aria-label="Buscar" aria-expanded="false">
@@ -77,7 +105,7 @@
   </button>
   <form class="search-bar" id="searchForm">
     <i class="fas fa-search" style="color:var(--t3);font-size:.9rem"></i>
-    <input type="text" id="searchInput" placeholder="Busca por nombre, zona o categoría…" autocomplete="off" />
+    <input type="text" id="searchInput" placeholder="Busca por nombre, zona o categoría…" data-mobile-placeholder="Buscar escorts en GDL..." autocomplete="off" />
     <div class="search-divider"></div>
     <div class="search-filter">
       <i class="fas fa-filter" style="font-size:.75rem"></i>
@@ -345,7 +373,7 @@
     <i class="fas fa-star"></i><span>Categorías</span>
   </a>
   <a href="#" class="bottom-nav-item" onclick="openModal('loginModal');return false;">
-    <i class="fas fa-user"></i><span>Mi cuenta</span>
+    <i class="fas fa-user"></i><span>Cuenta</span>
   </a>
 </nav>
 

@@ -2971,3 +2971,428 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
   .pwa-install-copy strong { font-size: .76rem; }
   .pwa-install-copy span { display: none; }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   MOBILE OPTIMIZATION OVERRIDES (≤768px) — appended last so
+   they win specificity ties against earlier mobile blocks.
+   Desktop styles above this block are intentionally untouched.
+   ═══════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  /* No horizontal scroll, ever */
+  html, body { overflow-x: hidden; }
+
+  /* ── 8. Hide on mobile ─────────────────────────────────── */
+  .nav-center,
+  .nav-btn.filled,
+  .hb-visual,
+  .hb-sub,
+  .hb-arrows,
+  .search-hint { display: none !important; }
+
+  /* ── 1. Mobile navigation ──────────────────────────────── */
+  .nav-cta { gap: 8px; }
+  .nav-cta .nav-login-btn,
+  .nav-cta .btn.btn-gold.btn-sm {
+    display: inline-flex !important;
+    background: transparent !important;
+    color: #C9A84C !important;
+    border: 1px solid #C9A84C !important;
+    padding: 5px 10px !important;
+    font-size: 10px !important;
+    line-height: 1 !important;
+    min-height: 0 !important;
+    height: auto !important;
+    border-radius: 999px !important;
+    box-shadow: none !important;
+    letter-spacing: .04em;
+    text-transform: none;
+  }
+  .nav-cta .nav-login-btn i,
+  .nav-cta .btn.btn-gold.btn-sm i { font-size: 10px; margin-right: 4px; }
+
+  /* Hamburger button: keep visible (already mobile-only) */
+  .nav-menu-btn {
+    display: flex !important;
+    width: 38px; height: 38px;
+    min-width: 38px; min-height: 38px;
+  }
+
+  /* ── Mobile drawer (separate element, slides from right) ── */
+  .mobile-drawer {
+    position: fixed;
+    top: 0; right: 0; bottom: 0;
+    width: min(78vw, 320px);
+    background: #0A0A0A;
+    border-left: 2px solid #C9A84C;
+    box-shadow: -8px 0 32px rgba(0,0,0,.6);
+    z-index: 1200;
+    transform: translateX(100%);
+    transition: transform .28s ease;
+    display: flex;
+    flex-direction: column;
+    padding: calc(env(safe-area-inset-top, 0) + 14px) 0 14px;
+    overscroll-behavior: contain;
+  }
+  .mobile-drawer.open { transform: translateX(0); }
+  .mobile-drawer-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 18px 14px;
+    border-bottom: 1px solid rgba(201,168,76,.18);
+  }
+  .mobile-drawer-title {
+    font-family: var(--font-serif, serif);
+    font-size: 14px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: #C9A84C;
+  }
+  .mobile-drawer-close {
+    background: transparent;
+    border: none;
+    color: #C9A84C;
+    font-size: 18px;
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+  }
+  .mobile-drawer-links {
+    list-style: none;
+    margin: 0;
+    padding: 8px 0;
+  }
+  .mobile-drawer-links li a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 20px;
+    color: #E6E1D2;
+    font-size: 13px;
+    letter-spacing: .04em;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255,255,255,.04);
+    transition: color .18s, background .18s;
+  }
+  .mobile-drawer-links li a i {
+    width: 18px;
+    color: #C9A84C;
+    font-size: 13px;
+    text-align: center;
+  }
+  .mobile-drawer-links li a:active,
+  .mobile-drawer-links li a:hover { color: #C9A84C; background: rgba(201,168,76,.06); }
+
+  .mobile-drawer-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,.62);
+    backdrop-filter: blur(2px);
+    z-index: 1190;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .22s ease;
+  }
+  .mobile-drawer-overlay.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  body.drawer-open { overflow: hidden; }
+
+  /* Disable the legacy nav-mobile-open drawer (we use .mobile-drawer now) */
+  .nav-mobile-open .nav-links { display: none !important; }
+  .nav-mobile-open::before { content: none !important; }
+
+  /* ── 2. Hero banner ────────────────────────────────────── */
+  .hero {
+    height: 260px !important;
+    min-height: 260px !important;
+    max-height: 260px !important;
+    margin: calc(var(--nav-h) + .5rem) 14px 0;
+  }
+  .hero-content { padding: 0 14px 18px; max-width: 75%; }
+  .hero-title {
+    font-size: 22px !important;
+    line-height: 1.18;
+    max-width: 75%;
+    margin-bottom: 10px;
+  }
+  /* Subtitle — hide both legacy .hero-desc and spec'd .hb-sub */
+  .hero-desc, .hb-sub { display: none !important; }
+  /* Only show first action button */
+  .hero-actions > .btn ~ .btn,
+  .hero-actions > a ~ a,
+  .hero-actions > button ~ button { display: none !important; }
+  .hero-actions > .btn:first-child {
+    padding: 8px 14px;
+    font-size: 12px;
+    min-height: 36px;
+  }
+  /* Hide hero floating mini-cards & arrows on mobile */
+  .hb-visual, .hb-arrows,
+  .hero-brand-mosaic, .hero-brand-mosaic-col,
+  .hero-arrow, .hero-prev, .hero-next { display: none !important; }
+
+  /* Indicators: horizontal lines (centered, gap 6, bottom 12) */
+  .hero-dots {
+    bottom: 12px !important;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    gap: 6px !important;
+  }
+  .hero-dot {
+    width: 20px !important;
+    height: 2px !important;
+    border-radius: 1px !important;
+    background: rgba(255,255,255,0.25) !important;
+    border: none !important;
+    padding: 0;
+    transition: width .25s ease, background .25s ease;
+  }
+  .hero-dot.active {
+    width: 32px !important;
+    height: 2px !important;
+    background: #C9A84C !important;
+    border-radius: 1px !important;
+  }
+
+  /* ── 3. Mobile search bar (left aligned, 75% input) ────── */
+  .city-bar {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 12px 14px 8px;
+    margin: 0;
+    scroll-snap-type: x proximity;
+  }
+  .city-bar::-webkit-scrollbar { display: none; }
+  .city-chip {
+    flex: 0 0 auto;
+    background: rgba(201,168,76,.06);
+    border: 1px solid rgba(201,168,76,.25);
+    color: #C9A84C;
+    font-size: 9px;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    padding: 5px 10px;
+    border-radius: 999px;
+    cursor: pointer;
+    white-space: nowrap;
+    scroll-snap-align: start;
+    transition: background .18s, color .18s, border-color .18s;
+  }
+  .city-chip.is-active,
+  .city-chip:active {
+    background: #C9A84C;
+    color: #0A0A0A;
+    border-color: #C9A84C;
+  }
+
+  .search-bar-wrap {
+    margin-top: 0 !important;
+    padding: 0 14px 12px !important;
+    max-width: 100% !important;
+    width: 100%;
+    text-align: left !important;
+  }
+  .search-bar-toggle { display: none !important; }
+  .search-bar {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 6px !important;
+    padding: 4px 4px 4px 12px !important;
+    width: 100% !important;
+    margin-top: 0 !important;
+    border-radius: 12px !important;
+    max-height: none !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    overflow: visible !important;
+  }
+  /* Hide filters on mobile — keep just input + submit button */
+  .search-bar .search-divider,
+  .search-bar .search-filter,
+  .search-bar > i.fa-search:first-of-type { display: none !important; }
+
+  .search-bar input {
+    flex: 0 0 75% !important;
+    width: 75% !important;
+    max-width: 75%;
+    font-size: 12px !important;
+    padding: 8px 6px !important;
+  }
+  .search-bar input::placeholder { font-size: 11px; }
+  .search-bar .btn-gold {
+    flex: 0 0 auto;
+    width: auto !important;
+    padding: 6px 10px !important;
+    font-size: 11px !important;
+    min-height: 32px !important;
+    border-radius: 8px !important;
+    margin-left: auto;
+  }
+
+  /* ── 4. Mobile spacing ─────────────────────────────────── */
+  .section { padding: 18px 14px !important; }
+  /* Sections that hardcode lateral padding inline — also normalize to 14px */
+  [style*="padding:5rem 2.5rem"],
+  [style*="padding: 5rem 2.5rem"],
+  [style*="padding:0 2.5rem"],
+  [style*="padding: 0 2.5rem"] {
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
+
+  /* Available-now strip avatars */
+  .strip-avatar,
+  .avail-strip .avatar,
+  .available-strip .avatar,
+  .strip-item img {
+    width: 36px !important;
+    height: 36px !important;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  /* Tabs rotativas (horizontal scroll, no scrollbar) */
+  .tabs,
+  .tab-bar,
+  .tabs-bar,
+  .rot-tabs {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 4px;
+  }
+  .tabs::-webkit-scrollbar,
+  .tab-bar::-webkit-scrollbar,
+  .tabs-bar::-webkit-scrollbar,
+  .rot-tabs::-webkit-scrollbar { display: none; }
+  .tabs > .tab,
+  .tab-bar > .tab,
+  .tabs-bar > .tab,
+  .rot-tabs > .tab,
+  .tabs > button,
+  .tab-bar > button {
+    flex: 0 0 auto;
+    font-size: 9px !important;
+    padding: 6px 10px !important;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  /* Tabs progress bar */
+  .tabs-progress,
+  .tab-progress,
+  .tabs .progress {
+    height: 1.5px !important;
+    background: rgba(201,168,76,.2);
+  }
+  .tabs-progress > span,
+  .tab-progress > span,
+  .tabs .progress > span { background: #C9A84C; height: 1.5px !important; }
+
+  /* ── 5. Escort grid (2 columns) ────────────────────────── */
+  .model-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+  }
+  .model-card-name { font-size: 11px !important; }
+  .model-card-meta,
+  .model-card-info .model-card-meta { font-size: 9px !important; }
+  .model-card-footer { padding: 5px 8px !important; }
+  .model-card-footer,
+  .model-card-footer .btn-sm,
+  .model-card-rate,
+  .model-card-rate span { font-size: 9px !important; }
+  .model-card-rate { font-size: 11px !important; }
+  .model-card-info { padding: 8px 8px 6px !important; }
+
+  /* ── 6. PWA install banner (compact) ───────────────────── */
+  .pwa-install-banner {
+    padding: 8px 14px !important;
+    gap: 10px;
+    min-height: 0;
+  }
+  .pwa-install-banner.is-visible { min-height: 0; }
+  .pwa-install-mark {
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 14px;
+    border-radius: 7px;
+  }
+  .pwa-install-copy strong {
+    font-size: 11px !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .pwa-install-copy span { display: none !important; }
+  .pwa-install-cta {
+    font-size: 10px !important;
+    padding: 5px 12px !important;
+    min-height: 0 !important;
+    height: auto !important;
+    letter-spacing: .04em;
+  }
+  .pwa-install-close { width: 28px; height: 28px; }
+  /* Re-pin nav offset for 8/14 banner height (~44px) */
+  body:has(.pwa-install-banner.is-visible) .nav { top: 44px; }
+  body:has(.pwa-install-banner.is-visible) .hero { margin-top: calc(var(--nav-h) + 44px + .5rem); }
+  body:has(.pwa-install-banner.is-visible) .page-header { margin-top: 44px; }
+
+  /* ── 7. Bottom navigation (54px, 4 items) ──────────────── */
+  .bottom-nav {
+    display: flex !important;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: 54px;
+    background: #0A0A0A !important;
+    border-top: 1px solid rgba(201,168,76,0.2) !important;
+    z-index: 200 !important;
+    padding-bottom: env(safe-area-inset-bottom, 0);
+    box-shadow: 0 -4px 16px rgba(0,0,0,.4);
+  }
+  .bottom-nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    color: #5A5448 !important;
+    font-size: 8px !important;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+  .bottom-nav-item i { font-size: 18px !important; }
+  .bottom-nav-item span { font-size: 8px !important; }
+  .bottom-nav-item.active,
+  .bottom-nav-item:active { color: #C9A84C !important; }
+
+  /* Body padding so bottom nav doesn't cover content */
+  body {
+    padding-bottom: calc(54px + env(safe-area-inset-bottom, 0)) !important;
+  }
+  /* Float buttons sit just above the bottom nav */
+  .float-btns {
+    bottom: calc(54px + env(safe-area-inset-bottom, 0) + 10px) !important;
+  }
+  .toast-container {
+    bottom: calc(54px + env(safe-area-inset-bottom, 0) + 10px) !important;
+  }
+}
+
+/* Hide mobile-only drawer/city-bar on desktop */
+@media (min-width: 769px) {
+  .mobile-drawer,
+  .mobile-drawer-overlay,
+  .city-bar { display: none !important; }
+}

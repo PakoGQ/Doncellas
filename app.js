@@ -270,20 +270,94 @@ window.addEventListener('scroll', () => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-  const btn = document.getElementById('navMenuBtn');
-  const nav = document.getElementById('mainNav');
-  if (!btn || !nav) return;
-  btn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    nav.classList.toggle('nav-mobile-open');
-  });
-  // Close drawer when tapping a link or outside of the nav
-  nav.addEventListener('click', (e) => {
-    if (e.target.closest('.nav-links a')) nav.classList.remove('nav-mobile-open');
-  });
-  document.addEventListener('click', (e) => {
-    if (!nav.classList.contains('nav-mobile-open')) return;
-    if (!e.target.closest('#mainNav')) nav.classList.remove('nav-mobile-open');
+  const btn      = document.getElementById('navMenuBtn');
+  const nav      = document.getElementById('mainNav');
+  const drawer   = document.getElementById('mobileDrawer');
+  const overlay  = document.getElementById('mobileDrawerOverlay');
+  const closeBtn = document.getElementById('mobileDrawerClose');
+
+  const openDrawer = () => {
+    if (!drawer || !overlay) return;
+    drawer.classList.add('open');
+    overlay.classList.add('open');
+    document.body.classList.add('drawer-open');
+    drawer.setAttribute('aria-hidden', 'false');
+    overlay.setAttribute('aria-hidden', 'false');
+    btn?.setAttribute('aria-expanded', 'true');
+    nav?.classList.add('nav-mobile-open');
+  };
+  const closeDrawer = () => {
+    if (!drawer || !overlay) return;
+    drawer.classList.remove('open');
+    overlay.classList.remove('open');
+    document.body.classList.remove('drawer-open');
+    drawer.setAttribute('aria-hidden', 'true');
+    overlay.setAttribute('aria-hidden', 'true');
+    btn?.setAttribute('aria-expanded', 'false');
+    nav?.classList.remove('nav-mobile-open');
+  };
+
+  if (btn && drawer && overlay) {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      drawer.classList.contains('open') ? closeDrawer() : openDrawer();
+    });
+    overlay.addEventListener('click', closeDrawer);
+    closeBtn?.addEventListener('click', closeDrawer);
+    drawer.addEventListener('click', (e) => {
+      if (e.target.closest('a')) closeDrawer();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && drawer.classList.contains('open')) closeDrawer();
+    });
+  } else if (btn && nav) {
+    // Fallback: legacy nav-links drawer behavior
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      nav.classList.toggle('nav-mobile-open');
+    });
+    nav.addEventListener('click', (e) => {
+      if (e.target.closest('.nav-links a')) nav.classList.remove('nav-mobile-open');
+    });
+    document.addEventListener('click', (e) => {
+      if (!nav.classList.contains('nav-mobile-open')) return;
+      if (!e.target.closest('#mainNav')) nav.classList.remove('nav-mobile-open');
+    });
+  }
+
+  /* ── Mobile-only: swap search placeholder ── */
+  const searchInput = document.getElementById('searchInput');
+  const mq = window.matchMedia('(max-width: 768px)');
+  const applyMobilePlaceholder = () => {
+    if (!searchInput) return;
+    const mobilePh = searchInput.getAttribute('data-mobile-placeholder');
+    if (!mobilePh) return;
+    if (mq.matches) {
+      if (!searchInput.dataset._origPh) {
+        searchInput.dataset._origPh = searchInput.getAttribute('placeholder') || '';
+      }
+      searchInput.setAttribute('placeholder', mobilePh);
+    } else if (searchInput.dataset._origPh !== undefined) {
+      searchInput.setAttribute('placeholder', searchInput.dataset._origPh);
+    }
+  };
+  applyMobilePlaceholder();
+  mq.addEventListener?.('change', applyMobilePlaceholder);
+
+  /* ── Mobile-only: city-chip activation + sync to zona select ── */
+  const chips = document.querySelectorAll('.city-bar .city-chip');
+  const zonaSelect = document.getElementById('searchZona');
+  chips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      chips.forEach(c => c.classList.remove('is-active'));
+      chip.classList.add('is-active');
+      if (zonaSelect) {
+        const v = chip.getAttribute('data-city') || '';
+        // If chip value isn't in the select options, leave select untouched.
+        const opt = Array.from(zonaSelect.options).find(o => o.value === v || o.text === v);
+        if (opt) zonaSelect.value = opt.value || opt.text;
+      }
+    });
   });
 });
 
