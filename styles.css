@@ -3512,8 +3512,7 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
    ═══════════════════════════════════════════════════════════ */
 @media (min-width: 769px) {
 
-  /* ── 1. Hide login / join / hamburger buttons in desktop navbar ── */
-  .nav .nav-cta .nav-login-btn,
+  /* ── 1. Hide join / hamburger buttons in desktop navbar (login button kept visible) ── */
   .nav .nav-cta .btn.btn-gold.btn-sm,
   .nav .nav-cta .nav-btn,
   .nav .nav-cta .nav-btn.filled,
@@ -3521,6 +3520,35 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
 
   /* ── Hide mobile-only "Escorts" label on desktop ── */
   .nav-escorts-mobile { display: none; }
+
+  /* ── Login button shown on desktop, sits to the left of "Escorts" ── */
+  .nav .nav-cta .btn.btn-gold.btn-sm.nav-login-btn {
+    display: inline-flex !important;
+    align-items: center;
+    gap: .5rem;
+    padding: 7px 18px;
+    border: 1px solid #C9A84C;
+    border-radius: 4px;
+    background: transparent;
+    color: #C9A84C;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    margin-right: 14px;
+    transition: background 0.2s, color 0.2s;
+    min-height: 0;
+    box-shadow: none;
+    transform: none;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .nav .nav-cta .btn.btn-gold.btn-sm.nav-login-btn:hover {
+    background: #C9A84C;
+    color: #000;
+    box-shadow: none;
+    transform: none;
+  }
 
   /* ── 2. "Escorts" italic gold label in navbar ── */
   .nav-escorts-label {
@@ -4469,4 +4497,12 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
     grid-template-columns: repeat(3, 1fr) !important;
     gap: 6px !important;
   }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SEARCH BAR — push a bit lower on all screen sizes
+   ═══════════════════════════════════════════════════════════ */
+.search-bar-wrap {
+  margin-top: 24px !important;
+  padding-top: 12px !important;
 }
