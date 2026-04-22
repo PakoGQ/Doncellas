@@ -16,7 +16,10 @@
       "Bash(curl -s http://127.0.0.1:8765/styles.css)",
       "Bash(kill 59787)",
       "Bash(xxd)",
-      "Bash(git checkout *)"
+      "Bash(git checkout *)",
+      "Bash(git -C /Users/pakogq/doncellas log --oneline -5)",
+      "Bash(git -C /Users/pakogq/doncellas show --stat HEAD)",
+      "Bash(git *)"
     ]
   }
 }
