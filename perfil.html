@@ -97,7 +97,7 @@
   <div>
 
     <!-- About -->
-    <div class="profile-card">
+    <div class="profile-card sobre-mi-card">
       <h3 class="profile-card-title">Sobre mí</h3>
       <p style="color:var(--t2);line-height:1.8;font-size:.92rem">
         Hola, soy Valentina. Modelo profesional con más de 4 años de experiencia en eventos corporativos,
@@ -112,7 +112,7 @@
     </div>
 
     <!-- 1. GALERÍA (arriba) -->
-    <div class="profile-card">
+    <div class="profile-card galeria-card">
       <h3 class="profile-card-title">
         Galería
         <div style="display:flex;gap:.5rem;align-items:center">
@@ -143,8 +143,83 @@
       </div>
     </div>
 
+    <!-- MOBILE ONLY: Action buttons (below gallery) -->
+    <div class="action-buttons-mobile">
+      <button class="action-btn-mobile" onclick="toggleFav(this)" aria-label="Guardar">
+        <i class="far fa-heart"></i><span>Guardar</span>
+      </button>
+      <button class="action-btn-mobile" onclick="shareProfile()" aria-label="Compartir">
+        <i class="fas fa-share-alt"></i><span>Compartir</span>
+      </button>
+      <a href="https://wa.me/523312345678?text=Hola%2C%20vi%20tu%20perfil%20en%20Doncellas"
+         target="_blank" class="action-btn-mobile action-btn-wa" aria-label="WhatsApp">
+        <i class="fab fa-whatsapp"></i><span>WhatsApp</span>
+      </a>
+      <a href="https://t.me/doncellas" target="_blank" class="action-btn-mobile action-btn-telegram" aria-label="Telegram">
+        <i class="fab fa-telegram"></i><span>Telegram</span>
+      </a>
+    </div>
+
+    <!-- MOBILE ONLY: Características -->
+    <div class="info-card-mobile">
+      <div class="section-title-mobile">Características</div>
+      <div class="section-content-mobile">
+        <div class="caract-grid-mobile">
+          <div class="caract-item-mobile"><span class="caract-lbl-m"><i class="fas fa-flag"></i> Nacionalidad</span><span class="caract-val-m">Mexicana</span></div>
+          <div class="caract-item-mobile"><span class="caract-lbl-m"><i class="fas fa-ruler-vertical"></i> Altura</span><span class="caract-val-m">1.72 m</span></div>
+          <div class="caract-item-mobile"><span class="caract-lbl-m"><i class="fas fa-birthday-cake"></i> Edad</span><span class="caract-val-m">24 años</span></div>
+          <div class="caract-item-mobile"><span class="caract-lbl-m"><i class="fas fa-eye"></i> Ojos</span><span class="caract-val-m">Verde</span></div>
+          <div class="caract-item-mobile"><span class="caract-lbl-m"><i class="fas fa-paint-brush"></i> Cabello</span><span class="caract-val-m">Castaño</span></div>
+          <div class="caract-item-mobile"><span class="caract-lbl-m"><i class="fas fa-hand-paper"></i> Piel</span><span class="caract-val-m">Morena clara</span></div>
+          <div class="caract-item-mobile"><span class="caract-lbl-m"><i class="fas fa-language"></i> Idiomas</span><span class="caract-val-m">ES / EN</span></div>
+          <div class="caract-item-mobile"><span class="caract-lbl-m"><i class="fas fa-circle-notch"></i> Medidas</span><span class="caract-val-m">88-62-94</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MOBILE ONLY: Tarifas -->
+    <div class="tarifas-section">
+      <div class="section-title-mobile">Tarifas</div>
+      <div class="section-content-mobile">
+        <div class="tarifa-row">
+          <span class="tarifa-tiempo">1 hora</span>
+          <span class="tarifa-precio">Consultar</span>
+        </div>
+        <div class="tarifa-row">
+          <span class="tarifa-tiempo">2 horas</span>
+          <span class="tarifa-precio">Consultar</span>
+        </div>
+        <div class="tarifa-row">
+          <span class="tarifa-tiempo">Noche completa</span>
+          <span class="tarifa-precio">Consultar</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- MOBILE ONLY: Servicios -->
+    <div class="servicios-section">
+      <div class="section-title-mobile">Servicios</div>
+      <div class="section-content-mobile">
+        <div class="servicios-tags">
+          <span class="servicio-tag">Cenas</span>
+          <span class="servicio-tag">Eventos</span>
+          <span class="servicio-tag">Viajes</span>
+          <span class="servicio-tag">A domicilio</span>
+          <span class="servicio-tag">En hotel</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- MOBILE ONLY: Perfiles similares -->
+    <div class="perfiles-similares">
+      <div class="section-title-mobile">Perfiles similares</div>
+      <div class="section-content-mobile" style="text-align:center;color:#5A5448;font-size:12px;padding:20px 0;">
+        Próximamente
+      </div>
+    </div>
+
     <!-- 2. SERVICIOS (izq) | CARACTERÍSTICAS (der) -->
-    <div class="profile-card">
+    <div class="profile-card servicios-caract-card">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
         <!-- Servicios -->
         <div>
@@ -172,7 +247,7 @@
     </div>
 
     <!-- Reviews -->
-    <div class="profile-card">
+    <div class="profile-card reviews-card">
       <h3 class="profile-card-title">
         Reseñas
         <span style="font-size:.8rem;font-family:var(--font-sans);color:var(--t2);font-weight:400">127 en total</span>
@@ -225,7 +300,7 @@
   <div>
 
     <!-- Pricing card -->
-    <div class="profile-card" style="border-color:var(--border-h)">
+    <div class="profile-card pricing-card" style="border-color:var(--border-h)">
       <h3 class="profile-card-title">Tarifas</h3>
 
       <!-- Promo banner (visible cuando hay promoción) -->
@@ -315,7 +390,7 @@
     </div>
 
     <!-- Contact card -->
-    <div class="profile-card mt-2">
+    <div class="profile-card mt-2 contact-card">
       <h3 class="profile-card-title">Contacto Rápido</h3>
       <div style="display:flex;flex-direction:column;gap:.6rem">
         <a href="https://wa.me/523312345678" target="_blank" class="btn btn-wa" style="justify-content:center">
@@ -334,7 +409,7 @@
     </div>
 
     <!-- Similar profiles -->
-    <div class="profile-card mt-2">
+    <div class="profile-card mt-2 similar-profiles-card">
       <h3 class="profile-card-title">Perfiles Similares</h3>
       <div style="display:flex;flex-direction:column;gap:.75rem" id="similarProfiles">
         <!-- Built by JS -->
