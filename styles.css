@@ -3762,3 +3762,28 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
   .profile-info-bar { max-width: 100%; box-sizing: border-box; }
   .profile-body * { min-width: 0; }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   Mobile-only action buttons below the photo carousel.
+   Desktop keeps the original .profile-actions inside the hero.
+   ═══════════════════════════════════════════════════════════ */
+.botones-perfil-mobile { display: none; }
+
+@media (max-width: 768px) {
+  .botones-perfil-mobile {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    border-bottom: 1px solid #2A2A2A;
+    background: #141414;
+    width: 100%;
+  }
+  .profile-info-bar .profile-actions { display: none; }
+}
+
+@media (min-width: 769px) {
+  .botones-perfil-mobile { display: none; }
+}
