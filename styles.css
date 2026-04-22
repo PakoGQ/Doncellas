@@ -3859,3 +3859,60 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
 @media (min-width: 769px) {
   .botones-perfil-mobile { display: none; }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   PROFILE HEADER — MOBILE reorganization
+   Línea 1: nombre + edad + estatura
+   Línea 2: badges (Disponible / Verificada / Top) + estrellas
+   Ubicación oculta. Sin afectar desktop.
+   ═══════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .profile-info-bar .profile-name-block {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    column-gap: 8px;
+    row-gap: 6px;
+  }
+  .profile-info-bar .profile-name-block::before {
+    content: "";
+    flex-basis: 100%;
+    height: 0;
+    order: 4;
+  }
+  .profile-info-bar .profile-meta {
+    display: contents !important;
+  }
+  .profile-info-bar .profile-meta-item.profile-meta-location {
+    display: none !important;
+  }
+  .profile-info-bar .profile-name {
+    order: 1;
+    margin-bottom: 0 !important;
+    flex: 0 0 auto;
+  }
+  .profile-info-bar .profile-meta-item.profile-meta-age  { order: 2; }
+  .profile-info-bar .profile-meta-item.profile-meta-height { order: 3; }
+  .profile-hero .profile-info-bar .profile-name-block .profile-badges-row {
+    order: 5;
+    display: flex !important;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 8px !important;
+    margin-bottom: 0 !important;
+  }
+  .profile-info-bar .profile-meta-item.stars {
+    order: 6;
+    font-size: 11px !important;
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+  }
+  .profile-info-bar .profile-meta-item.stars i {
+    font-size: 11px !important;
+  }
+  .profile-info-bar .profile-meta-item.stars span {
+    font-size: 10px !important;
+    color: #A09880 !important;
+  }
+}
