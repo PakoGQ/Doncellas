@@ -2992,29 +2992,28 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
   /* ── 1. Mobile navigation ──────────────────────────────── */
   .nav-cta { gap: 8px; }
   .nav-cta .nav-login-btn,
-  .nav-cta .btn.btn-gold.btn-sm {
-    display: inline-flex !important;
-    background: transparent !important;
-    color: #C9A84C !important;
-    border: 1px solid #C9A84C !important;
-    padding: 5px 10px !important;
-    font-size: 10px !important;
-    line-height: 1 !important;
-    min-height: 0 !important;
-    height: auto !important;
-    border-radius: 999px !important;
-    box-shadow: none !important;
-    letter-spacing: .04em;
-    text-transform: none;
-  }
-  .nav-cta .nav-login-btn i,
-  .nav-cta .btn.btn-gold.btn-sm i { font-size: 10px; margin-right: 4px; }
+  .nav-cta .btn.btn-gold.btn-sm,
+  .nav-cta .btn.btn-ghost.btn-sm,
+  .nav-cta .btn-ghost,
+  .nav-cta .nav-btn,
+  .nav-cta .nav-btn.filled,
+  .nav-menu-btn,
+  .m-hamburger,
+  .hamburger,
+  .nav-admin-right,
+  .nav-modelo-right { display: none !important; }
 
-  /* Hamburger button: keep visible (already mobile-only) */
-  .nav-menu-btn {
-    display: flex !important;
-    width: 38px; height: 38px;
-    min-width: 38px; min-height: 38px;
+  /* ── "Escorts" label on mobile navbar (right side) ── */
+  .nav-escorts-mobile {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    font-style: italic;
+    font-size: 20px;
+    font-weight: 400;
+    color: #C9A84C;
+    letter-spacing: 1px;
+    opacity: 0.9;
+    margin-left: auto;
+    padding-right: 4px;
   }
 
   /* ── Mobile drawer (separate element, slides from right) ── */
@@ -3518,6 +3517,9 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
   .nav .nav-cta .nav-btn,
   .nav .nav-cta .nav-btn.filled,
   .nav .nav-menu-btn { display: none !important; }
+
+  /* ── Hide mobile-only "Escorts" label on desktop ── */
+  .nav-escorts-mobile { display: none; }
 
   /* ── 2. "Escorts" italic gold label in navbar ── */
   .nav-escorts-label {
