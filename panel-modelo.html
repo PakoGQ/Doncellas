@@ -146,6 +146,13 @@
   <!-- Main -->
   <main class="modelo-main" style="padding:2rem">
 
+    <!-- Sticky availability bar (mobile only) -->
+    <button type="button" class="mobile-avail-bar" id="mobileAvailBar" onclick="toggleModelAvail()">
+      <span class="mobile-avail-dot" id="mobileAvailDot"></span>
+      <span class="mobile-avail-text" id="mobileAvailText">Disponible para citas</span>
+      <i class="fas fa-toggle-on mobile-avail-toggle" id="mobileAvailToggle"></i>
+    </button>
+
     <!-- ── Estadísticas ── -->
     <div class="admin-page active" id="page-stats">
       <h2 class="admin-page-title">Mis Estadísticas</h2>
@@ -433,9 +440,9 @@
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
         <div class="chart-card">
           <h4 style="margin-bottom:1rem">Información básica</h4>
-          <div class="form-group">
+          <div class="form-group locked-field">
             <label class="form-label">Nombre artístico</label>
-            <input class="form-input" value="Valentina R." />
+            <input class="form-input" value="Valentina R." readonly />
           </div>
           <div class="form-group">
             <label class="form-label">Descripción</label>
@@ -851,18 +858,31 @@ function toggleModelAvail() {
   const btn   = document.getElementById('modelAvailBtn');
   const pill  = document.getElementById('modelAvailPill');
   const label = document.getElementById('modelAvailLabel');
+  const mBar  = document.getElementById('mobileAvailBar');
+  const mText = document.getElementById('mobileAvailText');
+  const mTog  = document.getElementById('mobileAvailToggle');
   if (_modelAvail) {
-    btn.style.borderColor = 'rgba(76,175,130,.4)';
-    btn.style.background  = 'rgba(76,175,130,.08)';
-    btn.style.color       = 'var(--green)';
+    if (btn) {
+      btn.style.borderColor = 'rgba(76,175,130,.4)';
+      btn.style.background  = 'rgba(76,175,130,.08)';
+      btn.style.color       = 'var(--green)';
+    }
     if (label) label.textContent = 'Disponible';
     if (pill)  { pill.className = 'pill pill-available'; pill.style.fontSize = '.65rem'; pill.textContent = 'Disponible'; }
+    if (mBar)  mBar.classList.remove('off');
+    if (mText) mText.textContent = 'Disponible para citas';
+    if (mTog)  mTog.className = 'fas fa-toggle-on mobile-avail-toggle';
   } else {
-    btn.style.borderColor = 'rgba(224,80,80,.4)';
-    btn.style.background  = 'rgba(224,80,80,.08)';
-    btn.style.color       = 'var(--red)';
+    if (btn) {
+      btn.style.borderColor = 'rgba(224,80,80,.4)';
+      btn.style.background  = 'rgba(224,80,80,.08)';
+      btn.style.color       = 'var(--red)';
+    }
     if (label) label.textContent = 'No Disponible';
     if (pill)  { pill.className = 'pill pill-busy'; pill.style.fontSize = '.65rem'; pill.textContent = 'No Disponible'; }
+    if (mBar)  mBar.classList.add('off');
+    if (mText) mText.textContent = 'No disponible';
+    if (mTog)  mTog.className = 'fas fa-toggle-off mobile-avail-toggle';
   }
   showToast(_modelAvail ? 'Ahora estás Disponible' : 'Ahora estás No Disponible', 'success');
 }

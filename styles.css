@@ -3876,6 +3876,9 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
 /* Panel-specific bottom nav: hidden by default; shown on mobile */
 .panel-bottom-nav { display: none; }
 
+/* Mobile availability bar (modelo): hidden on desktop */
+.mobile-avail-bar { display: none; }
+
 @media (max-width: 768px) {
 
   /* ── Panel header (nav) ─────────────────────────────────── */
@@ -4022,6 +4025,7 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
   }
   body.panel-page .chart-title { font-size: .95rem; }
   body.panel-page .chart-canvas-wrap { height: 180px !important; }
+  body.panel-modelo #page-stats .chart-canvas-wrap { height: 160px !important; }
   body.panel-page .chart-tabs { flex-wrap: wrap; gap: .25rem; }
   body.panel-page .chart-tab { padding: .25rem .6rem; font-size: .7rem; }
 
@@ -4132,6 +4136,7 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
   /* ── Modelo: Contenido — upload + gallery ───────────────── */
   body.panel-page .upload-zone {
     padding: 1.5rem 1rem;
+    margin-bottom: 14px;
   }
   body.panel-page .upload-zone h4 { font-size: .95rem; }
   body.panel-page .upload-zone p { font-size: .75rem; }
@@ -4221,11 +4226,11 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
     gap: .25rem;
   }
   body.panel-page #page-disponibilidad .week-slot {
-    min-height: 28px;
-    font-size: .6rem;
+    min-height: 30px;
+    font-size: 11px;
   }
-  body.panel-page #page-disponibilidad .week-time { font-size: .6rem; padding: .2rem .3rem; }
-  body.panel-page #page-disponibilidad .week-col-header { font-size: .58rem; }
+  body.panel-page #page-disponibilidad .week-time { font-size: 11px; padding: .2rem .3rem; }
+  body.panel-page #page-disponibilidad .week-col-header { font-size: 10px; }
   body.panel-page #page-disponibilidad .chart-card > div:first-child {
     flex-direction: column;
     align-items: stretch !important;
@@ -4318,6 +4323,27 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
     color: var(--t2) !important;
     position: relative;
   }
+  body.panel-page .form-group.locked-field {
+    position: relative;
+  }
+  body.panel-page .form-group.locked-field .form-input {
+    background: #0A0A0A !important;
+    color: var(--t2) !important;
+    border-color: #2A2A2A !important;
+    padding-right: 38px !important;
+    cursor: not-allowed;
+  }
+  body.panel-page .form-group.locked-field::after {
+    content: "\f023";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    position: absolute;
+    right: 14px;
+    bottom: 13px;
+    color: var(--gold);
+    font-size: 14px;
+    pointer-events: none;
+  }
 
   /* Services grid rows: keep 3 cols but tighter */
   body.panel-page #modelServicesList > div,
@@ -4338,10 +4364,54 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
     gap: 12px !important;
   }
 
-  /* ── Sticky availability toggle (modelo) ────────────────── */
-  body.panel-modelo #page-disponibilidad .chart-card:first-of-type {
+  /* ── Sticky availability bar (modelo, all pages) ────────── */
+  body.panel-modelo .mobile-avail-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 44px;
+    padding: 0 14px;
+    margin: -14px -14px 14px;
+    box-sizing: border-box;
     position: sticky;
     top: 52px;
+    z-index: 90;
+    background: rgba(76,175,130,.12);
+    border: none;
+    border-bottom: 1px solid rgba(76,175,130,.35);
+    color: var(--green);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .03em;
+    cursor: pointer;
+    transition: background .2s, color .2s, border-color .2s;
+  }
+  body.panel-modelo .mobile-avail-bar.off {
+    background: rgba(224,80,80,.12);
+    border-bottom-color: rgba(224,80,80,.35);
+    color: var(--red);
+  }
+  body.panel-modelo .mobile-avail-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+    box-shadow: 0 0 8px currentColor;
+    flex-shrink: 0;
+  }
+  body.panel-modelo .mobile-avail-text {
+    flex: 1;
+    text-align: left;
+  }
+  body.panel-modelo .mobile-avail-toggle {
+    font-size: 22px;
+  }
+
+  /* ── Sticky availability toggle (modelo, disponibilidad) ── */
+  body.panel-modelo #page-disponibilidad .chart-card:first-of-type {
+    position: sticky;
+    top: 96px;
     z-index: 50;
     margin-bottom: 14px;
   }
