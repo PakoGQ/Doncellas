@@ -3505,3 +3505,95 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
   .mobile-drawer-links li:has(a[href="membresias.html"]) { display: none !important; }
   .footer-links li:has(a[href="membresias.html"]) { display: none !important; }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   DESKTOP (≥769px) — NAV + PROFILE + BANNER REFINEMENTS
+   Appended last to win specificity. Does not touch mobile/PWA.
+   ═══════════════════════════════════════════════════════════ */
+@media (min-width: 769px) {
+
+  /* ── 1. Hide login / join / hamburger buttons in desktop navbar ── */
+  .nav .nav-cta .nav-login-btn,
+  .nav .nav-cta .btn.btn-gold.btn-sm,
+  .nav .nav-cta .nav-btn,
+  .nav .nav-cta .nav-btn.filled,
+  .nav .nav-menu-btn { display: none !important; }
+
+  /* ── 2. "Escorts" italic gold label in navbar ── */
+  .nav-escorts-label {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    font-style: italic;
+    font-size: 22px;
+    font-weight: 400;
+    color: #C9A84C;
+    letter-spacing: 2px;
+    opacity: 0.9;
+  }
+
+  /* ── 3. Larger "Doncellas" logo in navbar ── */
+  .nav .nav-logo,
+  .nav .logo-text {
+    font-size: 22px;
+    letter-spacing: 4px;
+  }
+  .nav .logo-mark {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+  }
+
+  /* ── 4. Profile page — ensure everything fits and flows ── */
+  .profile-body,
+  .prof-main {
+    grid-template-columns: 1fr 320px;
+    min-height: 0;
+    overflow: visible;
+  }
+  .profile-body > *,
+  .profile-card,
+  .prof-main > *,
+  .gal-card,
+  .wa-card,
+  .info-card { overflow: visible; }
+
+  .profile-info-bar,
+  .prof-top {
+    max-width: 100%;
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+
+  .profile-card p,
+  .prof-bio { max-width: 100%; }
+
+  .profile-meta,
+  .stats-bar {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 1rem;
+    overflow: visible;
+  }
+  .profile-stat-n,
+  .stat-n { font-size: 22px; }
+  .profile-stat-l,
+  .stat-l { font-size: 10px; }
+
+  .profile-body .profile-card,
+  .gal-card {
+    width: 100%;
+  }
+
+  /* Sidebar (right column) follows the scroll */
+  .profile-body > div:nth-child(2),
+  .sidebar-r {
+    position: sticky;
+    top: 80px;
+    align-self: start;
+  }
+
+  .wa-card { padding: 18px; }
+
+  /* ── 5. Hide banner dots/indicators on desktop; keep arrows ── */
+  .hb-nav,
+  .hero-dots { display: none !important; }
+}
