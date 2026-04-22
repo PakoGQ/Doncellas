@@ -3599,3 +3599,16 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
   .hb-nav,
   .hero-dots { display: none !important; }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   MOBILE NAVBAR — minimal (logo only) on index, modelos, categorias
+   Removes login button, hamburger and "Escorts" label.
+   ═══════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  body.page-mobile-min-nav .nav .nav-cta,
+  body.page-mobile-min-nav .nav .nav-cta .btn,
+  body.page-mobile-min-nav .nav .nav-cta .nav-login-btn,
+  body.page-mobile-min-nav .nav .nav-menu-btn,
+  body.page-mobile-min-nav .nav .nav-escorts-mobile,
+  body.page-mobile-min-nav .nav .nav-escorts-label { display: none !important; }
+}
