@@ -3612,3 +3612,153 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
   body.page-mobile-min-nav .nav .nav-escorts-mobile,
   body.page-mobile-min-nav .nav .nav-escorts-label { display: none !important; }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   PROFILE PAGE — MOBILE (≤768px) icon-only actions, compact
+   metadata, single-column body, compact info/tags/gallery/calendar.
+   Appended last to win specificity. Desktop untouched.
+   ═══════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+
+  /* ── 1. Action buttons (profile-actions) → icon-only circles ── */
+  .profile-actions {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 8px;
+    padding-bottom: 4px;
+    margin: 0;
+  }
+  .profile-actions::-webkit-scrollbar { display: none; }
+  .profile-actions .btn {
+    flex: 0 0 auto;
+    width: 40px;
+    height: 40px;
+    min-height: 40px;
+    padding: 0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0;            /* hide trailing text nodes ("WhatsApp", "Guardar"…) */
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .profile-actions .btn i {
+    font-size: 15px;
+    margin: 0;
+  }
+
+  /* ── 2. Name block & pills ── */
+  .profile-name {
+    font-size: 18px !important;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    line-height: 1.25;
+  }
+  .profile-name-block .pill {
+    font-size: 8px;
+    padding: 2px 7px;
+    letter-spacing: .04em;
+  }
+  .profile-meta-item { font-size: 11px; }
+  /* "Sobre mí" bio paragraph (inline-styled <p> inside first .profile-card) */
+  .profile-body .profile-card p {
+    font-size: 12px;
+    line-height: 1.6;
+  }
+
+  /* ── 3. Tags (equivalent to .prof-tags) ── */
+  .model-card-tags {
+    display: flex !important;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 12px;
+  }
+  .model-card-tags .tag,
+  .profile-card .tag {
+    font-size: 9px;
+    padding: 3px 8px;
+  }
+
+  /* ── 4. Body: single column, sidebar below ── */
+  .profile-body {
+    grid-template-columns: 1fr !important;
+    gap: 1rem;
+  }
+  .profile-body > div:nth-child(2) { order: 2; }
+  .profile-body > div:first-child  { order: 1; }
+
+  /* ── 5. Characteristics grid (equivalent to .info-card / .info-row) ── */
+  .caract-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+  .caract-item {
+    padding: 8px 14px;
+    font-size: 11px;
+  }
+  .caract-lbl { font-size: 9px; }
+  .caract-val {
+    font-size: 11px;
+    text-align: right;
+  }
+
+  /* Servicios + Características: stack in one column on mobile */
+  .profile-card > div[style*="grid-template-columns:1fr 1fr"],
+  .profile-card > div[style*="grid-template-columns: 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+
+  /* ── 6. Tarifas / WhatsApp card (equivalent to .wa-card) ── */
+  .profile-card { padding: 14px; }
+  .profile-card-title { font-size: 12px; }
+  .profile-card .btn-wa,
+  .profile-card .btn-telegram {
+    padding: 10px;
+    font-size: 11px;
+  }
+
+  /* ── 7. Gallery (thumbs column → horizontal strip) ── */
+  .profile-card > div[style*="grid-template-columns:1fr 90px"],
+  .profile-card > div[style*="grid-template-columns: 1fr 90px"] {
+    grid-template-columns: 1fr !important;
+    gap: 6px !important;
+  }
+  #mediaThumbs {
+    flex-direction: row !important;
+    max-height: none !important;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 4px;
+  }
+  #mediaThumbs > * {
+    flex: 0 0 56px;
+    width: 56px !important;
+    height: 56px !important;
+  }
+  #mediaThumbs::-webkit-scrollbar { display: none; }
+
+  /* ── 8. Collapsible calendar (equivalent to .citas-toggle) ── */
+  .calendar-collapse-btn {
+    padding: 12px 16px;
+    font-size: 12px;
+  }
+  .calendar-month { font-size: 12px; }
+  .calendar-grid .cal-day,
+  .calendar-grid > * { font-size: 10px; }
+  .calendar-legend {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  /* ── 9. Prevent horizontal overflow anywhere in the profile ── */
+  .profile-body,
+  .profile-card,
+  .profile-info-bar { max-width: 100%; box-sizing: border-box; }
+  .profile-body * { min-width: 0; }
+}
