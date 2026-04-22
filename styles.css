@@ -3846,6 +3846,12 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
   .profile-info-bar .profile-meta-item.stars { font-size: 12px !important; }
   .profile-info-bar .profile-meta-item.stars span { font-size: 12px !important; }
 
+  /* Ocultar ubicación, edad/estatura, estrellas y reseñas en móvil */
+  .profile-info-bar .profile-meta-item:has(.fa-map-marker-alt) { display: none !important; }
+  .profile-info-bar .profile-meta-item:has(.fa-birthday-cake) { display: none !important; }
+  .profile-info-bar .profile-meta-item:has(.fa-ruler-vertical) { display: none !important; }
+  .profile-info-bar .profile-meta-item.stars { display: none !important; }
+
   /* Carrusel de fotos pequeñas (thumb strip) */
   #thumbStrip {
     height: 60px;
