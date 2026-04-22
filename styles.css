@@ -3773,15 +3773,87 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
   .botones-perfil-mobile {
     display: flex;
     flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 16px;
-    padding: 16px;
-    border-bottom: 1px solid #2A2A2A;
-    background: #141414;
     width: 100%;
+    padding: 12px 14px;
+    gap: 8px;
+    border-top: 1px solid #2A2A2A;
+    border-bottom: 1px solid #2A2A2A;
+    background: #0A0A0A;
+    justify-content: space-between;
+    box-sizing: border-box;
   }
   .profile-info-bar .profile-actions { display: none; }
+
+  /* All buttons: icon-only, 44px height, radius 8px */
+  .botones-perfil-mobile .btn {
+    height: 44px;
+    min-height: 44px;
+    padding: 0;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .botones-perfil-mobile .btn i { font-size: 16px; margin: 0; }
+  .botones-perfil-mobile .btn span { font-size: 0 !important; }
+
+  /* 1. Guardar (heart) */
+  .botones-perfil-mobile > *:nth-child(1) { flex: 1; width: 100%; }
+  /* 2. Compartir — smaller fixed square */
+  .botones-perfil-mobile > *:nth-child(2) { flex: 0 0 44px; width: 44px; }
+  /* 3. WhatsApp */
+  .botones-perfil-mobile > *:nth-child(3) {
+    flex: 2;
+    background: #25D366;
+    color: #fff;
+    border: none;
+  }
+  /* 4. Telegram */
+  .botones-perfil-mobile > *:nth-child(4) {
+    flex: 2;
+    background: #0088cc;
+    color: #fff;
+    border: none;
+  }
+
+  /* ── Compact upper block (badges / name / meta / thumbs) ── */
+  .profile-info-bar .profile-name-block > div:first-child {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 6px !important;
+    margin-bottom: 6px !important;
+  }
+  .profile-info-bar .profile-name-block .pill {
+    font-size: 9px !important;
+    padding: 2px 7px;
+    letter-spacing: .04em;
+  }
+  .profile-info-bar .profile-name {
+    font-size: 20px !important;
+    margin-bottom: 4px !important;
+    line-height: 1.2;
+  }
+  .profile-info-bar .profile-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 10px;
+  }
+  .profile-info-bar .profile-meta-item { font-size: 11px !important; }
+  .profile-info-bar .profile-meta-item.stars { font-size: 12px !important; }
+  .profile-info-bar .profile-meta-item.stars span { font-size: 12px !important; }
+
+  /* Carrusel de fotos pequeñas (thumb strip) */
+  #thumbStrip {
+    height: 60px;
+    gap: 6px !important;
+  }
+  #thumbStrip img {
+    width: 60px !important;
+    height: 60px !important;
+  }
 }
 
 @media (min-width: 769px) {
