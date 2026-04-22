@@ -22,7 +22,7 @@
     .inline-status { display:inline-flex; align-items:center; gap:.35rem; font-size:.78rem; }
   </style>
 </head>
-<body>
+<body class="panel-page panel-admin">
 
 <nav class="nav scrolled" id="mainNav">
   <a href="index.html" class="nav-logo">Doncel<span>las</span></a>
@@ -500,6 +500,59 @@
       </div>
     </div>
 
+    <!-- ── Referidos ── -->
+    <div class="admin-page" id="page-referidos">
+      <h2 class="admin-page-title">Programa de Referidos</h2>
+      <p class="admin-page-sub">Doncellas que se registraron por referidos</p>
+
+      <div class="kpi-grid" style="margin-bottom:1.5rem">
+        <div class="kpi-card">
+          <div class="kpi-icon gold"><i class="fas fa-user-friends"></i></div>
+          <div class="kpi-label">Referidos activos</div>
+          <div class="kpi-value">42</div>
+          <div class="kpi-delta up"><i class="fas fa-arrow-up"></i> +6 este mes</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon green"><i class="fas fa-coins"></i></div>
+          <div class="kpi-label">Comisiones pagadas</div>
+          <div class="kpi-value">$18,400</div>
+          <div class="kpi-delta up"><i class="fas fa-arrow-up"></i> +22%</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon blue"><i class="fas fa-percentage"></i></div>
+          <div class="kpi-label">Conversión</div>
+          <div class="kpi-value">68%</div>
+          <div class="kpi-delta up">Enlaces → altas</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon red"><i class="fas fa-hand-holding-usd"></i></div>
+          <div class="kpi-label">Por pagar</div>
+          <div class="kpi-value">$3,150</div>
+          <div class="kpi-delta down">Pendiente</div>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-header">
+          <span class="chart-title">Top referidoras</span>
+          <button class="btn btn-outline btn-sm"><i class="fas fa-download"></i> Exportar</button>
+        </div>
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead><tr>
+              <th>Doncella</th><th>Referidas</th><th>Activas</th><th>Comisión total</th><th>Estado</th>
+            </tr></thead>
+            <tbody>
+              <tr><td>Valentina R.</td><td>7</td><td>5</td><td>$3,500</td><td><span class="pill pill-available">Activo</span></td></tr>
+              <tr><td>Camila S.</td><td>5</td><td>4</td><td>$2,800</td><td><span class="pill pill-available">Activo</span></td></tr>
+              <tr><td>Isabella M.</td><td>4</td><td>3</td><td>$2,100</td><td><span class="pill pill-available">Activo</span></td></tr>
+              <tr><td>Lucía P.</td><td>3</td><td>2</td><td>$1,400</td><td><span class="pill pill-busy">Pausa</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
     <!-- ── Moderación ── -->
     <div class="admin-page" id="page-moderacion">
       <h2 class="admin-page-title">Moderación de Contenido</h2>
@@ -621,13 +674,32 @@
 
 <div class="toast-container" id="toastContainer"></div>
 
-<!-- Mobile Bottom Navigation -->
-<nav class="bottom-nav" aria-label="Navegación principal">
-  <a href="index.html" class="bottom-nav-item"><i class="fas fa-home"></i><span>Inicio</span></a>
-  <a href="modelos.html" class="bottom-nav-item"><i class="fas fa-users"></i><span>Doncellas</span></a>
-  <a href="categorias.html" class="bottom-nav-item"><i class="fas fa-star"></i><span>Categorías</span></a>
-  <a href="panel-admin.html" class="bottom-nav-item active"><i class="fas fa-user"></i><span>Mi cuenta</span></a>
+<!-- Mobile Panel Bottom Navigation -->
+<nav class="panel-bottom-nav" aria-label="Navegación del panel">
+  <button type="button" class="panel-bottom-nav-item active" data-page="dashboard" onclick="goPanelAdmin('dashboard', this)">
+    <i class="fas fa-chart-line"></i><span>Dashboard</span>
+  </button>
+  <button type="button" class="panel-bottom-nav-item" data-page="modelos" onclick="goPanelAdmin('modelos', this)">
+    <i class="fas fa-female"></i><span>Escorts</span>
+  </button>
+  <button type="button" class="panel-bottom-nav-item" data-page="resenas" onclick="goPanelAdmin('resenas', this)">
+    <i class="fas fa-star"></i><span>Reseñas</span>
+  </button>
+  <button type="button" class="panel-bottom-nav-item" data-page="referidos" onclick="goPanelAdmin('referidos', this)">
+    <i class="fas fa-user-friends"></i><span>Referidos</span>
+  </button>
+  <button type="button" class="panel-bottom-nav-item" data-page="ingresos" onclick="goPanelAdmin('ingresos', this)">
+    <i class="fas fa-dollar-sign"></i><span>Ingresos</span>
+  </button>
 </nav>
+<script>
+function goPanelAdmin(page, el) {
+  if (typeof showAdminPage === 'function') showAdminPage(page);
+  document.querySelectorAll('.panel-bottom-nav-item').forEach(i => i.classList.remove('active'));
+  if (el) el.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
 <script src="app.js"></script>
 <script>
   if ('serviceWorker' in navigator) {

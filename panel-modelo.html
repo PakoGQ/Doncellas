@@ -70,7 +70,7 @@
     .referral-stat:last-child { border-bottom: none; }
   </style>
 </head>
-<body>
+<body class="panel-page panel-modelo">
 
 <nav class="nav scrolled" id="mainNav">
   <a href="index.html" class="nav-logo">Doncel<span>las</span></a>
@@ -758,13 +758,32 @@
 
 <div class="toast-container" id="toastContainer"></div>
 
-<!-- Mobile Bottom Navigation -->
-<nav class="bottom-nav" aria-label="Navegación principal">
-  <a href="index.html" class="bottom-nav-item"><i class="fas fa-home"></i><span>Inicio</span></a>
-  <a href="modelos.html" class="bottom-nav-item"><i class="fas fa-users"></i><span>Doncellas</span></a>
-  <a href="categorias.html" class="bottom-nav-item"><i class="fas fa-star"></i><span>Categorías</span></a>
-  <a href="panel-modelo.html" class="bottom-nav-item active"><i class="fas fa-user"></i><span>Mi cuenta</span></a>
+<!-- Mobile Panel Bottom Navigation -->
+<nav class="panel-bottom-nav" aria-label="Navegación del panel">
+  <button type="button" class="panel-bottom-nav-item active" data-page="stats" onclick="goPanelModelo('stats', this)">
+    <i class="fas fa-home"></i><span>Inicio</span>
+  </button>
+  <button type="button" class="panel-bottom-nav-item" data-page="contenido" onclick="goPanelModelo('contenido', this)">
+    <i class="fas fa-camera"></i><span>Contenido</span>
+  </button>
+  <button type="button" class="panel-bottom-nav-item" data-page="citas" onclick="goPanelModelo('citas', this)">
+    <i class="fas fa-calendar-alt"></i><span>Citas</span>
+  </button>
+  <button type="button" class="panel-bottom-nav-item" data-page="disponibilidad" onclick="goPanelModelo('disponibilidad', this)">
+    <i class="fas fa-calendar-check"></i><span>Calendario</span>
+  </button>
+  <button type="button" class="panel-bottom-nav-item" data-page="perfil-edit" onclick="goPanelModelo('perfil-edit', this)">
+    <i class="fas fa-user"></i><span>Perfil</span>
+  </button>
 </nav>
+<script>
+function goPanelModelo(page, el) {
+  if (typeof showModeloPage === 'function') showModeloPage(page);
+  document.querySelectorAll('.panel-bottom-nav-item').forEach(i => i.classList.remove('active'));
+  if (el) el.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
 <script src="app.js"></script>
 <script>
 function toggleExtraCheck(extraId, siChecked) {

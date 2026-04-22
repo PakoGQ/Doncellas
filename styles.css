@@ -3866,3 +3866,537 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
 @media (min-width: 769px) {
   .botones-perfil-mobile { display: none; }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   PANEL ADMIN + PANEL MODELO — MOBILE OPTIMIZATION (≤768px)
+   Scoped to body.panel-page so the site-wide mobile bottom-nav
+   and desktop layouts remain untouched.
+   ═══════════════════════════════════════════════════════════ */
+
+/* Panel-specific bottom nav: hidden by default; shown on mobile */
+.panel-bottom-nav { display: none; }
+
+@media (max-width: 768px) {
+
+  /* ── Panel header (nav) ─────────────────────────────────── */
+  body.panel-page { --nav-h: 52px; overflow-x: hidden; }
+  body.panel-page .nav {
+    height: 52px;
+    background: #0A0A0A;
+    border-bottom: 1px solid #2A2A2A;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding: 0 12px;
+  }
+  body.panel-page .nav .nav-logo { font-size: 14px; letter-spacing: .03em; }
+  body.panel-page .nav .nav-logo::before { display: none; }
+  body.panel-page .nav .nav-escorts-mobile { display: none !important; }
+  body.panel-page .nav .nav-menu-btn,
+  body.panel-page .nav .m-hamburger,
+  body.panel-page .nav .hamburger { display: none !important; }
+
+  /* Admin: show small "Admin" label on right */
+  body.panel-admin .nav .nav-admin-right {
+    display: flex !important;
+    margin-left: auto;
+    align-items: center;
+    gap: 8px;
+  }
+  body.panel-admin .nav .nav-admin-right > :not(:first-child) { display: none !important; }
+  body.panel-admin .nav .nav-admin-right > span {
+    font-size: 11px !important;
+    color: var(--t2);
+  }
+
+  /* Modelo: show only the artist name on right */
+  body.panel-modelo .nav .nav-modelo-right {
+    display: flex !important;
+    margin-left: auto;
+    align-items: center;
+    gap: 8px;
+  }
+  body.panel-modelo .nav .nav-modelo-right > button,
+  body.panel-modelo .nav .nav-modelo-right > .pill,
+  body.panel-modelo .nav .nav-modelo-right > img { display: none !important; }
+  body.panel-modelo .nav .nav-modelo-right > span {
+    font-size: 11px !important;
+    color: var(--t2);
+  }
+
+  /* ── Hide sidebars ──────────────────────────────────────── */
+  body.panel-page .admin-sidebar,
+  body.panel-page .modelo-sidebar { display: none !important; }
+
+  /* ── Main content: full width, padded for bottom-nav ───── */
+  body.panel-page .admin-layout,
+  body.panel-page .modelo-layout {
+    padding-top: 0;
+    min-height: auto;
+  }
+  body.panel-page .admin-main,
+  body.panel-page .modelo-main {
+    margin-left: 0 !important;
+    width: 100%;
+    padding: 14px 14px 70px !important;
+    box-sizing: border-box;
+  }
+  /* Site-wide body padding for the old bottom-nav doesn't apply here */
+  body.panel-page { padding-bottom: 0 !important; }
+
+  /* ── Panel page titles compact ─────────────────────────── */
+  body.panel-page .admin-page-title { font-size: 1.15rem; margin-bottom: .25rem; }
+  body.panel-page .admin-page-sub { font-size: .78rem; margin-bottom: 1rem; }
+
+  /* ── Panel bottom navigation (5 items) ─────────────────── */
+  .panel-bottom-nav {
+    display: flex;
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    height: 56px;
+    background: #0A0A0A;
+    border-top: 1px solid rgba(201,168,76,0.2);
+    z-index: 200;
+    justify-content: space-around;
+    align-items: center;
+    padding-bottom: env(safe-area-inset-bottom, 0);
+    box-shadow: 0 -4px 16px rgba(0,0,0,.4);
+  }
+  .panel-bottom-nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    background: transparent;
+    border: none;
+    color: #5A5448;
+    cursor: pointer;
+    font-family: inherit;
+    padding: 6px 4px;
+    min-height: 44px;
+    text-decoration: none;
+    transition: color .18s ease;
+  }
+  .panel-bottom-nav-item i { font-size: 18px; line-height: 1; }
+  .panel-bottom-nav-item span {
+    font-size: 8px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    line-height: 1;
+  }
+  .panel-bottom-nav-item.active,
+  .panel-bottom-nav-item:active { color: #C9A84C; }
+
+  /* Hide the site-wide 4-item bottom-nav on panel pages (each panel has its own) */
+  body.panel-page .bottom-nav { display: none !important; }
+
+  /* ── KPI grid: 2 columns, compact cards ─────────────────── */
+  body.panel-page .kpi-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  body.panel-page .kpi-card { padding: 12px; }
+  body.panel-page .kpi-icon { width: 32px; height: 32px; font-size: .9rem; margin-bottom: .4rem; }
+  body.panel-page .kpi-label { font-size: 9px; }
+  body.panel-page .kpi-value { font-size: 20px; }
+  body.panel-page .kpi-delta { font-size: .65rem; margin-top: .2rem; }
+
+  /* ── Stat-mini (modelo) grid: 2 columns ─────────────────── */
+  body.panel-page .stat-mini { padding: 12px; }
+  body.panel-page .stat-mini-n { font-size: 20px; }
+  body.panel-page .stat-mini-l { font-size: 9px; }
+
+  /* ── Charts/cards: full width, reduced height ───────────── */
+  body.panel-page .chart-card {
+    padding: 12px;
+    margin-bottom: 12px;
+    border-radius: var(--r-md);
+  }
+  body.panel-page .chart-header {
+    margin-bottom: .75rem;
+    flex-wrap: wrap;
+    gap: .5rem;
+  }
+  body.panel-page .chart-title { font-size: .95rem; }
+  body.panel-page .chart-canvas-wrap { height: 180px !important; }
+  body.panel-page .chart-tabs { flex-wrap: wrap; gap: .25rem; }
+  body.panel-page .chart-tab { padding: .25rem .6rem; font-size: .7rem; }
+
+  /* ── Any inline grid 2fr 1fr / 1fr 1fr / 1fr 300px → 1 col ─ */
+  body.panel-page .admin-main > div[style*="grid-template-columns:2fr 1fr"],
+  body.panel-page .modelo-main > div[style*="grid-template-columns:2fr 1fr"],
+  body.panel-page .admin-page > div[style*="grid-template-columns:2fr 1fr"],
+  body.panel-page .admin-page > div[style*="grid-template-columns: 2fr 1fr"],
+  body.panel-page .admin-page > div[style*="grid-template-columns:1fr 1fr"],
+  body.panel-page .admin-page > div[style*="grid-template-columns: 1fr 1fr"],
+  body.panel-page .admin-page > div[style*="grid-template-columns:1fr 300px"],
+  body.panel-page .admin-page > div[style*="grid-template-columns: 1fr 300px"],
+  body.panel-page .admin-page > div[style*="grid-template-columns:1fr 1fr 1fr"],
+  body.panel-page .admin-page > div[style*="grid-template-columns: 1fr 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  /* ── Tables: block, horizontal scroll ───────────────────── */
+  body.panel-page .admin-table-wrap {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    max-width: 100%;
+    border-radius: var(--r-md);
+  }
+  body.panel-page .admin-table {
+    min-width: 480px;
+    font-size: .78rem;
+  }
+  body.panel-page .admin-table th,
+  body.panel-page .admin-table td {
+    padding: .55rem .65rem;
+    font-size: .72rem;
+    white-space: nowrap;
+  }
+  body.panel-page .admin-table th {
+    font-size: .62rem;
+  }
+
+  /* ── Admin search bar: stacked ──────────────────────────── */
+  body.panel-page .admin-search {
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  body.panel-page .admin-search-input,
+  body.panel-page .admin-search .filter-select {
+    width: 100%;
+    min-height: 44px;
+    font-size: 16px;
+  }
+
+  /* ── Tabs row (reseñas / citas) ─────────────────────────── */
+  body.panel-page .tabs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: .4rem;
+    flex-wrap: nowrap;
+    margin-bottom: 12px;
+  }
+  body.panel-page .tabs::-webkit-scrollbar { display: none; }
+  body.panel-page .tab-btn {
+    flex: 0 0 auto;
+    font-size: .75rem;
+    padding: .5rem .85rem;
+    white-space: nowrap;
+  }
+
+  /* ── Admin: Gestión de Doncellas — top row + CTA ────────── */
+  body.panel-page #page-modelos > div:first-child {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: .5rem !important;
+  }
+  body.panel-page #page-modelos .btn-gold {
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 6px;
+  }
+
+  /* Pagination row: keep centered & wrap */
+  body.panel-page #page-modelos > div:last-child {
+    flex-direction: column;
+    gap: .5rem;
+    font-size: .72rem;
+  }
+
+  /* ── Reviews list (admin): compact cards, action row horizontal ── */
+  body.panel-page .review-card {
+    padding: .85rem;
+    font-size: 12px;
+  }
+  body.panel-page .review-text { font-size: 12px; }
+  body.panel-page .review-action-row {
+    display: flex;
+    flex-direction: row;
+    gap: .5rem;
+    margin-top: .65rem;
+  }
+  body.panel-page .review-action-row .btn {
+    flex: 1;
+    min-height: 40px;
+    font-size: .75rem;
+  }
+
+  /* ── Modelo: Contenido — upload + gallery ───────────────── */
+  body.panel-page .upload-zone {
+    padding: 1.5rem 1rem;
+  }
+  body.panel-page .upload-zone h4 { font-size: .95rem; }
+  body.panel-page .upload-zone p { font-size: .75rem; }
+  body.panel-page .upload-zone .btn {
+    width: 100%;
+    min-height: 44px;
+    margin-top: 14px !important;
+    justify-content: center;
+  }
+  body.panel-page .upload-preview-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 8px;
+  }
+  body.panel-page .upload-preview-item { aspect-ratio: 1; border-radius: 6px; }
+  /* Remove button: always visible on mobile (no hover dependency) */
+  body.panel-page .upload-preview-remove {
+    opacity: 1 !important;
+    display: flex !important;
+    top: 4px; right: 4px;
+    width: 22px; height: 22px;
+  }
+
+  /* Current gallery grid: 3 columns, aspect 1, always-visible X */
+  body.panel-page #currentGallery {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 8px !important;
+  }
+  body.panel-page #currentGallery > * {
+    aspect-ratio: 1;
+    border-radius: 6px;
+    position: relative;
+  }
+  body.panel-page #currentGallery .remove-btn,
+  body.panel-page #currentGallery .gallery-remove,
+  body.panel-page #currentGallery button {
+    opacity: 1 !important;
+    display: flex !important;
+  }
+
+  /* Contenido: header row with sort/delete buttons stacks */
+  body.panel-page #page-contenido > div[style*="margin-top:2rem"] > div:first-child {
+    flex-direction: column;
+    align-items: stretch !important;
+    gap: .5rem;
+  }
+  body.panel-page #page-contenido > div[style*="margin-top:2rem"] > div:first-child > div {
+    display: flex;
+    gap: 8px;
+  }
+  body.panel-page #page-contenido > div[style*="margin-top:2rem"] > div:first-child .btn {
+    flex: 1;
+    min-height: 40px;
+  }
+
+  /* ── Modelo: Citas (cita-item) → vertical cards ─────────── */
+  body.panel-page .cita-item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: .65rem;
+    padding: .85rem;
+    font-size: 12px;
+  }
+  body.panel-page .cita-date {
+    align-self: flex-start;
+    min-width: auto;
+    padding: .4rem .65rem;
+  }
+  body.panel-page .cita-date .day { font-size: 1.1rem; }
+  body.panel-page .cita-info h4 { font-size: .88rem; }
+  body.panel-page .cita-info p { font-size: .72rem; }
+  body.panel-page .cita-item > .btn,
+  body.panel-page .cita-item .cita-actions {
+    width: 100%;
+  }
+  body.panel-page .cita-actions,
+  body.panel-page .cita-item > div[style*="display:flex"]:last-child {
+    display: flex;
+    flex-direction: row;
+    gap: .5rem;
+    width: 100%;
+  }
+  body.panel-page .cita-actions .btn { flex: 1; min-height: 40px; font-size: .72rem; }
+
+  /* ── Modelo: Disponibilidad / Calendario ────────────────── */
+  body.panel-page #page-disponibilidad .week-grid {
+    font-size: .65rem;
+    gap: .25rem;
+  }
+  body.panel-page #page-disponibilidad .week-slot {
+    min-height: 28px;
+    font-size: .6rem;
+  }
+  body.panel-page #page-disponibilidad .week-time { font-size: .6rem; padding: .2rem .3rem; }
+  body.panel-page #page-disponibilidad .week-col-header { font-size: .58rem; }
+  body.panel-page #page-disponibilidad .chart-card > div:first-child {
+    flex-direction: column;
+    align-items: stretch !important;
+    gap: .5rem;
+  }
+  body.panel-page #page-disponibilidad .chart-card > div:first-child > div {
+    display: flex;
+    gap: .5rem;
+  }
+  body.panel-page #page-disponibilidad .chart-card > div:first-child .btn {
+    flex: 1;
+    min-height: 40px;
+  }
+
+  /* Admin calendar (citas): compact */
+  body.panel-page #page-citas .calendar-month { font-size: 1rem; }
+  body.panel-page #page-citas .calendar-day-name { font-size: 10px; }
+  body.panel-page #page-citas #adminCalGrid > *,
+  body.panel-page #page-citas #adminCalGrid .cal-day {
+    font-size: 11px;
+    min-height: 34px;
+  }
+
+  /* ── Referidos: cards column, link box stacked ──────────── */
+  body.panel-page .referral-link-box {
+    flex-direction: column;
+    align-items: stretch;
+    gap: .5rem;
+    padding: .75rem;
+  }
+  body.panel-page .referral-link-box input {
+    width: 100%;
+    font-size: 14px;
+    min-height: 40px;
+  }
+  body.panel-page .referral-link-box .btn {
+    width: 100%;
+    min-height: 40px;
+    justify-content: center;
+  }
+
+  /* ── Forms: single column, 16px inputs, 44px height ─────── */
+  body.panel-page .form-row {
+    display: flex;
+    flex-direction: column;
+    gap: .6rem;
+  }
+  body.panel-page .form-group { margin-bottom: .75rem; }
+  body.panel-page .form-label {
+    font-size: 11px;
+    margin-bottom: 4px;
+    display: block;
+  }
+  body.panel-page .form-input,
+  body.panel-page textarea.form-input,
+  body.panel-page select.form-input {
+    width: 100%;
+    min-height: 44px;
+    font-size: 16px;
+    box-sizing: border-box;
+  }
+  body.panel-page textarea.form-input { min-height: 88px; }
+  body.panel-page .chart-card .btn.btn-gold {
+    width: 100%;
+    min-height: 48px;
+    margin-top: 14px;
+    justify-content: center;
+  }
+
+  /* Perfil edit: inline 2-col grids → 1 col */
+  body.panel-page #page-perfil-edit > div[style*="grid-template-columns:1fr 1fr"],
+  body.panel-page #page-perfil-edit > div[style*="grid-template-columns: 1fr 1fr"],
+  body.panel-page #page-perfil-edit .chart-card > div[style*="grid-template-columns:1fr 1fr 1fr"],
+  body.panel-page #page-perfil-edit .chart-card > div[style*="grid-template-columns: 1fr 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+    gap: 0 !important;
+  }
+
+  /* Photo of profile card: stack avatar + CTA */
+  body.panel-page #page-perfil-edit .chart-card > div[style*="align-items:center"][style*="gap:1.5rem"] {
+    flex-direction: column;
+    align-items: center !important;
+    gap: 12px !important;
+    text-align: center;
+  }
+
+  /* Locked "nombre artístico" field visual treatment (readonly-looking) */
+  body.panel-page .form-input[readonly] {
+    background: #0F0F0F !important;
+    color: var(--t2) !important;
+    position: relative;
+  }
+
+  /* Services grid rows: keep 3 cols but tighter */
+  body.panel-page #modelServicesList > div,
+  body.panel-page #page-perfil-edit div[style*="grid-template-columns:1fr 80px 80px"] {
+    grid-template-columns: 1fr 56px 56px !important;
+    padding: .5rem .55rem !important;
+    gap: .3rem !important;
+  }
+  body.panel-page #modelServicesList > div span:first-child { font-size: .78rem !important; }
+  body.panel-page #modelServicesList .pill { font-size: 9px !important; margin-left: .15rem !important; }
+
+  /* ── Config page 2-col → 1 col ──────────────────────────── */
+  body.panel-page #page-configuracion > div[style*="grid-template-columns:1fr 1fr"],
+  body.panel-page #page-configuracion > div[style*="grid-template-columns: 1fr 1fr"],
+  body.panel-page #page-config > div[style*="grid-template-columns:1fr 1fr"],
+  body.panel-page #page-config > div[style*="grid-template-columns: 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  /* ── Sticky availability toggle (modelo) ────────────────── */
+  body.panel-modelo #page-disponibilidad .chart-card:first-of-type {
+    position: sticky;
+    top: 52px;
+    z-index: 50;
+    margin-bottom: 14px;
+  }
+  body.panel-modelo #page-disponibilidad .chart-card:first-of-type > div:first-child {
+    min-height: 44px;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: .5rem !important;
+    flex-wrap: wrap;
+  }
+
+  /* ── Content admin: model-grid for filterContentGrid ────── */
+  body.panel-page #contentModelGrid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+  }
+
+  /* ── Toast container adjust above panel bottom-nav ──────── */
+  body.panel-page .toast-container {
+    bottom: calc(56px + env(safe-area-inset-bottom, 0) + 10px) !important;
+    right: 10px !important;
+    left: 10px !important;
+  }
+
+  /* ── Switch wraps wrap nicely ───────────────────────────── */
+  body.panel-page .switch-wrap {
+    flex-wrap: wrap;
+    gap: .5rem;
+  }
+  body.panel-page .switch-label { font-size: .82rem; }
+
+  /* ── Modal: width 100% on mobile ────────────────────────── */
+  body.panel-page .modal { max-width: calc(100vw - 24px) !important; padding: 1rem; }
+  body.panel-page .modal > div[style*="grid-template-columns:1fr 1fr"],
+  body.panel-page .modal > div[style*="grid-template-columns: 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+  }
+  body.panel-page .modal .form-group[style*="grid-column:span 2"] { grid-column: auto !important; }
+
+  /* ── Modelo: profile-mini card hidden (redundant on mobile) ─ */
+  body.panel-page .modelo-profile-mini { display: none; }
+
+  /* ── Currency/number formatting keeps tight ─────────────── */
+  body.panel-page .admin-page > div[style*="margin-bottom:2rem"] { margin-bottom: 14px !important; }
+}
+
+/* Extra-small: tighten even more */
+@media (max-width: 380px) {
+  body.panel-page .kpi-value { font-size: 18px; }
+  body.panel-page .stat-mini-n { font-size: 18px; }
+  body.panel-page .panel-bottom-nav-item span { font-size: 7px; }
+  body.panel-page .panel-bottom-nav-item i { font-size: 16px; }
+  body.panel-page #currentGallery,
+  body.panel-page .upload-preview-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 6px !important;
+  }
+}
