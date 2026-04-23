@@ -36,7 +36,7 @@
   --shadow:      0 4px 24px rgba(0,0,0,.6);
   --shadow-gold: 0 0 30px rgba(201,168,76,.2);
 
-  --nav-h: 72px;
+  --nav-h: 104px;
   --font-serif: 'Playfair Display', Georgia, serif;
   --font-sans:  'Inter', system-ui, sans-serif;
 
@@ -192,11 +192,11 @@ p  { line-height: 1.7; color: var(--t2); }
 }
 .nav-logo span { color: var(--gold); }
 .nav-logo img {
-  height: 58px;
+  height: 88px;
   width: auto;
   display: block;
 }
-.footer-brand .nav-logo img { height: 120px; }
+.footer-brand .nav-logo img { height: 200px; }
 .nav-links {
   display: flex;
   align-items: center;
@@ -2667,8 +2667,8 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
   /* ── Navigation ── */
   .nav { padding: 0 1rem; }
   .nav-logo { font-size: 14px; letter-spacing: .03em; }
-  .nav-logo img { height: 52px; }
-  .footer-brand .nav-logo img { height: 100px; }
+  .nav-logo img { height: 76px; }
+  .footer-brand .nav-logo img { height: 160px; }
   .nav-center { display: none; }
   .nav-links { display: none; }
   .nav-cta { gap: .35rem; }
@@ -3947,9 +3947,9 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
 @media (max-width: 768px) {
 
   /* ── Panel header (nav) ─────────────────────────────────── */
-  body.panel-page { --nav-h: 52px; overflow-x: hidden; }
+  body.panel-page { --nav-h: 72px; overflow-x: hidden; }
   body.panel-page .nav {
-    height: 52px;
+    height: 72px;
     background: #0A0A0A;
     border-bottom: 1px solid #2A2A2A;
     position: sticky;
@@ -3958,7 +3958,7 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
     padding: 0 12px;
   }
   body.panel-page .nav .nav-logo { font-size: 14px; letter-spacing: .03em; }
-  body.panel-page .nav .nav-logo img { height: 44px; }
+  body.panel-page .nav .nav-logo img { height: 60px; }
   body.panel-page .nav .nav-logo::before { display: none; }
   body.panel-page .nav .nav-escorts-mobile { display: none !important; }
   body.panel-page .nav .nav-menu-btn,
@@ -4700,26 +4700,18 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
 }
 
 /* ═══════════════════════════════════════════════════════════
-   Logo integrations: hero brand slide & login modal
+   Logo integrations: login modal
    ═══════════════════════════════════════════════════════════ */
-.hero-brand-logo {
-  height: 110px;
-  width: auto;
-  display: block;
-  margin-bottom: 1.25rem;
-  filter: drop-shadow(0 4px 24px rgba(201,168,76,.25));
-}
 .modal-logo {
   display: flex;
   justify-content: center;
   margin-bottom: 1.25rem;
 }
 .modal-logo img {
-  height: 88px;
+  height: 100px;
   width: auto;
   display: block;
 }
 @media (max-width: 768px) {
-  .hero-brand-logo { height: 68px; margin-bottom: .65rem; }
-  .modal-logo img { height: 70px; }
+  .modal-logo img { height: 80px; }
 }
