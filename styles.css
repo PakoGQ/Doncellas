@@ -3559,7 +3559,11 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
     color: #C9A84C;
     letter-spacing: 2px;
     opacity: 0.9;
+    order: 1;
   }
+
+  /* ── Swap order: Escorts before login button on desktop ── */
+  .nav .nav-cta .btn.btn-gold.btn-sm.nav-login-btn { order: 2; }
 
   /* ── 3. Larger "Doncellas" logo in navbar ── */
   .nav .nav-logo,
