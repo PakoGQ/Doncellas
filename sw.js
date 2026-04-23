@@ -1,4 +1,4 @@
-const CACHE_NAME = 'doncellas-v1';
+const CACHE_NAME = 'doncellas-v2';
 const OFFLINE_URL = '/offline.html';
 
 const STATIC_ASSETS = [
@@ -6,6 +6,7 @@ const STATIC_ASSETS = [
   '/app.js',
   '/offline.html',
   '/manifest.json',
+  '/logo.png',
   '/assets/icons/icon-192.png',
   '/assets/icons/icon-512.png',
 ];

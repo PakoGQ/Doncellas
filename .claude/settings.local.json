@@ -22,7 +22,12 @@
       "Bash(git *)",
       "Bash(awk *)",
       "Bash(grep -n \"^\\\\.btn\\\\b\\\\|^\\\\.btn-gold\\\\b\\\\|^\\\\.btn-sm\\\\b\\\\|^\\\\.btn[ ,{]\" /Users/pakogq/doncellas/styles.css)",
-      "Bash(grep -iE \"doncell|logo|\\\\.png$\")"
+      "Bash(grep -iE \"doncell|logo|\\\\.png$\")",
+      "Bash(sips -g pixelWidth -g pixelHeight /Users/pakogq/doncellas/logo.png)",
+      "Bash(sips -Z 512 /Users/pakogq/doncellas/assets/icons/icon-512.png)",
+      "Bash(sips -Z 512 /Users/pakogq/doncellas/icons/icon-512.png)",
+      "Bash(sips -Z 192 /Users/pakogq/doncellas/assets/icons/icon-192.png)",
+      "Bash(sips -Z 192 /Users/pakogq/doncellas/icons/icon-192.png)"
     ]
   }
 }
