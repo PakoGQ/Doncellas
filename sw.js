@@ -1,4 +1,4 @@
-const CACHE_NAME = 'doncellas-v3';
+const CACHE_NAME = 'doncellas-v4';
 const OFFLINE_URL = '/offline.html';
 
 const STATIC_ASSETS = [
