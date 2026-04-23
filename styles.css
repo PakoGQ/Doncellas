@@ -3864,22 +3864,46 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
     border: none;
   }
 
-  /* ── Compact upper block (badges / name / meta / thumbs) ── */
+  /* ── Info bar spans the full carousel so name sits above the thumbs
+         and pills can move to the top-right corner ───────────────── */
+  .profile-info-bar {
+    top: 0 !important;
+    padding: 0 !important;
+    gap: 0 !important;
+    pointer-events: none;
+  }
+  .profile-info-bar > * { pointer-events: auto; }
+  .profile-info-bar .profile-name-block {
+    position: relative;
+    height: 100%;
+    width: 100%;
+  }
+  /* Pills: top-right corner of the photo */
   .profile-info-bar .profile-name-block > div:first-child {
+    position: absolute;
+    top: 12px;
+    right: 10px;
+    left: auto;
     display: flex;
     flex-wrap: nowrap;
-    gap: 6px !important;
-    margin-bottom: 6px !important;
+    gap: 4px !important;
+    margin: 0 !important;
+    z-index: 4;
   }
   .profile-info-bar .profile-name-block .pill {
     font-size: 9px !important;
     padding: 2px 7px;
     letter-spacing: .04em;
   }
+  /* Name: bigger, placed above the thumbnail strip */
   .profile-info-bar .profile-name {
-    font-size: 20px !important;
-    margin-bottom: 4px !important;
-    line-height: 1.2;
+    position: absolute;
+    bottom: 5.5rem;
+    left: 1rem;
+    right: 1rem;
+    font-size: 30px !important;
+    line-height: 1.15;
+    margin: 0 !important;
   }
   .profile-info-bar .profile-meta {
     display: flex;
