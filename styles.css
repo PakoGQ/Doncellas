@@ -36,7 +36,7 @@
   --shadow:      0 4px 24px rgba(0,0,0,.6);
   --shadow-gold: 0 0 30px rgba(201,168,76,.2);
 
-  --nav-h: 104px;
+  --nav-h: 140px;
   --font-serif: 'Playfair Display', Georgia, serif;
   --font-sans:  'Inter', system-ui, sans-serif;
 
@@ -192,11 +192,11 @@ p  { line-height: 1.7; color: var(--t2); }
 }
 .nav-logo span { color: var(--gold); }
 .nav-logo img {
-  height: 88px;
+  height: 120px;
   width: auto;
   display: block;
 }
-.footer-brand .nav-logo img { height: 200px; }
+.footer-brand .nav-logo img { height: 260px; }
 .nav-links {
   display: flex;
   align-items: center;
@@ -2667,8 +2667,8 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
   /* ── Navigation ── */
   .nav { padding: 0 1rem; }
   .nav-logo { font-size: 14px; letter-spacing: .03em; }
-  .nav-logo img { height: 76px; }
-  .footer-brand .nav-logo img { height: 160px; }
+  .nav-logo img { height: 108px; }
+  .footer-brand .nav-logo img { height: 220px; }
   .nav-center { display: none; }
   .nav-links { display: none; }
   .nav-cta { gap: .35rem; }
@@ -3947,9 +3947,9 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
 @media (max-width: 768px) {
 
   /* ── Panel header (nav) ─────────────────────────────────── */
-  body.panel-page { --nav-h: 72px; overflow-x: hidden; }
+  body.panel-page { --nav-h: 96px; overflow-x: hidden; }
   body.panel-page .nav {
-    height: 72px;
+    height: 96px;
     background: #0A0A0A;
     border-bottom: 1px solid #2A2A2A;
     position: sticky;
@@ -3958,7 +3958,7 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
     padding: 0 12px;
   }
   body.panel-page .nav .nav-logo { font-size: 14px; letter-spacing: .03em; }
-  body.panel-page .nav .nav-logo img { height: 60px; }
+  body.panel-page .nav .nav-logo img { height: 80px; }
   body.panel-page .nav .nav-logo::before { display: none; }
   body.panel-page .nav .nav-escorts-mobile { display: none !important; }
   body.panel-page .nav .nav-menu-btn,
