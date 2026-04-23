@@ -186,8 +186,17 @@ p  { line-height: 1.7; color: var(--t2); }
   font-size: 1.6rem;
   font-weight: 700;
   letter-spacing: .05em;
+  display: inline-flex;
+  align-items: center;
+  line-height: 0;
 }
 .nav-logo span { color: var(--gold); }
+.nav-logo img {
+  height: 48px;
+  width: auto;
+  display: block;
+}
+.footer-brand .nav-logo img { height: 88px; }
 .nav-links {
   display: flex;
   align-items: center;
@@ -2662,15 +2671,8 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
   /* ── Navigation ── */
   .nav { padding: 0 1rem; }
   .nav-logo { font-size: 14px; letter-spacing: .03em; }
-  .nav-logo::before {
-    content: "";
-    display: inline-block;
-    width: 26px; height: 26px;
-    margin-right: .4rem;
-    vertical-align: middle;
-    background: linear-gradient(135deg, var(--gold), var(--gold-lt));
-    border-radius: 6px;
-  }
+  .nav-logo img { height: 38px; }
+  .footer-brand .nav-logo img { height: 72px; }
   .nav-center { display: none; }
   .nav-links { display: none; }
   .nav-cta { gap: .35rem; }
@@ -3961,6 +3963,7 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
     padding: 0 12px;
   }
   body.panel-page .nav .nav-logo { font-size: 14px; letter-spacing: .03em; }
+  body.panel-page .nav .nav-logo img { height: 34px; }
   body.panel-page .nav .nav-logo::before { display: none; }
   body.panel-page .nav .nav-escorts-mobile { display: none !important; }
   body.panel-page .nav .nav-menu-btn,

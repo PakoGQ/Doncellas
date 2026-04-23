@@ -21,7 +21,8 @@
       "Bash(git -C /Users/pakogq/doncellas show --stat HEAD)",
       "Bash(git *)",
       "Bash(awk *)",
-      "Bash(grep -n \"^\\\\.btn\\\\b\\\\|^\\\\.btn-gold\\\\b\\\\|^\\\\.btn-sm\\\\b\\\\|^\\\\.btn[ ,{]\" /Users/pakogq/doncellas/styles.css)"
+      "Bash(grep -n \"^\\\\.btn\\\\b\\\\|^\\\\.btn-gold\\\\b\\\\|^\\\\.btn-sm\\\\b\\\\|^\\\\.btn[ ,{]\" /Users/pakogq/doncellas/styles.css)",
+      "Bash(grep -iE \"doncell|logo|\\\\.png$\")"
     ]
   }
 }
