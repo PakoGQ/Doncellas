@@ -616,9 +616,11 @@ function buildHeroSlides() {
     const bgId = PHOTO_POOL[(m.id - 1) % PHOTO_POOL.length];
     const original = fmtMXN(m.rate);
     const discounted = fmtMXN(Math.round(m.rate * (1 - m.promo.discount / 100)));
-    const slide = document.createElement('div');
+    const slide = document.createElement('a');
     slide.className = 'hero-slide';
-    slide.style.cssText = `background-image:url('${photoUrl(bgId,1400,900)}');cursor:pointer`;
+    slide.href = `perfil.html?id=${m.id}`;
+    slide.setAttribute('aria-label', `Ver perfil de ${m.name}`);
+    slide.style.cssText = `background-image:url('${photoUrl(bgId,1400,900)}');cursor:pointer;text-decoration:none;color:inherit;display:block`;
     slide.innerHTML = `
       <div class="hero-overlay"></div>
       <div class="hero-promo-overlay">
@@ -631,7 +633,7 @@ function buildHeroSlides() {
           <span class="hero-promo-original">${original}/hr</span>
           <span class="hero-promo-discounted">${discounted}/hr</span>
         </div>
-        <a href="perfil.html?id=${m.id}" class="hero-promo-cta">Ver perfil <i class="fas fa-arrow-right"></i></a>
+        <span class="hero-promo-cta">Ver perfil <i class="fas fa-arrow-right"></i></span>
       </div>`;
     wrap.appendChild(slide);
   });

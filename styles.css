@@ -303,7 +303,10 @@ p  { line-height: 1.7; color: var(--t2); }
   justify-content: flex-end;
   padding: 0 2.5rem 2.5rem;
   max-width: 800px;
+  pointer-events: none;
 }
+.hero-content > * { pointer-events: auto; }
+.hero-stats { pointer-events: none; }
 .hero-content .section-label { font-size: .75rem; }
 .hero-title {
   font-size: clamp(1.8rem, 4.4vw, 3.4rem);
