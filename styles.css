@@ -192,11 +192,11 @@ p  { line-height: 1.7; color: var(--t2); }
 }
 .nav-logo span { color: var(--gold); }
 .nav-logo img {
-  height: 48px;
+  height: 58px;
   width: auto;
   display: block;
 }
-.footer-brand .nav-logo img { height: 88px; }
+.footer-brand .nav-logo img { height: 120px; }
 .nav-links {
   display: flex;
   align-items: center;
@@ -2553,15 +2553,11 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
 }
 .pwa-install-banner.is-visible { display: flex; }
 .pwa-install-mark {
-  width: 32px; height: 32px;
+  width: 44px; height: 44px;
   border-radius: 8px;
-  background: linear-gradient(135deg, var(--gold), var(--gold-lt));
-  color: #000;
-  display: flex; align-items: center; justify-content: center;
-  font-family: var(--font-serif);
-  font-weight: 700;
-  font-size: 1.1rem;
+  object-fit: cover;
   flex-shrink: 0;
+  display: block;
 }
 .pwa-install-copy {
   display: flex;
@@ -2671,8 +2667,8 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
   /* ── Navigation ── */
   .nav { padding: 0 1rem; }
   .nav-logo { font-size: 14px; letter-spacing: .03em; }
-  .nav-logo img { height: 38px; }
-  .footer-brand .nav-logo img { height: 72px; }
+  .nav-logo img { height: 52px; }
+  .footer-brand .nav-logo img { height: 100px; }
   .nav-center { display: none; }
   .nav-links { display: none; }
   .nav-cta { gap: .35rem; }
@@ -3327,9 +3323,8 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
   }
   .pwa-install-banner.is-visible { min-height: 0; }
   .pwa-install-mark {
-    width: 28px !important;
-    height: 28px !important;
-    font-size: 14px;
+    width: 36px !important;
+    height: 36px !important;
     border-radius: 7px;
   }
   .pwa-install-copy strong {
@@ -3963,7 +3958,7 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
     padding: 0 12px;
   }
   body.panel-page .nav .nav-logo { font-size: 14px; letter-spacing: .03em; }
-  body.panel-page .nav .nav-logo img { height: 34px; }
+  body.panel-page .nav .nav-logo img { height: 44px; }
   body.panel-page .nav .nav-logo::before { display: none; }
   body.panel-page .nav .nav-escorts-mobile { display: none !important; }
   body.panel-page .nav .nav-menu-btn,
@@ -4702,4 +4697,29 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
   .profile-body .profile-card:has(#reviewsList) {
     order: 99;
   }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   Logo integrations: hero brand slide & login modal
+   ═══════════════════════════════════════════════════════════ */
+.hero-brand-logo {
+  height: 110px;
+  width: auto;
+  display: block;
+  margin-bottom: 1.25rem;
+  filter: drop-shadow(0 4px 24px rgba(201,168,76,.25));
+}
+.modal-logo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+}
+.modal-logo img {
+  height: 88px;
+  width: auto;
+  display: block;
+}
+@media (max-width: 768px) {
+  .hero-brand-logo { height: 68px; margin-bottom: .65rem; }
+  .modal-logo img { height: 70px; }
 }

@@ -547,6 +547,7 @@ function buildHeroSlides() {
       <div class="hb-fade-right"></div>
     </div>
     <div class="hero-brand-content">
+      <img src="logo.png" alt="Doncellas" class="hero-brand-logo" />
       <div class="hero-brand-label"><i class="fas fa-gem"></i> Guadalajara, Jalisco</div>
       <h1 class="hero-brand-title">Escorts Elite<br><em>en Guadalajara</em></h1>
       <p class="hero-brand-desc">Perfiles verificados, disponibilidad en tiempo real<br>y la discreción que mereces.</p>
