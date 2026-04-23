@@ -4484,6 +4484,144 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
 
   /* ── Currency/number formatting keeps tight ─────────────── */
   body.panel-page .admin-page > div[style*="margin-bottom:2rem"] { margin-bottom: 14px !important; }
+
+  /* ── Table action buttons (tbl-btn) — 36×36 touch target ── */
+  body.panel-page .tbl-btn {
+    width: 36px;
+    height: 36px;
+    font-size: .85rem;
+    flex-shrink: 0;
+  }
+  body.panel-page .admin-table td .tbl-btn + .tbl-btn { margin-left: 4px; }
+
+  /* ── Modal close button — 44×44 touch target ────────────── */
+  body.panel-page .modal-close {
+    width: 44px;
+    height: 44px;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  /* ── Modal overlay padding tighter on mobile ────────────── */
+  body.panel-page .modal-overlay { padding: .75rem; }
+  body.panel-page .modal {
+    max-height: 85vh;
+    border-radius: 10px;
+    padding: 20px !important;
+  }
+
+  /* ── Role badge in header (Admin / Escort) ──────────────── */
+  body.panel-admin .nav .nav-admin-right > span {
+    font-size: 0 !important;
+    line-height: 1;
+  }
+  body.panel-admin .nav .nav-admin-right > span::before {
+    content: "ADMIN";
+    display: inline-block;
+    background: rgba(201,168,76,.1);
+    border: 1px solid rgba(201,168,76,.3);
+    color: var(--gold);
+    padding: 3px 8px;
+    border-radius: 100px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    font-size: 9px;
+  }
+  body.panel-modelo .nav .nav-modelo-right::after {
+    content: "ESCORT";
+    display: inline-block;
+    background: rgba(201,168,76,.1);
+    border: 1px solid rgba(201,168,76,.3);
+    color: var(--gold);
+    padding: 3px 8px;
+    border-radius: 100px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    font-size: 9px;
+    line-height: 1;
+  }
+
+  /* ── Review card rendered buttons (Aprobar / Rechazar) ──── */
+  body.panel-admin #pendingReviewsList .chart-card > div > div > div[style*="display:flex"][style*="gap"] {
+    width: 100%;
+  }
+  body.panel-admin #pendingReviewsList .chart-card .btn.btn-sm {
+    flex: 1;
+    min-height: 40px;
+    justify-content: center;
+    font-size: .75rem;
+  }
+
+  /* ── Chart-header action buttons wrap to full width ─────── */
+  body.panel-page .chart-header .btn.btn-outline.btn-sm,
+  body.panel-page .chart-header .btn.btn-sm {
+    width: 100%;
+    min-height: 40px;
+    justify-content: center;
+    flex-basis: 100%;
+  }
+  body.panel-page .chart-header .chart-title { flex: 1 1 auto; }
+
+  /* ── Contenido (modelo) — Sort/Delete row buttons full w ── */
+  body.panel-modelo #page-contenido .chart-card-ordenar-row .btn,
+  body.panel-modelo #page-contenido div[style*="gap:.5rem"] > .btn.btn-outline.btn-sm {
+    min-height: 40px;
+  }
+
+  /* ── Referidos (admin) table compact ────────────────────── */
+  body.panel-admin #page-referidos .admin-table { min-width: 420px; }
+
+  /* ── Pagination row buttons touch-friendly ──────────────── */
+  body.panel-page #page-modelos .tbl-btn {
+    width: 36px;
+    height: 36px;
+  }
+
+  /* ── Block-date input + button row wraps cleanly ────────── */
+  body.panel-page #page-disponibilidad div[style*="gap:.75rem"][style*="flex-wrap:wrap"] {
+    flex-direction: column;
+    align-items: stretch !important;
+  }
+  body.panel-page #page-disponibilidad div[style*="gap:.75rem"][style*="flex-wrap:wrap"] input[type="date"] {
+    width: 100% !important;
+    min-height: 44px;
+    font-size: 16px;
+  }
+  body.panel-page #page-disponibilidad div[style*="gap:.75rem"][style*="flex-wrap:wrap"] .btn {
+    width: 100%;
+    min-height: 44px;
+    justify-content: center;
+  }
+
+  /* ── Generated credentials box inside modal ─────────────── */
+  body.panel-admin #credencialesBox > div[style*="display:flex"][style*="gap:1.5rem"] {
+    flex-direction: column !important;
+    gap: .35rem !important;
+  }
+
+  /* ── Modal footer buttons (Cancelar/Guardar) full width ── */
+  body.panel-page .modal > div[style*="display:flex"][style*="justify-content:flex-end"] {
+    flex-direction: column-reverse;
+    gap: 8px !important;
+  }
+  body.panel-page .modal > div[style*="display:flex"][style*="justify-content:flex-end"] .btn {
+    width: 100%;
+    min-height: 44px;
+    justify-content: center;
+  }
+
+  /* ── Servicios pills — adequate touch on checkboxes ─────── */
+  body.panel-page #modelServicesList input[type="checkbox"] {
+    width: 20px !important;
+    height: 20px !important;
+  }
+
+  /* ── Photo upload label button (perfil-edit) ────────────── */
+  body.panel-page #page-perfil-edit label.btn.btn-outline.btn-sm {
+    width: 100%;
+    min-height: 44px;
+    justify-content: center;
+  }
 }
 
 /* Extra-small: tighten even more */
