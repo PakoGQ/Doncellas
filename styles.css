@@ -4653,3 +4653,19 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
   margin-top: 24px !important;
   padding-top: 12px !important;
 }
+
+/* ═══════════════════════════════════════════════════════════
+   PROFILE PAGE — MOBILE: Reseñas always at the very end
+   ═══════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .profile-body {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  .profile-body > div {
+    display: contents;
+  }
+  .profile-body .profile-card:has(#reviewsList) {
+    order: 99;
+  }
+}
