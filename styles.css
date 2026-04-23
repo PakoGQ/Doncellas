@@ -3742,6 +3742,15 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
     grid-template-columns: 1fr !important;
     gap: 1rem !important;
   }
+  /* Reorder: Características above Servicios on mobile */
+  .profile-card > div[style*="grid-template-columns:1fr 1fr"] > div:nth-child(1),
+  .profile-card > div[style*="grid-template-columns: 1fr 1fr"] > div:nth-child(1) {
+    order: 2;
+  }
+  .profile-card > div[style*="grid-template-columns:1fr 1fr"] > div:nth-child(2),
+  .profile-card > div[style*="grid-template-columns: 1fr 1fr"] > div:nth-child(2) {
+    order: 1;
+  }
 
   /* ── 6. Tarifas / WhatsApp card (equivalent to .wa-card) ── */
   .profile-card { padding: 14px; }
