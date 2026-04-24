@@ -43,21 +43,21 @@
   --transition: .3s cubic-bezier(.4,0,.2,1);
 }
 
-/* Desktop: taller nav to accommodate larger logo (cropped to show only gold) */
+/* Desktop: taller nav to accommodate larger logo (cropped to show only gold).
+   Scoped to `.nav .nav-logo` so the footer brand logo is NOT affected. */
 @media (min-width: 769px) {
   :root { --nav-h: 170px; }
-  /* Crop top/bottom whitespace around the gold part of the logo.
-     Image still renders at 204px, but only the middle ~130px (gold area) is visible. */
-  .nav-logo {
+  .nav .nav-logo {
     overflow: hidden;
     height: 130px;
   }
 }
 
-/* Mobile: same crop applied proportionally (108px image → 70px visible gold area) */
+/* Mobile: same crop applied proportionally (108px image → 70px visible gold area).
+   Scoped to `.nav .nav-logo` so the footer brand logo is NOT affected. */
 @media (max-width: 768px) {
   :root { --nav-h: 100px; }
-  .nav-logo {
+  .nav .nav-logo {
     overflow: hidden;
     height: 70px;
   }
