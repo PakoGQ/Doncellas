@@ -3005,17 +3005,20 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
   .nav-admin-right,
   .nav-modelo-right { display: none !important; }
 
-  /* ── "Escorts" label on mobile navbar (right side) ── */
+  /* ── Slogan on mobile navbar (right side, next to logo) ── */
   .nav-escorts-mobile {
     font-family: 'Georgia', 'Times New Roman', serif;
     font-style: italic;
-    font-size: 20px;
+    font-size: 14px;
     font-weight: 400;
     color: #C9A84C;
-    letter-spacing: 1px;
-    opacity: 0.9;
+    letter-spacing: .5px;
+    opacity: 0.92;
     margin-left: auto;
     padding-right: 4px;
+    white-space: nowrap;
+    line-height: 1.1;
+    text-align: right;
   }
 
   /* ── Mobile drawer (separate element, slides from right) ── */
@@ -4673,6 +4676,7 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
     grid-template-columns: repeat(3, 1fr) !important;
     gap: 6px !important;
   }
+  .nav-escorts-mobile { font-size: 12px; letter-spacing: .3px; }
 }
 
 /* ═══════════════════════════════════════════════════════════
