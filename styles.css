@@ -4724,10 +4724,39 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
 /* ═══════════════════════════════════════════════════════════
    MOBILE HERO BRAND SLIDE — show same profile photo mosaic
    as desktop (horizontal strip at bottom of the slide).
-   Overrides the earlier display:none rules with higher
-   specificity (.hero-slide-brand prefix) + !important.
+   Hides the non-essential label/stats and compacts text so
+   everything fits cleanly within the 300px mobile hero height.
    ═══════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
+  /* Hide non-essential elements to prevent overflow */
+  .hero-slide-brand .hero-brand-label,
+  .hero-slide-brand .hero-brand-stats {
+    display: none !important;
+  }
+
+  /* Compact content so it fits above the photo strip */
+  .hero-slide-brand .hero-brand-content {
+    padding: 12px 18px 92px !important;
+    gap: 6px !important;
+    justify-content: flex-start !important;
+  }
+  .hero-slide-brand .hero-brand-title {
+    font-size: 22px !important;
+    line-height: 1.15 !important;
+    margin-bottom: 6px !important;
+  }
+  .hero-slide-brand .hero-brand-desc {
+    font-size: 11px !important;
+    line-height: 1.35 !important;
+    margin-bottom: 8px !important;
+    display: block !important;
+  }
+  .hero-slide-brand .hero-brand-cta {
+    padding: 9px 18px !important;
+    font-size: 12px !important;
+  }
+
+  /* Photo strip: 4 profile photos at the bottom */
   .hero-slide-brand .hero-brand-mosaic {
     display: flex !important;
     position: absolute !important;
@@ -4736,7 +4765,7 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
     bottom: 10px !important;
     top: auto !important;
     width: auto !important;
-    height: 82px !important;
+    height: 78px !important;
     padding: 0 !important;
     gap: 6px !important;
     flex-direction: row !important;
@@ -4750,14 +4779,11 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
   .hero-slide-brand .hbm-img-wrap {
     flex: 1 1 0 !important;
     width: auto !important;
-    height: 82px !important;
+    height: 78px !important;
     aspect-ratio: auto !important;
     min-width: 0 !important;
     border-width: 1px !important;
     border-radius: 8px !important;
     box-shadow: 0 4px 14px rgba(0,0,0,.55) !important;
-  }
-  .hero-slide-brand .hero-brand-content {
-    padding-bottom: 100px !important;
   }
 }
