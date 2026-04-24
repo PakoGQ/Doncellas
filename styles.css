@@ -3005,8 +3005,9 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
   .nav-admin-right,
   .nav-modelo-right { display: none !important; }
 
-  /* ── Slogan on mobile navbar (right of logo, elegant) ── */
+  /* ── Slogan on mobile navbar (centered in space right of logo) ── */
   .nav-escorts-mobile {
+    flex: 1;
     font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
     font-style: italic;
     font-size: 20px;
@@ -3014,11 +3015,11 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
     color: #C9A84C;
     letter-spacing: 1px;
     opacity: 1;
-    margin-left: auto;
-    padding-right: 4px;
+    margin: 0;
+    padding: 0 8px 0 4px;
     white-space: nowrap;
     line-height: 1.15;
-    text-align: right;
+    text-align: center;
     text-shadow: 0 0 18px rgba(201, 168, 76, 0.3);
   }
 
