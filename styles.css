@@ -3005,31 +3005,21 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
   .nav-admin-right,
   .nav-modelo-right { display: none !important; }
 
-  /* ── Slogan on mobile navbar (top full-width row) ── */
-  :root { --nav-h: 190px; }
-  .nav {
-    flex-wrap: wrap;
-    height: auto;
-    min-height: var(--nav-h);
-    align-content: center;
-    row-gap: 2px;
-  }
+  /* ── Slogan on mobile navbar (right of logo, elegant) ── */
   .nav-escorts-mobile {
-    flex-basis: 100%;
-    order: -1;
     font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
     font-style: italic;
-    font-size: 30px;
+    font-size: 20px;
     font-weight: 400;
     color: #C9A84C;
-    letter-spacing: 2px;
+    letter-spacing: 1px;
     opacity: 1;
-    margin: 0;
-    padding: 14px 12px 6px;
+    margin-left: auto;
+    padding-right: 4px;
     white-space: nowrap;
-    line-height: 1.1;
-    text-align: center;
-    text-shadow: 0 0 26px rgba(201, 168, 76, 0.35);
+    line-height: 1.15;
+    text-align: right;
+    text-shadow: 0 0 18px rgba(201, 168, 76, 0.3);
   }
 
   /* ── Mobile drawer (separate element, slides from right) ── */
@@ -4686,7 +4676,7 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
     grid-template-columns: repeat(3, 1fr) !important;
     gap: 6px !important;
   }
-  .nav-escorts-mobile { font-size: 24px; letter-spacing: 1.5px; }
+  .nav-escorts-mobile { font-size: 16px; letter-spacing: .6px; }
 }
 
 /* ═══════════════════════════════════════════════════════════
