@@ -3005,20 +3005,31 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
   .nav-admin-right,
   .nav-modelo-right { display: none !important; }
 
-  /* ── Slogan on mobile navbar (right side, next to logo) ── */
+  /* ── Slogan on mobile navbar (top full-width row) ── */
+  :root { --nav-h: 190px; }
+  .nav {
+    flex-wrap: wrap;
+    height: auto;
+    min-height: var(--nav-h);
+    align-content: center;
+    row-gap: 2px;
+  }
   .nav-escorts-mobile {
-    font-family: 'Georgia', 'Times New Roman', serif;
+    flex-basis: 100%;
+    order: -1;
+    font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
     font-style: italic;
-    font-size: 14px;
+    font-size: 30px;
     font-weight: 400;
     color: #C9A84C;
-    letter-spacing: .5px;
-    opacity: 0.92;
-    margin-left: auto;
-    padding-right: 4px;
+    letter-spacing: 2px;
+    opacity: 1;
+    margin: 0;
+    padding: 14px 12px 6px;
     white-space: nowrap;
     line-height: 1.1;
-    text-align: right;
+    text-align: center;
+    text-shadow: 0 0 26px rgba(201, 168, 76, 0.35);
   }
 
   /* ── Mobile drawer (separate element, slides from right) ── */
@@ -3645,7 +3656,6 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
   body.page-mobile-min-nav .nav .nav-cta .btn,
   body.page-mobile-min-nav .nav .nav-cta .nav-login-btn,
   body.page-mobile-min-nav .nav .nav-menu-btn,
-  body.page-mobile-min-nav .nav .nav-escorts-mobile,
   body.page-mobile-min-nav .nav .nav-escorts-label { display: none !important; }
 }
 
@@ -4676,7 +4686,7 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
     grid-template-columns: repeat(3, 1fr) !important;
     gap: 6px !important;
   }
-  .nav-escorts-mobile { font-size: 12px; letter-spacing: .3px; }
+  .nav-escorts-mobile { font-size: 24px; letter-spacing: 1.5px; }
 }
 
 /* ═══════════════════════════════════════════════════════════
