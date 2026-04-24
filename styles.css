@@ -4787,3 +4787,70 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
     box-shadow: 0 4px 14px rgba(0,0,0,.55) !important;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   MOBILE HERO PAGOS SLIDE — 3 métodos en una sola fila + textos
+   compactos para caber en el banner de 300px.
+   ═══════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  /* Hide label to save space */
+  .hero-slide-pagos .hero-brand-label {
+    display: none !important;
+  }
+
+  /* Tighter content padding */
+  .hero-slide-pagos .hero-pagos-content {
+    padding: 14px 14px !important;
+    gap: 4px !important;
+    justify-content: center !important;
+  }
+
+  /* Compact title/desc on pagos slide */
+  .hero-slide-pagos .hero-brand-title {
+    font-size: 22px !important;
+    line-height: 1.15 !important;
+    margin-bottom: 4px !important;
+  }
+  .hero-slide-pagos .hero-brand-desc {
+    font-size: 11px !important;
+    line-height: 1.35 !important;
+    margin-bottom: 6px !important;
+    display: block !important;
+  }
+
+  /* Single-row payment grid (no wrap) */
+  .hero-slide-pagos .hero-pagos-grid {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    gap: 6px !important;
+    width: 100% !important;
+    margin-top: 2px !important;
+    margin-bottom: 4px !important;
+  }
+  .hero-slide-pagos .hero-pago-item {
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    padding: 8px 4px !important;
+    gap: 3px !important;
+  }
+  .hero-slide-pagos .hero-pago-icon {
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 12px !important;
+  }
+  .hero-slide-pagos .hero-pago-name {
+    font-size: 11px !important;
+    font-weight: 700 !important;
+  }
+  .hero-slide-pagos .hero-pago-sub,
+  .hero-slide-pagos .hero-pago-desc {
+    font-size: 8px !important;
+    line-height: 1.25 !important;
+    text-align: center !important;
+  }
+  .hero-slide-pagos .hero-pagos-badge {
+    font-size: 9px !important;
+    margin-top: 2px !important;
+    letter-spacing: .03em !important;
+  }
+}
