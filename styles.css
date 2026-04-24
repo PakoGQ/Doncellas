@@ -43,6 +43,11 @@
   --transition: .3s cubic-bezier(.4,0,.2,1);
 }
 
+/* Desktop: taller nav to accommodate larger logo (204px) */
+@media (min-width: 769px) {
+  :root { --nav-h: 240px; }
+}
+
 /* ─── Reset ─────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; font-size: 16px; }
@@ -192,7 +197,7 @@ p  { line-height: 1.7; color: var(--t2); }
 }
 .nav-logo span { color: var(--gold); }
 .nav-logo img {
-  height: 120px;
+  height: 204px;
   width: auto;
   display: block;
 }
