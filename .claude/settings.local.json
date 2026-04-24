@@ -30,7 +30,8 @@
       "Bash(sips -Z 192 /Users/pakogq/doncellas/icons/icon-192.png)",
       "Bash(sips -g hasAlpha -g pixelWidth -g pixelHeight /Users/pakogq/doncellas/logo.png)",
       "Bash(pip3 install *)",
-      "Bash(sips -g hasAlpha /Users/pakogq/doncellas/logo.png)"
+      "Bash(sips -g hasAlpha /Users/pakogq/doncellas/logo.png)",
+      "Bash(sips -g pixelHeight -g pixelWidth ~/doncellas/logo.png)"
     ]
   }
 }

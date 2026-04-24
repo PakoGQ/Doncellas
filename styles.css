@@ -43,9 +43,15 @@
   --transition: .3s cubic-bezier(.4,0,.2,1);
 }
 
-/* Desktop: taller nav to accommodate larger logo (204px) */
+/* Desktop: taller nav to accommodate larger logo (cropped to show only gold) */
 @media (min-width: 769px) {
-  :root { --nav-h: 240px; }
+  :root { --nav-h: 150px; }
+  /* Crop top/bottom whitespace around the gold part of the logo.
+     Image still renders at 204px, but only the middle ~110px (gold area) is visible. */
+  .nav-logo {
+    overflow: hidden;
+    height: 110px;
+  }
 }
 
 /* ─── Reset ─────────────────────────────────────────────── */
