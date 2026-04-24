@@ -54,6 +54,15 @@
   }
 }
 
+/* Mobile: same crop applied proportionally (108px image → 70px visible gold area) */
+@media (max-width: 768px) {
+  :root { --nav-h: 100px; }
+  .nav-logo {
+    overflow: hidden;
+    height: 70px;
+  }
+}
+
 /* ─── Reset ─────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; font-size: 16px; }
