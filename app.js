@@ -87,15 +87,19 @@ const TAG_POOL    = [
 ];
 
 /* ─── Pool de promos (8 plantillas) ────────────────────── */
+/* 4 sobre el costo por hora, 4 con un servicio incluido gratis */
 const PROMO_POOL = [
-  { badge:'20% OFF',         title:'Sesión fotográfica 20% off',           desc:'50 fotos editadas profesionalmente incluidas.',       discount:20, validUntil:'30 Abr 2026' },
-  { badge:'2x1',             title:'2 horas al precio de 1',               desc:'Válido fines de semana. Reserva con anticipación.',   discount:50, validUntil:'31 May 2026' },
-  { badge:'Paquete Evento',  title:'Paquete evento completo',              desc:'4 hrs + sesión foto + maquillaje incluido.',          discount:15, validUntil:'15 May 2026' },
-  { badge:'30% OFF',         title:'30% en tu primera cita',               desc:'Oferta exclusiva para nuevos clientes.',              discount:30, validUntil:'31 May 2026' },
-  { badge:'Precio Especial', title:'Tarifa de temporada reducida',         desc:'Precios especiales en sesiones de semana.',           discount:25, validUntil:'20 May 2026' },
-  { badge:'Kit Lujo',        title:'Experiencia de lujo completa',         desc:'Cena + 3 hrs de acompañamiento + transporte.',        discount:10, validUntil:'30 Jun 2026' },
-  { badge:'VIP Pass',        title:'Acceso VIP tarifa preferencial',       desc:'Membresía VIP con descuento especial de lanzamiento.',discount:35, validUntil:'31 May 2026' },
-  { badge:'Flash Sale',      title:'Oferta relámpago — solo esta semana',  desc:'¡Descuento limitado, no te lo pierdas!',              discount:40, validUntil:'22 Abr 2026' },
+  /* ─ Promociones sobre el costo por hora ─ */
+  { badge:'2x1',              title:'2 horas al precio de 1',           desc:'Paga 1 hora y disfruta 2 completas.',                  discount:50, validUntil:'31 May 2026' },
+  { badge:'30% OFF',          title:'30% off en tu primera hora',       desc:'Oferta exclusiva para nuevos clientes.',               discount:30, validUntil:'31 May 2026' },
+  { badge:'3x2',              title:'3 horas pagando solo 2',           desc:'Tercera hora completamente gratis.',                   discount:33, validUntil:'30 Jun 2026' },
+  { badge:'-40%',             title:'40% off en tarifa por hora',       desc:'Oferta relámpago — solo esta semana.',                 discount:40, validUntil:'22 Abr 2026' },
+
+  /* ─ Promociones con servicio incluido gratis ─ */
+  { badge:'Oral Gratis',      title:'Oral natural incluido sin costo',  desc:'Servicio gratis al reservar 1 hora o más.',            discount:0,  validUntil:'30 May 2026' },
+  { badge:'Novios Gratis',    title:'Trato de novios sin cargo extra',  desc:'Servicio incluido sin costo adicional en tu cita.',    discount:0,  validUntil:'31 May 2026' },
+  { badge:'Terminado Gratis', title:'Oral terminado incluido',          desc:'Sin cargo extra en reservas de 2 horas o más.',        discount:0,  validUntil:'20 May 2026' },
+  { badge:'Ilimitado',        title:'Relaciones ilimitadas incluidas',  desc:'Sin cargo extra durante toda la cita.',                discount:0,  validUntil:'15 Jun 2026' },
 ];
 
 /* Índices de modelos con promo (25 en total) */
@@ -615,12 +619,17 @@ function buildHeroSlides() {
   promoModels.forEach(m => {
     const bgId = PHOTO_POOL[(m.id - 1) % PHOTO_POOL.length];
     const original = fmtMXN(m.rate);
-    const discounted = fmtMXN(Math.round(m.rate * (1 - m.promo.discount / 100)));
+    const hasDiscount = m.promo.discount > 0;
+    const discounted = hasDiscount ? fmtMXN(Math.round(m.rate * (1 - m.promo.discount / 100))) : null;
     const slide = document.createElement('a');
     slide.className = 'hero-slide';
     slide.href = `perfil.html?id=${m.id}`;
     slide.setAttribute('aria-label', `Ver perfil de ${m.name}`);
     slide.style.cssText = `background-image:url('${photoUrl(bgId,1400,900)}');cursor:pointer;text-decoration:none;color:inherit;display:block`;
+    const pricesHTML = hasDiscount
+      ? `<span class="hero-promo-original">${original}/hr</span>
+         <span class="hero-promo-discounted">${discounted}/hr</span>`
+      : `<span class="hero-promo-discounted">${original}/hr</span>`;
     slide.innerHTML = `
       <div class="hero-overlay"></div>
       <div class="hero-promo-overlay">
@@ -630,8 +639,7 @@ function buildHeroSlides() {
         <div class="hero-promo-offer">${m.promo.title}</div>
         <div class="hero-promo-desc">${m.promo.desc}</div>
         <div class="hero-promo-prices">
-          <span class="hero-promo-original">${original}/hr</span>
-          <span class="hero-promo-discounted">${discounted}/hr</span>
+          ${pricesHTML}
         </div>
         <span class="hero-promo-cta">Ver perfil <i class="fas fa-arrow-right"></i></span>
       </div>`;
