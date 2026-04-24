@@ -4720,3 +4720,44 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
 @media (max-width: 768px) {
   .modal-logo img { height: 80px; }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   MOBILE HERO BRAND SLIDE — show same profile photo mosaic
+   as desktop (horizontal strip at bottom of the slide).
+   Overrides the earlier display:none rules with higher
+   specificity (.hero-slide-brand prefix) + !important.
+   ═══════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .hero-slide-brand .hero-brand-mosaic {
+    display: flex !important;
+    position: absolute !important;
+    left: 12px !important;
+    right: 12px !important;
+    bottom: 10px !important;
+    top: auto !important;
+    width: auto !important;
+    height: 82px !important;
+    padding: 0 !important;
+    gap: 6px !important;
+    flex-direction: row !important;
+    align-items: stretch !important;
+    z-index: 2;
+    pointer-events: none;
+  }
+  .hero-slide-brand .hero-brand-mosaic-col {
+    display: contents !important;
+  }
+  .hero-slide-brand .hbm-img-wrap {
+    flex: 1 1 0 !important;
+    width: auto !important;
+    height: 82px !important;
+    aspect-ratio: auto !important;
+    min-width: 0 !important;
+    border-width: 1px !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 14px rgba(0,0,0,.55) !important;
+  }
+  .hero-slide-brand .hero-brand-content {
+    padding-bottom: 100px !important;
+  }
+}
