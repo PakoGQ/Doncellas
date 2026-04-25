@@ -175,6 +175,46 @@ function generateModels() {
 
 let MODELS = generateModels();
 
+/* ─── Citas activas: si una modelo está en cita ahora, queda
+   automáticamente "No Disponible" hasta que termine. ─────── */
+function _seedDemoActiveCitas() {
+  const now = Date.now();
+  const clients = ['Carlos M.','Eduardo L.','Roberto A.','Javier R.','Miguel S.','Andrés T.','Luis P.'];
+  for (let i = 0; i < MODELS.length; i += 7) {
+    const startedMinAgo = 15 + (i * 7) % 35;
+    const totalMinutes  = 60 + (i * 11) % 120;
+    const start = now - startedMinAgo * 60_000;
+    const end   = start + totalMinutes * 60_000;
+    MODELS[i].citasActivas = [{ start, end, client: clients[i % clients.length] }];
+  }
+}
+
+function isModelInCita(m, nowTs) {
+  if (!m) return false;
+  if (nowTs == null) nowTs = Date.now();
+  return (m.citasActivas || []).some(c => nowTs >= c.start && nowTs <= c.end);
+}
+
+function getActiveCita(m, nowTs) {
+  if (!m) return null;
+  if (nowTs == null) nowTs = Date.now();
+  return (m.citasActivas || []).find(c => nowTs >= c.start && nowTs <= c.end) || null;
+}
+
+function syncModelAvailabilityWithCitas() {
+  const now = Date.now();
+  MODELS.forEach(m => {
+    if (m._baseAvailable === undefined) m._baseAvailable = m.available;
+    const inCita = isModelInCita(m, now);
+    m._inCita = inCita;
+    m.available = inCita ? false : m._baseAvailable;
+  });
+}
+
+_seedDemoActiveCitas();
+syncModelAvailabilityWithCitas();
+setInterval(syncModelAvailabilityWithCitas, 60_000);
+
 /* ─── Categorías ────────────────────────────────────────── */
 const CATEGORIES = [
   { name:'Universitaria', count:52, icon:'fa-graduation-cap', img: photoUrl(PHOTO_POOL[0],400,400),  desc:'Estudiantes universitarias con energía y frescura' },

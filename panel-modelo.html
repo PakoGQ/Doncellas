@@ -853,23 +853,61 @@ function blockDate() {
 }
 
 let _modelAvail = true;
-function toggleModelAvail() {
-  _modelAvail = !_modelAvail;
+
+/* Cita activa de la modelo logueada (Valentina, demo).
+   Mientras now ∈ [start,end] el toggle queda bloqueado en "No Disponible". */
+const _myActiveCita = (() => {
+  const now = Date.now();
+  return { client: 'Carlos M.', start: now - 18 * 60_000, end: now + 42 * 60_000 };
+})();
+
+function _isMyCitaActive() {
+  if (!_myActiveCita) return false;
+  const n = Date.now();
+  return n >= _myActiveCita.start && n <= _myActiveCita.end;
+}
+
+function _formatHHMM(ts) {
+  const d = new Date(ts);
+  return d.getHours() + ':' + String(d.getMinutes()).padStart(2,'0');
+}
+
+function _applyAvailUI() {
   const btn   = document.getElementById('modelAvailBtn');
   const pill  = document.getElementById('modelAvailPill');
   const label = document.getElementById('modelAvailLabel');
   const mBar  = document.getElementById('mobileAvailBar');
   const mText = document.getElementById('mobileAvailText');
   const mTog  = document.getElementById('mobileAvailToggle');
+  const inCita = _isMyCitaActive();
+
+  if (inCita) {
+    const endStr = _formatHHMM(_myActiveCita.end);
+    const txt = `En cita hasta ${endStr}`;
+    if (btn) {
+      btn.style.borderColor = 'rgba(224,140,80,.5)';
+      btn.style.background  = 'rgba(224,140,80,.12)';
+      btn.style.color       = '#E08C50';
+      btn.style.cursor      = 'not-allowed';
+    }
+    if (label) label.textContent = txt;
+    if (pill)  { pill.className = 'pill pill-busy'; pill.style.fontSize = '.65rem'; pill.textContent = txt; }
+    if (mBar)  { mBar.classList.add('off'); mBar.style.cursor = 'not-allowed'; }
+    if (mText) mText.textContent = txt;
+    if (mTog)  mTog.className = 'fas fa-toggle-off mobile-avail-toggle';
+    return;
+  }
+
   if (_modelAvail) {
     if (btn) {
       btn.style.borderColor = 'rgba(76,175,130,.4)';
       btn.style.background  = 'rgba(76,175,130,.08)';
       btn.style.color       = 'var(--green)';
+      btn.style.cursor      = 'pointer';
     }
     if (label) label.textContent = 'Disponible';
     if (pill)  { pill.className = 'pill pill-available'; pill.style.fontSize = '.65rem'; pill.textContent = 'Disponible'; }
-    if (mBar)  mBar.classList.remove('off');
+    if (mBar)  { mBar.classList.remove('off'); mBar.style.cursor = 'pointer'; }
     if (mText) mText.textContent = 'Disponible para citas';
     if (mTog)  mTog.className = 'fas fa-toggle-on mobile-avail-toggle';
   } else {
@@ -877,15 +915,30 @@ function toggleModelAvail() {
       btn.style.borderColor = 'rgba(224,80,80,.4)';
       btn.style.background  = 'rgba(224,80,80,.08)';
       btn.style.color       = 'var(--red)';
+      btn.style.cursor      = 'pointer';
     }
     if (label) label.textContent = 'No Disponible';
     if (pill)  { pill.className = 'pill pill-busy'; pill.style.fontSize = '.65rem'; pill.textContent = 'No Disponible'; }
-    if (mBar)  mBar.classList.add('off');
+    if (mBar)  { mBar.classList.add('off'); mBar.style.cursor = 'pointer'; }
     if (mText) mText.textContent = 'No disponible';
     if (mTog)  mTog.className = 'fas fa-toggle-off mobile-avail-toggle';
   }
+}
+
+function toggleModelAvail() {
+  if (_isMyCitaActive()) {
+    showToast('Estás en una cita — tu estado se restaurará al terminar', 'info');
+    return;
+  }
+  _modelAvail = !_modelAvail;
+  _applyAvailUI();
   showToast(_modelAvail ? 'Ahora estás Disponible' : 'Ahora estás No Disponible', 'success');
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+  _applyAvailUI();
+  setInterval(_applyAvailUI, 30_000);
+});
 
 function previewProfilePhoto(input) {
   if (!input.files || !input.files[0]) return;
