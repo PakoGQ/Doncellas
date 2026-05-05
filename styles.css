@@ -3420,9 +3420,8 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
    ═══════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
 
-  /* ── 1. Hide banner indicators/arrows (auto-rotate only) ─── */
-  .hb-nav, .hb-dot, .hb-arrows,
-  .hero-dots, .hero-dot,
+  /* ── 1. Hide banner arrows on mobile (los puntos sí se muestran) ─── */
+  .hb-nav, .hb-arrows,
   .hero-arrow, .hero-prev, .hero-next { display: none !important; }
 
   /* ── 2. Hero banner: 300px, centered full-width content ─── */
@@ -3646,9 +3645,8 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
 
   .wa-card { padding: 18px; }
 
-  /* ── 5. Hide banner dots/indicators on desktop; keep arrows ── */
-  .hb-nav,
-  .hero-dots { display: none !important; }
+  /* ── 5. Hide hb-nav on desktop (los puntos .hero-dots sí se muestran) ── */
+  .hb-nav { display: none !important; }
 }
 
 /* ═══════════════════════════════════════════════════════════
