@@ -4908,10 +4908,25 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
 }
 
 /* ═══════════════════════════════════════════════════════════
-   En móvil ocultamos los puntos del banner — rotación
-   sigue automática pero sin indicadores visibles.
+   Hero dots — ahora viven en .hero-dots-wrap DEBAJO del banner.
+   Visible en escritorio, oculto en móvil.
    ═══════════════════════════════════════════════════════════ */
+.hero-dots-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 14px 0 4px;
+  pointer-events: none;
+}
+.hero-dots-wrap .hero-dots {
+  position: relative;
+  bottom: auto; right: auto; left: auto; top: auto;
+  transform: none;
+  pointer-events: auto;
+  display: flex;
+  gap: 8px;
+}
+
 @media (max-width: 768px) {
-  .hero-dots,
-  .hero-dot { display: none !important; }
+  .hero-dots-wrap { display: none !important; }
 }
