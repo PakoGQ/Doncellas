@@ -441,6 +441,12 @@ function goHeroSlide(idx) {
   if (content) content.style.opacity = '0';
   /* hide floating stats on brand/pagos slides (0,1) — they have their own */
   if (stats) stats.style.opacity = heroIndex < 2 ? '0' : '1';
+  /* Cuando regresa el "reguilete" a la slide de marca, rota a otros perfiles destacados */
+  if (heroIndex === 0) {
+    const featuredCount = MODELS.filter(m => m.featured && !m.hidden).length || 4;
+    _mosaicOffset = (_mosaicOffset + 4) % Math.max(4, featuredCount);
+    refreshMosaicImages();
+  }
   clearInterval(heroTimer);
   heroTimer = setInterval(nextHeroSlide, 5500);
 }
@@ -568,11 +574,31 @@ function initIndex() {
   setupSearchForm();
 }
 
-/* Returns a featured-model photo for the brand slide mosaic */
-function _mosaicPic(i) {
+/* Returns a featured-model photo for the brand slide mosaic.
+   Reframes at 2:3 aspect (matches container) with face-centered crop
+   so the photo se ve completa, sin recortes raros en la cara. */
+let _mosaicOffset = 0;
+function _mosaicPic(i, offset) {
+  const off = offset == null ? _mosaicOffset : offset;
   const pool = MODELS.filter(m => m.featured && !m.hidden);
-  if (pool[i]) return pool[i].photos[0];
-  return photoUrl(PHOTO_POOL[i * 3 % PHOTO_POOL.length], 380, 570);
+  const m = pool.length ? pool[(i + off) % pool.length] : null;
+  if (m) {
+    const idMatch = m.photos[0].match(/images\.unsplash\.com\/([^?]+)/);
+    if (idMatch) {
+      return `https://images.unsplash.com/${idMatch[1]}?w=400&h=600&fit=crop&crop=faces&auto=format&q=80`;
+    }
+    return m.photos[0];
+  }
+  return photoUrl(PHOTO_POOL[((i + off) * 3) % PHOTO_POOL.length], 400, 600);
+}
+
+/* Rota las 4 fotos del mosaico de marca a otros perfiles destacados.
+   Se llama cada vez que la slide de marca vuelve a estar activa. */
+function refreshMosaicImages() {
+  const imgs = document.querySelectorAll('.hero-brand-mosaic .hbm-img-wrap img');
+  imgs.forEach((img, i) => {
+    img.src = _mosaicPic(i);
+  });
 }
 
 /* Genera slides del hero desde modelos con promo */
