@@ -698,6 +698,7 @@ function buildHeroSlides() {
       : `<span class="hero-promo-discounted">${original}/hr</span>`;
     slide.innerHTML = `
       <div class="hero-overlay"></div>
+      <div class="hero-promo-photo-card"><img src="${m.photos[0]}" alt="${m.name}" loading="lazy" /></div>
       <div class="hero-promo-overlay">
         <div class="hero-promo-badge">🔥 ${m.promo.badge}</div>
         <div class="hero-promo-name">${m.name}</div>
