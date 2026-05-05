@@ -2022,16 +2022,9 @@ canvas { width: 100% !important; }
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center top;
   display: block;
-  animation: kenBurns 10s ease-in-out infinite alternate;
-}
-.hero-brand-mosaic-col:nth-child(1) .hbm-img-wrap:nth-child(1) img { animation-duration: 10s; animation-delay:  0s; }
-.hero-brand-mosaic-col:nth-child(1) .hbm-img-wrap:nth-child(2) img { animation-duration: 12s; animation-delay: -4s; }
-.hero-brand-mosaic-col:nth-child(2) .hbm-img-wrap:nth-child(1) img { animation-duration: 11s; animation-delay: -7s; }
-.hero-brand-mosaic-col:nth-child(2) .hbm-img-wrap:nth-child(2) img { animation-duration:  9s; animation-delay: -2s; }
-@keyframes kenBurns {
-  0%   { transform: scale(1)    translateY(0); }
-  100% { transform: scale(1.12) translateY(-5%); }
+  /* Sin Ken Burns: las fotos se ven completas, sin escalado ni paneo */
 }
 @media (max-width: 900px) {
   .hero-brand-mosaic { display: none; }
