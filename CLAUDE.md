@@ -223,11 +223,30 @@
 ### Flujo 1 — Publicación automática
 Cuando escort marca "Disponible" → Make.com detecta el cambio → Claude genera texto elegante + foto → publica automáticamente en canal Telegram + estado WhatsApp Business
 
-### Flujo 2 — Chatbot conversacional
-Cliente escribe en Telegram o WhatsApp → agente identifica de qué escort hablan → consulta DB (disponibilidad, descripción, número) → responde con tono amable/sensual → si quieren cita: envía WhatsApp directo a la escort para confirmar → agente notifica al cliente → cita guardada en panel
+### Flujo 2 — Chatbot conversacional + Confirmación de cita
+1. Cliente escribe en Telegram o WhatsApp
+2. Agente consulta Supabase → presenta escorts disponibles con perfil
+3. Cliente elige una escort
+4. Agente le avisa al cliente: *"Perfecto, le voy a preguntar a [nombre] si tiene disponibilidad ⏳"*
+5. Agente manda WhatsApp a la escort: *"Tienes solicitud de cita para [día/hora]. ¿Puedes asistir? Responde SÍ o NO"*
+6. **Si escort dice SÍ** → agente confirma al cliente: *"¡Listo! Tu cita está confirmada 🌹"* → cita guardada en panel
+7. **Si escort dice NO o no responde en 15 min** → agente avisa al cliente: *"[Nombre] tuvo un imprevisto 😔 ¿Te presento a [otras disponibles] o prefieres cancelar?"*
 
-### Flujo 3 — Recordatorios
-1 hora antes: avisa a cliente y escort → confirma asistencia → si alguno cancela notifica al otro → actualiza el panel
+### Flujo 3 — Recordatorios escalonados
+- **30 min antes al cliente:** escort recibe aviso primero con 30 min de margen
+- Escort confirma → 30 min después cliente recibe confirmación final
+- **Si escort NO confirma o cancela en ese margen:**
+  - Cliente recibe: *"[Nombre] tuvo un imprevisto. ¿Te presento opciones disponibles o cancelamos?"*
+  - Se ofrecen escorts alternativas disponibles esa noche
+  - Panel se actualiza con el nuevo estado de la cita
+
+### Stack para versión final del agente
+- **GPT-4o mini** (cerebro — reemplaza Claude API por menos restricciones de contenido)
+- **Make.com** (orquestador de flujos y tiempos)
+- **WhatsApp Business API** (mensajes a escorts y clientes)
+- **Telegram Bot** (canal público + chatbot clientes)
+- **Supabase** (escorts, citas, disponibilidad, clientes)
+- Costo estimado: ~$39 USD/mes (~$700 MXN/mes)
 
 ---
 
@@ -291,10 +310,16 @@ git add . && git commit -m "descripción del cambio" && git push
 ## 15. PENDIENTES
 
 ### Técnicos
-- [ ] Comprar dominios doncellas.mx + doncellas.com en akky.mx (~$315 MXN)
-- [ ] Conectar dominio a GitHub Pages o migrar a Vercel
+- [x] Comprar dominios doncellas.mx + doncellas.com.mx en akky.mx
+- [x] Conectar dominio a GitHub Pages via Cloudflare
+- [x] doncellas.mx activo con HTTPS
+- [x] Bot de Telegram demo funcionando (@DocenllasGDLbot — corregir typo a @DoncellasGDLbot)
+- [ ] Corregir username del bot: DocenllasGDLbot → DoncellasGDLbot
+- [ ] Redirección doncellas.com.mx → doncellas.mx (pendiente propagar)
 - [ ] Conectar Supabase como base de datos real
-- [ ] Construir el agente IA (Make.com + Claude API + WhatsApp + Telegram)
+- [ ] Construir agente real (Make.com + GPT-4o mini + WhatsApp Business + Telegram)
+- [ ] Flujo de confirmación: escort confirma ANTES de notificar al cliente
+- [ ] Recordatorios escalonados: escort 30 min antes que cliente
 - [ ] Descargar logo en JPG desde Canva
 - [ ] Generar SVG del logo desde Claude Code
 
