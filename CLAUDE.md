@@ -272,16 +272,44 @@ Una vez que ambos confirman asistencia, el agente activa un **canal de mensajes 
 
 ---
 
-## 11. ESTRATEGIA DE MARKETING (sin Google Ads primeros meses)
+## 11. ESTRATEGIA DE MARKETING
+
+### Principio clave: discreción total en ambos lados
+- Las escorts NO comparten sus perfiles en redes sociales (quieren privacidad)
+- Los clientes NO quieren listas de difusión ni rastro de que contratan el servicio
+- Todo el marketing lo maneja Doncellas GDL como agencia, nunca las escorts directamente
+
+### Canales principales
 
 | Canal | Impacto | Descripción |
 |-------|---------|-------------|
-| Escorts comparten sus perfiles | 95% | 8 escorts × 500 seguidores = 4,000 personas día 1 gratis |
-| WhatsApp Business | 92% | Estados automáticos + lista de difusión VIP |
-| Telegram | 90% | Canal público con publicaciones automáticas del agente |
-| Instagram | 75% | Siluetas elegantes, historias diarias de disponibilidad |
-| SEO local + directorios | 70% | Google Search Console desde día 1 |
-| Google Ads | — | Activar en mes 4-5 cuando haya 20+ perfiles |
+| Directorios de adultos | Alto | Skokka.mx, Mileroticos.com, Vivastreet — clientes llegan buscando activamente |
+| SEO en Google | Alto (mediano plazo) | Keywords: "escorts Guadalajara", "acompañantes GDL" — tráfico orgánico constante |
+| Canal de Telegram propio | Medio | La AGENCIA publica disponibilidad — cliente se une anónimamente si quiere |
+| Bot de Telegram | Medio | Clientes regresan cuando quieren, sin rastro, sin lista de contactos |
+| Instagram discreto | Medio | Siluetas elegantes sin rostros, manejado por la agencia |
+| Boca a boca | Alto | El más poderoso en este giro — clientes satisfechos traen más clientes |
+| Google Ads | — | Activar en mes 4-5 cuando haya 20+ perfiles activos |
+
+### ❌ Estrategias descartadas
+- ~~Escorts comparten sus perfiles~~ — quieren privacidad total
+- ~~WhatsApp Business difusión~~ — clientes no quieren rastro en su teléfono
+
+### Timeline
+| Momento | Acción |
+|---------|--------|
+| Cuando haya 3-5 escorts | Subir perfiles reales + registrar en Google Search Console |
+| Semana 1 | Publicar en Skokka y Mileroticos con link a doncellas.mx |
+| Semana 2 | Canal de Telegram activo como agencia |
+| Mes 2 | Agente real con GPT-4o mini funcionando |
+| Mes 4-5 | Google Ads si hay 20+ perfiles |
+
+### SEO técnico — Ya implementado ✅
+- Meta tags optimizados en todas las páginas
+- Open Graph para compartir en redes
+- Structured data (JSON-LD) para Google
+- sitemap.xml y robots.txt activos
+- Pendiente: registrar en Google Search Console cuando haya perfiles reales
 
 ---
 
