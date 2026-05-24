@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /panel-admin.html
+Disallow: /panel-modelo.html
+
+Sitemap: https://doncellas.mx/sitemap.xml
