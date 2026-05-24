@@ -240,6 +240,28 @@ Cuando escort marca "Disponible" → Make.com detecta el cambio → Claude gener
   - Se ofrecen escorts alternativas disponibles esa noche
   - Panel se actualiza con el nuevo estado de la cita
 
+### Flujo 4 — Canal privado temporal (números protegidos)
+Una vez que ambos confirman asistencia, el agente activa un **canal de mensajes relay** entre cliente y escort:
+
+1. **Ambos confirman** → agente activa el relay
+2. Agente avisa a los dos:
+   - Al cliente: *"[Nombre] ya confirmó. Si surge algo antes de verse, escríbeme aquí y yo le aviso 😊"*
+   - A la escort: *"Tu cita confirmó. Si necesitas avisarle algo escríbeme aquí y se lo hago llegar"*
+3. **Cómo funciona el relay:**
+   - Cliente escribe al bot → agente reenvía a la escort (sin revelar número del cliente)
+   - Escort escribe al bot → agente reenvía al cliente (sin revelar número/Telegram de la escort)
+   - Ninguno ve el contacto real del otro en ningún momento
+4. **Ejemplos de uso:**
+   - *"Voy a llegar 10 minutos tarde"* → agente lo reenvía al otro
+   - *"¿Puedes ir a [otra dirección]?"* → agente lo reenvía
+   - *"Ya estoy en el lobby del hotel"* → agente lo reenvía
+5. **Cierre del canal:**
+   - Cuando cliente escribe *"ya estamos juntos"* o *"ya llegué"* o la escort confirma lo mismo → agente desactiva el relay
+   - Agente confirma: *"¡Que lo disfruten! 🌹 El canal se ha cerrado"*
+   - Los números/cuentas nunca quedan expuestos
+
+**Beneficio clave:** La escort nunca da su número real al cliente. Todo pasa por el agente. Esto protege a las chicas y mantiene el control del negocio en Doncellas GDL.
+
 ### Stack para versión final del agente
 - **GPT-4o mini** (cerebro — reemplaza Claude API por menos restricciones de contenido)
 - **Make.com** (orquestador de flujos y tiempos)
@@ -313,8 +335,8 @@ git add . && git commit -m "descripción del cambio" && git push
 - [x] Comprar dominios doncellas.mx + doncellas.com.mx en akky.mx
 - [x] Conectar dominio a GitHub Pages via Cloudflare
 - [x] doncellas.mx activo con HTTPS
-- [x] Bot de Telegram demo funcionando (@DocenllasGDLbot — corregir typo a @DoncellasGDLbot)
-- [ ] Corregir username del bot: DocenllasGDLbot → DoncellasGDLbot
+- [x] Bot de Telegram demo funcionando (@DocenllasGDLbot — typo provisional)
+- [ ] Corregir username del bot: @DocenllasGDLbot → @DoncellasGDLbot (hacerlo al migrar a GPT-4o mini — crear bot nuevo con nombre correcto)
 - [ ] Redirección doncellas.com.mx → doncellas.mx (pendiente propagar)
 - [ ] Conectar Supabase como base de datos real
 - [ ] Construir agente real (Make.com + GPT-4o mini + WhatsApp Business + Telegram)
