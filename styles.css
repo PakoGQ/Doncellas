@@ -46,10 +46,10 @@
 /* Desktop: taller nav to accommodate larger logo (cropped to show only gold).
    Scoped to `.nav .nav-logo` so the footer brand logo is NOT affected. */
 @media (min-width: 769px) {
-  :root { --nav-h: 188px; }
+  :root { --nav-h: 210px; }
   .nav .nav-logo {
     overflow: hidden;
-    height: 148px;
+    height: 172px;
   }
 }
 
@@ -3568,7 +3568,7 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
     flex-shrink: 0;
   }
 
-  /* ── "Escorts" label — small elegant word beneath the logo ── */
+  /* ── "Escorts" label — casi pegada al logo ── */
   .nav-escorts-label {
     display: block;
     font-family: 'Georgia', 'Times New Roman', serif;
@@ -3579,7 +3579,7 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
     letter-spacing: 6px;
     opacity: 0.88;
     line-height: 1;
-    margin-top: 6px;
+    margin-top: 1px;
     white-space: nowrap;
   }
 
@@ -3591,26 +3591,43 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
     justify-content: flex-start;
     flex: 1;
     gap: 0;
-    padding-top: 22px;
-    padding-bottom: 10px;
+    padding-top: 20px;
+    padding-bottom: 4px;
   }
 
-  /* ── Tagline: large, centered, near top of nav ── */
+  /* ── Tagline shimmer animation ── */
+  @keyframes nav-tagline-shimmer {
+    0%   { background-position: -150% center; }
+    100% { background-position: 250% center; }
+  }
+
+  /* ── Tagline: large, bold italic, animated gold shimmer ── */
   .nav-tagline {
     display: block;
     font-family: 'Georgia', 'Times New Roman', serif;
     font-style: italic;
-    font-size: 36px;
-    font-weight: 400;
-    color: #C9A84C;
+    font-size: 38px;
+    font-weight: bold;
     letter-spacing: 7px;
-    opacity: 0.95;
     white-space: nowrap;
     line-height: 1;
     text-decoration: none;
+    background: linear-gradient(
+      90deg,
+      #8a6a20 0%,
+      #C9A84C 35%,
+      #f5e09a 50%,
+      #C9A84C 65%,
+      #8a6a20 100%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: nav-tagline-shimmer 4s linear infinite;
   }
 
-  /* ── Nav links row — pushed to the bottom of nav-center ── */
+  /* ── Nav links row — pegado a la línea dorada inferior ── */
   .nav-links { gap: 2.5rem; display: flex; margin-top: auto; }
   .nav-links a {
     font-size: .85rem;
