@@ -446,8 +446,8 @@ function goHeroSlide(idx) {
   if (heroIndex === 0) {
     _mosaicRoundCount++;
     if (_mosaicRoundCount % 2 === 0) {
-      const featuredCount = MODELS.filter(m => m.featured && !m.hidden).length || 4;
-      _mosaicOffset = (_mosaicOffset + 4) % Math.max(4, featuredCount);
+      const featuredCount = MODELS.filter(m => m.featured && !m.hidden).length || 2;
+      _mosaicOffset = (_mosaicOffset + 2) % Math.max(2, featuredCount);
       refreshMosaicImages();
     }
   }
@@ -842,11 +842,9 @@ function buildHeroSlides() {
     <div class="hero-brand-mosaic">
       <div class="hero-brand-mosaic-col">
         <div class="hbm-img-wrap"><img src="${_mosaicPic(0)}" alt="modelo" /></div>
-        <div class="hbm-img-wrap"><img src="${_mosaicPic(1)}" alt="modelo" /></div>
       </div>
       <div class="hero-brand-mosaic-col">
-        <div class="hbm-img-wrap"><img src="${_mosaicPic(2)}" alt="modelo" /></div>
-        <div class="hbm-img-wrap"><img src="${_mosaicPic(3)}" alt="modelo" /></div>
+        <div class="hbm-img-wrap"><img src="${_mosaicPic(1)}" alt="modelo" /></div>
       </div>
     </div>`;
   wrap.appendChild(brandSlide);
