@@ -46,10 +46,10 @@
 /* Desktop: taller nav to accommodate larger logo (cropped to show only gold).
    Scoped to `.nav .nav-logo` so the footer brand logo is NOT affected. */
 @media (min-width: 769px) {
-  :root { --nav-h: 210px; }
+  :root { --nav-h: 250px; }
   .nav .nav-logo {
     overflow: hidden;
-    height: 172px;
+    height: 210px;
   }
 }
 
@@ -3579,7 +3579,7 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
     letter-spacing: 6px;
     opacity: 0.88;
     line-height: 1;
-    margin-top: 1px;
+    margin-top: -6px;
     white-space: nowrap;
   }
 
