@@ -31,12 +31,15 @@
   </div>
   <div class="nav-cta">
     <button class="btn btn-gold btn-sm nav-login-btn" onclick="openModal('loginModal')"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</button>
+    <button class="nav-menu-btn" id="navMenuBtn" aria-label="Menú">
+      <span></span><span></span><span></span>
+    </button>
   </div>
   <span class="nav-escorts-mobile">La Elegancia del Placer</span>
 </nav>
 
 <!-- ── Hero pequeño ── -->
-<section style="background:linear-gradient(135deg,#0A0A0A 0%,#0D0D08 100%);padding:7rem 2rem 3rem;text-align:center;border-bottom:1px solid var(--border)">
+<section style="background:linear-gradient(135deg,#0A0A0A 0%,#0D0D08 100%);padding:calc(var(--nav-h) + 2.5rem) 2rem 3rem;text-align:center;border-bottom:1px solid var(--border)">
   <p class="section-label"><i class="fas fa-shield-alt"></i> Transparencia y confianza</p>
   <h1 style="font-size:clamp(1.8rem,4vw,3rem);margin:.75rem 0 1rem">Información <span class="gold">Legal</span></h1>
   <p style="color:var(--t2);max-width:560px;margin:0 auto;font-size:1rem;line-height:1.7">Todo lo que necesitas saber sobre el funcionamiento, responsabilidades y políticas de Doncellas GDL.</p>
@@ -58,7 +61,7 @@
   <p style="color:var(--t3);font-size:.82rem;margin-bottom:3rem;text-align:right">Última actualización: mayo 2026</p>
 
   <!-- 1. Naturaleza -->
-  <section id="naturaleza" style="margin-bottom:3rem;scroll-margin-top:90px">
+  <section id="naturaleza" style="margin-bottom:3rem;scroll-margin-top:calc(var(--nav-h) + 8px)">
     <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.25rem">
       <div style="width:40px;height:40px;border-radius:50%;background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.3);display:flex;align-items:center;justify-content:center;flex-shrink:0">
         <i class="fas fa-building" style="color:var(--gold);font-size:.9rem"></i>
@@ -75,7 +78,7 @@
   <div style="border-top:1px solid var(--border);margin-bottom:3rem"></div>
 
   <!-- 2. Mayoría de edad -->
-  <section id="mayoria" style="margin-bottom:3rem;scroll-margin-top:90px">
+  <section id="mayoria" style="margin-bottom:3rem;scroll-margin-top:calc(var(--nav-h) + 8px)">
     <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.25rem">
       <div style="width:40px;height:40px;border-radius:50%;background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.3);display:flex;align-items:center;justify-content:center;flex-shrink:0">
         <i class="fas fa-id-card" style="color:var(--gold);font-size:.9rem"></i>
@@ -99,7 +102,7 @@
   <div style="border-top:1px solid var(--border);margin-bottom:3rem"></div>
 
   <!-- 3. Responsabilidades -->
-  <section id="responsabilidad" style="margin-bottom:3rem;scroll-margin-top:90px">
+  <section id="responsabilidad" style="margin-bottom:3rem;scroll-margin-top:calc(var(--nav-h) + 8px)">
     <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.25rem">
       <div style="width:40px;height:40px;border-radius:50%;background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.3);display:flex;align-items:center;justify-content:center;flex-shrink:0">
         <i class="fas fa-balance-scale" style="color:var(--gold);font-size:.9rem"></i>
@@ -122,7 +125,7 @@
   <div style="border-top:1px solid var(--border);margin-bottom:3rem"></div>
 
   <!-- 4. Anunciantes -->
-  <section id="anunciantes" style="margin-bottom:3rem;scroll-margin-top:90px">
+  <section id="anunciantes" style="margin-bottom:3rem;scroll-margin-top:calc(var(--nav-h) + 8px)">
     <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.25rem">
       <div style="width:40px;height:40px;border-radius:50%;background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.3);display:flex;align-items:center;justify-content:center;flex-shrink:0">
         <i class="fas fa-user-check" style="color:var(--gold);font-size:.9rem"></i>
@@ -147,7 +150,7 @@
   <div style="border-top:1px solid var(--border);margin-bottom:3rem"></div>
 
   <!-- 5. Privacidad -->
-  <section id="privacidad" style="margin-bottom:3rem;scroll-margin-top:90px">
+  <section id="privacidad" style="margin-bottom:3rem;scroll-margin-top:calc(var(--nav-h) + 8px)">
     <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.25rem">
       <div style="width:40px;height:40px;border-radius:50%;background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.3);display:flex;align-items:center;justify-content:center;flex-shrink:0">
         <i class="fas fa-lock" style="color:var(--gold);font-size:.9rem"></i>
@@ -169,7 +172,7 @@
   <div style="border-top:1px solid var(--border);margin-bottom:3rem"></div>
 
   <!-- 6. Cookies -->
-  <section id="cookies" style="margin-bottom:3rem;scroll-margin-top:90px">
+  <section id="cookies" style="margin-bottom:3rem;scroll-margin-top:calc(var(--nav-h) + 8px)">
     <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.25rem">
       <div style="width:40px;height:40px;border-radius:50%;background:rgba(201,168,76,.12);border:1px solid rgba(201,168,76,.3);display:flex;align-items:center;justify-content:center;flex-shrink:0">
         <i class="fas fa-cookie" style="color:var(--gold);font-size:.9rem"></i>
@@ -210,6 +213,31 @@
   <a href="legal.html"     class="bottom-nav-item active"><i class="fas fa-shield-alt"></i><span>Legal</span></a>
 </nav>
 
+<div class="toast-container" id="toastContainer"></div>
+
+<div class="modal-overlay" id="loginModal">
+  <div class="modal">
+    <div class="modal-logo"><img src="logo.png" alt="Doncellas" /></div>
+    <div class="modal-header">
+      <h3 class="modal-title">Iniciar Sesión</h3>
+      <button class="modal-close" onclick="closeModal('loginModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div id="loginError" style="display:none;background:rgba(224,80,80,.12);border:1px solid rgba(224,80,80,.3);border-radius:var(--r-md);padding:.75rem 1rem;margin-bottom:1rem;font-size:.85rem;color:var(--red)"><i class="fas fa-exclamation-circle"></i> Usuario o contraseña incorrectos.</div>
+    <div class="form-group"><label class="form-label">Correo</label><input type="email" class="form-input" id="loginEmail" placeholder="tu@correo.com" /></div>
+    <div class="form-group"><label class="form-label">Contraseña</label><input type="password" class="form-input" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()" /></div>
+    <button class="btn btn-gold w-full" style="justify-content:center;margin-top:.5rem" onclick="doLogin()"><i class="fas fa-sign-in-alt"></i> Entrar</button>
+    <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:.35rem">
+      <button class="btn btn-ghost btn-sm" style="font-size:.75rem" onclick="fillLogin('admin@doncellas.mx','admin123')"><i class="fas fa-shield-alt" style="color:var(--gold)"></i> Admin demo</button>
+      <button class="btn btn-ghost btn-sm" style="font-size:.75rem" onclick="fillLogin('valentina@doncellas.mx','modelo123')"><i class="fas fa-user" style="color:var(--gold)"></i> Doncella demo</button>
+    </div>
+  </div>
+</div>
+
 <script src="app.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  }
+</script>
 </body>
 </html>
