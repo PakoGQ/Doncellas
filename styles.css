@@ -3598,7 +3598,7 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
     display: block;
     font-family: 'Georgia', 'Times New Roman', serif;
     font-style: italic;
-    font-size: 28px;
+    font-size: 36px;
     font-weight: 400;
     color: #C9A84C;
     letter-spacing: 7px;
@@ -3606,6 +3606,7 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
     white-space: nowrap;
     line-height: 1;
     text-decoration: none;
+    margin-top: -14px;
   }
 
   /* ── Nav links row ── */
