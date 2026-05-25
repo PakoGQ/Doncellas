@@ -257,8 +257,9 @@ p  { line-height: 1.7; color: var(--t2); }
   line-height: 0;
   text-decoration: none;
 }
-/* Tagline & escorts label: hidden on mobile — desktop override below */
+/* Tagline, title & escorts label: hidden on mobile — desktop override below */
 .nav-tagline { display: none; }
+.nav-title { display: none; }
 .nav-escorts-label { display: none; }
 /* nav-center is transparent on mobile (contents behaves as if wrapper doesn't exist) */
 .nav-center { display: contents; }
@@ -3586,7 +3587,7 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
     white-space: nowrap;
   }
 
-  /* ── Nav Center: wraps tagline + links as a column ── */
+  /* ── Nav Center: wraps title + tagline + links as a column ── */
   .nav-center {
     display: flex;
     flex-direction: column;
@@ -3594,25 +3595,24 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
     justify-content: flex-start;
     flex: 1;
     gap: 0;
-    padding-top: 55px;
+    padding-top: 28px;
     padding-bottom: 6px;
     align-self: stretch;
   }
 
-  /* ── Tagline shimmer animation ── */
+  /* ── Shared shimmer animation ── */
   @keyframes nav-tagline-shimmer {
     0%   { background-position: -150% center; }
     100% { background-position: 250% center; }
   }
 
-  /* ── Tagline: large, bold italic, animated gold shimmer ── */
+  /* ── Shared shimmer style mixin (applied to both title and tagline) ── */
+  .nav-title,
   .nav-tagline {
     display: block;
     font-family: 'Georgia', 'Times New Roman', serif;
     font-style: italic;
-    font-size: 38px;
     font-weight: bold;
-    letter-spacing: 7px;
     white-space: nowrap;
     line-height: 1;
     text-decoration: none;
@@ -3629,6 +3629,21 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
     background-clip: text;
     -webkit-text-fill-color: transparent;
     animation: nav-tagline-shimmer 4s linear infinite;
+  }
+
+  /* ── "Doncellas" — título grande arriba ── */
+  .nav-title {
+    font-size: 52px;
+    letter-spacing: 10px;
+    animation-delay: 0s;
+  }
+
+  /* ── "La Elegancia del Placer" — subtítulo debajo ── */
+  .nav-tagline {
+    font-size: 28px;
+    letter-spacing: 6px;
+    margin-top: 6px;
+    animation-delay: -2s;
   }
 
   /* ── Nav links: posición absoluta pegada a la línea dorada ── */
