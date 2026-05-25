@@ -587,7 +587,6 @@ function initIndex() {
     init3DTilt();
     initSparkleClick();
     initMagneticBtns();
-    initCustomCursor();
   }, 120);
 }
 

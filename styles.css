@@ -5101,44 +5101,6 @@ details.faq-item[open] .faq-a {
    ANIMACIONES PREMIUM — Doncellas GDL
 ══════════════════════════════════════════════════════ */
 
-/* ── Cursor dorado personalizado ── */
-@media (pointer: fine) { * { cursor: none !important; } }
-
-.cursor-dot {
-  position: fixed;
-  left: 0; top: 0;
-  width: 9px; height: 9px;
-  margin-left: -4.5px; margin-top: -4.5px;
-  background: #C9A84C;
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 99999;
-  box-shadow: 0 0 14px rgba(201,168,76,.9), 0 0 28px rgba(201,168,76,.4);
-  transition: transform .1s ease;
-  will-change: left, top;
-}
-.cursor-dot.is-clicking { transform: scale(.55); }
-
-.cursor-ring {
-  position: fixed;
-  left: 0; top: 0;
-  width: 40px; height: 40px;
-  margin-left: -20px; margin-top: -20px;
-  border: 1.5px solid rgba(201,168,76,.45);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 99998;
-  transition: width .22s ease, height .22s ease,
-              margin .22s ease, border-color .22s ease,
-              background .22s ease;
-  will-change: left, top;
-}
-.cursor-ring.is-hovered {
-  width: 58px; height: 58px;
-  margin-left: -29px; margin-top: -29px;
-  border-color: rgba(201,168,76,.8);
-  background: rgba(201,168,76,.07);
-}
 
 /* ── Aurora orbs en hero ── */
 .aurora-orb {
