@@ -259,8 +259,14 @@ p  { line-height: 1.7; color: var(--t2); }
 }
 /* Tagline, title & escorts label: hidden on mobile — desktop override below */
 .nav-tagline { display: none; }
-.nav-title { display: none; }
+.nav-title   { display: none; }
 .nav-escorts-label { display: none; }
+
+/* ── Shimmer animation (fuera del media query para máxima compatibilidad) ── */
+@keyframes nav-tagline-shimmer {
+  0%   { background-position: -150% center; }
+  100% { background-position: 250% center; }
+}
 /* nav-center is transparent on mobile (contents behaves as if wrapper doesn't exist) */
 .nav-center { display: contents; }
 
@@ -3600,49 +3606,46 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
     align-self: stretch;
   }
 
-  /* ── Shared shimmer animation ── */
-  @keyframes nav-tagline-shimmer {
-    0%   { background-position: -150% center; }
-    100% { background-position: 250% center; }
-  }
-
-  /* ── Shared shimmer style mixin (applied to both title and tagline) ── */
-  .nav-title,
-  .nav-tagline {
-    display: block;
+  /* ── "Doncellas" — shimmer dorado, idéntico al tagline ── */
+  .nav-title {
+    display: block !important;
     font-family: 'Georgia', 'Times New Roman', serif;
     font-style: italic;
     font-weight: bold;
+    font-size: 38px;
+    letter-spacing: 7px;
     white-space: nowrap;
     line-height: 1;
     text-decoration: none;
-    background: linear-gradient(
-      90deg,
-      #8a6a20 0%,
-      #C9A84C 35%,
-      #f5e09a 50%,
-      #C9A84C 65%,
-      #8a6a20 100%
-    );
+    background: linear-gradient(90deg, #8a6a20 0%, #C9A84C 35%, #f5e09a 50%, #C9A84C 65%, #8a6a20 100%);
     background-size: 200% auto;
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
+    color: transparent;
     animation: nav-tagline-shimmer 4s linear infinite;
-  }
-
-  /* ── "Doncellas" — título grande arriba ── */
-  .nav-title {
-    font-size: 52px;
-    letter-spacing: 10px;
     animation-delay: 0s;
   }
 
-  /* ── "La Elegancia del Placer" — subtítulo debajo ── */
+  /* ── "La Elegancia del Placer" — mismo shimmer dorado ── */
   .nav-tagline {
-    font-size: 28px;
-    letter-spacing: 6px;
-    margin-top: 6px;
+    display: block !important;
+    font-family: 'Georgia', 'Times New Roman', serif;
+    font-style: italic;
+    font-weight: bold;
+    font-size: 38px;
+    letter-spacing: 7px;
+    white-space: nowrap;
+    line-height: 1;
+    text-decoration: none;
+    margin-top: 4px;
+    background: linear-gradient(90deg, #8a6a20 0%, #C9A84C 35%, #f5e09a 50%, #C9A84C 65%, #8a6a20 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    animation: nav-tagline-shimmer 4s linear infinite;
     animation-delay: -2s;
   }
 
