@@ -5096,3 +5096,137 @@ details.faq-item[open] .faq-a {
   background: rgba(10,10,10,.98) !important;
   transition: background .3s, box-shadow .3s;
 }
+
+/* ══════════════════════════════════════════════════════
+   ANIMACIONES PREMIUM — Doncellas GDL
+══════════════════════════════════════════════════════ */
+
+/* ── Cursor dorado personalizado ── */
+@media (pointer: fine) { * { cursor: none !important; } }
+
+.cursor-dot {
+  position: fixed;
+  left: 0; top: 0;
+  width: 9px; height: 9px;
+  margin-left: -4.5px; margin-top: -4.5px;
+  background: #C9A84C;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99999;
+  box-shadow: 0 0 14px rgba(201,168,76,.9), 0 0 28px rgba(201,168,76,.4);
+  transition: transform .1s ease;
+  will-change: left, top;
+}
+.cursor-dot.is-clicking { transform: scale(.55); }
+
+.cursor-ring {
+  position: fixed;
+  left: 0; top: 0;
+  width: 40px; height: 40px;
+  margin-left: -20px; margin-top: -20px;
+  border: 1.5px solid rgba(201,168,76,.45);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99998;
+  transition: width .22s ease, height .22s ease,
+              margin .22s ease, border-color .22s ease,
+              background .22s ease;
+  will-change: left, top;
+}
+.cursor-ring.is-hovered {
+  width: 58px; height: 58px;
+  margin-left: -29px; margin-top: -29px;
+  border-color: rgba(201,168,76,.8);
+  background: rgba(201,168,76,.07);
+}
+
+/* ── Aurora orbs en hero ── */
+.aurora-orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
+  filter: blur(65px);
+  opacity: .9;
+}
+.aurora-orb-1 {
+  width: 520px; height: 520px;
+  background: radial-gradient(circle, rgba(201,168,76,.38) 0%, transparent 70%);
+  top: -20%; left: -10%;
+  animation: aurora1 22s ease-in-out infinite;
+}
+.aurora-orb-2 {
+  width: 380px; height: 380px;
+  background: radial-gradient(circle, rgba(140,80,15,.45) 0%, transparent 70%);
+  bottom: -12%; right: 2%;
+  animation: aurora2 17s ease-in-out infinite;
+}
+.aurora-orb-3 {
+  width: 260px; height: 260px;
+  background: radial-gradient(circle, rgba(201,168,76,.22) 0%, transparent 70%);
+  top: 40%; left: 48%;
+  animation: aurora3 30s ease-in-out infinite;
+}
+@keyframes aurora1 {
+  0%,100% { transform: translate(0,0) scale(1); }
+  33%  { transform: translate(70px,-45px) scale(1.18); }
+  66%  { transform: translate(-35px,55px) scale(.85); }
+}
+@keyframes aurora2 {
+  0%,100% { transform: translate(0,0) scale(1); }
+  40%  { transform: translate(-55px,35px) scale(1.12); }
+  70%  { transform: translate(45px,-25px) scale(.9); }
+}
+@keyframes aurora3 {
+  0%,100% { transform: translate(0,0) scale(1); }
+  25%  { transform: translate(90px,45px) scale(1.22); }
+  75%  { transform: translate(-65px,-35px) scale(.78); }
+}
+
+/* ── Scan line hero ── */
+@keyframes scanLine {
+  0%   { top: -3%; opacity: .6; }
+  100% { top: 108%; opacity: 0; }
+}
+.hero-scan {
+  position: absolute;
+  left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(201,168,76,.55) 50%, transparent 100%);
+  z-index: 3;
+  pointer-events: none;
+  animation: scanLine 5s linear infinite;
+}
+
+/* ── Chispas doradas al clic ── */
+.sparkle {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99990;
+  transform: translate(-50%,-50%);
+  animation: sparkleOut .65s cubic-bezier(.22,1,.36,1) forwards;
+}
+@keyframes sparkleOut {
+  0%   { transform: translate(-50%,-50%) translate(0,0) scale(1); opacity: 1; }
+  100% { transform: translate(-50%,-50%) translate(var(--tx),var(--ty)) scale(0); opacity: 0; }
+}
+
+/* ── 3D tilt cards: transición suave al salir ── */
+.profile-card {
+  transform-style: preserve-3d;
+  transition: transform .35s cubic-bezier(.22,1,.36,1),
+              box-shadow .35s ease,
+              border-color .35s ease !important;
+  will-change: transform;
+}
+
+/* ── Gradiente fondo animado en CTA escorts ── */
+@keyframes gradMove {
+  0%,100% { background-position: 0% 50%; }
+  50%      { background-position: 100% 50%; }
+}
+.cta-escorts-section {
+  background: linear-gradient(135deg,#0D0A05,#200F00,#0A0A0A,#1A0D00,#080808) !important;
+  background-size: 400% 400% !important;
+  animation: gradMove 10s ease infinite !important;
+}

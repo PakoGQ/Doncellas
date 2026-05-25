@@ -579,10 +579,15 @@ function initIndex() {
   /* Animaciones */
   setTimeout(() => {
     addHeroParticles();
+    addAuroraOrbs();
     initScrollReveal();
     initNavScroll();
     addHowStepClasses();
     addCtaSectionClass();
+    init3DTilt();
+    initSparkleClick();
+    initMagneticBtns();
+    initCustomCursor();
   }, 120);
 }
 
@@ -667,6 +672,104 @@ function addCtaSectionClass() {
     if (sec.querySelector('h2')?.textContent?.includes('Quieres ser una de nuestras')) {
       sec.classList.add('cta-escorts-section');
     }
+  });
+}
+
+/* ══════════════════════════════════════════════════════
+   ANIMACIONES PREMIUM
+══════════════════════════════════════════════════════ */
+
+/* ── Cursor personalizado dorado (solo desktop) ── */
+function initCustomCursor() {
+  if (window.matchMedia('(pointer:coarse)').matches) return;
+  const dot  = Object.assign(document.createElement('div'), { className: 'cursor-dot' });
+  const ring = Object.assign(document.createElement('div'), { className: 'cursor-ring' });
+  document.body.append(dot, ring);
+  let cx = -200, cy = -200, rx = -200, ry = -200;
+  document.addEventListener('mousemove', e => {
+    cx = e.clientX; cy = e.clientY;
+    dot.style.left = cx + 'px';
+    dot.style.top  = cy + 'px';
+  }, { passive: true });
+  (function loop() {
+    rx += (cx - rx) * 0.1;
+    ry += (cy - ry) * 0.1;
+    ring.style.left = Math.round(rx) + 'px';
+    ring.style.top  = Math.round(ry) + 'px';
+    requestAnimationFrame(loop);
+  })();
+  document.addEventListener('mousedown', () => dot.classList.add('is-clicking'));
+  document.addEventListener('mouseup',   () => dot.classList.remove('is-clicking'));
+  document.addEventListener('mouseover', e => {
+    const hov = e.target.closest('a,button,.profile-card,.faq-q,.how-step-wrap,[onclick]');
+    ring.classList.toggle('is-hovered', !!hov);
+  });
+}
+
+/* ── Aurora orbs de luz en el hero ── */
+function addAuroraOrbs() {
+  const bg = document.querySelector('.hero-slide-brand .hero-slide-brand-bg');
+  if (!bg) return;
+  ['aurora-orb-1','aurora-orb-2','aurora-orb-3'].forEach(cls => {
+    const orb = document.createElement('div');
+    orb.className = 'aurora-orb ' + cls;
+    bg.appendChild(orb);
+  });
+  const scan = document.createElement('div');
+  scan.className = 'hero-scan';
+  bg.appendChild(scan);
+}
+
+/* ── 3D tilt en tarjetas ── */
+function init3DTilt() {
+  const applyTilt = () => {
+    document.querySelectorAll('.profile-card:not([data-tilt])').forEach(card => {
+      card.dataset.tilt = '1';
+      card.addEventListener('mousemove', e => {
+        const r  = card.getBoundingClientRect();
+        const dx = (e.clientX - r.left - r.width  / 2) / (r.width  / 2);
+        const dy = (e.clientY - r.top  - r.height / 2) / (r.height / 2);
+        card.style.transform = `perspective(700px) rotateX(${-dy * 6}deg) rotateY(${dx * 6}deg) translateZ(10px) scale(1.02)`;
+        card.style.boxShadow = `${-dx*12}px ${-dy*12}px 40px rgba(201,168,76,.15), 0 20px 60px rgba(0,0,0,.5)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform  = '';
+        card.style.boxShadow  = '';
+      });
+    });
+  };
+  applyTilt();
+  setTimeout(applyTilt, 900);
+}
+
+/* ── Chispas doradas al hacer clic ── */
+function initSparkleClick() {
+  const colors = ['#C9A84C','#F5D880','#E0B840','#FFF0A0','#A07828'];
+  document.addEventListener('click', e => {
+    if (e.target.closest('a[href],button[type="submit"]')) return; // no bloquear navegación
+    for (let i = 0; i < 10; i++) {
+      const s = document.createElement('div');
+      s.className = 'sparkle';
+      const angle = (i / 10) * Math.PI * 2 + Math.random() * 0.5;
+      const dist  = 28 + Math.random() * 45;
+      s.style.cssText = `left:${e.clientX}px;top:${e.clientY}px;background:${colors[i % colors.length]};width:${3+Math.random()*5}px;height:${3+Math.random()*5}px;--tx:${(Math.cos(angle)*dist).toFixed(1)}px;--ty:${(Math.sin(angle)*dist).toFixed(1)}px`;
+      document.body.appendChild(s);
+      setTimeout(() => s.remove(), 700);
+    }
+  });
+}
+
+/* ── Botones magnéticos — siguen el cursor ── */
+function initMagneticBtns() {
+  if (window.matchMedia('(pointer:coarse)').matches) return;
+  document.querySelectorAll('.btn-gold:not(.btn-sm):not(.nav-login-btn), .btn-wa.btn-lg').forEach(btn => {
+    btn.addEventListener('mousemove', e => {
+      const r  = btn.getBoundingClientRect();
+      const dx = (e.clientX - r.left - r.width  / 2) * 0.22;
+      const dy = (e.clientY - r.top  - r.height / 2) * 0.22;
+      btn.style.transform = `translate(${dx}px, ${dy}px)`;
+    });
+    btn.addEventListener('mouseleave', () => { btn.style.transform = ''; });
   });
 }
 
