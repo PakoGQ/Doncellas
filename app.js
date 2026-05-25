@@ -784,13 +784,13 @@ function _mosaicPic(i, offset) {
   if (m) {
     const idMatch = m.photos[0].match(/images\.unsplash\.com\/([^?]+)/);
     if (idMatch) {
-      /* Sin crop ni fit — Unsplash devuelve la foto completa a su proporción natural */
-      return `https://images.unsplash.com/${idMatch[1]}?w=600&auto=format&q=85`;
+      /* crop=top → Unsplash empieza desde la cara, no desde la cintura */
+      return `https://images.unsplash.com/${idMatch[1]}?w=500&h=667&fit=crop&crop=top&auto=format&q=85`;
     }
     return m.photos[0];
   }
   const pid = PHOTO_POOL[((i + off) * 3) % PHOTO_POOL.length];
-  return `https://images.unsplash.com/${pid}?w=600&auto=format&q=85`;
+  return `https://images.unsplash.com/${pid}?w=500&h=667&fit=crop&crop=top&auto=format&q=85`;
 }
 
 /* Rota las 4 fotos del mosaico de marca a otros perfiles destacados.
