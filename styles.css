@@ -3591,7 +3591,7 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
     justify-content: flex-start;
     flex: 1;
     gap: 0;
-    padding-top: 20px;
+    padding-top: 55px;
     padding-bottom: 6px;
     align-self: stretch;
   }
