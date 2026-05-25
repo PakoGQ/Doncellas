@@ -51,6 +51,9 @@
     overflow: hidden;
     height: 178px;
   }
+  .nav .nav-logo img {
+    margin-top: -22px;
+  }
 }
 
 /* Mobile: same crop applied proportionally (108px image → 70px visible gold area).
