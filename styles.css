@@ -3628,8 +3628,17 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
     animation: nav-tagline-shimmer 4s linear infinite;
   }
 
-  /* ── Nav links row — pegado a la línea dorada inferior ── */
-  .nav-links { gap: 2.5rem; display: flex; margin-top: auto; }
+  /* ── Nav links: posición absoluta pegada a la línea dorada ── */
+  .nav .nav-center .nav-links {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    gap: 2.5rem;
+    display: flex;
+    margin-top: 0;
+    white-space: nowrap;
+  }
   .nav-links a {
     font-size: .85rem;
     font-weight: 500;
