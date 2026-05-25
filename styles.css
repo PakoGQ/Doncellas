@@ -245,7 +245,7 @@ p  { line-height: 1.7; color: var(--t2); }
 .nav-menu-btn { display: none; flex-direction: column; gap: 5px; padding: 4px; }
 .nav-menu-btn span { display: block; width: 24px; height: 2px; background: var(--gold); border-radius: 2px; transition: transform var(--transition), opacity var(--transition); }
 
-/* ─── Nav Brand (logo + tagline wrapper) ─────────────────── */
+/* ─── Nav Brand (logo + escorts below) ──────────────────── */
 .nav-brand {
   display: inline-flex;
   flex-direction: column;
@@ -254,8 +254,11 @@ p  { line-height: 1.7; color: var(--t2); }
   line-height: 0;
   text-decoration: none;
 }
-/* Tagline hidden on mobile — desktop override below */
+/* Tagline & escorts label: hidden on mobile — desktop override below */
 .nav-tagline { display: none; }
+.nav-escorts-label { display: none; }
+/* nav-center is transparent on mobile (contents behaves as if wrapper doesn't exist) */
+.nav-center { display: contents; }
 
 /* ─── Mobile Nav ─────────────────────────────────────────── */
 @media (max-width: 900px) {
@@ -3555,28 +3558,62 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
   /* ── Hide mobile-only spans on desktop ── */
   .nav-escorts-mobile { display: none; }
 
-  /* ── Nav Brand wrapper: center logo + tagline vertically ── */
+  /* ── Nav Brand: logo + "Escorts" below it ── */
   .nav-brand {
     display: inline-flex;
     flex-direction: column;
     align-items: center;
     gap: 0;
     line-height: 0;
+    flex-shrink: 0;
   }
 
-  /* ── Tagline "La Elegancia del Placer" below logo ── */
+  /* ── "Escorts" label — small elegant word beneath the logo ── */
+  .nav-escorts-label {
+    display: block;
+    font-family: 'Georgia', 'Times New Roman', serif;
+    font-style: italic;
+    font-size: 13px;
+    font-weight: 400;
+    color: #C9A84C;
+    letter-spacing: 5px;
+    opacity: 0.82;
+    line-height: 1;
+    margin-top: 5px;
+    white-space: nowrap;
+  }
+
+  /* ── Nav Center: wraps tagline + links as a column ── */
+  .nav-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    gap: 10px;
+  }
+
+  /* ── Tagline: large, centered, above the nav links ── */
   .nav-tagline {
     display: block;
     font-family: 'Georgia', 'Times New Roman', serif;
     font-style: italic;
-    font-size: 10.5px;
+    font-size: 21px;
+    font-weight: 400;
     color: #C9A84C;
-    letter-spacing: 3px;
-    opacity: 0.75;
+    letter-spacing: 5px;
+    opacity: 0.92;
     white-space: nowrap;
-    margin-top: 4px;
     line-height: 1;
     text-decoration: none;
+  }
+
+  /* ── Nav links row ── */
+  .nav-links { gap: 2.5rem; display: flex; }
+  .nav-links a {
+    font-size: .85rem;
+    font-weight: 500;
+    letter-spacing: .08em;
   }
 
   /* ── Subtle gold gradient line at the bottom of the nav ── */
@@ -3596,16 +3633,9 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
     pointer-events: none;
   }
 
-  /* ── Nav links: slightly more refined on desktop ── */
-  .nav-links { gap: 2.5rem; }
-  .nav-links a {
-    font-size: .88rem;
-    font-weight: 500;
-    letter-spacing: .08em;
-  }
-
   /* ── Login button — elegant outlined style ── */
-  .nav .nav-cta .btn.btn-gold.btn-sm.nav-login-btn {
+  .nav .nav-cta .btn.btn-gold.btn-sm.nav-login-btn,
+  .nav .nav-cta .btn.btn-ghost.btn-sm.nav-login-btn {
     display: inline-flex !important;
     align-items: center;
     gap: .5rem;
@@ -3618,44 +3648,20 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
     letter-spacing: 2px;
     text-transform: uppercase;
     cursor: pointer;
-    margin-right: 0;
     transition: background 0.25s, color 0.25s, border-color 0.25s, box-shadow 0.25s;
     min-height: 0;
     box-shadow: none;
     transform: none;
     font-weight: 500;
     white-space: nowrap;
-    order: 2;
   }
-  .nav .nav-cta .btn.btn-gold.btn-sm.nav-login-btn:hover {
+  .nav .nav-cta .btn.btn-gold.btn-sm.nav-login-btn:hover,
+  .nav .nav-cta .btn.btn-ghost.btn-sm.nav-login-btn:hover {
     background: #C9A84C;
     color: #000;
     border-color: #C9A84C;
     box-shadow: 0 0 18px rgba(201,168,76,.25);
     transform: none;
-  }
-
-  /* ── "Escorts" italic gold label — redesigned ── */
-  .nav-escorts-label {
-    font-family: 'Georgia', 'Times New Roman', serif;
-    font-style: italic;
-    font-size: 26px;
-    font-weight: 400;
-    color: #C9A84C;
-    letter-spacing: 4px;
-    opacity: 1;
-    order: 1;
-    margin-right: 20px;
-    position: relative;
-    padding-left: 22px;
-  }
-  /* Thin vertical gold line to the left of Escorts */
-  .nav-escorts-label::before {
-    content: '';
-    position: absolute;
-    left: 0; top: 10%; bottom: 10%;
-    width: 1px;
-    background: linear-gradient(to bottom, transparent, rgba(201,168,76,.7), transparent);
   }
 
   /* ── Logo text size ── */
