@@ -47,12 +47,20 @@
    Scoped to `.nav .nav-logo` so the footer brand logo is NOT affected. */
 @media (min-width: 769px) {
   :root { --nav-h: 250px; }
+  .nav-brand {
+    align-self: stretch;
+    justify-content: center;
+  }
   .nav .nav-logo {
     overflow: visible;
     height: auto;
+    flex: 1;
+    display: flex;
+    align-items: center;
   }
   .nav .nav-logo img {
-    height: 155px;
+    height: 210px;
+    width: auto;
     margin-top: 0;
   }
 }
