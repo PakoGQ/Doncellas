@@ -3588,12 +3588,14 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     flex: 1;
-    gap: 10px;
+    gap: 0;
+    padding-top: 22px;
+    padding-bottom: 10px;
   }
 
-  /* ── Tagline: large, centered, above the nav links ── */
+  /* ── Tagline: large, centered, near top of nav ── */
   .nav-tagline {
     display: block;
     font-family: 'Georgia', 'Times New Roman', serif;
@@ -3606,11 +3608,10 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
     white-space: nowrap;
     line-height: 1;
     text-decoration: none;
-    margin-top: -14px;
   }
 
-  /* ── Nav links row ── */
-  .nav-links { gap: 2.5rem; display: flex; }
+  /* ── Nav links row — pushed to the bottom of nav-center ── */
+  .nav-links { gap: 2.5rem; display: flex; margin-top: auto; }
   .nav-links a {
     font-size: .85rem;
     font-weight: 500;
