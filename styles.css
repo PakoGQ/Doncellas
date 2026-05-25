@@ -2017,14 +2017,17 @@ canvas { width: 100% !important; }
   box-shadow: 0 16px 50px rgba(0,0,0,.75);
   width: 100%;
   aspect-ratio: 2 / 3;
+  background: #080808;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .hbm-img-wrap img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: center top;
+  object-fit: contain;
   display: block;
-  /* Sin Ken Burns: las fotos se ven completas, sin escalado ni paneo */
+  transition: opacity .4s ease;
 }
 @media (max-width: 900px) {
   .hero-brand-mosaic { display: none; }
