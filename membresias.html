@@ -141,7 +141,10 @@
 <body>
 
 <nav class="nav" id="mainNav">
-  <a href="index.html" class="nav-logo" aria-label="Doncellas"><img src="logo.png" alt="Doncellas" /></a>
+  <div class="nav-brand">
+    <a href="index.html" class="nav-logo" aria-label="Doncellas"><img src="logo.png" alt="Doncellas" /></a>
+    <span class="nav-tagline">La Elegancia del Placer</span>
+  </div>
   <ul class="nav-links">
     <li><a href="index.html">Inicio</a></li>
     <li><a href="modelos.html">Doncellas</a></li>
@@ -150,7 +153,8 @@
     <li><a href="membresias.html" class="active">Membresías</a></li>
   </ul>
   <div class="nav-cta">
-    <button class="btn btn-ghost btn-sm" onclick="openModal('loginModal')">Iniciar sesión</button>
+    <span class="nav-escorts-label">Escorts</span>
+    <button class="btn btn-ghost btn-sm nav-login-btn" onclick="openModal('loginModal')">Iniciar sesión</button>
     <button class="nav-menu-btn" id="navMenuBtn"><span></span><span></span><span></span></button>
   </div>
   <span class="nav-escorts-mobile">La Elegancia del Placer</span>

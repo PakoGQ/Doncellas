@@ -46,10 +46,10 @@
 /* Desktop: taller nav to accommodate larger logo (cropped to show only gold).
    Scoped to `.nav .nav-logo` so the footer brand logo is NOT affected. */
 @media (min-width: 769px) {
-  :root { --nav-h: 170px; }
+  :root { --nav-h: 188px; }
   .nav .nav-logo {
     overflow: hidden;
-    height: 130px;
+    height: 148px;
   }
 }
 
@@ -244,6 +244,18 @@ p  { line-height: 1.7; color: var(--t2); }
 .nav-cta { display: flex; align-items: center; gap: .75rem; }
 .nav-menu-btn { display: none; flex-direction: column; gap: 5px; padding: 4px; }
 .nav-menu-btn span { display: block; width: 24px; height: 2px; background: var(--gold); border-radius: 2px; transition: transform var(--transition), opacity var(--transition); }
+
+/* ─── Nav Brand (logo + tagline wrapper) ─────────────────── */
+.nav-brand {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  line-height: 0;
+  text-decoration: none;
+}
+/* Tagline hidden on mobile — desktop override below */
+.nav-tagline { display: none; }
 
 /* ─── Mobile Nav ─────────────────────────────────────────── */
 @media (max-width: 900px) {
@@ -3540,54 +3552,113 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
   .nav .nav-cta .nav-btn.filled,
   .nav .nav-menu-btn { display: none !important; }
 
-  /* ── Hide mobile-only "Escorts" label on desktop ── */
+  /* ── Hide mobile-only spans on desktop ── */
   .nav-escorts-mobile { display: none; }
 
-  /* ── Login button shown on desktop, sits to the left of "Escorts" ── */
+  /* ── Nav Brand wrapper: center logo + tagline vertically ── */
+  .nav-brand {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    line-height: 0;
+  }
+
+  /* ── Tagline "La Elegancia del Placer" below logo ── */
+  .nav-tagline {
+    display: block;
+    font-family: 'Georgia', 'Times New Roman', serif;
+    font-style: italic;
+    font-size: 10.5px;
+    color: #C9A84C;
+    letter-spacing: 3px;
+    opacity: 0.75;
+    white-space: nowrap;
+    margin-top: 4px;
+    line-height: 1;
+    text-decoration: none;
+  }
+
+  /* ── Subtle gold gradient line at the bottom of the nav ── */
+  .nav::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(201,168,76,.0) 10%,
+      rgba(201,168,76,.6) 40%,
+      rgba(201,168,76,.9) 50%,
+      rgba(201,168,76,.6) 60%,
+      rgba(201,168,76,.0) 90%,
+      transparent 100%);
+    pointer-events: none;
+  }
+
+  /* ── Nav links: slightly more refined on desktop ── */
+  .nav-links { gap: 2.5rem; }
+  .nav-links a {
+    font-size: .88rem;
+    font-weight: 500;
+    letter-spacing: .08em;
+  }
+
+  /* ── Login button — elegant outlined style ── */
   .nav .nav-cta .btn.btn-gold.btn-sm.nav-login-btn {
     display: inline-flex !important;
     align-items: center;
     gap: .5rem;
-    padding: 7px 18px;
-    border: 1px solid #C9A84C;
-    border-radius: 4px;
+    padding: 8px 22px;
+    border: 1px solid rgba(201,168,76,.65);
+    border-radius: 3px;
     background: transparent;
     color: #C9A84C;
-    font-size: 11px;
-    letter-spacing: 1.5px;
+    font-size: 10.5px;
+    letter-spacing: 2px;
     text-transform: uppercase;
     cursor: pointer;
-    margin-right: 14px;
-    transition: background 0.2s, color 0.2s;
+    margin-right: 0;
+    transition: background 0.25s, color 0.25s, border-color 0.25s, box-shadow 0.25s;
     min-height: 0;
     box-shadow: none;
     transform: none;
     font-weight: 500;
     white-space: nowrap;
+    order: 2;
   }
   .nav .nav-cta .btn.btn-gold.btn-sm.nav-login-btn:hover {
     background: #C9A84C;
     color: #000;
-    box-shadow: none;
+    border-color: #C9A84C;
+    box-shadow: 0 0 18px rgba(201,168,76,.25);
     transform: none;
   }
 
-  /* ── 2. "Escorts" italic gold label in navbar ── */
+  /* ── "Escorts" italic gold label — redesigned ── */
   .nav-escorts-label {
     font-family: 'Georgia', 'Times New Roman', serif;
     font-style: italic;
-    font-size: 22px;
+    font-size: 26px;
     font-weight: 400;
     color: #C9A84C;
-    letter-spacing: 2px;
-    opacity: 0.9;
+    letter-spacing: 4px;
+    opacity: 1;
     order: 1;
+    margin-right: 20px;
+    position: relative;
+    padding-left: 22px;
+  }
+  /* Thin vertical gold line to the left of Escorts */
+  .nav-escorts-label::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 10%; bottom: 10%;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, rgba(201,168,76,.7), transparent);
   }
 
-  /* ── Swap order: Escorts before login button on desktop ── */
-  .nav .nav-cta .btn.btn-gold.btn-sm.nav-login-btn { order: 2; }
-
-  /* ── 3. Larger "Doncellas" logo in navbar ── */
+  /* ── Logo text size ── */
   .nav .nav-logo,
   .nav .logo-text {
     font-size: 22px;

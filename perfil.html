@@ -27,7 +27,10 @@
 <body>
 
 <nav class="nav scrolled" id="mainNav">
-  <a href="index.html" class="nav-logo" aria-label="Doncellas"><img src="logo.png" alt="Doncellas" /></a>
+  <div class="nav-brand">
+    <a href="index.html" class="nav-logo" aria-label="Doncellas"><img src="logo.png" alt="Doncellas" /></a>
+    <span class="nav-tagline">La Elegancia del Placer</span>
+  </div>
   <ul class="nav-links">
     <li><a href="index.html">Inicio</a></li>
     <li><a href="modelos.html">Doncellas</a></li>
@@ -35,8 +38,9 @@
     <li><a href="legal.html">Legal</a></li>
   </ul>
   <div class="nav-cta">
+    <span class="nav-escorts-label">Escorts</span>
     <a href="modelos.html" class="btn btn-ghost btn-sm"><i class="fas fa-arrow-left"></i> Volver</a>
-    <button class="btn btn-gold btn-sm" onclick="openModal('loginModal')"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</button>
+    <button class="btn btn-gold btn-sm nav-login-btn" onclick="openModal('loginModal')"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</button>
     <button class="nav-menu-btn" id="navMenuBtn"><span></span><span></span><span></span></button>
   </div>
   <span class="nav-escorts-mobile">La Elegancia del Placer</span>
