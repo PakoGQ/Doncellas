@@ -576,6 +576,98 @@ function initIndex() {
   buildNewCarousel();
   buildPromoCarousel();
   setupSearchForm();
+  /* Animaciones */
+  setTimeout(() => {
+    addHeroParticles();
+    initScrollReveal();
+    initNavScroll();
+    addHowStepClasses();
+    addCtaSectionClass();
+  }, 120);
+}
+
+/* ── Partículas doradas flotantes en el hero brand slide ── */
+function addHeroParticles() {
+  const bg = document.querySelector('.hero-slide-brand .hero-slide-brand-bg');
+  if (!bg) return;
+  for (let i = 0; i < 16; i++) {
+    const p = document.createElement('span');
+    p.className = 'hero-particle';
+    const size = 2 + Math.random() * 4;
+    p.style.cssText = `
+      left:${4 + Math.random() * 92}%;
+      bottom:${Math.random() * 50}%;
+      width:${size}px; height:${size}px;
+      animation-delay:${(Math.random() * 8).toFixed(2)}s;
+      animation-duration:${(5 + Math.random() * 5).toFixed(2)}s;
+    `;
+    bg.appendChild(p);
+  }
+}
+
+/* ── Scroll reveal con IntersectionObserver ── */
+function initScrollReveal() {
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('is-visible');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.07, rootMargin: '0px 0px -40px 0px' });
+
+  /* Secciones principales */
+  document.querySelectorAll('.section, section:not(.hero)').forEach(el => {
+    if (el.classList.contains('hero') || el.closest('.hero')) return;
+    el.classList.add('js-reveal');
+    io.observe(el);
+  });
+
+  /* Tarjetas del "por qué elegirnos" con stagger */
+  document.querySelectorAll('.why-doncellas-grid > .profile-card').forEach((el, i) => {
+    el.classList.add('js-reveal');
+    el.style.transitionDelay = `${i * 0.1}s`;
+    io.observe(el);
+  });
+
+  /* FAQ items con stagger */
+  document.querySelectorAll('.faq-item').forEach((el, i) => {
+    el.classList.add('js-reveal');
+    el.style.transitionDelay = `${i * 0.07}s`;
+    io.observe(el);
+  });
+}
+
+/* ── Navbar: sombra al hacer scroll ── */
+function initNavScroll() {
+  const nav = document.getElementById('mainNav');
+  if (!nav) return;
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  }, { passive: true });
+}
+
+/* ── Agrega clases de animación a los steps de "¿Cómo funciona?" ── */
+function addHowStepClasses() {
+  document.querySelectorAll('#faqList').forEach(() => {}); // placeholder
+  /* Targets each step card in the how-it-works section */
+  const steps = document.querySelectorAll('.section [style*="border-radius:var(--r-lg)"]');
+  steps.forEach(el => el.classList.add('how-step-wrap'));
+  steps.forEach(el => {
+    const numDiv = el.querySelector('div[style*="border-radius:50%"]');
+    if (numDiv) numDiv.classList.add('how-step-num');
+  });
+  /* Stat numbers shimmer */
+  document.querySelectorAll('#statsCount, .stats-bar strong').forEach(el => el.classList.add('stat-num'));
+}
+
+/* ── Clase al CTA de escorts para gradiente animado ── */
+function addCtaSectionClass() {
+  document.querySelectorAll('section').forEach(sec => {
+    if (sec.querySelector('h2')?.textContent?.includes('Quieres ser una de nuestras')) {
+      sec.classList.add('cta-escorts-section');
+    }
+  });
 }
 
 /* Returns a featured-model photo for the brand slide mosaic.

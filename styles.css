@@ -4933,3 +4933,166 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
 @media (max-width: 768px) {
   .hero-dots-wrap { display: none !important; }
 }
+
+/* ══════════════════════════════════════════════════════
+   ANIMACIONES — Doncellas GDL
+══════════════════════════════════════════════════════ */
+
+/* ── Scroll reveal ── */
+.js-reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity .65s cubic-bezier(.22,1,.36,1),
+              transform .65s cubic-bezier(.22,1,.36,1);
+}
+.js-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Gold shimmer en títulos ── */
+@keyframes goldShimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+.section-title .gold {
+  background: linear-gradient(90deg, #8B6914 0%, #C9A84C 30%, #F0D080 50%, #C9A84C 70%, #8B6914 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: goldShimmer 4s linear infinite;
+}
+
+/* ── Hero brand title em: shimmer ── */
+.hero-brand-title em {
+  background: linear-gradient(90deg, #8B6914 0%, #C9A84C 30%, #F5E090 50%, #C9A84C 70%, #8B6914 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: goldShimmer 3.5s linear infinite;
+}
+
+/* ── Card hover: lift + glow dorado ── */
+.profile-card {
+  transition: transform .3s cubic-bezier(.22,1,.36,1),
+              box-shadow .3s ease,
+              border-color .3s ease !important;
+}
+.profile-card:hover {
+  transform: translateY(-6px) scale(1.015) !important;
+  box-shadow: 0 24px 60px rgba(201,168,76,.16),
+              0 6px 20px rgba(0,0,0,.6) !important;
+  border-color: rgba(201,168,76,.45) !important;
+}
+
+/* ── Botones dorados: pulse suave ── */
+@keyframes ctaPulse {
+  0%, 100% { box-shadow: 0 4px 18px rgba(201,168,76,.25); }
+  50%       { box-shadow: 0 4px 32px rgba(201,168,76,.5), 0 0 0 5px rgba(201,168,76,.07); }
+}
+.btn-gold:not(.btn-sm):not(.nav-login-btn) {
+  animation: ctaPulse 3s ease infinite;
+}
+
+/* ── Partículas flotantes en hero ── */
+@keyframes particleFloat {
+  0%   { transform: translateY(0) translateX(0);   opacity: 0; }
+  12%  { opacity: .9; }
+  88%  { opacity: .4; }
+  100% { transform: translateY(-110px) translateX(15px); opacity: 0; }
+}
+.hero-particle {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(201,168,76,.85) 0%, rgba(201,168,76,0) 100%);
+  animation: particleFloat linear infinite;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* ── Floating buttons: bounce on hover ── */
+.float-btn {
+  transition: transform .25s cubic-bezier(.34,1.56,.64,1),
+              box-shadow .25s ease !important;
+}
+.float-btn:hover {
+  transform: scale(1.2) !important;
+}
+
+/* ── FAQ: slide suave al abrir ── */
+details.faq-item[open] .faq-a {
+  animation: faqSlide .3s cubic-bezier(.22,1,.36,1);
+}
+@keyframes faqSlide {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Pill disponible: glow ── */
+@keyframes pillGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(74,222,128,.45); }
+  50%       { box-shadow: 0 0 10px 3px rgba(74,222,128,.2); }
+}
+.pill-available {
+  animation: pillGlow 2.2s ease infinite !important;
+}
+
+/* ── Stats bar números: shimmer ── */
+@keyframes numGlow {
+  0%, 100% { text-shadow: none; }
+  50%       { text-shadow: 0 0 10px rgba(201,168,76,.5); }
+}
+.stat-num {
+  animation: numGlow 2.5s ease infinite;
+}
+
+/* ── Sección "¿Cómo funciona?" — step hover ── */
+.how-step-wrap {
+  transition: transform .3s cubic-bezier(.22,1,.36,1),
+              box-shadow .3s ease,
+              border-color .3s ease;
+}
+.how-step-wrap:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 50px rgba(201,168,76,.12);
+  border-color: rgba(201,168,76,.5) !important;
+}
+.how-step-num {
+  transition: transform .35s cubic-bezier(.34,1.56,.64,1);
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+}
+.how-step-wrap:hover .how-step-num {
+  transform: scale(1.25) rotate(-8deg);
+}
+
+/* ── Gradiente animado en fondo de secciones especiales ── */
+@keyframes gradientShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.cta-escorts-section {
+  background: linear-gradient(135deg, #0D0A05, #1A1200, #0A0A0A, #0D0800) !important;
+  background-size: 300% 300% !important;
+  animation: gradientShift 8s ease infinite !important;
+}
+
+/* ── Divider: crecer al aparecer ── */
+@keyframes dividerGrow {
+  from { width: 0; opacity: 0; }
+  to   { width: 60px; opacity: 1; }
+}
+.js-reveal.is-visible .divider {
+  animation: dividerGrow .55s cubic-bezier(.22,1,.36,1) .3s both;
+}
+
+/* ── Navbar scroll: sombra al hacer scroll ── */
+.nav.scrolled {
+  box-shadow: 0 4px 30px rgba(0,0,0,.5);
+  background: rgba(10,10,10,.98) !important;
+  transition: background .3s, box-shadow .3s;
+}
