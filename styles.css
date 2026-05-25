@@ -3573,13 +3573,13 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
     display: block;
     font-family: 'Georgia', 'Times New Roman', serif;
     font-style: italic;
-    font-size: 13px;
+    font-size: 19px;
     font-weight: 400;
     color: #C9A84C;
-    letter-spacing: 5px;
-    opacity: 0.82;
+    letter-spacing: 6px;
+    opacity: 0.88;
     line-height: 1;
-    margin-top: 5px;
+    margin-top: 6px;
     white-space: nowrap;
   }
 
@@ -3598,11 +3598,11 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
     display: block;
     font-family: 'Georgia', 'Times New Roman', serif;
     font-style: italic;
-    font-size: 21px;
+    font-size: 28px;
     font-weight: 400;
     color: #C9A84C;
-    letter-spacing: 5px;
-    opacity: 0.92;
+    letter-spacing: 7px;
+    opacity: 0.95;
     white-space: nowrap;
     line-height: 1;
     text-decoration: none;
