@@ -48,11 +48,12 @@
 @media (min-width: 769px) {
   :root { --nav-h: 250px; }
   .nav .nav-logo {
-    overflow: hidden;
-    height: 178px;
+    overflow: visible;
+    height: auto;
   }
   .nav .nav-logo img {
-    margin-top: -22px;
+    height: 155px;
+    margin-top: 0;
   }
 }
 
@@ -3589,7 +3590,7 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
     letter-spacing: 6px;
     opacity: 0.88;
     line-height: 1;
-    margin-top: -22px;
+    margin-top: 3px;
     white-space: nowrap;
   }
 
