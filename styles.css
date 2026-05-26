@@ -5688,7 +5688,7 @@ details.faq-item[open] .faq-a {
 @media (max-width: 768px) {
 
   /* ── Reduce nav height ── */
-  :root { --nav-h: 76px; }
+  :root { --nav-h: 60px; }
 
   /* ── Nav-brand: simple horizontal row ── */
   .nav-brand {
@@ -5701,7 +5701,7 @@ details.faq-item[open] .faq-a {
   }
 
   /* Smaller logo — scoped to .nav so footer logo is unaffected */
-  .nav .nav-logo img { height: 52px !important; }
+  .nav .nav-logo img { height: 38px !important; }
 
   /* ── "La Elegancia del Placer" — shimmer igual que escritorio ── */
   .nav-escorts-mobile {
