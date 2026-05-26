@@ -518,13 +518,15 @@ function modelCardHTML(m) {
         ${m.photos.map(p=>`<img src="${p}" alt="${m.name}" loading="lazy" />`).join('')}
       </div>
       <div class="card-img-overlay"></div>
-      <div class="card-top-badges">
+      <div class="card-top-status">
         ${m.available
-          ? '<span class="pill pill-available" style="font-size:.6rem">Disponible</span>'
-          : '<span class="pill pill-busy" style="font-size:.6rem">No Disponible</span>'}
-        ${m.isNew    ? '<span class="pill pill-new" style="font-size:.6rem">Nueva</span>' : ''}
-        ${m.hasVideo ? '<span class="pill pill-gold" style="font-size:.6rem"><i class="fas fa-video"></i></span>' : ''}
-        ${m.promo    ? `<span class="pill pill-gold" style="font-size:.6rem">🔥 ${m.promo.badge}</span>` : ''}
+          ? '<span class="pill pill-available">Disponible</span>'
+          : '<span class="pill pill-busy">No Disponible</span>'}
+      </div>
+      <div class="card-bottom-badges">
+        ${m.isNew    ? '<span class="pill pill-new">Nueva</span>' : ''}
+        ${m.hasVideo ? '<span class="pill pill-gold"><i class="fas fa-video"></i></span>' : ''}
+        ${m.promo    ? `<span class="pill pill-gold">🔥 ${m.promo.badge}</span>` : ''}
       </div>
       <button class="card-fav-btn" onclick="event.stopPropagation();toggleCardFav(this)" aria-label="Guardar">
         <i class="far fa-heart"></i>

@@ -556,25 +556,46 @@ p  { line-height: 1.7; color: var(--t2); }
   inset: 0;
   background: linear-gradient(to top, rgba(10,10,10,.85) 0%, transparent 50%);
 }
-.card-top-badges {
+/* Status pill — top-left corner */
+.card-top-status {
   position: absolute;
-  top: .75rem; left: .75rem;
+  top: .45rem; left: .45rem;
   display: flex;
-  gap: .4rem;
-  flex-wrap: wrap;
+  gap: .3rem;
 }
+.card-top-status .pill {
+  font-size: .52rem !important;
+  padding: .18rem .5rem !important;
+  letter-spacing: .01em;
+}
+
+/* Info badges (Nueva / video / promo) — bottom-left of photo */
+.card-bottom-badges {
+  position: absolute;
+  bottom: .5rem; left: .5rem;
+  display: flex;
+  gap: .3rem;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+.card-bottom-badges .pill {
+  font-size: .52rem !important;
+  padding: .18rem .5rem !important;
+}
+
+/* Fav heart — top-right corner, smaller */
 .card-fav-btn {
   position: absolute;
-  top: .6rem; right: .75rem;
-  width: 32px; height: 32px;
+  top: .35rem; right: .4rem;
+  width: 26px; height: 26px;
   border-radius: 50%;
-  background: rgba(10,10,10,.6);
+  background: rgba(10,10,10,.55);
   backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--t2);
-  font-size: 1rem;
+  font-size: .78rem;
   transition: var(--transition);
 }
 .card-fav-btn:hover, .card-fav-btn.active { color: var(--red); }
