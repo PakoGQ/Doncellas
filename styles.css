@@ -4873,34 +4873,60 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
 }
 
 /* ═══════════════════════════════════════════════════════════
-   MOBILE HERO BRAND SLIDE — centrado limpio en 225px
-   Sin foto-strip (no hay espacio). Label, stats y mosaic
-   ocultos. Título + desc + CTA centrados verticalmente.
+   MOBILE HERO BRAND SLIDE — foto-strip abajo, texto arriba
    ═══════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
-  /* Ocultar elementos decorativos */
+  /* Ocultar solo label y stats — mosaic se muestra */
   .hero-slide-brand .hero-brand-label,
-  .hero-slide-brand .hero-brand-stats,
-  .hero-slide-brand .hero-brand-mosaic { display: none !important; }
+  .hero-slide-brand .hero-brand-stats { display: none !important; }
 
-  /* Contenido centrado verticalmente, sin sesgo */
+  /* Contenido: parte desde arriba y deja 92px al strip abajo */
   .hero-slide-brand .hero-brand-content {
-    padding: 12px 20px !important;
+    padding: 16px 20px 92px !important;
     gap: 7px !important;
-    justify-content: center !important;
+    justify-content: flex-start !important;
   }
   .hero-slide-brand .hero-brand-title {
-    font-size: 22px !important;
+    font-size: 20px !important;
     line-height: 1.15 !important;
   }
   .hero-slide-brand .hero-brand-desc {
-    font-size: 11.5px !important;
-    line-height: 1.35 !important;
+    font-size: 11px !important;
+    line-height: 1.3 !important;
     display: block !important;
   }
   .hero-slide-brand .hero-brand-cta {
-    padding: 9px 18px !important;
-    font-size: 12px !important;
+    padding: 8px 18px !important;
+    font-size: 11.5px !important;
+  }
+
+  /* Foto-strip al fondo del banner */
+  .hero-slide-brand .hero-brand-mosaic {
+    display: flex !important;
+    position: absolute !important;
+    left: 10px !important;
+    right: 10px !important;
+    bottom: 8px !important;
+    top: auto !important;
+    width: auto !important;
+    height: 74px !important;
+    padding: 0 !important;
+    gap: 5px !important;
+    flex-direction: row !important;
+    align-items: stretch !important;
+    z-index: 2 !important;
+    pointer-events: none !important;
+  }
+  .hero-slide-brand .hero-brand-mosaic-col { display: contents !important; }
+  .hero-slide-brand .hbm-img-wrap {
+    flex: 1 1 0 !important;
+    width: auto !important;
+    height: 74px !important;
+    aspect-ratio: auto !important;
+    min-width: 0 !important;
+    border-width: 1px !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 14px rgba(0,0,0,.55) !important;
   }
 }
 
