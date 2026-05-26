@@ -5687,13 +5687,15 @@ details.faq-item[open] .faq-a {
    ═══════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
 
-  /* ── Reduce nav height ── */
-  :root { --nav-h: 60px; }
+  /* ── Nav height ── */
+  :root { --nav-h: 70px; }
 
   /* ── Nav: sticky en móvil para que el hero fluya debajo ── */
   .nav {
-    position: sticky !important;
-    top:      0 !important;
+    position:   sticky !important;
+    top:        0 !important;
+    background: #0A0A0A !important;
+    border-bottom: 1px solid rgba(201,168,76,.22) !important;
   }
   /* Hero: no necesita margin-top con nav sticky */
   .hero {
@@ -5717,7 +5719,7 @@ details.faq-item[open] .faq-a {
   }
 
   /* Smaller logo — scoped to .nav so footer logo is unaffected */
-  .nav .nav-logo img { height: 38px !important; }
+  .nav .nav-logo img { height: 52px !important; }
 
   /* ── "La Elegancia del Placer" — shimmer igual que escritorio ── */
   .nav-escorts-mobile {
