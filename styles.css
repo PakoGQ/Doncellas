@@ -3465,9 +3465,9 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
 
   /* ── 2. Hero banner: 300px, centered full-width content ─── */
   .hero {
-    height: 300px !important;
-    min-height: 300px !important;
-    max-height: 300px !important;
+    height: 225px !important;
+    min-height: 225px !important;
+    max-height: 225px !important;
     margin: calc(var(--nav-h) + .5rem) 0 0 !important;
     border-radius: 0 !important;
     width: 100% !important;
