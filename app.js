@@ -439,16 +439,33 @@ function goHeroSlide(idx) {
   slides[heroIndex].classList.add('active');
   dots[heroIndex]?.classList.add('active');
   if (content) content.style.opacity = '0';
-  /* hide floating stats on brand/pagos slides (0,1) — they have their own */
-  if (stats) stats.style.opacity = heroIndex < 2 ? '0' : '1';
-  /* Cada vez que el carrusel completa una vuelta, cuenta.
-     Cada 2 vueltas completas rota las fotos del mosaico */
+  /* hide floating stats en slides que tienen contenido propio (marca, telegram, pagos) */
+  const total = document.querySelectorAll('.hero-slide').length;
+  const isStaticSlide = heroIndex === 0 || heroIndex === 1 || heroIndex === total - 1;
+  if (stats) stats.style.opacity = isStaticSlide ? '0' : '1';
+  /* Cada vez que el carrusel completa una vuelta, cuenta y rota slides de perfil */
   if (heroIndex === 0) {
     _mosaicRoundCount++;
+    /* Mosaico de marca: rota cada 2 vueltas */
     if (_mosaicRoundCount % 2 === 0) {
       const featuredCount = MODELS.filter(m => m.featured && !m.hidden).length || 2;
       _mosaicOffset = (_mosaicOffset + 4) % Math.max(4, featuredCount);
       refreshMosaicImages();
+    }
+    /* Offer slides: rotan cada 2 vueltas */
+    if (_mosaicRoundCount % 2 === 0) {
+      _heroOfferIdx = (_heroOfferIdx + 2) % Math.max(1, _offerModels().length);
+      refreshOfferSlides();
+    }
+    /* Gold slides: rotan cada 5 vueltas */
+    if (_mosaicRoundCount % 5 === 0) {
+      _heroGoldIdx = (_heroGoldIdx + 2) % Math.max(1, _goldModels().length);
+      _allElite() ? refreshAllEliteSlides() : refreshGoldSlides();
+    }
+    /* Elite slides: rotan cada 10 vueltas */
+    if (_mosaicRoundCount % 10 === 0) {
+      _heroEliteIdx = (_heroEliteIdx + 2) % Math.max(1, _eliteModels().length);
+      _allElite() ? refreshAllEliteSlides() : refreshEliteSlides();
     }
   }
   clearInterval(heroTimer);
@@ -777,6 +794,9 @@ function initMagneticBtns() {
    so the photo se ve completa, sin recortes raros en la cara. */
 let _mosaicOffset = 0;
 let _mosaicRoundCount = 0;   /* cuenta cuántas veces el carrusel completa una vuelta */
+let _heroOfferIdx  = 0;      /* offset en el pool de offer slides (rota cada 2 vueltas) */
+let _heroGoldIdx   = 0;      /* offset en el pool Gold (rota cada 5 vueltas) */
+let _heroEliteIdx  = 0;      /* offset en el pool Elite (rota cada 10 vueltas) */
 function _mosaicPic(i, offset) {
   const off = offset == null ? _mosaicOffset : offset;
   const pool = MODELS.filter(m => m.featured && !m.hidden);
@@ -806,12 +826,93 @@ function refreshMosaicImages() {
   });
 }
 
-/* Genera slides del hero desde modelos con promo */
+/* ─── Helpers para slides de perfil rotativas ─────────── */
+function getModelPlan(m) {
+  return ['Silver','Gold','Elite'][(m.id - 1) % 3];
+}
+function _allElite() {
+  const visible = MODELS.filter(m => !m.hidden);
+  return visible.length > 0 && visible.every(m => getModelPlan(m) === 'Elite');
+}
+function _offerModels() {
+  /* Modelos con promo, ordenados: Elite primero, luego Gold, luego Silver */
+  const priority = { Elite:0, Gold:1, Silver:2 };
+  return MODELS.filter(m => !m.hidden && m.promo)
+               .sort((a,b) => priority[getModelPlan(a)] - priority[getModelPlan(b)]);
+}
+function _goldModels() {
+  return MODELS.filter(m => !m.hidden && getModelPlan(m) === 'Gold');
+}
+function _eliteModels() {
+  return MODELS.filter(m => !m.hidden && getModelPlan(m) === 'Elite');
+}
+
+/* Aplica datos de un modelo a un slide `<a>` de perfil */
+function _applyProfileSlide(el, m, badgeText) {
+  if (!el || !m) return;
+  const bgId = PHOTO_POOL[(m.id - 1) % PHOTO_POOL.length];
+  const original = fmtMXN(m.rate);
+  const hasDiscount = m.promo && m.promo.discount > 0;
+  const discounted  = hasDiscount ? fmtMXN(Math.round(m.rate * (1 - m.promo.discount / 100))) : null;
+  const pricesHTML  = hasDiscount
+    ? `<span class="hero-promo-original">${original}/hr</span>
+       <span class="hero-promo-discounted">${discounted}/hr</span>`
+    : `<span class="hero-promo-discounted">${original}/hr</span>`;
+  const badge = m.promo ? `🔥 ${m.promo.badge}` : badgeText;
+  el.href = `perfil.html?id=${m.id}`;
+  el.setAttribute('aria-label', `Ver perfil de ${m.name}`);
+  el.style.cssText = `background-image:url('${photoUrl(bgId,1400,900)}');cursor:pointer;text-decoration:none;color:inherit;display:block`;
+  el.innerHTML = `
+    <div class="hero-overlay"></div>
+    <div class="hero-promo-photo-card"><img src="${m.photos[0]}" alt="${m.name}" loading="lazy" /></div>
+    <div class="hero-promo-overlay">
+      <div class="hero-promo-badge">${badge}</div>
+      <div class="hero-promo-name">${m.name}</div>
+      <div class="hero-promo-zone"><i class="fas fa-map-marker-alt"></i> ${m.zone}</div>
+      ${m.promo?.title ? `<div class="hero-promo-offer">${m.promo.title}</div>` : ''}
+      ${m.promo?.desc  ? `<div class="hero-promo-desc">${m.promo.desc}</div>` : ''}
+      <div class="hero-promo-prices">${pricesHTML}</div>
+      <span class="hero-promo-cta">Ver perfil <i class="fas fa-arrow-right"></i></span>
+    </div>`;
+}
+
+function refreshOfferSlides() {
+  const pool = _offerModels();
+  if (!pool.length) return;
+  _applyProfileSlide(document.getElementById('heroSlideOffer0'), pool[_heroOfferIdx % pool.length], `${getModelPlan(pool[_heroOfferIdx % pool.length])} · Oferta`);
+  _applyProfileSlide(document.getElementById('heroSlideOffer1'), pool[(_heroOfferIdx+1) % pool.length], `${getModelPlan(pool[(_heroOfferIdx+1) % pool.length])} · Oferta`);
+}
+function refreshGoldSlides() {
+  const pool = _goldModels();
+  if (!pool.length) return;
+  _applyProfileSlide(document.getElementById('heroSlideGold0'), pool[_heroGoldIdx % pool.length], '⭐ Gold');
+  _applyProfileSlide(document.getElementById('heroSlideGold1'), pool[(_heroGoldIdx+1) % pool.length], '⭐ Gold');
+}
+function refreshEliteSlides() {
+  const pool = _eliteModels();
+  if (!pool.length) return;
+  _applyProfileSlide(document.getElementById('heroSlideElite0'), pool[_heroEliteIdx % pool.length], '💎 Elite');
+  _applyProfileSlide(document.getElementById('heroSlideElite1'), pool[(_heroEliteIdx+1) % pool.length], '💎 Elite');
+}
+function refreshAllEliteSlides() {
+  /* Cuando todas son Elite: 6 slots Elite con offset progresivo */
+  const pool = _eliteModels();
+  if (!pool.length) return;
+  ['Offer0','Offer1','Gold0','Gold1','Elite0','Elite1'].forEach((suffix, i) => {
+    _applyProfileSlide(
+      document.getElementById(`heroSlide${suffix}`),
+      pool[(_heroEliteIdx + i) % pool.length],
+      '💎 Elite'
+    );
+  });
+}
+
+/* Genera slides del hero — estructura fija de 9 slides */
 function buildHeroSlides() {
   const wrap = document.getElementById('heroSlides');
   if (!wrap) return;
 
-  /* ── Banner 1: Marca (primer slide, active) ─── */
+  /* ── Slide 0: Marca principal (active) ─── */
   const brandSlide = document.createElement('div');
   brandSlide.className = 'hero-slide hero-slide-brand active';
   brandSlide.innerHTML = `
@@ -851,7 +952,43 @@ function buildHeroSlides() {
     </div>`;
   wrap.appendChild(brandSlide);
 
-  /* ── Banner 2: Pagos ─── */
+  /* ── Slide 1: Canal de Telegram ─── */
+  const tgSlide = document.createElement('div');
+  tgSlide.className = 'hero-slide hero-slide-telegram';
+  tgSlide.innerHTML = `
+    <div class="hero-tg-bg">
+      <div class="hero-tg-glow"></div>
+      <div class="hero-tg-particles"></div>
+    </div>
+    <div class="hero-tg-content">
+      <div class="hero-tg-icon"><i class="fab fa-telegram"></i></div>
+      <div class="hero-tg-label">Canal Oficial de Doncellas GDL</div>
+      <h2 class="hero-tg-title">Únete a nuestro<br><em>canal de Telegram</em></h2>
+      <p class="hero-tg-desc">Sé el primero en ver quién está disponible esta noche, ofertas exclusivas y todas nuestras Doncellas.</p>
+      <div class="hero-tg-features">
+        <span><i class="fas fa-bell"></i> Alertas en tiempo real</span>
+        <span><i class="fas fa-lock"></i> 100% anónimo</span>
+        <span><i class="fas fa-eye-slash"></i> Sin rastro en tu teléfono</span>
+        <span><i class="fas fa-star"></i> Ofertas exclusivas primero</span>
+      </div>
+      <a href="https://t.me/doncellas" target="_blank" rel="noopener" onclick="event.stopPropagation()" class="hero-tg-cta">
+        <i class="fab fa-telegram"></i> Unirme al canal gratis
+      </a>
+      <div class="hero-tg-handle">@DoncellasGDL · Actualizaciones diarias</div>
+    </div>`;
+  wrap.appendChild(tgSlide);
+
+  /* ── Slides 2–7: Perfiles rotantes ─── */
+  const allElite = _allElite();
+  const slotIds = ['Offer0','Offer1','Gold0','Gold1','Elite0','Elite1'];
+  slotIds.forEach(suffix => {
+    const s = document.createElement('a');
+    s.className = 'hero-slide hero-slide-profile';
+    s.id = `heroSlide${suffix}`;
+    wrap.appendChild(s);
+  });
+
+  /* ── Slide 8: Pagos ─── */
   const pagoSlide = document.createElement('div');
   pagoSlide.className = 'hero-slide hero-slide-pagos';
   pagoSlide.innerHTML = `
@@ -885,38 +1022,14 @@ function buildHeroSlides() {
     </div>`;
   wrap.appendChild(pagoSlide);
 
-  /* ── Banners de modelos con promo ─── */
-  const promoModels = MODELS.filter(m => m.promo).slice(0, 6);
-  promoModels.forEach(m => {
-    const bgId = PHOTO_POOL[(m.id - 1) % PHOTO_POOL.length];
-    const original = fmtMXN(m.rate);
-    const hasDiscount = m.promo.discount > 0;
-    const discounted = hasDiscount ? fmtMXN(Math.round(m.rate * (1 - m.promo.discount / 100))) : null;
-    const slide = document.createElement('a');
-    slide.className = 'hero-slide';
-    slide.href = `perfil.html?id=${m.id}`;
-    slide.setAttribute('aria-label', `Ver perfil de ${m.name}`);
-    slide.style.cssText = `background-image:url('${photoUrl(bgId,1400,900)}');cursor:pointer;text-decoration:none;color:inherit;display:block`;
-    const pricesHTML = hasDiscount
-      ? `<span class="hero-promo-original">${original}/hr</span>
-         <span class="hero-promo-discounted">${discounted}/hr</span>`
-      : `<span class="hero-promo-discounted">${original}/hr</span>`;
-    slide.innerHTML = `
-      <div class="hero-overlay"></div>
-      <div class="hero-promo-photo-card"><img src="${m.photos[0]}" alt="${m.name}" loading="lazy" /></div>
-      <div class="hero-promo-overlay">
-        <div class="hero-promo-badge">🔥 ${m.promo.badge}</div>
-        <div class="hero-promo-name">${m.name}</div>
-        <div class="hero-promo-zone"><i class="fas fa-map-marker-alt"></i> ${m.zone}</div>
-        <div class="hero-promo-offer">${m.promo.title}</div>
-        <div class="hero-promo-desc">${m.promo.desc}</div>
-        <div class="hero-promo-prices">
-          ${pricesHTML}
-        </div>
-        <span class="hero-promo-cta">Ver perfil <i class="fas fa-arrow-right"></i></span>
-      </div>`;
-    wrap.appendChild(slide);
-  });
+  /* ── Poblar slots de perfil inicialmente ─── */
+  if (allElite) {
+    refreshAllEliteSlides();
+  } else {
+    refreshOfferSlides();
+    refreshGoldSlides();
+    refreshEliteSlides();
+  }
 }
 
 function buildFeaturedCarousel() {

@@ -5330,3 +5330,136 @@ details.faq-item[open] .faq-a {
   background-size: 400% 400% !important;
   animation: gradMove 10s ease infinite !important;
 }
+
+/* ═══════════════════════════════════════════════════════════
+   Hero slide — Canal de Telegram
+   ═══════════════════════════════════════════════════════════ */
+.hero-slide-telegram {
+  background: linear-gradient(135deg, #080e18 0%, #0d1a2e 40%, #081420 70%, #060a10 100%);
+  cursor: pointer;
+  display: block;
+}
+.hero-tg-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.hero-tg-glow {
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(34,158,217,.18) 0%, rgba(34,158,217,.06) 40%, transparent 70%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: tgPulse 4s ease-in-out infinite;
+}
+@keyframes tgPulse {
+  0%,100% { transform: translate(-50%,-50%) scale(1);   opacity: .8; }
+  50%      { transform: translate(-50%,-50%) scale(1.12); opacity: 1; }
+}
+.hero-tg-particles {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle, rgba(34,158,217,.12) 1px, transparent 1px);
+  background-size: 48px 48px;
+  opacity: .5;
+}
+.hero-tg-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 3rem 2rem;
+  text-align: center;
+  gap: .85rem;
+}
+.hero-tg-icon {
+  font-size: 3.8rem;
+  color: #229ED9;
+  line-height: 1;
+  filter: drop-shadow(0 0 24px rgba(34,158,217,.5));
+  animation: tgBounce 3s ease-in-out infinite;
+}
+@keyframes tgBounce {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+.hero-tg-label {
+  font-size: .68rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: #229ED9;
+  font-weight: 700;
+}
+.hero-tg-title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.6rem, 4vw, 2.5rem);
+  line-height: 1.2;
+  margin: 0;
+  color: #fff;
+}
+.hero-tg-title em {
+  color: #229ED9;
+  font-style: italic;
+}
+.hero-tg-desc {
+  font-size: clamp(.82rem, 2vw, .98rem);
+  color: rgba(255,255,255,.65);
+  max-width: 520px;
+  line-height: 1.65;
+  margin: 0;
+}
+.hero-tg-features {
+  display: flex;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  font-size: .78rem;
+  color: rgba(255,255,255,.55);
+  margin-top: .15rem;
+}
+.hero-tg-features span {
+  display: flex;
+  align-items: center;
+  gap: .35rem;
+}
+.hero-tg-features i { color: #229ED9; }
+.hero-tg-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  background: #229ED9;
+  color: #fff;
+  padding: .8rem 2.2rem;
+  border-radius: 100px;
+  font-weight: 700;
+  font-size: .9rem;
+  text-decoration: none;
+  transition: all .25s;
+  box-shadow: 0 4px 24px rgba(34,158,217,.35);
+  margin-top: .25rem;
+}
+.hero-tg-cta:hover {
+  background: #1a8ec9;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 32px rgba(34,158,217,.45);
+}
+.hero-tg-handle {
+  font-size: .7rem;
+  color: rgba(255,255,255,.35);
+  letter-spacing: .05em;
+}
+@media (max-width: 600px) {
+  .hero-tg-content { gap: .65rem; padding: 2rem 1.25rem; }
+  .hero-tg-icon { font-size: 2.8rem; }
+  .hero-tg-features { gap: .85rem; font-size: .72rem; }
+  .hero-tg-cta { padding: .7rem 1.6rem; font-size: .82rem; }
+  .hero-tg-features span:nth-child(n+3) { display: none; }
+}
