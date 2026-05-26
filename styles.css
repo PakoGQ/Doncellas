@@ -5559,3 +5559,116 @@ details.faq-item[open] .faq-a {
   .hero-tg-f1 { font-size: 6rem; }
   .hero-tg-f3 { font-size: 8rem; }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   INDEX — MOBILE REFINEMENTS (≤768px)
+   Stats bar · Section headers · Carousels · Card footer
+   Appended last to win all specificity ties.
+   ═══════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+
+  /* ── 1. Stats bar: single scrollable row ─────────────────── */
+  .stats-bar {
+    flex-wrap:    nowrap !important;
+    overflow-x:   auto !important;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    justify-content: flex-start !important;
+    gap:          .85rem !important;
+    padding:      .5rem 1rem !important;
+    font-size:    .76rem !important;
+  }
+  .stats-bar::-webkit-scrollbar { display: none; }
+  .stats-bar > div {
+    flex-shrink: 0;
+    font-size:   .76rem;
+  }
+
+  /* ── 2. Section spacing: tighter vertical rhythm ─────────── */
+  .section { padding: 1.5rem 1rem !important; }
+
+  /* Sections with inline vertical padding (New Arrivals, Promo) */
+  section.section[style*="padding:5rem 0"],
+  section.section[style*="padding: 5rem 0"] {
+    padding-top:    1.5rem !important;
+    padding-bottom: 1.5rem !important;
+  }
+  section.section[style*="padding:4rem 0"],
+  section.section[style*="padding: 4rem 0"] {
+    padding-top:    1.25rem !important;
+    padding-bottom: 1.25rem !important;
+  }
+  /* CTA banner section with 5rem horizontal padding */
+  section[style*="padding:5rem 2.5rem"],
+  section[style*="padding: 5rem 2.5rem"] {
+    padding: 2.5rem 1rem !important;
+  }
+  /* Inner wrapper: remove lateral padding (already normalized) */
+  .section > div[style*="padding:0 2.5rem"],
+  .section > div[style*="padding: 0 2.5rem"] {
+    padding-left:  0 !important;
+    padding-right: 0 !important;
+  }
+
+  /* ── 3. Section head: title + "Ver todas" inline ─────────── */
+  .section-head {
+    flex-wrap:       nowrap !important;
+    align-items:     center !important;
+    margin-bottom:   .75rem !important;
+    gap:             .4rem !important;
+  }
+  .section-head > div { flex: 1; min-width: 0; }
+  .section-head .btn.btn-outline.btn-sm {
+    flex-shrink:  0;
+    white-space:  nowrap;
+    font-size:    .67rem;
+    padding:      .3rem .65rem;
+  }
+  /* Reduce divider gap so title + button stay visually tight */
+  .section-head .divider { margin-bottom: .5rem !important; }
+  .section-head .section-title { margin-bottom: .2rem; }
+
+  /* ── 4. Horizontal carousel: 63vw cards for peek effect ──── */
+  .h-carousel > .model-card,
+  .h-carousel > * {
+    min-width: 63vw !important;
+    max-width: 63vw !important;
+  }
+  .h-carousel {
+    gap:           .6rem !important;
+    padding-right: 1rem;
+  }
+
+  /* ── 5. Card info area ───────────────────────────────────── */
+  .model-card-info {
+    padding: .5rem .65rem .55rem !important;
+  }
+  .model-card-name  { font-size: .84rem !important; }
+  .model-card-meta  { font-size: .65rem !important; margin-bottom: .35rem !important; }
+  .model-card-tags  { display: none !important; }
+  .model-card-rate  { font-size: .98rem; }
+
+  /* ── 6. Card footer: small icon-only WA/Telegram circles ─── */
+  .model-card-footer {
+    padding: .38rem .65rem .48rem !important;
+    gap:     .3rem !important;
+  }
+  .model-card-footer .btn-telegram.btn-sm,
+  .model-card-footer .btn-wa.btn-sm {
+    width:       30px !important;
+    height:      30px !important;
+    min-width:   30px !important;
+    min-height:  30px !important;
+    padding:     0 !important;
+    border-radius: 50% !important;
+    display:     inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size:   .72rem !important;
+  }
+  .model-card-footer .btn-ghost.btn-sm {
+    flex:      1;
+    padding:   .28rem .5rem !important;
+    font-size: .65rem !important;
+  }
+}
