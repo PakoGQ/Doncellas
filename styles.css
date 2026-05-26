@@ -5672,3 +5672,48 @@ details.faq-item[open] .faq-a {
     font-size: .65rem !important;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   MOBILE NAVBAR — logo pequeño + wordmark "Doncellas"
+   Logo reducido a 52px · nav-h 76px · marca visible en móvil
+   ═══════════════════════════════════════════════════════════ */
+
+/* Desktop: hide the mobile wordmark (nav-center ya lo muestra) */
+@media (min-width: 769px) {
+  .nav-brand-title { display: none; }
+}
+
+@media (max-width: 768px) {
+
+  /* ── Reduce nav height ── */
+  :root { --nav-h: 76px; }
+
+  /* ── Logo + brand name side by side ── */
+  .nav-brand {
+    display:        flex !important;
+    flex-direction: row !important;
+    align-items:    center !important;
+    gap:            10px;
+    flex-shrink:    0;
+    line-height:    normal !important;
+  }
+
+  /* Smaller logo — scope to .nav so footer logo is unaffected */
+  .nav .nav-logo img { height: 52px !important; }
+
+  /* "Doncellas" wordmark */
+  .nav-brand-title {
+    font-family:  var(--font-serif);
+    font-style:   italic;
+    font-size:    26px;
+    font-weight:  600;
+    color:        var(--gold);
+    letter-spacing: 2px;
+    line-height:  1;
+    white-space:  nowrap;
+    text-shadow:  0 0 22px rgba(201,168,76,.28);
+  }
+
+  /* Hide tagline — brand name is now visible */
+  .nav-escorts-mobile { display: none !important; }
+}
