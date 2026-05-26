@@ -2443,8 +2443,8 @@ canvas { width: 100% !important; }
   }
   .h-carousel > .model-card,
   .h-carousel > * {
-    min-width: 260px;
-    max-width: 280px;
+    min-width: calc(50% - 0.35rem);
+    max-width: calc(50% - 0.35rem);
   }
   .h-carousel-nav { display: none; }
 }
@@ -5638,15 +5638,15 @@ details.faq-item[open] .faq-a {
   .section-head .divider { margin-bottom: .5rem !important; }
   .section-head .section-title { margin-bottom: .2rem; }
 
-  /* ── 4. Horizontal carousel: 63vw cards for peek effect ──── */
+  /* ── 4. Horizontal carousel: 2 cards exactas visibles ──── */
   .h-carousel > .model-card,
   .h-carousel > * {
-    min-width: 63vw !important;
-    max-width: 63vw !important;
+    min-width: calc(50% - 0.35rem) !important;
+    max-width: calc(50% - 0.35rem) !important;
   }
   .h-carousel {
-    gap:           .6rem !important;
-    padding-right: 1rem;
+    gap:           .7rem !important;
+    padding-right: .5rem;
   }
 
   /* ── 5. Card info area ───────────────────────────────────── */
