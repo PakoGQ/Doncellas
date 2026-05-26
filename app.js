@@ -1728,11 +1728,11 @@ function buildActivityTable() {
   if (!tbody) return;
   [
     ['Nueva cita','Valentina R. / Carlos M.','$2,500','Hoy 14:32','success'],
-    ['Membresía Premium','Eduardo L.','$799','Hoy 12:15','success'],
-    ['Pago rechazado','Roberto A.','$1,499','Hoy 10:48','error'],
+    ['Membresía Gold','Eduardo L.','$2,000','Hoy 12:15','success'],
+    ['Pago rechazado','Roberto A.','$2,500','Hoy 10:48','error'],
     ['Nuevo perfil','Mariana F.','—','Hoy 09:20','info'],
     ['Cita cancelada','Isabella M.','−$4,500','Ayer 18:05','error'],
-    ['Membresía Elite','Héctor F.','$1,499','Ayer 15:30','success'],
+    ['Membresía Elite','Héctor F.','$2,500','Ayer 15:30','success'],
   ].forEach(r => {
     tbody.insertAdjacentHTML('beforeend',`
       <tr>
@@ -1747,7 +1747,7 @@ function buildActivityTable() {
 function buildModelosTable() {
   const tbody = document.getElementById('modelosTbody');
   if (!tbody) return;
-  const plans = ['Básico','Premium','Elite'];
+  const plans = ['Silver','Gold','Elite'];
   MODELS.slice(0, 50).forEach(m => {
     const plan = plans[m.id % 3];
     tbody.insertAdjacentHTML('beforeend',`
@@ -1755,7 +1755,7 @@ function buildModelosTable() {
         <td><div class="table-avatar"><img src="${m.img}" alt="${m.name}" /><div><div class="table-name">${m.name}</div><div class="table-sub">${m.age} años · ${m.nationality}</div></div></div></td>
         <td><span style="color:var(--t2)">${m.zone}</span></td>
         <td>${m.cat}</td>
-        <td><span class="pill ${plan==='Elite'?'pill-new':plan==='Premium'?'pill-gold':'pill-available'}" style="font-size:.65rem">${plan}</span></td>
+        <td><span class="pill ${plan==='Elite'?'pill-new':plan==='Gold'?'pill-gold':'pill-available'}" style="font-size:.65rem">${plan}</span></td>
         <td style="font-family:var(--font-serif)">${m.citas}</td>
         <td style="color:var(--gold);font-family:var(--font-serif)">${fmtMXN(m.rate*12)}</td>
         <td><span class="pill ${m.available?'pill-available':'pill-busy'}" style="font-size:.65rem">${m.available?'Activa':'No Disponible'}</span></td>
@@ -2138,10 +2138,10 @@ function buildTxTable() {
   const tbody = document.getElementById('txTbody');
   if (!tbody) return;
   [['#4821','Valentina R.','Cita 1hr','$2,500','$500','17 Abr','Tarjeta'],
-   ['#4820','Carlos M.','Membresía Premium','$799','$160','17 Abr','OXXO'],
+   ['#4820','Carlos M.','Membresía Gold','$2,000','$400','17 Abr','OXXO'],
    ['#4819','Renata P.','Cita 3hr','$6,500','$1,300','16 Abr','SPEI'],
    ['#4818','Ximena A.','Cita Día','$18,000','$3,600','16 Abr','Tarjeta'],
-   ['#4817','Andrea T.','Membresía Elite','$1,499','$300','15 Abr','Tarjeta'],
+   ['#4817','Andrea T.','Membresía Elite','$2,500','$500','15 Abr','Tarjeta'],
   ].forEach(r => {
     tbody.insertAdjacentHTML('beforeend',`<tr><td style="color:var(--t3)">${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td style="color:var(--gold);font-family:var(--font-serif)">${r[3]}</td><td style="color:var(--green)">${r[4]}</td><td style="color:var(--t3)">${r[5]}</td><td><span class="pill pill-available" style="font-size:.65rem">${r[6]}</span></td></tr>`);
   });
@@ -2150,8 +2150,8 @@ function buildTxTable() {
 function buildPagosTable() {
   const tbody = document.getElementById('pagosTbody');
   if (!tbody) return;
-  [['#P001','Carlos M.','Membresía Premium','$799','Tarjeta','Aprobado','17 Abr'],
-   ['#P002','Roberto A.','Membresía Elite','$1,499','SPEI','Pendiente','17 Abr'],
+  [['#P001','Carlos M.','Membresía Gold','$2,000','Tarjeta','Aprobado','17 Abr'],
+   ['#P002','Roberto A.','Membresía Elite','$2,500','SPEI','Pendiente','17 Abr'],
    ['#P003','Eduardo L.','Cita Valentina R.','$2,500','OXXO','Aprobado','16 Abr'],
   ].forEach(r => {
     tbody.insertAdjacentHTML('beforeend',`<tr><td style="color:var(--t3)">${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td style="color:var(--gold);font-family:var(--font-serif)">${r[3]}</td><td>${r[4]}</td><td><span class="pill ${r[5]==='Aprobado'?'pill-available':'pill-gold'}" style="font-size:.65rem">${r[5]}</span></td><td style="color:var(--t3)">${r[6]}</td></tr>`);
@@ -2294,12 +2294,12 @@ function buildAvailWeekGrid() {
 function buildReferidosTable() {
   const tbody=document.getElementById('referidosTbody');
   if(!tbody)return;
-  [['Sofía L.','15 Mar 2026','Premium','Activa','$800'],
-   ['Mariana F.','01 Feb 2026','Básico','Activa','$300'],
-   ['Daniela C.','20 Ene 2026','Elite','Activa','$1,500'],
-   ['Luisa G.','05 Dic 2025','Premium','Activa','$800'],
+  [['Sofía L.','15 Mar 2026','Gold','Activa','$2,000'],
+   ['Mariana F.','01 Feb 2026','Silver','Activa','$1,500'],
+   ['Daniela C.','20 Ene 2026','Elite','Activa','$2,500'],
+   ['Luisa G.','05 Dic 2025','Gold','Activa','$2,000'],
   ].forEach(r=>{
-    tbody.insertAdjacentHTML('beforeend',`<tr><td>${r[0]}</td><td style="color:var(--t3)">${r[1]}</td><td><span class="pill ${r[2]==='Elite'?'pill-new':r[2]==='Premium'?'pill-gold':'pill-available'}" style="font-size:.65rem">${r[2]}</span></td><td><span class="pill ${r[3]==='Activa'?'pill-available':'pill-busy'}" style="font-size:.65rem">${r[3]}</span></td><td style="color:var(--gold);font-family:var(--font-serif)">${r[4]}</td></tr>`);
+    tbody.insertAdjacentHTML('beforeend',`<tr><td>${r[0]}</td><td style="color:var(--t3)">${r[1]}</td><td><span class="pill ${r[2]==='Elite'?'pill-new':r[2]==='Gold'?'pill-gold':'pill-available'}" style="font-size:.65rem">${r[2]}</span></td><td><span class="pill ${r[3]==='Activa'?'pill-available':'pill-busy'}" style="font-size:.65rem">${r[3]}</span></td><td style="color:var(--gold);font-family:var(--font-serif)">${r[4]}</td></tr>`);
   });
 }
 
