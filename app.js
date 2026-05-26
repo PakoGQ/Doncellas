@@ -883,10 +883,10 @@ function refreshOfferSlides() {
   _applyProfileSlide(document.getElementById('heroSlideOffer1'), pool[(_heroOfferIdx+1) % pool.length], `${getModelPlan(pool[(_heroOfferIdx+1) % pool.length])} · Oferta`);
 }
 function refreshGoldSlides() {
-  /* 4 slots Gold, cada uno con su modelo del pool rotante */
+  /* 2 slots Gold */
   const pool = _goldModels();
   if (!pool.length) return;
-  ['Gold0','Gold1','Gold2','Gold3'].forEach((suffix, i) => {
+  ['Gold0','Gold1'].forEach((suffix, i) => {
     _applyProfileSlide(document.getElementById(`heroSlide${suffix}`), pool[(_heroGoldIdx + i) % pool.length], '⭐ Gold');
   });
 }
@@ -902,7 +902,7 @@ function refreshAllEliteSlides() {
   /* Cuando todas son Elite: los 9 slots de perfil muestran Elites */
   const pool = _eliteModels();
   if (!pool.length) return;
-  ['Offer0','Offer1','Gold0','Gold1','Gold2','Gold3','Elite0','Elite1','Elite2'].forEach((suffix, i) => {
+  ['Offer0','Offer1','Gold0','Gold1','Elite0','Elite1','Elite2'].forEach((suffix, i) => {
     _applyProfileSlide(document.getElementById(`heroSlide${suffix}`), pool[(_heroEliteIdx + i) % pool.length], '💎 Elite');
   });
 }
@@ -981,7 +981,7 @@ function buildHeroSlides() {
   /* ── Slides 2–10: Perfiles rotantes ─── */
   const allElite = _allElite();
   /* 2 Offer · 4 Gold · 3 Elite */
-  const slotIds = ['Offer0','Offer1','Gold0','Gold1','Gold2','Gold3','Elite0','Elite1','Elite2'];
+  const slotIds = ['Offer0','Offer1','Gold0','Gold1','Elite0','Elite1','Elite2'];
   slotIds.forEach(suffix => {
     const s = document.createElement('a');
     s.className = 'hero-slide hero-slide-profile';
