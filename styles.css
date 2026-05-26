@@ -4883,7 +4883,7 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
 
   /* Contenido: centrado verticalmente en la mitad superior */
   .hero-slide-brand .hero-brand-content {
-    padding: 10px 20px 102px !important;
+    padding: 10px 20px 116px !important;
     gap: 10px !important;
     justify-content: center !important;
   }
@@ -4895,10 +4895,10 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
   /* Descripción: tipografía llamativa, color dorado */
   .hero-slide-brand .hero-brand-desc {
     display: block !important;
-    font-size: 13px !important;
+    font-size: 11px !important;
     font-style: italic !important;
     font-weight: 500 !important;
-    line-height: 1.55 !important;
+    line-height: 1.5 !important;
     letter-spacing: 0.01em !important;
     color: rgba(255,255,255,0.92) !important;
     text-align: center !important;
@@ -4916,19 +4916,19 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
     font-weight: 800 !important;
     letter-spacing: 0.04em !important;
     text-transform: uppercase !important;
-    font-size: 11.5px !important;
+    font-size: 10px !important;
   }
 
   /* Foto-strip al fondo del banner */
   .hero-slide-brand .hero-brand-mosaic {
     display: flex !important;
     position: absolute !important;
-    left: 10px !important;
-    right: 10px !important;
+    left: 8px !important;
+    right: 8px !important;
     bottom: 10px !important;
     top: auto !important;
     width: auto !important;
-    height: 86px !important;
+    height: 100px !important;
     padding: 0 !important;
     gap: 6px !important;
     flex-direction: row !important;
@@ -4940,7 +4940,7 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
   .hero-slide-brand .hbm-img-wrap {
     flex: 1 1 0 !important;
     width: auto !important;
-    height: 86px !important;
+    height: 100px !important;
     aspect-ratio: auto !important;
     min-width: 0 !important;
     border-width: 1px !important;
