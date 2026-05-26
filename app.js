@@ -426,6 +426,27 @@ function initHero() {
   const stats = document.getElementById('heroStats');
   if (stats) stats.style.opacity = heroIndex < 2 ? '0' : '1';
   document.querySelectorAll('[data-count]').forEach(el => animateCount(el, +el.dataset.count));
+
+  /* ── Swipe en móvil: deslizar izquierda/derecha cambia slide ── */
+  const heroEl = document.querySelector('.hero');
+  if (heroEl) {
+    let _tx = 0, _ty = 0;
+    heroEl.addEventListener('touchstart', e => {
+      _tx = e.touches[0].clientX;
+      _ty = e.touches[0].clientY;
+    }, { passive: true });
+    heroEl.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - _tx;
+      const dy = e.changedTouches[0].clientY - _ty;
+      // Ignorar si el movimiento es más vertical que horizontal (scroll)
+      if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy)) return;
+      const total = document.querySelectorAll('.hero-slide').length;
+      if (!total) return;
+      goHeroSlide(dx < 0
+        ? (heroIndex + 1) % total              // deslizar izquierda → siguiente
+        : (heroIndex - 1 + total) % total);    // deslizar derecha  → anterior
+    }, { passive: true });
+  }
 }
 
 function goHeroSlide(idx) {
