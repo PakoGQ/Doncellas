@@ -5678,42 +5678,53 @@ details.faq-item[open] .faq-a {
    Logo reducido a 52px · nav-h 76px · marca visible en móvil
    ═══════════════════════════════════════════════════════════ */
 
-/* Desktop: hide the mobile wordmark (nav-center ya lo muestra) */
-@media (min-width: 769px) {
-  .nav-brand-title { display: none; }
-}
+/* Brand title span: always hidden (reserved for future use) */
+.nav-brand-title { display: none !important; }
 
+/* ═══════════════════════════════════════════════════════════
+   MOBILE NAVBAR — logo pequeño + tagline con shimmer dorado
+   Logo 52px · nav-h 76px · "La Elegancia del Placer" animado
+   ═══════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
 
   /* ── Reduce nav height ── */
   :root { --nav-h: 76px; }
 
-  /* ── Logo + brand name side by side ── */
+  /* ── Nav-brand: simple horizontal row ── */
   .nav-brand {
     display:        flex !important;
     flex-direction: row !important;
     align-items:    center !important;
-    gap:            10px;
     flex-shrink:    0;
     line-height:    normal !important;
+    gap:            0;
   }
 
-  /* Smaller logo — scope to .nav so footer logo is unaffected */
+  /* Smaller logo — scoped to .nav so footer logo is unaffected */
   .nav .nav-logo img { height: 52px !important; }
 
-  /* "Doncellas" wordmark */
-  .nav-brand-title {
-    font-family:  var(--font-serif);
-    font-style:   italic;
-    font-size:    26px;
-    font-weight:  600;
-    color:        var(--gold);
-    letter-spacing: 2px;
-    line-height:  1;
-    white-space:  nowrap;
-    text-shadow:  0 0 22px rgba(201,168,76,.28);
+  /* ── "La Elegancia del Placer" — shimmer igual que escritorio ── */
+  .nav-escorts-mobile {
+    display:          block !important;
+    font-family:      'Georgia', 'Times New Roman', serif;
+    font-style:       italic;
+    font-weight:      bold;
+    font-size:        clamp(13px, 4.2vw, 18px);
+    letter-spacing:   1px;
+    white-space:      nowrap;
+    line-height:      1;
+    margin:           0;
+    padding:          0 6px;
+    flex:             1;
+    text-align:       center;
+    /* Shimmer gradient */
+    background: linear-gradient(90deg, #8a6a20 0%, #C9A84C 30%, #f5e09a 50%, #C9A84C 70%, #8a6a20 100%);
+    background-size:              220% auto;
+    -webkit-background-clip:      text;
+    background-clip:              text;
+    -webkit-text-fill-color:      transparent;
+    color:                        transparent;
+    animation:        nav-tagline-shimmer 4s linear infinite;
+    animation-delay:  -2s;
   }
-
-  /* Hide tagline — brand name is now visible */
-  .nav-escorts-mobile { display: none !important; }
 }
