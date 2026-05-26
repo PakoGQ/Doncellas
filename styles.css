@@ -1724,7 +1724,7 @@ canvas { width: 100% !important; }
   .hero-promo-name { font-size: clamp(1.2rem, 5.5vw, 1.7rem); }
   .hero-promo-zone { font-size: .72rem; }
   .hero-promo-offer { font-size: clamp(.9rem, 3vw, 1.1rem); margin-top: .15rem; }
-  .hero-promo-desc { font-size: .75rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .hero-promo-desc { display: none !important; } /* ocultar desc → badge visible a 225px */
   .hero-promo-prices { gap: .75rem; margin-top: .25rem; }
   .hero-promo-original { font-size: .8rem; }
   .hero-promo-discounted { font-size: clamp(1.2rem, 5.5vw, 1.6rem); }
@@ -3508,10 +3508,9 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
     max-width: 100% !important;
   }
 
-  /* Subtitle visible */
+  /* Subtitle visible (hero-promo-desc excluido — se oculta en 225px) */
   .hb-sub,
-  .hero-brand-desc,
-  .hero-promo-desc {
+  .hero-brand-desc {
     display: block !important;
     font-size: 12px !important;
     max-width: 100% !important;
@@ -4874,69 +4873,34 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
 }
 
 /* ═══════════════════════════════════════════════════════════
-   MOBILE HERO BRAND SLIDE — show same profile photo mosaic
-   as desktop (horizontal strip at bottom of the slide).
-   Hides the non-essential label/stats and compacts text so
-   everything fits cleanly within the 300px mobile hero height.
+   MOBILE HERO BRAND SLIDE — centrado limpio en 225px
+   Sin foto-strip (no hay espacio). Label, stats y mosaic
+   ocultos. Título + desc + CTA centrados verticalmente.
    ═══════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
-  /* Hide non-essential elements to prevent overflow */
+  /* Ocultar elementos decorativos */
   .hero-slide-brand .hero-brand-label,
-  .hero-slide-brand .hero-brand-stats {
-    display: none !important;
-  }
+  .hero-slide-brand .hero-brand-stats,
+  .hero-slide-brand .hero-brand-mosaic { display: none !important; }
 
-  /* Compact content so it fits above the photo strip */
+  /* Contenido centrado verticalmente, sin sesgo */
   .hero-slide-brand .hero-brand-content {
-    padding: 12px 18px 92px !important;
-    gap: 6px !important;
-    justify-content: flex-start !important;
+    padding: 12px 20px !important;
+    gap: 7px !important;
+    justify-content: center !important;
   }
   .hero-slide-brand .hero-brand-title {
     font-size: 22px !important;
     line-height: 1.15 !important;
-    margin-bottom: 6px !important;
   }
   .hero-slide-brand .hero-brand-desc {
-    font-size: 11px !important;
+    font-size: 11.5px !important;
     line-height: 1.35 !important;
-    margin-bottom: 8px !important;
     display: block !important;
   }
   .hero-slide-brand .hero-brand-cta {
     padding: 9px 18px !important;
     font-size: 12px !important;
-  }
-
-  /* Photo strip: 4 profile photos at the bottom */
-  .hero-slide-brand .hero-brand-mosaic {
-    display: flex !important;
-    position: absolute !important;
-    left: 12px !important;
-    right: 12px !important;
-    bottom: 10px !important;
-    top: auto !important;
-    width: auto !important;
-    height: 78px !important;
-    padding: 0 !important;
-    gap: 6px !important;
-    flex-direction: row !important;
-    align-items: stretch !important;
-    z-index: 2;
-    pointer-events: none;
-  }
-  .hero-slide-brand .hero-brand-mosaic-col {
-    display: contents !important;
-  }
-  .hero-slide-brand .hbm-img-wrap {
-    flex: 1 1 0 !important;
-    width: auto !important;
-    height: 78px !important;
-    aspect-ratio: auto !important;
-    min-width: 0 !important;
-    border-width: 1px !important;
-    border-radius: 8px !important;
-    box-shadow: 0 4px 14px rgba(0,0,0,.55) !important;
   }
 }
 
@@ -5545,19 +5509,19 @@ details.faq-item[open] .faq-a {
 }
 .hero-tg-cta:hover .hero-tg-cta-arrow { transform: translateX(4px); }
 
-/* ── Mobile ── */
+/* ── Mobile 225px — versión ultra-compacta ── */
 @media (max-width: 768px) {
-  .hero-tg-content { padding: 1.5rem 1.25rem; gap: .7rem; }
-  .hero-tg-icon-ring { width: 56px; height: 56px; font-size: 1.7rem; }
-  .hero-tg-title { font-size: clamp(1.55rem, 6vw, 2rem); }
-  .hero-tg-desc-box { padding: .65rem 1rem; }
-  .hero-tg-desc-box p { font-size: .83rem; line-height: 1.55; }
-  .hero-tg-pills { gap: .4rem; }
-  .hero-tg-pill { font-size: .68rem; padding: .28rem .7rem; }
-  .hero-tg-pill:nth-child(n+5) { display: none; }
-  .hero-tg-cta { padding: .75rem 1.75rem; font-size: .88rem; }
-  .hero-tg-f1 { font-size: 6rem; }
-  .hero-tg-f3 { font-size: 8rem; }
+  /* Solo ícono + título + CTA. Todo lo demás sobra en 225px */
+  .hero-tg-content    { padding: 10px 20px; gap: .4rem; }
+  .hero-tg-top-row    { gap: .3rem; }
+  .hero-tg-icon-ring  { width: 40px; height: 40px; font-size: 1.3rem; }
+  .hero-tg-channel-tag { display: none; }
+  .hero-tg-title      { font-size: clamp(1.1rem, 5.5vw, 1.5rem); line-height: 1.15; }
+  .hero-tg-desc-box   { display: none; }
+  .hero-tg-pills      { display: none; }
+  .hero-tg-cta        { padding: .55rem 1.5rem; font-size: .82rem; }
+  .hero-tg-f1         { font-size: 5rem; }
+  .hero-tg-f3         { font-size: 6rem; }
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -5706,6 +5670,12 @@ details.faq-item[open] .faq-a {
   /* PWA banner + nav: empujar el nav sticky hacia abajo */
   body:has(.pwa-install-banner.is-visible) .nav {
     top: 44px !important;
+  }
+  /* Hero offset cuando el banner PWA está visible:
+     el nav se pega en top:44px → hero necesita margin-top extra
+     para arrancar visualmente debajo del nav (44+70=114px) */
+  body:has(.pwa-install-banner.is-visible) .hero {
+    margin-top: 44px !important;
   }
 
   /* ── Nav-brand: simple horizontal row ── */
