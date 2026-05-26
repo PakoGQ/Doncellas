@@ -946,7 +946,7 @@ function buildHeroSlides() {
     <div class="hero-brand-content">
       <div class="hero-brand-label"><i class="fas fa-gem"></i> Guadalajara, Jalisco</div>
       <h1 class="hero-brand-title">Escorts Elite<br><em>en Guadalajara</em></h1>
-      <p class="hero-brand-desc">Perfiles verificados, disponibilidad en tiempo real<br>y la discreción que mereces.</p>
+      <p class="hero-brand-desc">Perfiles <span class="hbd-gold">verificados</span> · disponibilidad en <span class="hbd-gold">tiempo real</span><br>discreción y <span class="hbd-vip">trato VIP</span> que te mereces</p>
       <div class="hero-brand-actions">
         <a href="modelos.html" class="hero-brand-cta" onclick="event.stopPropagation()">
           <span>Explorar Doncellas</span><i class="fas fa-arrow-right"></i>

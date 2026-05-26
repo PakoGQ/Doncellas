@@ -4876,28 +4876,47 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
    MOBILE HERO BRAND SLIDE — foto-strip abajo, texto arriba
    ═══════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
-  /* Ocultar solo label y stats — mosaic se muestra */
+  /* Ocultar label, stats y botón CTA — más espacio para fotos */
   .hero-slide-brand .hero-brand-label,
-  .hero-slide-brand .hero-brand-stats { display: none !important; }
+  .hero-slide-brand .hero-brand-stats,
+  .hero-slide-brand .hero-brand-actions { display: none !important; }
 
-  /* Contenido: centrado en la mitad superior, fotos abajo libres */
+  /* Contenido: centrado verticalmente en la mitad superior */
   .hero-slide-brand .hero-brand-content {
-    padding: 10px 20px 100px !important;
-    gap: 8px !important;
+    padding: 10px 20px 102px !important;
+    gap: 10px !important;
     justify-content: center !important;
   }
   .hero-slide-brand .hero-brand-title {
     font-size: 22px !important;
     line-height: 1.15 !important;
   }
+
+  /* Descripción: tipografía llamativa, color dorado */
   .hero-slide-brand .hero-brand-desc {
-    font-size: 11.5px !important;
-    line-height: 1.35 !important;
     display: block !important;
+    font-size: 13px !important;
+    font-style: italic !important;
+    font-weight: 500 !important;
+    line-height: 1.55 !important;
+    letter-spacing: 0.01em !important;
+    color: rgba(255,255,255,0.92) !important;
+    text-align: center !important;
   }
-  .hero-slide-brand .hero-brand-cta {
-    padding: 9px 20px !important;
-    font-size: 12px !important;
+  /* Palabras clave doradas */
+  .hero-slide-brand .hbd-gold {
+    color: #C9A84C !important;
+    font-style: normal !important;
+    font-weight: 700 !important;
+  }
+  /* "trato VIP" — dorado brillante con mayúsculas */
+  .hero-slide-brand .hbd-vip {
+    color: #E8C76A !important;
+    font-style: normal !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.04em !important;
+    text-transform: uppercase !important;
+    font-size: 11.5px !important;
   }
 
   /* Foto-strip al fondo del banner */
