@@ -957,24 +957,54 @@ function buildHeroSlides() {
   tgSlide.className = 'hero-slide hero-slide-telegram';
   tgSlide.innerHTML = `
     <div class="hero-tg-bg">
-      <div class="hero-tg-glow"></div>
-      <div class="hero-tg-particles"></div>
+      <div class="hero-tg-glow-main"></div>
+      <div class="hero-tg-glow-sec"></div>
+      <i class="fab fa-telegram hero-tg-float hero-tg-f1"></i>
+      <i class="fab fa-telegram hero-tg-float hero-tg-f2"></i>
+      <i class="fab fa-telegram hero-tg-float hero-tg-f3"></i>
+      <i class="fab fa-telegram hero-tg-float hero-tg-f4"></i>
+      <i class="fab fa-telegram hero-tg-float hero-tg-f5"></i>
+      <i class="fab fa-telegram hero-tg-float hero-tg-f6"></i>
     </div>
+
     <div class="hero-tg-content">
-      <div class="hero-tg-icon"><i class="fab fa-telegram"></i></div>
-      <div class="hero-tg-label">Canal Oficial de Doncellas GDL</div>
-      <h2 class="hero-tg-title">Únete a nuestro<br><em>canal de Telegram</em></h2>
-      <p class="hero-tg-desc">Sé el primero en ver quién está disponible esta noche, ofertas exclusivas y todas nuestras Doncellas.</p>
-      <div class="hero-tg-features">
-        <span><i class="fas fa-bell"></i> Alertas en tiempo real</span>
-        <span><i class="fas fa-lock"></i> 100% anónimo</span>
-        <span><i class="fas fa-eye-slash"></i> Sin rastro en tu teléfono</span>
-        <span><i class="fas fa-star"></i> Ofertas exclusivas primero</span>
+
+      <div class="hero-tg-top-row">
+        <div class="hero-tg-icon-ring">
+          <i class="fab fa-telegram"></i>
+        </div>
+        <div class="hero-tg-channel-tag">
+          <i class="fab fa-telegram"></i> @DoncellasGDL &nbsp;·&nbsp; Canal Oficial
+        </div>
       </div>
-      <a href="https://t.me/doncellas" target="_blank" rel="noopener" onclick="event.stopPropagation()" class="hero-tg-cta">
-        <i class="fab fa-telegram"></i> Unirme al canal gratis
+
+      <h2 class="hero-tg-title">
+        Únete al canal<br>
+        <em>más exclusivo <i class="fab fa-telegram hero-tg-title-icon"></i> de GDL</em>
+      </h2>
+
+      <div class="hero-tg-desc-box">
+        <p>Sé el <strong>primero</strong> en ver quién está disponible esta noche.<br>
+        Ofertas, perfiles nuevos y novedades de todas nuestras <em>Doncellas</em> —<br>
+        todo en un solo lugar, con total discreción.</p>
+      </div>
+
+      <div class="hero-tg-pills">
+        <div class="hero-tg-pill"><i class="fab fa-telegram"></i> Actualizaciones diarias</div>
+        <div class="hero-tg-pill"><i class="fas fa-bell"></i> Alertas de disponibilidad</div>
+        <div class="hero-tg-pill"><i class="fas fa-user-secret"></i> 100% anónimo</div>
+        <div class="hero-tg-pill"><i class="fas fa-tag"></i> Ofertas exclusivas</div>
+        <div class="hero-tg-pill"><i class="fas fa-eye-slash"></i> Sin rastro en tu celular</div>
+        <div class="hero-tg-pill"><i class="fab fa-telegram"></i> Gratis para siempre</div>
+      </div>
+
+      <a href="https://t.me/doncellas" target="_blank" rel="noopener"
+         onclick="event.stopPropagation()" class="hero-tg-cta">
+        <i class="fab fa-telegram"></i>
+        <span>Unirme gratis ahora</span>
+        <i class="fas fa-arrow-right hero-tg-cta-arrow"></i>
       </a>
-      <div class="hero-tg-handle">@DoncellasGDL · Actualizaciones diarias</div>
+
     </div>`;
   wrap.appendChild(tgSlide);
 
