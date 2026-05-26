@@ -185,9 +185,9 @@ p  { line-height: 1.7; color: var(--t2); }
   letter-spacing: .04em;
   text-transform: uppercase;
 }
-.pill-available { background: rgba(76,175,130,.15); color: var(--green); border: 1px solid rgba(76,175,130,.3); }
-.pill-available::before { content: ''; width: 6px; height: 6px; background: var(--green); border-radius: 50%; animation: pulse-green 2s infinite; }
-.pill-busy    { background: rgba(224,80,80,.12); color: var(--red); border: 1px solid rgba(224,80,80,.25); }
+.pill-available { background: rgba(76,175,130,.55); color: #fff; border: 1px solid rgba(76,175,130,.7); }
+.pill-available::before { content: ''; width: 6px; height: 6px; background: #fff; border-radius: 50%; animation: pulse-green 2s infinite; }
+.pill-busy    { background: rgba(180,50,50,.72); color: #fff; border: 1px solid rgba(224,80,80,.5); }
 .pill-gold    { background: rgba(201,168,76,.12); color: var(--gold); border: 1px solid var(--border); }
 .pill-new     { background: var(--gold); color: #000; font-weight: 700; }
 
