@@ -5978,7 +5978,7 @@ details.faq-item[open] .faq-a {
   z-index: 5;
 }
 
-/* Hero slides de modelos — tarjeta de foto (desktop): pequeña y difuminada */
+/* Hero slides de modelos — tarjeta de foto (desktop) */
 .hero-promo-photo-card::after {
   content: '';
   position: absolute;
@@ -5986,16 +5986,15 @@ details.faq-item[open] .faq-a {
   width: 100%;
   height: 100%;
   background-image: url('watermark.png');
-  background-size: 22%;
+  background-size: 65%;
   background-repeat: no-repeat;
-  background-position: center bottom 8%;
-  opacity: 0.22;
-  filter: blur(0.6px);
+  background-position: center;
+  opacity: 0.72;
   pointer-events: none;
   z-index: 3;
 }
 
-/* Hero slides de modelos — fondo completo (móvil): pequeña y difuminada */
+/* Hero slides de modelos — fondo completo (móvil) */
 .hero-slide-profile::after {
   content: '';
   position: absolute;
@@ -6003,11 +6002,10 @@ details.faq-item[open] .faq-a {
   width: 100%;
   height: 100%;
   background-image: url('watermark.png');
-  background-size: 22%;
+  background-size: 55%;
   background-repeat: no-repeat;
-  background-position: center bottom 8%;
-  opacity: 0.22;
-  filter: blur(0.6px);
+  background-position: center 45%;
+  opacity: 0.72;
   pointer-events: none;
   z-index: 3;
 }
