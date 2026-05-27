@@ -1406,6 +1406,11 @@ function initPerfil() {
     track.innerHTML = m.photos.map((p, i) =>
       `<img src="${p}" alt="Foto ${i+1}" class="profile-carousel-slide" />`
     ).join('');
+    /* Fondo borroso: foto activa como background desenfocado */
+    const blurBg = document.getElementById('profileBlurBg');
+    if (blurBg && m.photos[0]) {
+      blurBg.style.backgroundImage = `url('${m.photos[0]}')`;
+    }
   }
 
   /* Características */
@@ -1519,6 +1524,11 @@ function initProfileCarousel() {
       t.style.opacity = i===idx ? '1':'0.5';
       t.style.borderColor = i===idx ? 'var(--gold)':'transparent';
     });
+    /* Actualizar fondo borroso con la foto activa */
+    const blurBg = document.getElementById('profileBlurBg');
+    if (blurBg && slides[idx]) {
+      blurBg.style.backgroundImage = `url('${slides[idx].src}')`;
+    }
   }
 }
 
