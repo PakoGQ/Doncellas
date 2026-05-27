@@ -5913,19 +5913,19 @@ details.faq-item[open] .faq-a {
    mix-blend-mode: screen → fondo negro desaparece, queda dorado
    ═══════════════════════════════════════════════════════════ */
 
+/* Mixin reutilizable — marca centrada grande */
 /* Cards del grid principal */
 .model-card-img-wrap::after {
   content: '';
   position: absolute;
-  bottom: 6%;
-  right: 4%;
-  width: 28%;
-  aspect-ratio: 1 / 1;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   background-image: url('watermark.png');
-  background-size: contain;
+  background-size: 65%;
   background-repeat: no-repeat;
   background-position: center;
-  opacity: 0.52;
+  opacity: 0.38;
   mix-blend-mode: screen;
   pointer-events: none;
   z-index: 6;
@@ -5935,15 +5935,14 @@ details.faq-item[open] .faq-a {
 .hbm-img-wrap::after {
   content: '';
   position: absolute;
-  bottom: 4%;
-  right: 3%;
-  width: 34%;
-  aspect-ratio: 1 / 1;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   background-image: url('watermark.png');
-  background-size: contain;
+  background-size: 70%;
   background-repeat: no-repeat;
   background-position: center;
-  opacity: 0.48;
+  opacity: 0.36;
   mix-blend-mode: screen;
   pointer-events: none;
   z-index: 6;
@@ -5953,15 +5952,14 @@ details.faq-item[open] .faq-a {
 .profile-carousel::after {
   content: '';
   position: absolute;
-  bottom: 4%;
-  right: 3%;
-  width: 16%;
-  aspect-ratio: 1 / 1;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   background-image: url('watermark.png');
-  background-size: contain;
+  background-size: 55%;
   background-repeat: no-repeat;
   background-position: center;
-  opacity: 0.50;
+  opacity: 0.38;
   mix-blend-mode: screen;
   pointer-events: none;
   z-index: 5;
@@ -5970,15 +5968,14 @@ details.faq-item[open] .faq-a {
 /* Videos — overlay CSS (no se puede incrustar en el archivo via canvas) */
 .wm-video-overlay {
   position: absolute;
-  bottom: 6%;
-  right: 4%;
-  width: 28%;
-  aspect-ratio: 1 / 1;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   background-image: url('watermark.png');
-  background-size: contain;
+  background-size: 65%;
   background-repeat: no-repeat;
   background-position: center;
-  opacity: 0.50;
+  opacity: 0.38;
   mix-blend-mode: screen;
   pointer-events: none;
   z-index: 5;

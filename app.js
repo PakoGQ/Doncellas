@@ -2508,14 +2508,15 @@ async function applyWatermark(dataURL) {
       ctx.drawImage(photo, 0, 0);
 
       if (wm) {
-        // 2. Calcular tamaño y posición (esquina inferior derecha, 30% del ancho)
-        const wmW = Math.round(canvas.width  * 0.30);
-        const wmH = Math.round(wmW * (wm.height / wm.width));
-        const wmX = canvas.width  - wmW - Math.round(canvas.width  * 0.03);
-        const wmY = canvas.height - wmH - Math.round(canvas.height * 0.03);
+        // 2. Marca grande centrada: 65% del lado menor para que quepa bien
+        const side   = Math.min(canvas.width, canvas.height);
+        const wmW    = Math.round(side * 0.65);
+        const wmH    = Math.round(wmW * (wm.height / wm.width));
+        const wmX    = Math.round((canvas.width  - wmW) / 2);
+        const wmY    = Math.round((canvas.height - wmH) / 2);
 
         // 3. Screen blend: el fondo negro desaparece, queda solo el dorado
-        ctx.globalAlpha = 0.55;
+        ctx.globalAlpha = 0.42;
         ctx.globalCompositeOperation = 'screen';
         ctx.drawImage(wm, wmX, wmY, wmW, wmH);
         ctx.globalAlpha = 1;
