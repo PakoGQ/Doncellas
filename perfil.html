@@ -162,7 +162,8 @@
           <div style="border-radius:var(--r-md);overflow:hidden;background:#000;aspect-ratio:4/3;position:relative" id="mainMediaWrap">
             <img id="mainMediaImg" src="" alt="Media principal" style="width:100%;height:100%;object-fit:cover;display:block;cursor:zoom-in" onclick="openFullscreen(activeMediaIdx)" />
             <video id="mainMediaVideo" style="width:100%;height:100%;object-fit:cover;display:none" controls></video>
-            <div id="mainMediaPlayBtn" style="display:none;position:absolute;inset:0;align-items:center;justify-content:center;background:rgba(0,0,0,.4);cursor:pointer" onclick="playMainVideo()">
+            <div class="wm-overlay" style="z-index:3"></div>
+            <div id="mainMediaPlayBtn" style="display:none;position:absolute;inset:0;align-items:center;justify-content:center;background:rgba(0,0,0,.4);cursor:pointer;z-index:4" onclick="playMainVideo()">
               <div style="width:60px;height:60px;border-radius:50%;background:rgba(201,168,76,.9);display:flex;align-items:center;justify-content:center;font-size:1.4rem;color:#000">
                 <i class="fas fa-play" style="margin-left:4px"></i>
               </div>
@@ -429,9 +430,10 @@
   <button onclick="closeFullscreen()" style="position:absolute;top:1rem;right:1rem;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:1.2rem;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:2"><i class="fas fa-times"></i></button>
   <div style="position:absolute;top:1rem;left:50%;transform:translateX(-50%);font-size:.82rem;color:rgba(255,255,255,.5)" id="fsCounter">1 / 12</div>
   <button onclick="navigateFullscreen(-1)" style="position:absolute;left:1.5rem;top:50%;transform:translateY(-50%);width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:1.4rem;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:2;transition:.2s" onmouseover="this.style.background='rgba(201,168,76,.3)'" onmouseout="this.style.background='rgba(255,255,255,.12)'"><i class="fas fa-chevron-left"></i></button>
-  <div style="max-width:90vw;max-height:90vh;display:flex;align-items:center;justify-content:center" id="fsContent">
+  <div style="max-width:90vw;max-height:90vh;display:flex;align-items:center;justify-content:center;position:relative" id="fsContent">
     <img id="fsImg" style="max-width:90vw;max-height:90vh;object-fit:contain;border-radius:8px" src="" alt="" />
     <video id="fsVideo" style="max-width:90vw;max-height:90vh;display:none;border-radius:8px" controls></video>
+    <div class="wm-overlay" style="border-radius:8px;background-size:40%;z-index:1;pointer-events:none"></div>
   </div>
   <button onclick="navigateFullscreen(1)" style="position:absolute;right:1.5rem;top:50%;transform:translateY(-50%);width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:1.4rem;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:2;transition:.2s" onmouseover="this.style.background='rgba(201,168,76,.3)'" onmouseout="this.style.background='rgba(255,255,255,.12)'"><i class="fas fa-chevron-right"></i></button>
   <!-- Play button overlay for video in fullscreen -->

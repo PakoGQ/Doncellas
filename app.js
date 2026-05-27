@@ -1310,6 +1310,7 @@ function buildCatFeatureGrid() {
     g.insertAdjacentHTML('beforeend', `
       <a href="modelos.html?cat=${encodeURIComponent(c.name)}" class="cat-hero-card">
         <img src="${c.img}" alt="${c.name}" loading="lazy" />
+        <div class="wm-overlay" style="background-size:55%"></div>
         <div class="cat-hero-overlay"></div>
         <div class="cat-hero-info">
           <h3>${c.name}</h3>
@@ -1644,14 +1645,18 @@ function buildGalleryFull() {
       g.insertAdjacentHTML('beforeend', `
         <div style="position:relative;border-radius:8px;overflow:hidden;aspect-ratio:4/3;background:#000;cursor:pointer" onclick="closeModal('galleryModal');openFullscreen(${i})">
           <img src="${item.poster}" style="width:100%;height:100%;object-fit:cover" />
-          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.4)">
+          <div class="wm-overlay"></div>
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.4);z-index:9">
             <div style="width:50px;height:50px;border-radius:50%;background:rgba(201,168,76,.9);display:flex;align-items:center;justify-content:center;color:#000;font-size:1.1rem"><i class="fas fa-play" style="margin-left:3px"></i></div>
           </div>
-          <span class="pill pill-gold" style="position:absolute;top:.5rem;left:.5rem;font-size:.6rem"><i class="fas fa-video"></i> Video</span>
+          <span class="pill pill-gold" style="position:absolute;top:.5rem;left:.5rem;font-size:.6rem;z-index:9"><i class="fas fa-video"></i> Video</span>
         </div>`);
     } else {
       g.insertAdjacentHTML('beforeend', `
-        <img src="${item.src}" loading="lazy" style="border-radius:8px;object-fit:cover;width:100%;aspect-ratio:4/3;cursor:zoom-in" onclick="closeModal('galleryModal');openFullscreen(${i})" />`);
+        <div style="position:relative;border-radius:8px;overflow:hidden;aspect-ratio:4/3;cursor:zoom-in" onclick="closeModal('galleryModal');openFullscreen(${i})">
+          <img src="${item.src}" loading="lazy" style="width:100%;height:100%;object-fit:cover" />
+          <div class="wm-overlay"></div>
+        </div>`);
     }
   });
 }
@@ -1949,9 +1954,10 @@ function buildContentGrid(filterQ) {
     grid.insertAdjacentHTML('beforeend', `
       <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;transition:var(--transition)"
            onmouseenter="this.style.borderColor='var(--border-h)'" onmouseleave="this.style.borderColor='var(--border)'">
-        <div style="position:relative">
+        <div style="position:relative;overflow:hidden">
           <img src="${m.img}" alt="${m.name}" style="width:100%;aspect-ratio:4/3;object-fit:cover" />
-          ${m.hidden ? '<div style="position:absolute;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center"><span class="pill pill-busy" style="font-size:.7rem"><i class="fas fa-eye-slash"></i> Oculta</span></div>' : ''}
+          <div class="wm-overlay"></div>
+          ${m.hidden ? '<div style="position:absolute;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;z-index:9"><span class="pill pill-busy" style="font-size:.7rem"><i class="fas fa-eye-slash"></i> Oculta</span></div>' : ''}
         </div>
         <div style="padding:.85rem">
           <div style="font-size:.88rem;font-weight:600;margin-bottom:.25rem">${m.name}</div>
@@ -2399,8 +2405,9 @@ function buildCurrentGallery() {
     g.insertAdjacentHTML('beforeend',`
       <div class="upload-preview-item" style="aspect-ratio:1">
         <img src="${item.thumb}" alt="Media ${i+1}" />
-        ${item.type==='video'?`<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.4)"><i class="fas fa-play" style="color:#fff;font-size:.9rem"></i></div>`:''}
-        <button class="upload-preview-remove" onclick="this.closest('.upload-preview-item').remove();showToast('Eliminado','info')"><i class="fas fa-times"></i></button>
+        <div class="wm-overlay"></div>
+        ${item.type==='video'?`<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.4);z-index:9"><i class="fas fa-play" style="color:#fff;font-size:.9rem"></i></div>`:''}
+        <button class="upload-preview-remove" style="z-index:10" onclick="this.closest('.upload-preview-item').remove();showToast('Eliminado','info')"><i class="fas fa-times"></i></button>
       </div>`);
   });
 }
@@ -2606,9 +2613,10 @@ window.openQuickView = function(id) {
   if (nameEl) nameEl.textContent = m.name;
   content.innerHTML = `
     <div class="qv-grid">
-      <div>
+      <div style="position:relative;border-radius:var(--r-lg);overflow:hidden;border:1px solid var(--border)">
         <img src="${m.img}" alt="${m.name}"
-             style="width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:var(--r-lg);border:1px solid var(--border)" />
+             style="width:100%;aspect-ratio:3/4;object-fit:cover;display:block" />
+        <div class="wm-overlay"></div>
       </div>
       <div style="display:flex;flex-direction:column;gap:.75rem">
         <div>
