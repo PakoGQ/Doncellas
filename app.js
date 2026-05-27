@@ -2196,8 +2196,9 @@ function renderModelContent(m) {
   const photosHTML = m.photos.map((src, i) => `
     <div style="position:relative;border-radius:var(--r-md);overflow:hidden;background:var(--surface)">
       <img src="${src}" alt="foto ${i+1}" style="width:100%;aspect-ratio:1;object-fit:cover" />
+      <div class="wm-overlay"></div>
       <button onclick="removeModelPhoto(${m.id},${i})"
-              style="position:absolute;top:.4rem;right:.4rem;background:rgba(224,80,80,.9);color:#fff;border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.75rem">
+              style="position:absolute;top:.4rem;right:.4rem;background:rgba(224,80,80,.9);color:#fff;border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.75rem;z-index:10">
         <i class="fas fa-times"></i>
       </button>
     </div>`).join('');
@@ -2516,7 +2517,7 @@ async function applyWatermark(dataURL) {
         const wmY    = Math.round((canvas.height - wmH) / 2);
 
         // 3. Screen blend: el fondo negro desaparece, queda solo el dorado
-        ctx.globalAlpha = 0.42;
+        ctx.globalAlpha = 0.65;
         ctx.globalCompositeOperation = 'screen';
         ctx.drawImage(wm, wmX, wmY, wmW, wmH);
         ctx.globalAlpha = 1;

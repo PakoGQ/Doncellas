@@ -5909,11 +5909,26 @@ details.faq-item[open] .faq-a {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   MARCA DE AGUA — Doncellas logo sobre todas las fotos
+   MARCA DE AGUA — Doncellas logo sobre TODAS las fotos y videos
    mix-blend-mode: screen → fondo negro desaparece, queda dorado
    ═══════════════════════════════════════════════════════════ */
 
-/* Mixin reutilizable — marca centrada grande */
+/* ── Clase reutilizable para overlay watermark ── */
+.wm-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('watermark.png');
+  background-size: 65%;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.62;
+  mix-blend-mode: screen;
+  pointer-events: none;
+  z-index: 8;
+}
+
 /* Cards del grid principal */
 .model-card-img-wrap::after {
   content: '';
@@ -5925,13 +5940,13 @@ details.faq-item[open] .faq-a {
   background-size: 65%;
   background-repeat: no-repeat;
   background-position: center;
-  opacity: 0.38;
+  opacity: 0.62;
   mix-blend-mode: screen;
   pointer-events: none;
   z-index: 6;
 }
 
-/* Hero mosaic strip */
+/* Hero mosaic strip (slide de marca) */
 .hbm-img-wrap::after {
   content: '';
   position: absolute;
@@ -5942,13 +5957,13 @@ details.faq-item[open] .faq-a {
   background-size: 70%;
   background-repeat: no-repeat;
   background-position: center;
-  opacity: 0.36;
+  opacity: 0.60;
   mix-blend-mode: screen;
   pointer-events: none;
   z-index: 6;
 }
 
-/* Foto principal en perfil.html */
+/* Foto de perfil en perfil.html */
 .profile-carousel::after {
   content: '';
   position: absolute;
@@ -5959,13 +5974,47 @@ details.faq-item[open] .faq-a {
   background-size: 55%;
   background-repeat: no-repeat;
   background-position: center;
-  opacity: 0.38;
+  opacity: 0.62;
   mix-blend-mode: screen;
   pointer-events: none;
   z-index: 5;
 }
 
-/* Videos — overlay CSS (no se puede incrustar en el archivo via canvas) */
+/* Hero slides de modelos — tarjeta de foto (desktop) */
+.hero-promo-photo-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('watermark.png');
+  background-size: 65%;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.62;
+  mix-blend-mode: screen;
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* Hero slides de modelos — fondo completo (móvil y desktop) */
+.hero-slide-profile::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('watermark.png');
+  background-size: 55%;
+  background-repeat: no-repeat;
+  background-position: center 45%;
+  opacity: 0.60;
+  mix-blend-mode: screen;
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* Videos — overlay CSS (videos no pasan por canvas) */
 .wm-video-overlay {
   position: absolute;
   inset: 0;
@@ -5975,7 +6024,7 @@ details.faq-item[open] .faq-a {
   background-size: 65%;
   background-repeat: no-repeat;
   background-position: center;
-  opacity: 0.38;
+  opacity: 0.62;
   mix-blend-mode: screen;
   pointer-events: none;
   z-index: 5;
@@ -5985,7 +6034,4 @@ details.faq-item[open] .faq-a {
 .upload-preview-item {
   position: relative;
 }
-.upload-preview-item img::after,
-.upload-preview-item video + div + .wm-video-overlay {
-  /* watermark ya incrustado en imagen via canvas — sin duplicar */
-}
+/* Las imágenes subidas ya tienen watermark incrustado via canvas — sin duplicar */
