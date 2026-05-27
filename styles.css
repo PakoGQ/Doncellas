@@ -5911,8 +5911,8 @@ details.faq-item[open] .faq-a {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   MARCA DE AGUA — Doncellas logo sobre TODAS las fotos y videos
-   mix-blend-mode: screen → fondo negro desaparece, queda dorado
+   MARCA DE AGUA — Doncellas logo PNG transparente sobre todas las fotos
+   El PNG ya tiene fondo transparente — sin mix-blend-mode
    ═══════════════════════════════════════════════════════════ */
 
 /* ── Clase reutilizable para overlay watermark ── */
@@ -5925,8 +5925,7 @@ details.faq-item[open] .faq-a {
   background-size: 65%;
   background-repeat: no-repeat;
   background-position: center;
-  opacity: 0.62;
-  mix-blend-mode: screen;
+  opacity: 0.55;
   pointer-events: none;
   z-index: 8;
 }
@@ -5942,8 +5941,7 @@ details.faq-item[open] .faq-a {
   background-size: 65%;
   background-repeat: no-repeat;
   background-position: center;
-  opacity: 0.62;
-  mix-blend-mode: screen;
+  opacity: 0.55;
   pointer-events: none;
   z-index: 6;
 }
@@ -5959,8 +5957,7 @@ details.faq-item[open] .faq-a {
   background-size: 70%;
   background-repeat: no-repeat;
   background-position: center;
-  opacity: 0.60;
-  mix-blend-mode: screen;
+  opacity: 0.52;
   pointer-events: none;
   z-index: 6;
 }
@@ -5976,8 +5973,7 @@ details.faq-item[open] .faq-a {
   background-size: 55%;
   background-repeat: no-repeat;
   background-position: center;
-  opacity: 0.62;
-  mix-blend-mode: screen;
+  opacity: 0.55;
   pointer-events: none;
   z-index: 5;
 }
@@ -5993,8 +5989,7 @@ details.faq-item[open] .faq-a {
   background-size: 65%;
   background-repeat: no-repeat;
   background-position: center;
-  opacity: 0.82;
-  mix-blend-mode: screen;
+  opacity: 0.72;
   pointer-events: none;
   z-index: 3;
 }
@@ -6010,8 +6005,7 @@ details.faq-item[open] .faq-a {
   background-size: 55%;
   background-repeat: no-repeat;
   background-position: center 45%;
-  opacity: 0.82;
-  mix-blend-mode: screen;
+  opacity: 0.72;
   pointer-events: none;
   z-index: 3;
 }
@@ -6026,8 +6020,7 @@ details.faq-item[open] .faq-a {
   background-size: 65%;
   background-repeat: no-repeat;
   background-position: center;
-  opacity: 0.62;
-  mix-blend-mode: screen;
+  opacity: 0.55;
   pointer-events: none;
   z-index: 5;
 }

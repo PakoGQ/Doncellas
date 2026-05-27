@@ -2516,12 +2516,11 @@ async function applyWatermark(dataURL) {
         const wmX    = Math.round((canvas.width  - wmW) / 2);
         const wmY    = Math.round((canvas.height - wmH) / 2);
 
-        // 3. Screen blend: el fondo negro desaparece, queda solo el dorado
-        ctx.globalAlpha = 0.65;
-        ctx.globalCompositeOperation = 'screen';
+        // 3. PNG con transparencia real — source-over directo
+        ctx.globalAlpha = 0.58;
+        ctx.globalCompositeOperation = 'source-over';
         ctx.drawImage(wm, wmX, wmY, wmW, wmH);
         ctx.globalAlpha = 1;
-        ctx.globalCompositeOperation = 'source-over';
       }
 
       resolve(canvas.toDataURL('image/jpeg', 0.92));
