@@ -777,6 +777,7 @@ p  { line-height: 1.7; color: var(--t2); }
   height: 70vh;
   min-height: 500px;
   overflow: hidden;
+  background: #050505;
 }
 .profile-carousel-track {
   display: flex;
@@ -786,7 +787,8 @@ p  { line-height: 1.7; color: var(--t2); }
 .profile-carousel-slide {
   min-width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center top;
 }
 .profile-carousel-overlay {
   position: absolute;
@@ -2850,6 +2852,7 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
   /* ── Profile page ── */
   .profile-hero { height: auto; }
   .profile-carousel { height: 360px; }
+  .profile-carousel-slide { object-fit: cover; object-position: center top; }
   .profile-info-bar {
     flex-direction: column;
     align-items: stretch;
