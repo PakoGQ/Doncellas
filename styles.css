@@ -6005,7 +6005,7 @@ details.faq-item[open] .faq-a {
   background-repeat: no-repeat;
   background-position: center;
   opacity: 0.34;
-  filter: blur(0.5px);
+  filter: blur(0.2px);
   pointer-events: none;
   z-index: 5;
 }
