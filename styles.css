@@ -5565,17 +5565,33 @@ details.faq-item[open] .faq-a {
 }
 .hero-tg-cta:hover .hero-tg-cta-arrow { transform: translateX(4px); }
 
-/* ── Mobile 225px — versión ultra-compacta ── */
+/* ── Mobile — todo el contenido visible, ultra-compacto ── */
 @media (max-width: 768px) {
-  /* Solo ícono + título + CTA. Todo lo demás sobra en 225px */
-  .hero-tg-content    { padding: 10px 20px; gap: .4rem; }
-  .hero-tg-top-row    { gap: .3rem; }
-  .hero-tg-icon-ring  { width: 40px; height: 40px; font-size: 1.3rem; }
-  .hero-tg-channel-tag { display: none; }
-  .hero-tg-title      { font-size: clamp(1.1rem, 5.5vw, 1.5rem); line-height: 1.15; }
-  .hero-tg-desc-box   { display: none; }
-  .hero-tg-pills      { display: none; }
-  .hero-tg-cta        { padding: .55rem 1.5rem; font-size: .82rem; }
+  .hero-tg-content    { padding: 8px 14px; gap: .28rem; }
+  .hero-tg-top-row    { gap: .2rem; }
+  /* Ícono oculto en móvil para ahorrar espacio vertical */
+  .hero-tg-icon-ring  { display: none; }
+  .hero-tg-channel-tag {
+    display: inline-flex;
+    font-size: .58rem;
+    padding: .18rem .6rem;
+    letter-spacing: .08em;
+  }
+  .hero-tg-title      { font-size: clamp(.95rem, 4.8vw, 1.25rem); line-height: 1.1; }
+  .hero-tg-desc-box   {
+    display: block !important;
+    padding: .28rem .75rem;
+    max-width: 100%;
+  }
+  .hero-tg-desc-box p { font-size: .68rem; line-height: 1.4; }
+  .hero-tg-pills      {
+    display: flex !important;
+    gap: .22rem;
+    max-width: 100%;
+  }
+  .hero-tg-pill       { font-size: .58rem; padding: .16rem .5rem; gap: .22rem; }
+  .hero-tg-pill i     { font-size: .62rem; }
+  .hero-tg-cta        { padding: .42rem 1.4rem; font-size: .78rem; gap: .4rem; }
   .hero-tg-f1         { font-size: 5rem; }
   .hero-tg-f3         { font-size: 6rem; }
 }
