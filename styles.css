@@ -2053,6 +2053,7 @@ canvas { width: 100% !important; }
   margin-bottom: -28px;
 }
 .hbm-img-wrap {
+  position: relative;
   border-radius: 16px;
   overflow: hidden;
   border: 2px solid rgba(201,168,76,.22);
@@ -4946,6 +4947,7 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
   }
   .hero-slide-brand .hero-brand-mosaic-col { display: contents !important; }
   .hero-slide-brand .hbm-img-wrap {
+    position: relative !important;
     flex: 1 1 0 !important;
     width: auto !important;
     height: 100px !important;
@@ -5991,13 +5993,13 @@ details.faq-item[open] .faq-a {
   background-size: 65%;
   background-repeat: no-repeat;
   background-position: center;
-  opacity: 0.62;
+  opacity: 0.82;
   mix-blend-mode: screen;
   pointer-events: none;
   z-index: 3;
 }
 
-/* Hero slides de modelos — fondo completo (móvil y desktop) */
+/* Hero slides de modelos — fondo completo (móvil: es la foto de fondo del slide) */
 .hero-slide-profile::after {
   content: '';
   position: absolute;
@@ -6008,7 +6010,7 @@ details.faq-item[open] .faq-a {
   background-size: 55%;
   background-repeat: no-repeat;
   background-position: center 45%;
-  opacity: 0.60;
+  opacity: 0.82;
   mix-blend-mode: screen;
   pointer-events: none;
   z-index: 3;
