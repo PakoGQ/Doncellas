@@ -794,26 +794,13 @@ p  { line-height: 1.7; color: var(--t2); }
   background: linear-gradient(to bottom, rgba(10,10,10,.2) 0%, rgba(10,10,10,.85) 100%);
 }
 .profile-carousel-ctrl {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 44px; height: 44px;
-  border-radius: 50%;
-  background: rgba(10,10,10,.7);
-  backdrop-filter: blur(8px);
-  border: 1px solid var(--border-h);
-  color: var(--gold);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.2rem;
-  transition: var(--transition);
-  z-index: 3;
+  display: none !important;
 }
 .profile-carousel-ctrl:hover { background: var(--gold-glow); }
 .profile-carousel-ctrl.prev { left: 1.5rem; }
 .profile-carousel-ctrl.next { right: 1.5rem; }
 .profile-carousel-counter {
+  display: none !important;
   position: absolute;
   bottom: 1.5rem;
   right: 1.5rem;
