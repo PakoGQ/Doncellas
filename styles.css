@@ -5764,20 +5764,25 @@ details.faq-item[open] .faq-a {
     animation:        none !important;
   }
 
-  /* Línea 1: DONCELLAS */
+  /* Línea 1: Doncellas — igual que la tagline */
   .nav-escorts-mobile::before {
-    content:          'DONCELLAS';
+    content:          'Doncellas';
     display:          block;
-    font-family:      var(--font-serif, 'Georgia', serif);
-    font-style:       normal;
-    font-weight:      700;
-    font-size:        10px;
-    letter-spacing:   2.5px;
+    font-family:      'Georgia', 'Times New Roman', serif;
+    font-style:       italic;
+    font-weight:      bold;
+    font-size:        clamp(11px, 3.4vw, 14px);
+    letter-spacing:   0.5px;
+    white-space:      nowrap;
     text-align:       center;
-    color:            #C9A84C;
-    -webkit-text-fill-color: #C9A84C;
-    background:       none;
-    animation:        none;
+    background:       linear-gradient(90deg, #8a6a20 0%, #C9A84C 30%, #f5e09a 50%, #C9A84C 70%, #8a6a20 100%);
+    background-size:  220% auto;
+    -webkit-background-clip: text;
+    background-clip:  text;
+    -webkit-text-fill-color: transparent;
+    color:            transparent;
+    animation:        nav-tagline-shimmer 4s linear infinite;
+    animation-delay:  0s;
   }
 
   /* Línea 2: La Elegancia del Placer — shimmer dorado */
@@ -5791,7 +5796,6 @@ details.faq-item[open] .faq-a {
     letter-spacing:   0.5px;
     white-space:      nowrap;
     text-align:       center;
-    /* Shimmer gradient */
     background:       linear-gradient(90deg, #8a6a20 0%, #C9A84C 30%, #f5e09a 50%, #C9A84C 70%, #8a6a20 100%);
     background-size:  220% auto;
     -webkit-background-clip: text;
