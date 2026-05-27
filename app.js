@@ -2240,16 +2240,21 @@ function renderModelContent(m) {
     </div>`;
 }
 
-function addModelPhotos(id, input) {
+async function addModelPhotos(id, input) {
   const m = MODELS.find(x => x.id === id);
   if (!m || !input.files.length) return;
   const files = Array.from(input.files).slice(0, 6 - m.photos.length);
-  files.forEach(file => {
-    const url = URL.createObjectURL(file);
-    m.photos.push(url);
-  });
+  showToast('Aplicando marca de agua...', 'info');
+  const watermarked = await Promise.all(files.map(file =>
+    new Promise(res => {
+      const reader = new FileReader();
+      reader.onload = async ev => res(await applyWatermark(ev.target.result));
+      reader.readAsDataURL(file);
+    })
+  ));
+  watermarked.forEach(url => m.photos.push(url));
   renderModelContent(m);
-  showToast(`${files.length} foto(s) agregada(s)`, 'success');
+  showToast(`${files.length} foto(s) con marca de agua agregadas`, 'success');
 }
 
 function removeModelPhoto(id, idx) {
@@ -2470,6 +2475,59 @@ function buildReferidosTable() {
   });
 }
 
+/* ── Marca de agua Doncellas ─────────────────────────────── */
+const WM_SRC = 'watermark.png';
+let _wmImg = null;
+
+function _loadWatermark() {
+  if (_wmImg) return Promise.resolve(_wmImg);
+  return new Promise(res => {
+    const img = new Image();
+    img.onload  = () => { _wmImg = img; res(img); };
+    img.onerror = () => res(null);
+    img.src = WM_SRC;
+  });
+}
+
+/**
+ * Aplica la marca de agua Doncellas a una imagen.
+ * @param {string} dataURL  – imagen original en base64
+ * @returns {Promise<string>} – imagen con watermark en base64
+ */
+async function applyWatermark(dataURL) {
+  const wm = await _loadWatermark();
+  return new Promise(resolve => {
+    const photo = new Image();
+    photo.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width  = photo.width;
+      canvas.height = photo.height;
+      const ctx = canvas.getContext('2d');
+
+      // 1. Dibujar foto original
+      ctx.drawImage(photo, 0, 0);
+
+      if (wm) {
+        // 2. Calcular tamaño y posición (esquina inferior derecha, 30% del ancho)
+        const wmW = Math.round(canvas.width  * 0.30);
+        const wmH = Math.round(wmW * (wm.height / wm.width));
+        const wmX = canvas.width  - wmW - Math.round(canvas.width  * 0.03);
+        const wmY = canvas.height - wmH - Math.round(canvas.height * 0.03);
+
+        // 3. Screen blend: el fondo negro desaparece, queda solo el dorado
+        ctx.globalAlpha = 0.55;
+        ctx.globalCompositeOperation = 'screen';
+        ctx.drawImage(wm, wmX, wmY, wmW, wmH);
+        ctx.globalAlpha = 1;
+        ctx.globalCompositeOperation = 'source-over';
+      }
+
+      resolve(canvas.toDataURL('image/jpeg', 0.92));
+    };
+    photo.src = dataURL;
+  });
+}
+
 /* File upload */
 function handleFileUpload(e) {
   const grid=document.getElementById('uploadPreviewGrid');
@@ -2477,20 +2535,24 @@ function handleFileUpload(e) {
   Array.from(e.target?.files||e.dataTransfer?.files||[]).forEach(file=>{
     if(!file.type.startsWith('image/')&&!file.type.startsWith('video/'))return;
     const reader=new FileReader();
-    reader.onload=ev=>{
+    reader.onload=async ev=>{
       const item=document.createElement('div');
       item.className='upload-preview-item';
       const isVid=file.type.startsWith('video/');
+
+      // Aplicar watermark a imágenes automáticamente
+      const src = isVid ? ev.target.result : await applyWatermark(ev.target.result);
+
       item.innerHTML=`
         ${isVid
-          ? `<video src="${ev.target.result}" style="width:100%;height:100%;object-fit:cover"></video><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.4)"><i class="fas fa-play" style="color:#fff"></i></div>`
-          : `<img src="${ev.target.result}" alt="${file.name}" />`}
+          ? `<video src="${src}" style="width:100%;height:100%;object-fit:cover"></video><div class="wm-video-overlay"></div><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center"><i class="fas fa-play" style="color:#fff;font-size:1.5rem"></i></div>`
+          : `<img src="${src}" alt="${file.name}" />`}
         <button class="upload-preview-remove" onclick="this.closest('.upload-preview-item').remove()"><i class="fas fa-times"></i></button>`;
       grid.appendChild(item);
     };
     reader.readAsDataURL(file);
   });
-  showToast(`${(e.target?.files||e.dataTransfer?.files||[]).length} archivo(s) cargado(s)`,'success');
+  showToast(`Aplicando marca de agua Doncellas...`,'success');
 }
 
 document.addEventListener('DOMContentLoaded',()=>{
