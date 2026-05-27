@@ -5745,27 +5745,59 @@ details.faq-item[open] .faq-a {
   /* Smaller logo — scoped to .nav so footer logo is unaffected */
   .nav .nav-logo img { height: 52px !important; }
 
-  /* ── "La Elegancia del Placer" — shimmer igual que escritorio ── */
+  /* ── Centro del nav: columna DONCELLAS + tagline ── */
   .nav-escorts-mobile {
-    display:          block !important;
+    display:          flex !important;
+    flex-direction:   column !important;
+    align-items:      center !important;
+    justify-content:  center !important;
+    gap:              1px !important;
+    flex:             1;
+    padding:          0 4px;
+    margin:           0;
+    line-height:      1;
+    font-size:        0 !important;        /* oculta texto real del span */
+    /* Reset shimmer del span */
+    background:       none !important;
+    -webkit-text-fill-color: initial !important;
+    color:            initial !important;
+    animation:        none !important;
+  }
+
+  /* Línea 1: DONCELLAS */
+  .nav-escorts-mobile::before {
+    content:          'DONCELLAS';
+    display:          block;
+    font-family:      var(--font-serif, 'Georgia', serif);
+    font-style:       normal;
+    font-weight:      700;
+    font-size:        10px;
+    letter-spacing:   2.5px;
+    text-align:       center;
+    color:            #C9A84C;
+    -webkit-text-fill-color: #C9A84C;
+    background:       none;
+    animation:        none;
+  }
+
+  /* Línea 2: La Elegancia del Placer — shimmer dorado */
+  .nav-escorts-mobile::after {
+    content:          'La Elegancia del Placer';
+    display:          block;
     font-family:      'Georgia', 'Times New Roman', serif;
     font-style:       italic;
     font-weight:      bold;
-    font-size:        clamp(13px, 4.2vw, 18px);
-    letter-spacing:   1px;
+    font-size:        clamp(11px, 3.4vw, 14px);
+    letter-spacing:   0.5px;
     white-space:      nowrap;
-    line-height:      1;
-    margin:           0;
-    padding:          0 6px;
-    flex:             1;
     text-align:       center;
     /* Shimmer gradient */
-    background: linear-gradient(90deg, #8a6a20 0%, #C9A84C 30%, #f5e09a 50%, #C9A84C 70%, #8a6a20 100%);
-    background-size:              220% auto;
-    -webkit-background-clip:      text;
-    background-clip:              text;
-    -webkit-text-fill-color:      transparent;
-    color:                        transparent;
+    background:       linear-gradient(90deg, #8a6a20 0%, #C9A84C 30%, #f5e09a 50%, #C9A84C 70%, #8a6a20 100%);
+    background-size:  220% auto;
+    -webkit-background-clip: text;
+    background-clip:  text;
+    -webkit-text-fill-color: transparent;
+    color:            transparent;
     animation:        nav-tagline-shimmer 4s linear infinite;
     animation-delay:  -2s;
   }
