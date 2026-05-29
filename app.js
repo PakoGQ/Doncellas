@@ -175,6 +175,76 @@ function generateModels() {
 
 let MODELS = generateModels();
 
+/* ─── Supabase: mapeo de escort → formato MODELS ───────────── */
+function mapEscortToModel(e) {
+  const fotos     = (e.fotos || []).slice().sort((a, b) => a.orden - b.orden);
+  const photoUrls = fotos.filter(f => f.tipo === 'foto').map(f => f.url);
+  const fallback  = (n) => photoUrl(PHOTO_POOL[(e.id + n) % PHOTO_POOL.length]);
+
+  while (photoUrls.length < 3) photoUrls.push(fallback(photoUrls.length + 1));
+
+  const serviciosMap = {};
+  (e.servicios || []).forEach(s => {
+    serviciosMap[s.nombre] = { si: s.incluido, extra: s.tiene_costo_extra };
+  });
+
+  return {
+    id:          e.id,
+    slug:        e.slug,
+    name:        e.nombre,
+    age:         e.edad         || 25,
+    height:      e.altura       || 165,
+    zone:        e.zona         || 'Guadalajara',
+    cat:         e.categoria    || 'VIP',
+    tags:        e.tags         || [e.categoria || 'VIP'],
+    rate:        e.precio_hora  || 2000,
+    rating:      parseFloat(e.calificacion) || 5.0,
+    reviews:     e.num_resenas  || 0,
+    citas:       e.num_citas    || 0,
+    available:   !!e.disponible,
+    featured:    !!e.es_destacada,
+    isNew:       !!e.es_nueva,
+    img:         photoUrls[0],
+    photos:      photoUrls,
+    hasVideo:    fotos.some(f => f.tipo === 'video'),
+    hairColor:   e.cabello      || 'Castaño',
+    eyeColor:    e.ojos         || 'Café',
+    skinColor:   e.piel         || 'Morena',
+    waist:       e.cintura      || 65,
+    hips:        e.cadera       || 90,
+    bust:        e.busto        || 88,
+    nationality: e.nacionalidad || 'Mexicana',
+    services:    Object.keys(serviciosMap).length ? serviciosMap : null,
+    hidden:      false,
+    promo:       null,
+    whatsapp:    e.whatsapp,
+    descripcion: e.descripcion,
+    idiomas:     e.idiomas      || ['Español'],
+    plan:        e.plan         || 'Elite',
+    verificada:  !!e.verificada,
+    top10:       !!e.top10,
+    ciudad:      e.ciudad       || 'Guadalajara',
+  };
+}
+
+async function loadModelsFromSupabase() {
+  if (!window.sbClient) return null;
+  try {
+    const { data, error } = await window.sbClient
+      .from('escorts')
+      .select('*, fotos(url,tipo,orden), servicios(nombre,incluido,tiene_costo_extra)')
+      .eq('activa', true)
+      .order('es_destacada', { ascending: false })
+      .order('calificacion',  { ascending: false });
+
+    if (error || !data?.length) return null;
+    return data.map(mapEscortToModel);
+  } catch (err) {
+    console.warn('Supabase fetch falló, usando datos demo:', err.message);
+    return null;
+  }
+}
+
 /* ─── Citas activas: si una modelo está en cita ahora, queda
    automáticamente "No Disponible" hasta que termine. ─────── */
 function _seedDemoActiveCitas() {
@@ -2682,13 +2752,20 @@ document.addEventListener('keydown', e => {
 });
 
 /* ─── Auto-init ─────────────────────────────────────────── */
-document.addEventListener('DOMContentLoaded',()=>{
-  const path=window.location.pathname.split('/').pop();
-  if(path==='index.html'||path===''||path==='/') initIndex();
-  else if(path==='modelos.html')    initModelos();
-  else if(path==='categorias.html') initCategorias();
-  else if(path==='perfil.html')     initPerfil();
-  else if(path==='membresias.html') initMembresias();
-  else if(path==='panel-admin.html')  initAdmin();
-  else if(path==='panel-modelo.html') initPanelModelo();
+document.addEventListener('DOMContentLoaded', async () => {
+  /* Intentar cargar escorts reales desde Supabase */
+  const sbModels = await loadModelsFromSupabase();
+  if (sbModels && sbModels.length > 0) {
+    MODELS = sbModels;
+    syncModelAvailabilityWithCitas();
+  }
+
+  const path = window.location.pathname.split('/').pop();
+  if (path==='index.html'||path===''||path==='/') initIndex();
+  else if (path==='modelos.html')    initModelos();
+  else if (path==='categorias.html') initCategorias();
+  else if (path==='perfil.html')     initPerfil();
+  else if (path==='membresias.html') initMembresias();
+  else if (path==='panel-admin.html')  initAdmin();
+  else if (path==='panel-modelo.html') initPanelModelo();
 });
