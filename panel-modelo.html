@@ -66,8 +66,6 @@
     .week-slot.on { background: rgba(76,175,130,.12); border-color: rgba(76,175,130,.35); color: var(--green); }
     .week-slot.booked { background: rgba(201,168,76,.08); border-color: var(--border-h); color: var(--gold); cursor: default; }
     .week-slot:not(.booked):hover { border-color: var(--gold); }
-    .referral-stat { display:flex; justify-content:space-between; font-size:.85rem; padding:.5rem 0; border-bottom:1px solid var(--border); }
-    .referral-stat:last-child { border-bottom: none; }
   </style>
 </head>
 <body class="panel-page panel-modelo">
@@ -122,9 +120,6 @@
     </div>
     <div class="admin-nav-item" onclick="showModeloPage('disponibilidad')">
       <i class="fas fa-clock fa-fw"></i> Disponibilidad
-    </div>
-    <div class="admin-nav-item" onclick="showModeloPage('referidos')">
-      <i class="fas fa-users fa-fw"></i> Referidos
     </div>
     <div class="admin-nav-item" onclick="showModeloPage('perfil-edit')">
       <i class="fas fa-user-edit fa-fw"></i> Editar Perfil
@@ -357,56 +352,6 @@
     </div>
 
     <!-- ── Referidos ── -->
-    <div class="admin-page" id="page-referidos">
-      <h2 class="admin-page-title">Programa de Referidos</h2>
-      <p class="admin-page-sub">Invita a otras Doncellas y gana comisiones</p>
-
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-bottom:2rem">
-        <div class="stat-mini">
-          <div class="stat-mini-n">7</div>
-          <div class="stat-mini-l">Referidos activos</div>
-        </div>
-        <div class="stat-mini">
-          <div class="stat-mini-n">$3,500</div>
-          <div class="stat-mini-l">Comisiones ganadas</div>
-        </div>
-        <div class="stat-mini">
-          <div class="stat-mini-n">$500</div>
-          <div class="stat-mini-l">Por cobrar</div>
-        </div>
-        <div class="stat-mini">
-          <div class="stat-mini-n">10%</div>
-          <div class="stat-mini-l">Tu comisión</div>
-        </div>
-      </div>
-
-      <div class="chart-card" style="margin-bottom:1.5rem">
-        <h4 style="margin-bottom:.75rem">Tu enlace de referido</h4>
-        <div class="referral-link-box">
-          <i class="fas fa-link" style="color:var(--gold)"></i>
-          <input type="text" value="https://doncellas.mx/ref/valentina-r" readonly id="refLink" />
-          <button class="btn btn-outline btn-sm" onclick="copyRefLink()">
-            <i class="fas fa-copy"></i> Copiar
-          </button>
-          <button class="btn btn-wa btn-sm" onclick="shareRefWhatsApp()">
-            <i class="fab fa-whatsapp"></i>
-          </button>
-        </div>
-        <p class="text-xs text-muted mt-1">Gana el 10% del plan mensual de cada Doncella que se registre con tu enlace durante 12 meses.</p>
-      </div>
-
-      <div class="chart-card">
-        <h4 style="margin-bottom:1rem">Mis referidos</h4>
-        <div class="admin-table-wrap">
-          <table class="admin-table">
-            <thead><tr>
-              <th>Doncella</th><th>Registro</th><th>Plan</th><th>Estado</th><th>Comisión</th>
-            </tr></thead>
-            <tbody id="referidosTbody"><!-- Built by JS --></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
 
     <!-- ── Editar Perfil ── -->
     <div class="admin-page" id="page-perfil-edit">
@@ -818,15 +763,6 @@ function toggleAvailability(el) {
   showToast(el.checked ? 'Ahora apareces como Disponible' : 'Ahora apareces como No disponible', el.checked ? 'success' : 'info');
 }
 
-function copyRefLink() {
-  navigator.clipboard.writeText(document.getElementById('refLink').value);
-  showToast('Enlace copiado', 'success');
-}
-
-function shareRefWhatsApp() {
-  const link = document.getElementById('refLink').value;
-  window.open(`https://wa.me/?text=Únete a Doncellas con mi enlace: ${encodeURIComponent(link)}`, '_blank');
-}
 
 function saveAvailability() {
   showToast('Disponibilidad guardada correctamente', 'success');

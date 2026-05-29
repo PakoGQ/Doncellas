@@ -1886,7 +1886,7 @@ function buildAdminCharts() {
   const c1 = document.getElementById('revenueChart');
   if (c1) new Chart(c1,{ type:'line', data:{ labels:['L','M','X','J','V','S','D'], datasets:[{ data:[38000,42000,35000,55000,48000,62000,58000], borderColor:'#C9A84C', backgroundColor:'rgba(201,168,76,.08)', fill:true, tension:.4, pointBackgroundColor:'#C9A84C', pointRadius:4 }] }, options:chartOptions() });
   const c2 = document.getElementById('distChart');
-  if (c2) new Chart(c2,{ type:'doughnut', data:{ labels:['Citas','Membresías','Eventos','Referidos'], datasets:[{ data:[45,30,15,10], backgroundColor:['#C9A84C','#4CAF82','#5078C9','#E05050'], borderWidth:0 }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'bottom', labels:{ color:'#A89070', font:{size:11} } } }, cutout:'65%' } });
+  if (c2) new Chart(c2,{ type:'doughnut', data:{ labels:['Citas','Membresías','Eventos'], datasets:[{ data:[50,35,15], backgroundColor:['#C9A84C','#4CAF82','#5078C9'], borderWidth:0 }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'bottom', labels:{ color:'#A89070', font:{size:11} } } }, cutout:'65%' } });
   const c3 = document.getElementById('citasChart');
   if (c3) new Chart(c3,{ type:'bar', data:{ labels:['L','M','X','J','V','S','D'], datasets:[{ data:[28,35,31,44,52,65,48], backgroundColor:'rgba(201,168,76,.4)', borderColor:'#C9A84C', borderWidth:1, borderRadius:4 }] }, options:chartOptions() });
   const c4 = document.getElementById('membChart');
@@ -2387,7 +2387,6 @@ function initPanelModelo() {
   buildCitasProximas();
   buildCitasHistorial();
   buildAvailWeekGrid();
-  buildReferidosTable();
 }
 
 function showModeloPage(page) {
@@ -2403,7 +2402,7 @@ function buildModeloCharts() {
   const c1=document.getElementById('modeloRevenueChart');
   if(c1) new Chart(c1,{type:'bar',data:{labels:['L','M','X','J','V','S','D'],datasets:[{data:[2500,0,3200,2500,6500,8000,2500],backgroundColor:'rgba(201,168,76,.5)',borderColor:'#C9A84C',borderWidth:1,borderRadius:4}]},options:chartOptions()});
   const c2=document.getElementById('contactSourceChart');
-  if(c2) new Chart(c2,{type:'doughnut',data:{labels:['WhatsApp','Búsqueda','Referido','Directo'],datasets:[{data:[55,25,12,8],backgroundColor:['#25D366','#C9A84C','#5078C9','#9050C0'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#A89070',font:{size:10}}}},cutout:'60%'}});
+  if(c2) new Chart(c2,{type:'doughnut',data:{labels:['WhatsApp','Búsqueda','Directo'],datasets:[{data:[58,28,14],backgroundColor:['#25D366','#C9A84C','#5078C9'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#A89070',font:{size:10}}}},cutout:'60%'}});
   const c3=document.getElementById('visitasChart');
   if(c3) new Chart(c3,{type:'line',data:{labels:['L','M','X','J','V','S','D'],datasets:[{data:[120,145,132,178,195,220,180],borderColor:'#5078C9',backgroundColor:'rgba(80,120,201,.08)',fill:true,tension:.4,pointBackgroundColor:'#5078C9',pointRadius:3}]},options:chartOptions()});
 }
@@ -2481,17 +2480,6 @@ function buildAvailWeekGrid() {
   g.innerHTML=html;
 }
 
-function buildReferidosTable() {
-  const tbody=document.getElementById('referidosTbody');
-  if(!tbody)return;
-  [['Sofía L.','15 Mar 2026','Gold','Activa','$2,000'],
-   ['Mariana F.','01 Feb 2026','Silver','Activa','$1,500'],
-   ['Daniela C.','20 Ene 2026','Elite','Activa','$2,500'],
-   ['Luisa G.','05 Dic 2025','Gold','Activa','$2,000'],
-  ].forEach(r=>{
-    tbody.insertAdjacentHTML('beforeend',`<tr><td>${r[0]}</td><td style="color:var(--t3)">${r[1]}</td><td><span class="pill ${r[2]==='Elite'?'pill-new':r[2]==='Gold'?'pill-gold':'pill-available'}" style="font-size:.65rem">${r[2]}</span></td><td><span class="pill ${r[3]==='Activa'?'pill-available':'pill-busy'}" style="font-size:.65rem">${r[3]}</span></td><td style="color:var(--gold);font-family:var(--font-serif)">${r[4]}</td></tr>`);
-  });
-}
 
 /* ── Marca de agua Doncellas ─────────────────────────────── */
 const WM_SRC = 'watermark.png';

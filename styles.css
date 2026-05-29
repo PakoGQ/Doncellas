@@ -1256,24 +1256,6 @@ canvas { width: 100% !important; }
 .avail-slot.on { background: rgba(76,175,130,.15); border-color: rgba(76,175,130,.4); }
 .avail-slot:hover { border-color: var(--gold); }
 
-/* Referral */
-.referral-link-box {
-  display: flex;
-  align-items: center;
-  gap: .75rem;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--r-md);
-  padding: .75rem 1rem;
-}
-.referral-link-box input {
-  flex: 1;
-  background: none;
-  border: none;
-  color: var(--gold);
-  font-size: .85rem;
-  outline: none;
-}
 
 /* ─── Membership ─────────────────────────────────────────── */
 .mem-hero {
@@ -4506,23 +4488,6 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
     min-height: 34px;
   }
 
-  /* ── Referidos: cards column, link box stacked ──────────── */
-  body.panel-page .referral-link-box {
-    flex-direction: column;
-    align-items: stretch;
-    gap: .5rem;
-    padding: .75rem;
-  }
-  body.panel-page .referral-link-box input {
-    width: 100%;
-    font-size: 14px;
-    min-height: 40px;
-  }
-  body.panel-page .referral-link-box .btn {
-    width: 100%;
-    min-height: 40px;
-    justify-content: center;
-  }
 
   /* ── Forms: single column, 16px inputs, 44px height ─────── */
   body.panel-page .form-row {
@@ -4791,9 +4756,6 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
   body.panel-modelo #page-contenido div[style*="gap:.5rem"] > .btn.btn-outline.btn-sm {
     min-height: 40px;
   }
-
-  /* ── Referidos (admin) table compact ────────────────────── */
-  body.panel-admin #page-referidos .admin-table { min-width: 420px; }
 
   /* ── Pagination row buttons touch-friendly ──────────────── */
   body.panel-page #page-modelos .tbl-btn {
