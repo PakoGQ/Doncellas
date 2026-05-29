@@ -12,20 +12,47 @@ const USERS = [
   { email:'isabella@doncellas.mx',  pass:'modelo123',  role:'modelo', name:'Isabella M.',   redirect:'panel-modelo.html' },
 ];
 
-function doLogin() {
+async function doLogin() {
   const email = document.getElementById('loginEmail')?.value.trim().toLowerCase();
   const pass  = document.getElementById('loginPass')?.value;
   const errEl = document.getElementById('loginError');
   if (!email || !pass) return;
-  const user = USERS.find(u => u.email === email && u.pass === pass);
-  if (!user) {
-    if (errEl) errEl.style.display = 'block';
-    document.getElementById('loginPass').value = '';
+
+  /* 1. Verificar admin y demos hardcodeados */
+  const hardUser = USERS.find(u => u.email === email && u.pass === pass);
+  if (hardUser) {
+    if (errEl) errEl.style.display = 'none';
+    sessionStorage.setItem('userRole',   hardUser.role);
+    sessionStorage.setItem('userNombre', hardUser.name);
+    showToast(`Bienvenida, ${hardUser.name}`, 'success');
+    setTimeout(() => { window.location.href = hardUser.redirect; }, 800);
     return;
   }
-  if (errEl) errEl.style.display = 'none';
-  showToast(`Bienvenida, ${user.name}`, 'success');
-  setTimeout(() => { window.location.href = user.redirect; }, 800);
+
+  /* 2. Verificar escorts reales en Supabase */
+  if (window.sbClient) {
+    const { data } = await window.sbClient
+      .from('usuarios')
+      .select('*, escorts(id, nombre)')
+      .eq('email', email)
+      .eq('password', pass)
+      .eq('activo', true)
+      .maybeSingle();
+
+    if (data) {
+      if (errEl) errEl.style.display = 'none';
+      sessionStorage.setItem('userRole',    'modelo');
+      sessionStorage.setItem('userNombre',  data.escorts?.nombre || 'Doncella');
+      sessionStorage.setItem('escortId',    data.escort_id);
+      showToast(`Bienvenida, ${data.escorts?.nombre || 'Doncella'} 🌹`, 'success');
+      setTimeout(() => { window.location.href = 'panel-modelo.html'; }, 800);
+      return;
+    }
+  }
+
+  /* 3. Credenciales incorrectas */
+  if (errEl) errEl.style.display = 'block';
+  if (document.getElementById('loginPass')) document.getElementById('loginPass').value = '';
 }
 
 function fillLogin(email, pass) {
@@ -1863,58 +1890,106 @@ window.generarPassword = function() {
   if (passEl) passEl.value = pass;
 };
 
-window.saveNewModelo = function() {
+/* Genera slug a partir del nombre artístico */
+function generarSlug(nombre) {
+  return nombre.toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '') +
+    '-' + Date.now().toString(36);
+}
+
+window.saveNewModelo = async function() {
   const nombre = document.getElementById('newNombre')?.value.trim();
-  const email  = document.getElementById('newEmail')?.value.trim();
+  const email  = document.getElementById('newEmail')?.value.trim().toLowerCase();
   const pass   = document.getElementById('newPass')?.value.trim();
   const zona   = document.getElementById('newZona')?.value;
   const cat    = document.getElementById('newCat')?.value;
   const plan   = document.getElementById('newPlan')?.value;
   const tarifa = parseInt(document.getElementById('newTarifa')?.value) || 2500;
+  const edad   = parseInt(document.getElementById('newEdad')?.value) || 25;
+  const tel    = (document.getElementById('newTel')?.value || '').replace(/\D/g,'');
+  const desc   = document.getElementById('newDesc')?.value.trim() || '';
 
-  if (!nombre) { showToast('El nombre es obligatorio', 'error'); return; }
+  if (!nombre) { showToast('El nombre artístico es obligatorio', 'error'); return; }
   if (!email)  { showToast('El correo es obligatorio', 'error'); return; }
   if (!pass)   { showToast('Genera o escribe una contraseña', 'error'); return; }
 
-  /* add to MODELS array */
-  const newId = Math.max(...MODELS.map(m => m.id)) + 1;
-  const photoId = PHOTO_POOL[newId % PHOTO_POOL.length];
-  MODELS.unshift({
-    id: newId, name: nombre, zone: zona, cat: cat, rate: tarifa,
-    rating: 4.5, available: true, featured: false, isNew: true, hasVideo: false,
-    img: photoUrl(photoId, 400, 530), photos: [photoUrl(photoId, 400, 530)],
-    tags: [cat], plan: plan, email: email, password: pass, promo: null,
-    skinColor: 'Morena clara', hairColor: 'Castaño', eyeColor: 'Café',
-    bust: 86, waist: 62, hips: 90,
-    services: Object.fromEntries(ALL_SERVICES.map(s => [s, { si: false, extra: false }])),
-    hidden: false,
-  });
+  const btn = document.querySelector('#addModeloModal .btn-gold');
+  if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Guardando…'; }
 
-  /* show credentials */
+  /* ── Guardar en Supabase ── */
+  if (window.sbClient) {
+    const slug = generarSlug(nombre);
+
+    const { data: escortData, error: escortErr } = await window.sbClient
+      .from('escorts')
+      .insert({
+        slug, nombre, edad, zona, categoria: cat, plan,
+        precio_hora: tarifa, whatsapp: tel, descripcion: desc,
+        disponible: false, activa: true, es_nueva: true,
+        tags: [cat],
+      })
+      .select()
+      .single();
+
+    if (escortErr) {
+      showToast('Error al crear perfil: ' + escortErr.message, 'error');
+      if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-user-plus"></i> Crear cuenta y guardar'; }
+      return;
+    }
+
+    const { error: userErr } = await window.sbClient
+      .from('usuarios')
+      .insert({ escort_id: escortData.id, email, password: pass });
+
+    if (userErr) {
+      showToast('Perfil creado pero error con credenciales: ' + userErr.message, 'error');
+      if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-user-plus"></i> Crear cuenta y guardar'; }
+      return;
+    }
+
+    /* Agregar a MODELS para UI inmediata */
+    MODELS.unshift(mapEscortToModel({ ...escortData, fotos: [], servicios: [] }));
+
+  } else {
+    /* Fallback sin Supabase — solo memoria */
+    const newId  = Math.max(...MODELS.map(m => m.id)) + 1;
+    const pId    = PHOTO_POOL[newId % PHOTO_POOL.length];
+    MODELS.unshift({
+      id: newId, name: nombre, age: edad, zone: zona, cat, rate: tarifa,
+      rating: 5.0, available: false, featured: false, isNew: true, hasVideo: false,
+      img: photoUrl(pId), photos: [photoUrl(pId)], tags: [cat], plan, promo: null,
+      skinColor: 'Morena clara', hairColor: 'Castaño', eyeColor: 'Café',
+      bust: 86, waist: 62, hips: 90, whatsapp: tel, descripcion: desc,
+      services: Object.fromEntries(ALL_SERVICES.map(s => [s, { si: false, extra: false }])),
+      hidden: false,
+    });
+  }
+
+  /* ── Mostrar credenciales ── */
   const box = document.getElementById('credencialesBox');
-  const credEmail = document.getElementById('credEmail');
-  const credPass  = document.getElementById('credPass');
-  if (box && credEmail && credPass) {
-    credEmail.textContent = email;
-    credPass.textContent  = pass;
+  if (box) {
+    document.getElementById('credEmail').textContent = email;
+    document.getElementById('credPass').textContent  = pass;
     box.style.display = 'block';
   }
 
-  /* refresh table */
+  /* ── Actualizar tabla de escorts en el panel ── */
   const tbody = document.getElementById('modelosTbody');
   if (tbody) { tbody.innerHTML = ''; buildModelosTable(); }
 
-  showToast(`Cuenta creada para ${nombre}`, 'success');
+  showToast(`✅ Cuenta creada para ${nombre}`, 'success');
 
-  /* clear form after short delay */
+  if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-user-plus"></i> Crear cuenta y guardar'; }
+
+  /* ── Limpiar formulario tras 3.5 s ── */
   setTimeout(() => {
-    ['newNombre','newEdad','newEmail','newPass','newTarifa','newDesc','newTel'].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.value = '';
-    });
+    ['newNombre','newEdad','newEmail','newPass','newTarifa','newDesc','newTel']
+      .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
     if (box) box.style.display = 'none';
     closeModal('addModeloModal');
-  }, 3000);
+  }, 3500);
 };
 
 /* ─── Admin ─────────────────────────────────────────────── */
