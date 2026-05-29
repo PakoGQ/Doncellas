@@ -2865,6 +2865,13 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
   .profile-hero { height: auto; }
   .profile-carousel { height: 360px; }
   .profile-carousel-slide { object-fit: cover; object-position: center top; }
+  /* Watermark más grande y visible en móvil */
+  .profile-carousel::after {
+    background-size: 55% !important;
+    background-position: center !important;
+    opacity: 0.62 !important;
+    filter: none !important;
+  }
   .profile-info-bar {
     flex-direction: column;
     align-items: stretch;
