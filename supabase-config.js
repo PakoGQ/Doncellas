@@ -8,16 +8,16 @@
    4. Guarda el archivo
    ================================================================ */
 
-const SUPABASE_URL = 'REEMPLAZA_CON_TU_URL';
-const SUPABASE_KEY = 'REEMPLAZA_CON_TU_ANON_KEY';
+const SUPABASE_URL = 'https://lhfmyfxltxhpgfgymyzo.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_R5iQ_m8bkQqe2eK3UiWhWw_6YFx7cIw';
 
 /* ── No modificar lo de abajo ──────────────────────────────── */
 (function () {
   const configured =
     typeof window !== 'undefined' &&
     typeof window.supabase !== 'undefined' &&
-    SUPABASE_URL !== 'REEMPLAZA_CON_TU_URL' &&
-    SUPABASE_KEY !== 'REEMPLAZA_CON_TU_ANON_KEY';
+    SUPABASE_URL.startsWith('https://') &&
+    SUPABASE_KEY.length > 20;
 
   window.sbClient = configured
     ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
