@@ -953,7 +953,7 @@ function buildHeroSlides() {
         <a href="modelos.html" class="hero-brand-cta" onclick="event.stopPropagation()">
           <span>Explorar Doncellas</span><i class="fas fa-arrow-right"></i>
         </a>
-        <a href="membresias.html" class="hero-brand-cta-sec" onclick="event.stopPropagation()">Membresías</a>
+        <a href="membresias.html" class="hero-brand-cta-sec" onclick="event.stopPropagation()">Únete</a>
       </div>
       <div class="hero-brand-stats">
         <div class="hero-brand-stat"><span class="hero-brand-stat-n">240+</span><span class="hero-brand-stat-l">Doncellas</span></div>
@@ -2569,8 +2569,8 @@ document.addEventListener('DOMContentLoaded',()=>{
   zone.addEventListener('drop',e=>{e.preventDefault();zone.classList.remove('drag-over');handleFileUpload(e);});
 });
 
-/* ─── Membresias ────────────────────────────────────────── */
-function initMembresias() { buildFAQ(); }
+/* ─── Afiliacion ─────────────────────────────────────────── */
+function initMembresias() { /* FAQ handled inline in membresias.html */ }
 
 function buildFAQ() {
   const list=document.getElementById('faqList');
