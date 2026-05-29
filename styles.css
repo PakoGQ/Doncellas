@@ -6062,7 +6062,7 @@ details.faq-item[open] .faq-a {
   background-position: center;
   opacity: 0.72;
   pointer-events: none;
-  z-index: 5;
+  z-index: 10;
 }
 
 /* Preview de uploads en el panel */
