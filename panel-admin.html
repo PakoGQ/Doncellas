@@ -527,7 +527,7 @@
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
       <div class="form-group">
         <label class="form-label">Nombre artístico</label>
-        <input class="form-input" id="newNombre" placeholder="Ej. Valentina R." />
+        <input class="form-input" id="newNombre" placeholder="Ej. Valentina R." oninput="autoUsername()" />
       </div>
       <div class="form-group">
         <label class="form-label">Edad</label>
@@ -584,8 +584,8 @@
       <p style="font-size:.7rem;color:var(--gold);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.75rem"><i class="fas fa-key"></i> Credenciales de acceso al panel</p>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
         <div class="form-group">
-          <label class="form-label">Correo (usuario)</label>
-          <input class="form-input" id="newEmail" placeholder="nombre@doncellas.mx" />
+          <label class="form-label">Usuario</label>
+          <input class="form-input" id="newUsername" placeholder="Ej. valentina" autocomplete="off" />
         </div>
         <div class="form-group">
           <label class="form-label">Contraseña</label>
@@ -601,7 +601,7 @@
       <div id="credencialesBox" style="display:none;background:rgba(201,168,76,.07);border:1px solid rgba(201,168,76,.3);border-radius:var(--r-md);padding:.85rem 1rem;margin-top:.25rem">
         <p style="font-size:.72rem;color:var(--t2);margin-bottom:.4rem"><i class="fas fa-check-circle" style="color:var(--green)"></i> Credenciales listas — compártalas con la Doncella de forma segura</p>
         <div style="display:flex;gap:1.5rem;font-size:.8rem">
-          <div><span style="color:var(--t3)">Usuario: </span><strong id="credEmail" style="color:var(--gold)">—</strong></div>
+          <div><span style="color:var(--t3)">Usuario: </span><strong id="credEmail" style="color:var(--gold);font-family:monospace">—</strong></div>
           <div><span style="color:var(--t3)">Contraseña: </span><strong id="credPass" style="color:var(--gold);font-family:monospace">—</strong></div>
         </div>
       </div>

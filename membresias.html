@@ -377,12 +377,12 @@
       <button class="modal-close" onclick="closeModal('loginModal')"><i class="fas fa-times"></i></button>
     </div>
     <div id="loginError" style="display:none;background:rgba(224,80,80,.12);border:1px solid rgba(224,80,80,.3);border-radius:var(--r-md);padding:.75rem 1rem;margin-bottom:1rem;font-size:.85rem;color:var(--red)"><i class="fas fa-exclamation-circle"></i> Usuario o contraseña incorrectos.</div>
-    <div class="form-group"><label class="form-label">Correo</label><input type="email" class="form-input" id="loginEmail" placeholder="tu@correo.com" /></div>
+    <div class="form-group"><label class="form-label">Usuario</label><input type="text" class="form-input" id="loginEmail" placeholder="Ej. valentina" autocomplete="username" /></div>
     <div class="form-group"><label class="form-label">Contraseña</label><input type="password" class="form-input" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()" /></div>
     <button class="btn btn-gold w-full" style="justify-content:center;margin-top:.5rem" onclick="doLogin()"><i class="fas fa-sign-in-alt"></i> Entrar</button>
     <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:.35rem">
-      <button class="btn btn-ghost btn-sm" style="font-size:.75rem" onclick="fillLogin('admin@doncellas.mx','admin123')"><i class="fas fa-shield-alt" style="color:var(--gold)"></i> Admin demo</button>
-      <button class="btn btn-ghost btn-sm" style="font-size:.75rem" onclick="fillLogin('valentina@doncellas.mx','modelo123')"><i class="fas fa-user" style="color:var(--gold)"></i> Doncella demo</button>
+      <button class="btn btn-ghost btn-sm" style="font-size:.75rem" onclick="fillLogin('admin','admin123')"><i class="fas fa-shield-alt" style="color:var(--gold)"></i> Admin demo</button>
+      <button class="btn btn-ghost btn-sm" style="font-size:.75rem" onclick="fillLogin('isabella','modelo123')"><i class="fas fa-user" style="color:var(--gold)"></i> Doncella demo</button>
     </div>
   </div>
 </div>

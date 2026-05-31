@@ -6,20 +6,20 @@
 
 /* ─── Usuarios / Login ──────────────────────────────────── */
 const USERS = [
-  { email:'admin@doncellas.mx',     pass:'admin123',   role:'admin',  name:'Administrador', redirect:'panel-admin.html' },
-  { email:'valentina@doncellas.mx', pass:'modelo123',  role:'modelo', name:'Valentina R.',  redirect:'panel-modelo.html' },
-  { email:'camila@doncellas.mx',    pass:'modelo123',  role:'modelo', name:'Camila V.',     redirect:'panel-modelo.html' },
-  { email:'isabella@doncellas.mx',  pass:'modelo123',  role:'modelo', name:'Isabella M.',   redirect:'panel-modelo.html' },
+  { username:'admin',     pass:'admin123',  role:'admin',  name:'Administrador', redirect:'panel-admin.html' },
+  { username:'valentina', pass:'modelo123', role:'modelo', name:'Valentina R.',  redirect:'panel-modelo.html' },
+  { username:'camila',    pass:'modelo123', role:'modelo', name:'Camila V.',     redirect:'panel-modelo.html' },
+  { username:'isabella',  pass:'modelo123', role:'modelo', name:'Isabella M.',   redirect:'panel-modelo.html' },
 ];
 
 async function doLogin() {
-  const email = document.getElementById('loginEmail')?.value.trim().toLowerCase();
-  const pass  = document.getElementById('loginPass')?.value;
-  const errEl = document.getElementById('loginError');
-  if (!email || !pass) return;
+  const username = document.getElementById('loginEmail')?.value.trim().toLowerCase();
+  const pass     = document.getElementById('loginPass')?.value;
+  const errEl    = document.getElementById('loginError');
+  if (!username || !pass) return;
 
-  /* 1. Verificar admin y demos hardcodeados */
-  const hardUser = USERS.find(u => u.email === email && u.pass === pass);
+  /* 1. Admin y demos hardcodeados */
+  const hardUser = USERS.find(u => u.username === username && u.pass === pass);
   if (hardUser) {
     if (errEl) errEl.style.display = 'none';
     sessionStorage.setItem('userRole',   hardUser.role);
@@ -29,21 +29,21 @@ async function doLogin() {
     return;
   }
 
-  /* 2. Verificar escorts reales en Supabase */
+  /* 2. Escorts reales en Supabase */
   if (window.sbClient) {
     const { data } = await window.sbClient
       .from('usuarios')
       .select('*, escorts(id, nombre)')
-      .eq('email', email)
+      .eq('username', username)
       .eq('password', pass)
       .eq('activo', true)
       .maybeSingle();
 
     if (data) {
       if (errEl) errEl.style.display = 'none';
-      sessionStorage.setItem('userRole',    'modelo');
-      sessionStorage.setItem('userNombre',  data.escorts?.nombre || 'Doncella');
-      sessionStorage.setItem('escortId',    data.escort_id);
+      sessionStorage.setItem('userRole',   'modelo');
+      sessionStorage.setItem('userNombre', data.escorts?.nombre || 'Doncella');
+      sessionStorage.setItem('escortId',   data.escort_id);
       showToast(`Bienvenida, ${data.escorts?.nombre || 'Doncella'} 🌹`, 'success');
       setTimeout(() => { window.location.href = 'panel-modelo.html'; }, 800);
       return;
@@ -1899,10 +1899,22 @@ function generarSlug(nombre) {
     '-' + Date.now().toString(36);
 }
 
-window.saveNewModelo = async function() {
+/* Auto-genera username desde el nombre artístico */
+window.autoUsername = function() {
   const nombre = document.getElementById('newNombre')?.value.trim();
-  const email  = document.getElementById('newEmail')?.value.trim().toLowerCase();
-  const pass   = document.getElementById('newPass')?.value.trim();
+  const el     = document.getElementById('newUsername');
+  if (!el || el.value) return;
+  if (!nombre) return;
+  el.value = nombre.toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9]+/g, '.')
+    .replace(/^\.|\.$/, '');
+};
+
+window.saveNewModelo = async function() {
+  const nombre   = document.getElementById('newNombre')?.value.trim();
+  const username = document.getElementById('newUsername')?.value.trim().toLowerCase();
+  const pass     = document.getElementById('newPass')?.value.trim();
   const zona   = document.getElementById('newZona')?.value;
   const cat    = document.getElementById('newCat')?.value;
   const plan   = document.getElementById('newPlan')?.value;
@@ -1911,9 +1923,9 @@ window.saveNewModelo = async function() {
   const tel    = (document.getElementById('newTel')?.value || '').replace(/\D/g,'');
   const desc   = document.getElementById('newDesc')?.value.trim() || '';
 
-  if (!nombre) { showToast('El nombre artístico es obligatorio', 'error'); return; }
-  if (!email)  { showToast('El correo es obligatorio', 'error'); return; }
-  if (!pass)   { showToast('Genera o escribe una contraseña', 'error'); return; }
+  if (!nombre)   { showToast('El nombre artístico es obligatorio', 'error'); return; }
+  if (!username) { showToast('El usuario es obligatorio', 'error'); return; }
+  if (!pass)     { showToast('Genera o escribe una contraseña', 'error'); return; }
 
   const btn = document.querySelector('#addModeloModal .btn-gold');
   if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Guardando…'; }
@@ -1941,7 +1953,7 @@ window.saveNewModelo = async function() {
 
     const { error: userErr } = await window.sbClient
       .from('usuarios')
-      .insert({ escort_id: escortData.id, email, password: pass });
+      .insert({ escort_id: escortData.id, username, password: pass });
 
     if (userErr) {
       showToast('Perfil creado pero error con credenciales: ' + userErr.message, 'error');
@@ -1970,7 +1982,7 @@ window.saveNewModelo = async function() {
   /* ── Mostrar credenciales ── */
   const box = document.getElementById('credencialesBox');
   if (box) {
-    document.getElementById('credEmail').textContent = email;
+    document.getElementById('credEmail').textContent = username;
     document.getElementById('credPass').textContent  = pass;
     box.style.display = 'block';
   }
@@ -1985,7 +1997,7 @@ window.saveNewModelo = async function() {
 
   /* ── Limpiar formulario tras 3.5 s ── */
   setTimeout(() => {
-    ['newNombre','newEdad','newEmail','newPass','newTarifa','newDesc','newTel']
+    ['newNombre','newEdad','newUsername','newPass','newTarifa','newDesc','newTel']
       .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
     if (box) box.style.display = 'none';
     closeModal('addModeloModal');
