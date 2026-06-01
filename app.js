@@ -2838,8 +2838,49 @@ document.addEventListener('keydown', e => {
   if (e.key === 'ArrowRight')  navigateFullscreen(1);
 });
 
+/* ─── Sesión activa en nav público ──────────────────────── */
+function initNavSession() {
+  const role   = sessionStorage.getItem('userRole');
+  const nombre = sessionStorage.getItem('userNombre');
+  if (!role) return;
+
+  const loginBtn = document.querySelector('.nav-login-btn');
+  if (!loginBtn) return;
+
+  if (role === 'admin') {
+    loginBtn.outerHTML = `
+      <div style="display:flex;align-items:center;gap:.6rem">
+        <a href="panel-admin.html" class="btn btn-gold btn-sm" style="font-size:.75rem">
+          <i class="fas fa-shield-alt"></i> Panel Admin
+        </a>
+        <button onclick="cerrarSesion()" class="btn btn-ghost btn-sm" style="font-size:.72rem;color:var(--t3)" title="Cerrar sesión">
+          <i class="fas fa-sign-out-alt"></i>
+        </button>
+      </div>`;
+  } else if (role === 'modelo') {
+    loginBtn.outerHTML = `
+      <div style="display:flex;align-items:center;gap:.6rem">
+        <span style="font-size:.78rem;color:var(--t2);max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${nombre || 'Mi Panel'}</span>
+        <a href="panel-modelo.html" class="btn btn-gold btn-sm" style="font-size:.75rem">
+          <i class="fas fa-user-circle"></i> Mi Panel
+        </a>
+        <button onclick="cerrarSesion()" class="btn btn-ghost btn-sm" style="font-size:.72rem;color:var(--t3)" title="Cerrar sesión">
+          <i class="fas fa-sign-out-alt"></i>
+        </button>
+      </div>`;
+  }
+}
+
+function cerrarSesion() {
+  sessionStorage.clear();
+  window.location.href = 'index.html';
+}
+
 /* ─── Auto-init ─────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', async () => {
+  /* Detectar sesión activa en nav de páginas públicas */
+  initNavSession();
+
   /* Intentar cargar escorts reales desde Supabase */
   const sbModels = await loadModelsFromSupabase();
   if (sbModels && sbModels.length > 0) {
