@@ -545,9 +545,10 @@ p  { line-height: 1.7; color: var(--t2); }
     animation: card-enter .65s cubic-bezier(.23,1,.32,1) both;
   }
 
-  /* Imagen más alta */
+  /* Imagen controlada para 2 columnas anchas */
   .model-card-img-wrap {
-    aspect-ratio: 3 / 4.8;
+    aspect-ratio: unset;
+    height: 480px;
   }
 
   /* Hover dramático */
