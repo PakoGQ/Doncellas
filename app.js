@@ -138,10 +138,10 @@ const _rng = (seed) => {
   return () => { s = (s * 16807 + 0) % 2147483647; return (s - 1) / 2147483646; };
 };
 
-/* ─── Generador de 100 modelos ──────────────────────────── */
+/* ─── Generador de 10 modelos demo (fallback sin Supabase) ── */
 function generateModels() {
   const models = [];
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i < 10; i++) {
     const r       = _rng(i * 997 + 13);
     const age     = 18 + Math.floor(r() * 18);
     const photoId = PHOTO_POOL[i % PHOTO_POOL.length];
@@ -2937,12 +2937,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     syncModelAvailabilityWithCitas();
   }
 
-  const path = window.location.pathname.split('/').pop();
-  if (path==='index.html'||path===''||path==='/') initIndex();
-  else if (path==='modelos.html')    initModelos();
-  else if (path==='categorias.html') initCategorias();
-  else if (path==='perfil.html')     initPerfil();
-  else if (path==='membresias.html') initMembresias();
-  else if (path==='panel-admin.html')  initAdmin();
-  else if (path==='panel-modelo.html') initPanelModelo();
+  const raw  = window.location.pathname.split('/').pop();
+  const path = raw.replace(/\.html$/, '');
+  if (path===''||path==='index') initIndex();
+  else if (path==='modelos')      initModelos();
+  else if (path==='categorias')   initCategorias();
+  else if (path==='perfil')       initPerfil();
+  else if (path==='membresias')   initMembresias();
+  else if (path==='panel-admin')  initAdmin();
+  else if (path==='panel-modelo') initPanelModelo();
 });
