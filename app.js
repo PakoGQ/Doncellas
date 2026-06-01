@@ -807,15 +807,11 @@ function buildDoncellaGallery() {
   if (!escorts.length) return;
 
   escorts.forEach((m, i) => {
-    // Layout: primera es hero (2x2), posición 4 es wide (2x1), resto normales
-    const isHero = i === 0;
-    const isWide = i === 4;
-    const cls    = isHero ? 'dg-hero' : isWide ? 'dg-wide' : '';
-
     el.insertAdjacentHTML('beforeend', `
-      <div class="dg-item${cls ? ' ' + cls : ''}"
+      <div class="dg-item"
+           data-photos='${JSON.stringify(m.photos)}'
            onclick="window.location.href='perfil.html?id=${m.id}'">
-        <img src="${m.photos[0]}" alt="${m.name}" loading="${i < 3 ? 'eager' : 'lazy'}" />
+        <img src="${m.photos[0]}" alt="${m.name}" loading="${i < 4 ? 'eager' : 'lazy'}" />
         <div class="wm-overlay"></div>
         <div class="dg-info">
           <div class="dg-name">${m.name}</div>
@@ -828,6 +824,36 @@ function buildDoncellaGallery() {
           </a>
         </div>
       </div>`);
+  });
+
+  // Arrancar ciclo de fotos después de un pequeño delay inicial
+  setTimeout(initGalleryCycle, 1200);
+}
+
+function initGalleryCycle() {
+  document.querySelectorAll('.dg-item[data-photos]').forEach((item, idx) => {
+    let photos;
+    try { photos = JSON.parse(item.dataset.photos); } catch { return; }
+    if (!photos || photos.length < 2) return;
+
+    const img = item.querySelector('img');
+    if (!img) return;
+
+    let current = 0;
+    // Cada card cambia en un momento distinto para que no se vean todas a la vez
+    const interval = 3500 + idx * 600;
+
+    setInterval(() => {
+      current = (current + 1) % photos.length;
+      // Fade out
+      img.style.opacity = '0';
+      setTimeout(() => {
+        img.src = photos[current];
+        img.onload = () => { img.style.opacity = '1'; };
+        // Si la imagen ya estaba en caché, onload puede no disparar
+        if (img.complete) img.style.opacity = '1';
+      }, 480);
+    }, interval);
   });
 }
 
