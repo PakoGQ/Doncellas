@@ -798,63 +798,91 @@ function buildHeroMosaic() {
     + (pool[3] ? slot(pool[3], false) : '');
 }
 
-/* ─── Galería artística homepage ────────────────────────── */
+/* ─── Galería 2 fotos con crossfade ─────────────────────── */
 function buildDoncellaGallery() {
   const el = document.getElementById('doncellaGallery');
   if (!el) return;
 
-  const escorts = MODELS.filter(m => !m.hidden).slice(0, 10);
+  const escorts = MODELS.filter(m => !m.hidden);
   if (!escorts.length) return;
 
-  escorts.forEach((m, i) => {
+  /* Pool: todas las fotos de todas las escorts con metadata */
+  const pool = [];
+  escorts.forEach(m => {
+    m.photos.forEach(p => pool.push({ src: p, name: m.name, id: m.id, available: m.available }));
+  });
+
+  /* Crear solo 2 slots */
+  [0, 1].forEach(slotIdx => {
     el.insertAdjacentHTML('beforeend', `
-      <div class="dg-item"
-           data-photos='${JSON.stringify(m.photos)}'
-           onclick="window.location.href='perfil.html?id=${m.id}'">
-        <img src="${m.photos[0]}" alt="${m.name}" loading="${i < 4 ? 'eager' : 'lazy'}" />
+      <div class="dg-item" id="dgSlot${slotIdx}">
+        <img class="dg-img dg-img-a dg-active" src="" alt="" loading="eager" />
+        <img class="dg-img dg-img-b" src="" alt="" loading="lazy" />
         <div class="wm-overlay"></div>
         <div class="dg-info">
-          <div class="dg-name">${m.name}</div>
-          <div class="dg-status${m.available ? ' disponible' : ''}">
+          <div class="dg-name" id="dgName${slotIdx}"></div>
+          <div class="dg-status" id="dgStatus${slotIdx}">
             <span class="dg-dot"></span>
-            ${m.available ? 'Disponible ahora' : 'No disponible'}
+            <span id="dgStatusTxt${slotIdx}"></span>
           </div>
-          <a href="perfil.html?id=${m.id}" class="dg-ver" onclick="event.stopPropagation()">
+          <a href="#" class="dg-ver" id="dgVer${slotIdx}" onclick="event.stopPropagation()">
             Ver perfil <i class="fas fa-arrow-right" style="font-size:.6rem"></i>
           </a>
         </div>
       </div>`);
   });
 
-  // Arrancar ciclo de fotos después de un pequeño delay inicial
-  setTimeout(initGalleryCycle, 1200);
+  /* Arrancar ciclo con offset entre los 2 slots */
+  startSlotCycle(0, pool, 0,    5200);
+  startSlotCycle(1, pool, Math.floor(pool.length / 2), 4600);
 }
 
-function initGalleryCycle() {
-  document.querySelectorAll('.dg-item[data-photos]').forEach((item, idx) => {
-    let photos;
-    try { photos = JSON.parse(item.dataset.photos); } catch { return; }
-    if (!photos || photos.length < 2) return;
+function startSlotCycle(slotIdx, pool, startIdx, interval) {
+  const slot    = document.getElementById(`dgSlot${slotIdx}`);
+  const nameEl  = document.getElementById(`dgName${slotIdx}`);
+  const statEl  = document.getElementById(`dgStatus${slotIdx}`);
+  const statTxt = document.getElementById(`dgStatusTxt${slotIdx}`);
+  const verEl   = document.getElementById(`dgVer${slotIdx}`);
+  if (!slot) return;
 
-    const img = item.querySelector('img');
-    if (!img) return;
+  const imgA = slot.querySelector('.dg-img-a');
+  const imgB = slot.querySelector('.dg-img-b');
+  let idx    = startIdx % pool.length;
+  let useA   = true;
 
-    let current = 0;
-    // Cada card cambia en un momento distinto para que no se vean todas a la vez
-    const interval = 3500 + idx * 600;
+  function showPhoto(entry) {
+    const next = useA ? imgB : imgA;
+    const curr = useA ? imgA : imgB;
+    next.src = entry.src;
+    next.alt = entry.name;
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        next.classList.add('dg-active');
+        curr.classList.remove('dg-active');
+        useA = !useA;
+        /* Actualizar info */
+        nameEl.textContent  = entry.name;
+        statTxt.textContent = entry.available ? 'Disponible ahora' : 'No disponible';
+        statEl.className    = `dg-status${entry.available ? ' disponible' : ''}`;
+        verEl.href          = `perfil.html?id=${entry.id}`;
+        slot.onclick        = () => window.location.href = `perfil.html?id=${entry.id}`;
+      });
+    });
+  }
 
-    setInterval(() => {
-      current = (current + 1) % photos.length;
-      // Fade out
-      img.style.opacity = '0';
-      setTimeout(() => {
-        img.src = photos[current];
-        img.onload = () => { img.style.opacity = '1'; };
-        // Si la imagen ya estaba en caché, onload puede no disparar
-        if (img.complete) img.style.opacity = '1';
-      }, 480);
-    }, interval);
-  });
+  /* Carga la primera foto de inmediato */
+  imgA.src = pool[idx].src;
+  imgA.alt = pool[idx].name;
+  nameEl.textContent  = pool[idx].name;
+  statTxt.textContent = pool[idx].available ? 'Disponible ahora' : 'No disponible';
+  statEl.className    = `dg-status${pool[idx].available ? ' disponible' : ''}`;
+  verEl.href          = `perfil.html?id=${pool[idx].id}`;
+  slot.onclick        = () => window.location.href = `perfil.html?id=${pool[idx].id}`;
+
+  setInterval(() => {
+    idx = (idx + 1) % pool.length;
+    showPhoto(pool[idx]);
+  }, interval);
 }
 
 function initIndex() {
