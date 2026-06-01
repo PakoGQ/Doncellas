@@ -102,9 +102,6 @@
   </ul>
 </aside>
 
-<!-- ── Hero Mosaic (desktop only) ── -->
-<div class="hero-mosaic" id="heroMosaic"></div>
-
 <!-- ── Hero ── -->
 <section class="hero" id="hero">
   <!-- Slides generadas por JS desde modelos con promo -->
@@ -200,87 +197,18 @@
   </div>
 </div>
 
-<!-- ── Featured Models ── -->
-<section class="section">
-  <div class="section-head">
+<!-- ── Galería artística ── -->
+<section class="dg-section">
+  <div class="dg-header">
     <div>
-      <p class="section-label">Selección estelar</p>
-      <h2 class="section-title">Doncellas <span class="gold">Destacadas</span></h2>
-      <div class="divider"></div>
+      <p class="section-label" style="font-size:.65rem">Las Doncellas de Guadalajara</p>
+      <h2 class="dg-title">Nuestras <span class="gold">Doncellas</span></h2>
     </div>
     <a href="modelos.html" class="btn btn-outline btn-sm">
       Ver todas <i class="fas fa-arrow-right"></i>
     </a>
   </div>
-
-  <div class="h-carousel-wrap">
-    <button class="h-carousel-nav h-carousel-prev" data-target="featuredCarousel" aria-label="Anterior">
-      <i class="fas fa-chevron-left"></i>
-    </button>
-    <div class="h-carousel" id="featuredCarousel">
-      <!-- Cards generadas por JS -->
-    </div>
-    <button class="h-carousel-nav h-carousel-next" data-target="featuredCarousel" aria-label="Siguiente">
-      <i class="fas fa-chevron-right"></i>
-    </button>
-  </div>
-</section>
-
-<!-- ── Available Now ── -->
-<section class="section">
-  <div class="section-head">
-    <div>
-      <p class="section-label">
-        <span class="pill pill-available" style="font-size:.65rem">Disponible</span>
-        &nbsp;En este momento
-      </p>
-      <h2 class="section-title">Disponibles <span class="gold">Ahora</span></h2>
-      <div class="divider"></div>
-    </div>
-    <a href="modelos.html?filter=available" class="btn btn-outline btn-sm">Ver todas <i class="fas fa-arrow-right"></i></a>
-  </div>
-  <div class="h-carousel-wrap">
-    <button class="h-carousel-nav h-carousel-prev" data-target="availableCarousel"><i class="fas fa-chevron-left"></i></button>
-    <div class="h-carousel" id="availableCarousel"></div>
-    <button class="h-carousel-nav h-carousel-next" data-target="availableCarousel"><i class="fas fa-chevron-right"></i></button>
-  </div>
-</section>
-
-<!-- ── New Arrivals ── -->
-<section class="section" style="background:linear-gradient(180deg,var(--bg) 0%,var(--surface) 50%,var(--bg) 100%);max-width:100%;padding:5rem 0">
-  <div style="max-width:1400px;margin:0 auto;padding:0 2.5rem">
-    <div class="section-head">
-      <div>
-        <p class="section-label">Recién llegadas</p>
-        <h2 class="section-title">Nuevos <span class="gold">Perfiles</span></h2>
-        <div class="divider"></div>
-      </div>
-    </div>
-    <div class="h-carousel-wrap">
-      <button class="h-carousel-nav h-carousel-prev" data-target="newCarousel"><i class="fas fa-chevron-left"></i></button>
-      <div class="h-carousel" id="newCarousel"></div>
-      <button class="h-carousel-nav h-carousel-next" data-target="newCarousel"><i class="fas fa-chevron-right"></i></button>
-    </div>
-  </div>
-</section>
-
-<!-- ── Con Promo ── -->
-<section class="section" style="background:var(--surface);max-width:100%;padding:4rem 0">
-  <div style="max-width:1400px;margin:0 auto;padding:0 2.5rem">
-    <div class="section-head">
-      <div>
-        <p class="section-label">🔥 Ofertas especiales</p>
-        <h2 class="section-title">Con <span class="gold">Promo</span></h2>
-        <div class="divider"></div>
-      </div>
-      <a href="modelos.html?filter=promo" class="btn btn-outline btn-sm">Ver todas <i class="fas fa-arrow-right"></i></a>
-    </div>
-    <div class="h-carousel-wrap">
-      <button class="h-carousel-nav h-carousel-prev" data-target="promoCarousel"><i class="fas fa-chevron-left"></i></button>
-      <div class="h-carousel" id="promoCarousel"></div>
-      <button class="h-carousel-nav h-carousel-next" data-target="promoCarousel"><i class="fas fa-chevron-right"></i></button>
-    </div>
-  </div>
+  <div class="dg-grid" id="doncellaGallery"></div>
 </section>
 
 <!-- ── Cómo funciona ── -->

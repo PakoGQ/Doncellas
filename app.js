@@ -798,8 +798,41 @@ function buildHeroMosaic() {
     + (pool[3] ? slot(pool[3], false) : '');
 }
 
+/* ─── Galería artística homepage ────────────────────────── */
+function buildDoncellaGallery() {
+  const el = document.getElementById('doncellaGallery');
+  if (!el) return;
+
+  const escorts = MODELS.filter(m => !m.hidden).slice(0, 10);
+  if (!escorts.length) return;
+
+  escorts.forEach((m, i) => {
+    // Layout: primera es hero (2x2), posición 4 es wide (2x1), resto normales
+    const isHero = i === 0;
+    const isWide = i === 4;
+    const cls    = isHero ? 'dg-hero' : isWide ? 'dg-wide' : '';
+
+    el.insertAdjacentHTML('beforeend', `
+      <div class="dg-item${cls ? ' ' + cls : ''}"
+           onclick="window.location.href='perfil.html?id=${m.id}'">
+        <img src="${m.photos[0]}" alt="${m.name}" loading="${i < 3 ? 'eager' : 'lazy'}" />
+        <div class="wm-overlay"></div>
+        <div class="dg-info">
+          <div class="dg-name">${m.name}</div>
+          <div class="dg-status${m.available ? ' disponible' : ''}">
+            <span class="dg-dot"></span>
+            ${m.available ? 'Disponible ahora' : 'No disponible'}
+          </div>
+          <a href="perfil.html?id=${m.id}" class="dg-ver" onclick="event.stopPropagation()">
+            Ver perfil <i class="fas fa-arrow-right" style="font-size:.6rem"></i>
+          </a>
+        </div>
+      </div>`);
+  });
+}
+
 function initIndex() {
-  buildHeroMosaic();   // desktop mosaic
+  buildDoncellaGallery();
   buildHeroSlides();   // must run before initHero()
   initHero();
   initHCarouselNav();

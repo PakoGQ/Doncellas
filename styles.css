@@ -472,6 +472,174 @@ p  { line-height: 1.7; color: var(--t2); }
   max-width: 1400px;
   margin: 0 auto;
 }
+
+/* ── Galería artística de Doncellas ─────────────────────── */
+.dg-section {
+  padding: 3.5rem 0 5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding-left: 2.5rem;
+  padding-right: 2.5rem;
+}
+.dg-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+.dg-title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  font-weight: 700;
+  margin: .3rem 0 0;
+}
+
+/* Grid de fotos */
+.dg-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 380px;
+  gap: 5px;
+}
+
+/* Item base */
+.dg-item {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  background: #111;
+  border-radius: 3px;
+}
+
+/* Foto principal: ocupa 2 columnas y 2 filas */
+.dg-item.dg-hero {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+/* Foto wide: ocupa 2 columnas */
+.dg-item.dg-wide {
+  grid-column: span 2;
+}
+
+.dg-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  transition: transform .8s cubic-bezier(.23,1,.32,1);
+  display: block;
+}
+
+.dg-item:hover img { transform: scale(1.07); }
+
+/* Gradiente sutil siempre visible */
+.dg-item::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top,
+    rgba(0,0,0,.82) 0%,
+    rgba(0,0,0,.18) 40%,
+    transparent 70%);
+  z-index: 1;
+  transition: background .4s ease;
+}
+
+.dg-item:hover::before {
+  background: linear-gradient(to top,
+    rgba(0,0,0,.92) 0%,
+    rgba(0,0,0,.35) 50%,
+    rgba(201,168,76,.05) 100%);
+}
+
+/* Watermark */
+.dg-item .wm-overlay {
+  background-size: 35%;
+  opacity: 0.45;
+  z-index: 2;
+}
+
+/* Info superpuesta */
+.dg-info {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  padding: 1.1rem 1.25rem;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: .25rem;
+}
+
+.dg-name {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 1px 6px rgba(0,0,0,.6);
+  letter-spacing: .01em;
+  transition: font-size .3s ease;
+}
+
+.dg-item.dg-hero .dg-name { font-size: 1.65rem; }
+.dg-item.dg-wide .dg-name { font-size: 1.15rem; }
+
+.dg-status {
+  display: flex;
+  align-items: center;
+  gap: .35rem;
+  font-size: .68rem;
+  color: rgba(255,255,255,.6);
+  transition: color .3s;
+}
+
+.dg-status.disponible { color: #4ade80; }
+.dg-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #666;
+  flex-shrink: 0;
+}
+.dg-status.disponible .dg-dot { background: #4ade80; }
+
+/* Ver perfil — aparece en hover */
+.dg-ver {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  margin-top: .4rem;
+  font-size: .72rem;
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity .3s ease, transform .3s ease;
+  text-decoration: none;
+}
+.dg-item:hover .dg-ver {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Mobile: 2 columnas, altura más pequeña */
+@media (max-width: 768px) {
+  .dg-section { padding: 2.5rem 0 3rem; }
+  .dg-header  { padding: 0 1.25rem; margin-bottom: 1.25rem; }
+  .dg-title   { font-size: 1.4rem; }
+
+  .dg-grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 220px;
+    gap: 3px;
+  }
+  .dg-item.dg-hero { grid-column: span 2; }
+  .dg-item.dg-wide { grid-column: span 1; }
+  .dg-item.dg-hero .dg-name { font-size: 1.1rem; }
+  .dg-name { font-size: .85rem; }
+}
+/* ────────────────────────────────────────────────────────── */
 .section-head {
   display: flex;
   align-items: flex-end;
@@ -539,10 +707,6 @@ p  { line-height: 1.7; color: var(--t2); }
 }
 
 @media (min-width: 900px) {
-  /* Ocultar hero de slides, mostrar mosaico */
-  .hero        { display: none !important; }
-  .hero-dots-wrap { display: none !important; }
-
   .hero-mosaic {
     display: grid;
     grid-template-columns: 1.65fr 1fr 1fr;
