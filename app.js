@@ -658,6 +658,39 @@ function modelCardHTML(m) {
   </div>`;
 }
 
+/* ─── Entrada escalonada en desktop ─────────────────────── */
+function initCardEntrance() {
+  if (window.innerWidth < 900) return;
+  const cards = [...document.querySelectorAll('.model-card[data-id]')];
+  cards.forEach(c => {
+    c.classList.add('card-hidden');
+    if (c.dataset.available === 'true' && c.closest('.featured-section')) {
+      c.classList.add('featured-card');
+    }
+  });
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const card  = entry.target;
+      const cards = [...document.querySelectorAll('.model-card.card-hidden')];
+      const idx   = cards.indexOf(card);
+      setTimeout(() => {
+        card.classList.remove('card-hidden');
+        card.classList.add('card-visible');
+        if (card.dataset.available === 'true') {
+          card.style.animationDelay = `${idx * 0.08}s, ${idx * 0.08 + 1}s`;
+        } else {
+          card.style.animationDelay = `${idx * 0.08}s`;
+        }
+      }, idx * 80);
+      observer.unobserve(card);
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  cards.forEach(c => observer.observe(c));
+}
+
 /* Hover carousel */
 function initCardCarousels() {
   document.querySelectorAll('.model-card[data-id]').forEach(card => {
@@ -1271,6 +1304,7 @@ function renderModelos() {
   grid.innerHTML = '';
   filteredModels.forEach(m => grid.insertAdjacentHTML('beforeend', modelCardHTML(m)));
   initCardCarousels();
+  initCardEntrance();
   const c = document.getElementById('resultsCount');
   if (c) c.textContent = `${filteredModels.length} Doncellas encontradas`;
 }
