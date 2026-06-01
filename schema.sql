@@ -94,14 +94,19 @@ CREATE TABLE IF NOT EXISTS citas (
   created_at       TIMESTAMPTZ DEFAULT NOW()
 );
 
--- ── 6. Reseñas (moderadas por admin) ────────────────────────────
+-- ── 6. Reseñas de escorts (moderadas por admin) ─────────────────
+-- El agente manda mensaje al cliente al terminar la cita (WhatsApp/Telegram)
+-- Cliente responde con calificación + comentario → admin aprueba → aparece en perfil
 CREATE TABLE IF NOT EXISTS resenas (
   id           BIGSERIAL PRIMARY KEY,
   escort_id    BIGINT REFERENCES escorts(id) ON DELETE CASCADE,
+  cita_id      BIGINT REFERENCES citas(id),   -- cita que originó la reseña
+  canal        TEXT DEFAULT 'web'
+                 CHECK (canal IN ('web','whatsapp','telegram')),
   autor        TEXT DEFAULT 'Anónimo',
   calificacion INTEGER CHECK (calificacion BETWEEN 1 AND 5),
   texto        TEXT,
-  aprobada     BOOLEAN DEFAULT false,
+  aprobada     BOOLEAN DEFAULT false,          -- admin aprueba antes de publicar
   created_at   TIMESTAMPTZ DEFAULT NOW()
 );
 
