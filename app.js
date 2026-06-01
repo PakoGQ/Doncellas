@@ -737,7 +737,69 @@ function initHCarouselNav() {
 }
 
 /* ─── Index page ────────────────────────────────────────── */
+/* ─── Hero Mosaic (desktop) ─────────────────────────────── */
+function buildHeroMosaic() {
+  const el = document.getElementById('heroMosaic');
+  if (!el || window.innerWidth < 900) return;
+
+  const pool = [
+    ...MODELS.filter(m => m.featured && !m.hidden),
+    ...MODELS.filter(m => m.available && !m.featured && !m.hidden),
+    ...MODELS.filter(m => !m.available && !m.featured && !m.hidden),
+  ].slice(0, 4);
+
+  if (!pool.length) return;
+
+  const avCount = MODELS.filter(m => m.available && !m.hidden).length;
+
+  const slot = (m, isMain) => `
+    <div class="hm-slot${isMain ? ' hm-main' : ' hm-sm'}"
+         onclick="window.location.href='perfil.html?id=${m.id}'">
+      <img src="${m.photos[0]}" alt="${m.name}" loading="${isMain ? 'eager' : 'lazy'}" />
+      <div class="wm-overlay"></div>
+      <div class="hm-overlay">
+        <div class="hm-info">
+          ${m.available
+            ? `<span class="pill pill-available" style="font-size:.6rem;margin-bottom:.4rem">● Disponible</span>`
+            : `<span class="pill pill-busy" style="font-size:.6rem;margin-bottom:.4rem">No Disponible</span>`}
+          <div class="hm-name">${m.name}</div>
+          <div class="hm-meta">
+            <i class="fas fa-map-marker-alt" style="color:var(--gold);margin-right:.25rem;font-size:.7rem"></i>${m.zone}
+            &nbsp;·&nbsp;${m.cat}
+            &nbsp;·&nbsp;${stars(m.rating)} ${m.rating}
+          </div>
+          <a href="perfil.html?id=${m.id}" class="hm-btn" onclick="event.stopPropagation()">
+            <i class="fas fa-eye"></i> Ver perfil
+          </a>
+        </div>
+      </div>
+    </div>`;
+
+  const brandPanel = `
+    <div class="hm-slot hm-brand">
+      <div class="hm-brand-eyebrow">Guadalajara, Jalisco</div>
+      <h2>La <span class="gold">Elegancia</span><br>del Placer</h2>
+      <p>${avCount} Doncella${avCount !== 1 ? 's' : ''} disponible${avCount !== 1 ? 's' : ''} ahora mismo en Guadalajara.</p>
+      <div class="hm-brand-btns">
+        <a href="modelos.html" class="btn btn-gold">
+          <i class="fas fa-users"></i> Ver todas las Doncellas
+        </a>
+        <a href="modelos.html?filter=available" class="btn btn-outline btn-sm">
+          <span style="width:7px;height:7px;border-radius:50%;background:#4ade80;display:inline-block"></span>
+          Solo disponibles ahora
+        </a>
+      </div>
+    </div>`;
+
+  el.innerHTML = slot(pool[0], true)
+    + (pool[1] ? slot(pool[1], false) : '')
+    + (pool[2] ? slot(pool[2], false) : '')
+    + brandPanel
+    + (pool[3] ? slot(pool[3], false) : '');
+}
+
 function initIndex() {
+  buildHeroMosaic();   // desktop mosaic
   buildHeroSlides();   // must run before initHero()
   initHero();
   initHCarouselNav();
