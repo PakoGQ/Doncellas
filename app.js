@@ -2597,12 +2597,13 @@ function buildCurrentGallery() {
 function buildCitasProximas() {
   const w=document.getElementById('citasProximas');
   if(!w)return;
-  /* [tipo_lugar, lugar, fecha, hora, duracion, tarifa] */
-  [['Hotel','Fiesta Americana','Vie 18 Abr','10:00','1hr','$2,500'],
-   ['Motel','Las Villas',      'Sáb 19 Abr','14:00','3hr','$6,500'],
-   ['Hotel','Hilton GDL',      'Lun 21 Abr','17:00','1hr','$2,500'],
-  ].forEach(c=>{
-    const [tipo,lugar,fecha,hora,dur,tarifa]=c;
+  /* [tipo_lugar, lugar, fecha, hora, duracion, tarifa, clienteWa, citaId] */
+  [['Hotel','Fiesta Americana','Vie 18 Abr','10:00','1hr','$2,500','3312345001','demo-1'],
+   ['Motel','Las Villas',      'Sáb 19 Abr','14:00','3hr','$6,500','3312345002','demo-2'],
+   ['Hotel','Hilton GDL',      'Lun 21 Abr','17:00','1hr','$2,500','3312345003','demo-3'],
+  ].forEach((c,idx)=>{
+    const [tipo,lugar,fecha,hora,dur,tarifa,cWa,cId]=c;
+    const badgeId=`badge-prox-${idx}`;
     w.insertAdjacentHTML('beforeend',`
       <div class="cita-item">
         <div class="cita-date">
@@ -2611,32 +2612,37 @@ function buildCitasProximas() {
         </div>
         <div class="cita-info">
           <h4 style="display:flex;align-items:center;gap:.4rem">
-            ${_lugarIcon(tipo)}
-            <span>${tipo} ${lugar}</span>
+            ${_lugarIcon(tipo)}<span>${tipo} ${lugar}</span>
           </h4>
           <p>${hora} · ${dur}</p>
+          <div id="${badgeId}" style="margin-top:.3rem"></div>
         </div>
         <div style="text-align:right">
           <div style="font-family:var(--font-serif);color:var(--gold)">${tarifa}</div>
-          <div style="display:flex;gap:.4rem;margin-top:.4rem">
-            <button class="btn btn-wa btn-sm" onclick="window.open('https://wa.me/523312345678')"><i class="fab fa-whatsapp"></i></button>
+          <div style="display:flex;gap:.4rem;margin-top:.4rem;flex-wrap:wrap;justify-content:flex-end">
+            <button class="btn btn-wa btn-sm" onclick="window.open('https://wa.me/${cWa}')"><i class="fab fa-whatsapp"></i></button>
             <button class="btn btn-outline btn-sm">Cancelar</button>
           </div>
         </div>
       </div>`);
+    /* cargar badge de historial del cliente */
+    if (typeof loadClientBadge === 'function') {
+      loadClientBadge(cWa, document.getElementById(badgeId));
+    }
   });
 }
 
 function buildCitasHistorial() {
   const w=document.getElementById('citasHistorial');
   if(!w)return;
-  /* [tipo_lugar, lugar, fecha, hora, duracion, tarifa, estado] */
-  [['Motel','El Paraíso', 'Mié 16 Abr','11:00','1hr', '$2,500', 'Completada'],
-   ['Hotel','Marriott',   'Lun 14 Abr','15:00','3hr', '$6,500', 'Completada'],
-   ['Hotel','Crown Plaza','Sáb 12 Abr','09:00','Día', '$18,000','Completada'],
-   ['Motel','Los Pinos',  'Jue 10 Abr','18:00','1hr', '$2,500', 'Cancelada'],
-  ].forEach(c=>{
-    const [tipo,lugar,fecha,hora,dur,tarifa,estado]=c;
+  /* [tipo_lugar, lugar, fecha, hora, duracion, tarifa, estado, clienteWa, citaId] */
+  [['Motel','El Paraíso', 'Mié 16 Abr','11:00','1hr', '$2,500', 'Completada','3312345001','demo-h1'],
+   ['Hotel','Marriott',   'Lun 14 Abr','15:00','3hr', '$6,500', 'Completada','3312345002','demo-h2'],
+   ['Hotel','Crown Plaza','Sáb 12 Abr','09:00','Día', '$18,000','Completada','3312345004','demo-h3'],
+   ['Motel','Los Pinos',  'Jue 10 Abr','18:00','1hr', '$2,500', 'Cancelada', '3312345005','demo-h4'],
+  ].forEach((c,idx)=>{
+    const [tipo,lugar,fecha,hora,dur,tarifa,estado,cWa,cId]=c;
+    const completada = estado==='Completada';
     w.insertAdjacentHTML('beforeend',`
       <div class="cita-item">
         <div class="cita-date">
@@ -2645,14 +2651,19 @@ function buildCitasHistorial() {
         </div>
         <div class="cita-info">
           <h4 style="display:flex;align-items:center;gap:.4rem">
-            ${_lugarIcon(tipo)}
-            <span>${tipo} ${lugar}</span>
+            ${_lugarIcon(tipo)}<span>${tipo} ${lugar}</span>
           </h4>
           <p>${hora} · ${dur}</p>
         </div>
-        <div style="text-align:right">
+        <div style="text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:.35rem">
           <div style="font-family:var(--font-serif);color:var(--gold)">${tarifa}</div>
-          <span class="pill ${estado==='Completada'?'pill-available':'pill-busy'}" style="font-size:.65rem;margin-top:.35rem">${estado}</span>
+          <span class="pill ${completada?'pill-available':'pill-busy'}" style="font-size:.65rem">${estado}</span>
+          ${completada
+            ? `<button class="btn btn-ghost btn-sm" style="font-size:.68rem;padding:.2rem .6rem"
+                onclick="openClientReview('${cId}','${cWa}')">
+                <i class="fas fa-star" style="color:var(--gold)"></i> Reseñar cliente
+               </button>`
+            : ''}
         </div>
       </div>`);
   });

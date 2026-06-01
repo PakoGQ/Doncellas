@@ -66,6 +66,27 @@
     .week-slot.on { background: rgba(76,175,130,.12); border-color: rgba(76,175,130,.35); color: var(--green); }
     .week-slot.booked { background: rgba(201,168,76,.08); border-color: var(--border-h); color: var(--gold); cursor: default; }
     .week-slot:not(.booked):hover { border-color: var(--gold); }
+
+    /* ── Tags de reseña de cliente ── */
+    .review-tag {
+      padding: .3rem .7rem; border-radius: 999px;
+      border: 1px solid var(--border); background: var(--surface);
+      color: var(--t2); font-size: .75rem; cursor: pointer;
+      transition: all .18s; white-space: nowrap;
+    }
+    .review-tag:hover  { border-color: var(--gold); color: var(--gold); }
+    .review-tag.active { border-color: var(--green); background: rgba(76,175,130,.12); color: var(--green); }
+    .review-tag-neg.active { border-color: var(--red); background: rgba(224,80,80,.1); color: var(--red); }
+
+    /* ── Badge historial cliente ── */
+    .client-badge {
+      display: inline-flex; align-items: center; gap: .3rem;
+      font-size: .68rem; padding: .2rem .55rem; border-radius: 999px;
+      font-weight: 600; letter-spacing: .02em;
+    }
+    .client-badge-pos { background: rgba(76,175,130,.12); color: var(--green); border: 1px solid rgba(76,175,130,.3); }
+    .client-badge-neg { background: rgba(224,80,80,.1); color: var(--red); border: 1px solid rgba(224,80,80,.3); }
+    .client-badge-new { background: rgba(201,168,76,.08); color: var(--t3); border: 1px solid var(--border); }
   </style>
 </head>
 <body class="panel-page panel-modelo">
@@ -735,6 +756,96 @@ function goPanelModelo(page, el) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 </script>
+<!-- ── Modal: Reseña de Cliente ───────────────────────────── -->
+<div class="modal-overlay" id="clientReviewModal">
+  <div class="modal" style="max-width:520px">
+    <div class="modal-header">
+      <h3 class="modal-title"><i class="fas fa-star" style="color:var(--gold)"></i> Reseña del cliente</h3>
+      <button class="modal-close" onclick="closeModal('clientReviewModal')"><i class="fas fa-times"></i></button>
+    </div>
+
+    <p style="font-size:.8rem;color:var(--t2);margin-bottom:1.25rem">
+      Esta reseña es <strong style="color:var(--gold)">completamente privada</strong> — solo la ven las Doncellas y el admin. Ayuda a las demás a saber qué esperar.
+    </p>
+
+    <!-- Tipo general -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-bottom:1.25rem">
+      <button class="review-type-btn active" data-tipo="positiva" onclick="selectReviewTipo(this,'positiva')"
+        style="padding:.6rem;border-radius:var(--r-md);border:2px solid var(--green);background:rgba(76,175,130,.12);color:var(--green);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s">
+        <i class="fas fa-thumbs-up"></i> Buen cliente
+      </button>
+      <button class="review-type-btn" data-tipo="neutral" onclick="selectReviewTipo(this,'neutral')"
+        style="padding:.6rem;border-radius:var(--r-md);border:2px solid var(--border);background:var(--surface);color:var(--t2);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s">
+        <i class="fas fa-minus"></i> Neutral
+      </button>
+      <button class="review-type-btn" data-tipo="negativa" onclick="selectReviewTipo(this,'negativa')"
+        style="padding:.6rem;border-radius:var(--r-md);border:2px solid var(--border);background:var(--surface);color:var(--t2);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s">
+        <i class="fas fa-thumbs-down"></i> Cuidado
+      </button>
+    </div>
+
+    <!-- Tags positivos -->
+    <div id="tagsPositivos">
+      <p style="font-size:.72rem;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.6rem">¿Qué destacas de él?</p>
+      <div style="display:flex;flex-wrap:wrap;gap:.45rem" id="tagsPos">
+        <button class="review-tag" onclick="toggleTag(this)">✨ Muy amable</button>
+        <button class="review-tag" onclick="toggleTag(this)">⏰ Puntual</button>
+        <button class="review-tag" onclick="toggleTag(this)">💵 Da propinas</button>
+        <button class="review-tag" onclick="toggleTag(this)">🤝 Respetuoso</button>
+        <button class="review-tag" onclick="toggleTag(this)">😊 Complaciente</button>
+        <button class="review-tag" onclick="toggleTag(this)">🧼 Limpio y presentable</button>
+        <button class="review-tag" onclick="toggleTag(this)">💬 Buena comunicación</button>
+        <button class="review-tag" onclick="toggleTag(this)">⭐ Lo volvería a atender</button>
+      </div>
+    </div>
+
+    <!-- Tags negativos -->
+    <div id="tagsNegativos" style="display:none">
+      <p style="font-size:.72rem;color:var(--red);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.6rem">⚠️ ¿Qué pasó?</p>
+      <div style="display:flex;flex-wrap:wrap;gap:.45rem" id="tagsNeg">
+        <button class="review-tag review-tag-neg" onclick="toggleTag(this)">💸 No pagó el extra</button>
+        <button class="review-tag review-tag-neg" onclick="toggleTag(this)">🚫 No pagó completo</button>
+        <button class="review-tag review-tag-neg" onclick="toggleTag(this)">😤 Trato irrespetuoso</button>
+        <button class="review-tag review-tag-neg" onclick="toggleTag(this)">😡 Fue agresivo/a</button>
+        <button class="review-tag review-tag-neg" onclick="toggleTag(this)">🤥 No cumplió lo acordado</button>
+        <button class="review-tag review-tag-neg" onclick="toggleTag(this)">🍺 Llegó en mal estado</button>
+        <button class="review-tag review-tag-neg" onclick="toggleTag(this)">📵 Pedía más de lo acordado</button>
+        <button class="review-tag review-tag-neg" onclick="toggleTag(this)">🖼️ Foto falsa</button>
+      </div>
+    </div>
+
+    <!-- Tags neutral -->
+    <div id="tagsNeutral" style="display:none">
+      <p style="font-size:.72rem;color:var(--t2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.6rem">Selecciona lo que aplique</p>
+      <div style="display:flex;flex-wrap:wrap;gap:.45rem">
+        <button class="review-tag" onclick="toggleTag(this)">😐 Sin problemas</button>
+        <button class="review-tag" onclick="toggleTag(this)">🔇 Poco comunicativo</button>
+        <button class="review-tag" onclick="toggleTag(this)">⏱️ Se tardó demasiado</button>
+        <button class="review-tag" onclick="toggleTag(this)">🤷 Nada especial</button>
+      </div>
+    </div>
+
+    <!-- Notas adicionales -->
+    <div class="form-group" style="margin-top:1.1rem">
+      <label class="form-label">Notas adicionales <span style="color:var(--t3);font-weight:400">(opcional)</span></label>
+      <textarea class="form-input" id="reviewNotas" rows="2"
+        placeholder="Algo más que las demás deban saber sobre este cliente…"
+        style="resize:vertical;min-height:70px"></textarea>
+    </div>
+
+    <div style="display:flex;gap:.75rem;justify-content:flex-end;margin-top:.5rem">
+      <button class="btn btn-ghost" onclick="closeModal('clientReviewModal')">Cancelar</button>
+      <button class="btn btn-gold" onclick="submitClientReview()">
+        <i class="fas fa-paper-plane"></i> Guardar reseña
+      </button>
+    </div>
+
+    <input type="hidden" id="reviewClienteWa" />
+    <input type="hidden" id="reviewCitaId" />
+    <input type="hidden" id="reviewTipo" value="positiva" />
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script src="supabase-config.js"></script>
 <script src="app.js"></script>
@@ -899,6 +1010,123 @@ function togglePassVisibility() {
     el.type = 'password';
     icon.className = 'fas fa-eye';
   }
+}
+</script>
+<script>
+/* ── Reseñas de clientes ───────────────────────────────── */
+function openClientReview(citaId, clienteWa) {
+  document.getElementById('reviewCitaId').value    = citaId  || '';
+  document.getElementById('reviewClienteWa').value = clienteWa || '';
+  document.getElementById('reviewTipo').value      = 'positiva';
+  document.getElementById('reviewNotas').value     = '';
+  /* reset tags */
+  document.querySelectorAll('.review-tag').forEach(t => t.classList.remove('active'));
+  /* reset tipo buttons */
+  selectReviewTipo(document.querySelector('[data-tipo="positiva"]'), 'positiva');
+  openModal('clientReviewModal');
+}
+
+function selectReviewTipo(btn, tipo) {
+  document.querySelectorAll('.review-type-btn').forEach(b => {
+    b.style.borderColor = 'var(--border)';
+    b.style.background  = 'var(--surface)';
+    b.style.color       = 'var(--t2)';
+  });
+  const colors = { positiva:['var(--green)','rgba(76,175,130,.15)','var(--green)'],
+                   negativa: ['var(--red)','rgba(224,80,80,.12)','var(--red)'],
+                   neutral:  ['var(--gold)','rgba(201,168,76,.1)','var(--gold)'] };
+  const [bc, bg, tc] = colors[tipo] || colors.neutral;
+  if (btn) { btn.style.borderColor=bc; btn.style.background=bg; btn.style.color=tc; }
+  document.getElementById('reviewTipo').value = tipo;
+  document.getElementById('tagsPositivos').style.display = tipo==='positiva' ? 'block' : 'none';
+  document.getElementById('tagsNegativos').style.display = tipo==='negativa' ? 'block' : 'none';
+  document.getElementById('tagsNeutral').style.display   = tipo==='neutral'  ? 'block' : 'none';
+  document.querySelectorAll('.review-tag').forEach(t => t.classList.remove('active'));
+}
+
+function toggleTag(btn) {
+  btn.classList.toggle('active');
+}
+
+async function submitClientReview() {
+  const tipo       = document.getElementById('reviewTipo').value;
+  const clienteWa  = document.getElementById('reviewClienteWa').value;
+  const citaId     = document.getElementById('reviewCitaId').value;
+  const notas      = document.getElementById('reviewNotas').value.trim();
+  const tags       = [...document.querySelectorAll('.review-tag.active')].map(t => t.textContent.trim());
+
+  if (!clienteWa) { showToast('No se encontró el número del cliente', 'error'); return; }
+
+  const escortId = sessionStorage.getItem('escortId') || null;
+
+  if (window.sbClient) {
+    const { error } = await window.sbClient
+      .from('resenas_clientes')
+      .insert({
+        cliente_whatsapp: clienteWa,
+        escort_id: escortId ? parseInt(escortId) : null,
+        cita_id:   citaId   ? parseInt(citaId)   : null,
+        tipo, tags, notas: notas || null,
+      });
+    if (error) { showToast('Error al guardar: ' + error.message, 'error'); return; }
+  }
+
+  closeModal('clientReviewModal');
+  showToast('✅ Reseña guardada — gracias por ayudar a las demás', 'success');
+}
+
+async function loadClientBadge(clienteWa, containerEl) {
+  if (!window.sbClient || !clienteWa || !containerEl) return;
+  const { data } = await window.sbClient
+    .from('resenas_clientes')
+    .select('tipo')
+    .eq('cliente_whatsapp', clienteWa);
+
+  if (!data || !data.length) {
+    containerEl.innerHTML = '<span class="client-badge client-badge-new"><i class="fas fa-user"></i> Cliente nuevo</span>';
+    return;
+  }
+  const negativas = data.filter(r => r.tipo === 'negativa').length;
+  const positivas = data.filter(r => r.tipo === 'positiva').length;
+  if (negativas > 0) {
+    containerEl.innerHTML = `<span class="client-badge client-badge-neg"><i class="fas fa-exclamation-triangle"></i> ${negativas} alerta${negativas>1?'s':''} — ver historial</span>`;
+  } else {
+    containerEl.innerHTML = `<span class="client-badge client-badge-pos"><i class="fas fa-star"></i> ${positivas} reseña${positivas>1?'s':''} positiva${positivas>1?'s':''}</span>`;
+  }
+  containerEl.style.cursor = 'pointer';
+  containerEl.onclick = () => viewClientHistory(clienteWa);
+}
+
+async function viewClientHistory(clienteWa) {
+  if (!window.sbClient) return;
+  const { data } = await window.sbClient
+    .from('resenas_clientes')
+    .select('tipo, tags, notas, created_at')
+    .eq('cliente_whatsapp', clienteWa)
+    .order('created_at', { ascending: false });
+
+  if (!data?.length) { showToast('Sin historial para este cliente', 'info'); return; }
+
+  const iconos = { positiva:'✅', negativa:'⚠️', neutral:'➖' };
+  const items  = data.map(r => `
+    <div style="padding:.75rem;background:var(--surface);border-radius:var(--r-md);border:1px solid var(--border);margin-bottom:.5rem">
+      <div style="font-size:.8rem;font-weight:600;margin-bottom:.3rem">${iconos[r.tipo]||'➖'} ${r.tipo.charAt(0).toUpperCase()+r.tipo.slice(1)}</div>
+      ${r.tags?.length ? `<div style="display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:.3rem">${r.tags.map(t=>`<span style="font-size:.7rem;padding:.15rem .5rem;border-radius:999px;background:var(--card);border:1px solid var(--border)">${t}</span>`).join('')}</div>` : ''}
+      ${r.notas ? `<p style="font-size:.78rem;color:var(--t2)">${r.notas}</p>` : ''}
+      <p style="font-size:.68rem;color:var(--t3);margin-top:.25rem">${new Date(r.created_at).toLocaleDateString('es-MX',{day:'numeric',month:'short',year:'numeric'})}</p>
+    </div>`).join('');
+
+  const modal = document.getElementById('clientReviewModal');
+  const orig  = modal.querySelector('.modal').innerHTML;
+  modal.querySelector('.modal').innerHTML = `
+    <div class="modal-header">
+      <h3 class="modal-title"><i class="fas fa-history" style="color:var(--gold)"></i> Historial del cliente</h3>
+      <button class="modal-close" onclick="closeModal('clientReviewModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <p style="font-size:.78rem;color:var(--t2);margin-bottom:1rem">Número: ****${clienteWa.slice(-4)} · ${data.length} reseña${data.length>1?'s':''}</p>
+    <div style="max-height:60vh;overflow-y:auto">${items}</div>
+    <button class="btn btn-ghost w-full" style="margin-top:.75rem" onclick="this.closest('.modal').innerHTML = \`${orig.replace(/`/g,"'")}\`">← Volver</button>`;
+  openModal('clientReviewModal');
 }
 </script>
 <script>
