@@ -2066,7 +2066,7 @@ function buildActivityTable() {
   const tbody = document.getElementById('activityTbody');
   if (!tbody) return;
   [
-    ['Nueva cita','Valentina R. / Carlos M.','$2,500','Hoy 14:32','success'],
+    ['Nueva cita','Valentina R. — Hotel Fiesta Americana','$2,500','Hoy 14:32','success'],
     ['Membresía Gold','Eduardo L.','$2,000','Hoy 12:15','success'],
     ['Pago rechazado','Roberto A.','$2,500','Hoy 10:48','error'],
     ['Nuevo perfil','Mariana F.','—','Hoy 09:20','info'],
@@ -2529,11 +2529,27 @@ function renderAdminCalendar() {
   grid.innerHTML=html;
 }
 
+function _lugarIcon(tipo) {
+  return tipo === 'Motel'
+    ? '<i class="fas fa-bed" style="color:#A889C0;font-size:.7rem"></i>'
+    : '<i class="fas fa-hotel" style="color:var(--gold);font-size:.7rem"></i>';
+}
+
 function buildTodayCitas() {
   const w=document.getElementById('todayCitas');
   if(!w)return;
-  [['Valentina R.','Carlos M.','10:00','1hr'],['Renata P.','Eduardo L.','14:00','3hr'],['Camila V.','Javier R.','17:30','1hr']].forEach(c=>{
-    w.insertAdjacentHTML('beforeend',`<div style="padding:.75rem;background:var(--surface);border-radius:var(--r-md);border:1px solid var(--border)"><div style="display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:.2rem"><strong>${c[0]}</strong><span style="color:var(--gold)">${c[2]}</span></div><div style="font-size:.75rem;color:var(--t2)">${c[1]} · ${c[3]}</div></div>`);
+  /* [escort, tipo_lugar, lugar, hora, duracion] */
+  [['Valentina R.','Hotel','Fiesta Americana','10:00','1hr'],
+   ['Renata M.','Motel','Las Villas','14:00','3hr'],
+   ['Camila V.','Hotel','Hilton GDL','17:30','1hr']
+  ].forEach(c=>{
+    w.insertAdjacentHTML('beforeend',`
+      <div style="padding:.75rem;background:var(--surface);border-radius:var(--r-md);border:1px solid var(--border)">
+        <div style="display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:.2rem">
+          <strong>${c[0]}</strong><span style="color:var(--gold)">${c[3]}</span>
+        </div>
+        <div style="font-size:.75rem;color:var(--t2)">${_lugarIcon(c[1])} ${c[1]} ${c[2]} · ${c[4]}</div>
+      </div>`);
   });
 }
 
@@ -2581,16 +2597,27 @@ function buildCurrentGallery() {
 function buildCitasProximas() {
   const w=document.getElementById('citasProximas');
   if(!w)return;
-  [['Carlos M.','Vie 18 Abr','10:00','1hr','Universitaria','$2,500'],
-   ['Eduardo L.','Sáb 19 Abr','14:00','3hr','Fit','$6,500'],
-   ['Roberto A.','Lun 21 Abr','17:00','1hr','Jovencita','$2,500'],
+  /* [tipo_lugar, lugar, fecha, hora, duracion, tarifa] */
+  [['Hotel','Fiesta Americana','Vie 18 Abr','10:00','1hr','$2,500'],
+   ['Motel','Las Villas',      'Sáb 19 Abr','14:00','3hr','$6,500'],
+   ['Hotel','Hilton GDL',      'Lun 21 Abr','17:00','1hr','$2,500'],
   ].forEach(c=>{
+    const [tipo,lugar,fecha,hora,dur,tarifa]=c;
     w.insertAdjacentHTML('beforeend',`
       <div class="cita-item">
-        <div class="cita-date"><div class="day">${c[1].split(' ')[1]}</div><div class="month">${c[1].split(' ')[2]} ${c[1].split(' ')[3]}</div></div>
-        <div class="cita-info"><h4>${c[0]}</h4><p>${c[2]} · ${c[3]} · ${c[4]}</p></div>
+        <div class="cita-date">
+          <div class="day">${fecha.split(' ')[1]}</div>
+          <div class="month">${fecha.split(' ')[2]}</div>
+        </div>
+        <div class="cita-info">
+          <h4 style="display:flex;align-items:center;gap:.4rem">
+            ${_lugarIcon(tipo)}
+            <span>${tipo} ${lugar}</span>
+          </h4>
+          <p>${hora} · ${dur}</p>
+        </div>
         <div style="text-align:right">
-          <div style="font-family:var(--font-serif);color:var(--gold)">${c[5]}</div>
+          <div style="font-family:var(--font-serif);color:var(--gold)">${tarifa}</div>
           <div style="display:flex;gap:.4rem;margin-top:.4rem">
             <button class="btn btn-wa btn-sm" onclick="window.open('https://wa.me/523312345678')"><i class="fab fa-whatsapp"></i></button>
             <button class="btn btn-outline btn-sm">Cancelar</button>
@@ -2603,18 +2630,29 @@ function buildCitasProximas() {
 function buildCitasHistorial() {
   const w=document.getElementById('citasHistorial');
   if(!w)return;
-  [['Héctor F.','Mié 16 Abr','11:00','1hr','$2,500','Completada'],
-   ['Javier R.','Lun 14 Abr','15:00','3hr','$6,500','Completada'],
-   ['Miguel S.','Sáb 12 Abr','09:00','Día','$18,000','Completada'],
-   ['Luis P.',  'Jue 10 Abr','18:00','1hr','$2,500', 'Cancelada'],
+  /* [tipo_lugar, lugar, fecha, hora, duracion, tarifa, estado] */
+  [['Motel','El Paraíso', 'Mié 16 Abr','11:00','1hr', '$2,500', 'Completada'],
+   ['Hotel','Marriott',   'Lun 14 Abr','15:00','3hr', '$6,500', 'Completada'],
+   ['Hotel','Crown Plaza','Sáb 12 Abr','09:00','Día', '$18,000','Completada'],
+   ['Motel','Los Pinos',  'Jue 10 Abr','18:00','1hr', '$2,500', 'Cancelada'],
   ].forEach(c=>{
+    const [tipo,lugar,fecha,hora,dur,tarifa,estado]=c;
     w.insertAdjacentHTML('beforeend',`
       <div class="cita-item">
-        <div class="cita-date"><div class="day">${c[1].split(' ')[1]}</div><div class="month">${c[1].split(' ')[2]} ${c[1].split(' ')[3]}</div></div>
-        <div class="cita-info"><h4>${c[0]}</h4><p>${c[2]} · ${c[3]}</p></div>
+        <div class="cita-date">
+          <div class="day">${fecha.split(' ')[1]}</div>
+          <div class="month">${fecha.split(' ')[2]}</div>
+        </div>
+        <div class="cita-info">
+          <h4 style="display:flex;align-items:center;gap:.4rem">
+            ${_lugarIcon(tipo)}
+            <span>${tipo} ${lugar}</span>
+          </h4>
+          <p>${hora} · ${dur}</p>
+        </div>
         <div style="text-align:right">
-          <div style="font-family:var(--font-serif);color:var(--gold)">${c[4]}</div>
-          <span class="pill ${c[5]==='Completada'?'pill-available':'pill-busy'}" style="font-size:.65rem;margin-top:.35rem">${c[5]}</span>
+          <div style="font-family:var(--font-serif);color:var(--gold)">${tarifa}</div>
+          <span class="pill ${estado==='Completada'?'pill-available':'pill-busy'}" style="font-size:.65rem;margin-top:.35rem">${estado}</span>
         </div>
       </div>`);
   });

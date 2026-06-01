@@ -81,10 +81,13 @@ CREATE TABLE IF NOT EXISTS disponibilidad (
 CREATE TABLE IF NOT EXISTS citas (
   id               BIGSERIAL PRIMARY KEY,
   escort_id        BIGINT REFERENCES escorts(id),
-  cliente_nombre   TEXT,
-  cliente_whatsapp TEXT,
+  tipo_lugar       TEXT DEFAULT 'Hotel' CHECK (tipo_lugar IN ('Hotel','Motel')),
+  lugar            TEXT,                  -- Nombre del hotel o motel
+  cliente_whatsapp TEXT,                  -- Solo para relay agente (nunca visible)
   fecha            DATE,
   hora             TEXT,
+  duracion         TEXT,                  -- '1hr', '3hr', 'Día', etc.
+  tarifa           INTEGER,               -- MXN
   estado           TEXT DEFAULT 'pendiente'
                      CHECK (estado IN ('pendiente','confirmada','cancelada','completada')),
   notas            TEXT,
