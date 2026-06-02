@@ -798,7 +798,7 @@ function buildHeroMosaic() {
     + (pool[3] ? slot(pool[3], false) : '');
 }
 
-/* ─── Galería 2 fotos con crossfade ─────────────────────── */
+/* ─── Galería: un slot por escort, 2 en 2 hacia abajo ───── */
 function buildDoncellaGallery() {
   const el = document.getElementById('doncellaGallery');
   if (!el) return;
@@ -806,35 +806,30 @@ function buildDoncellaGallery() {
   const escorts = MODELS.filter(m => !m.hidden);
   if (!escorts.length) return;
 
-  /* Pool: todas las fotos de todas las escorts con metadata */
-  const pool = [];
-  escorts.forEach(m => {
-    m.photos.forEach(p => pool.push({ src: p, name: m.name, id: m.id, available: m.available }));
-  });
-
-  /* Crear solo 2 slots */
-  [0, 1].forEach(slotIdx => {
+  escorts.forEach((m, i) => {
     el.insertAdjacentHTML('beforeend', `
-      <div class="dg-item" id="dgSlot${slotIdx}">
-        <img class="dg-img dg-img-a dg-active" src="" alt="" loading="eager" />
+      <div class="dg-item" id="dgSlot${i}">
+        <img class="dg-img dg-img-a dg-active" src="" alt="" loading="${i < 2 ? 'eager' : 'lazy'}" />
         <img class="dg-img dg-img-b" src="" alt="" loading="lazy" />
         <div class="wm-overlay"></div>
         <div class="dg-info">
-          <div class="dg-name" id="dgName${slotIdx}"></div>
-          <div class="dg-status" id="dgStatus${slotIdx}">
+          <div class="dg-name" id="dgName${i}"></div>
+          <div class="dg-status" id="dgStatus${i}">
             <span class="dg-dot"></span>
-            <span id="dgStatusTxt${slotIdx}"></span>
+            <span id="dgStatusTxt${i}"></span>
           </div>
-          <a href="#" class="dg-ver" id="dgVer${slotIdx}" onclick="event.stopPropagation()">
+          <a href="#" class="dg-ver" id="dgVer${i}" onclick="event.stopPropagation()">
             Ver perfil <i class="fas fa-arrow-right" style="font-size:.6rem"></i>
           </a>
         </div>
       </div>`);
-  });
 
-  /* Arrancar ciclo con offset entre los 2 slots */
-  startSlotCycle(0, pool, 0,    5200);
-  startSlotCycle(1, pool, Math.floor(pool.length / 2), 4600);
+    /* Pool: solo las fotos de esta escort */
+    const pool = m.photos.map(p => ({ src: p, name: m.name, id: m.id, available: m.available }));
+    /* Columnas pares 5.2s, impares 4.6s → nunca cambian al mismo tiempo */
+    const interval = i % 2 === 0 ? 5200 : 4600;
+    startSlotCycle(i, pool, 0, interval);
+  });
 }
 
 

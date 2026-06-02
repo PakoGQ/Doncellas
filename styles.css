@@ -498,19 +498,17 @@ p  { line-height: 1.7; color: var(--t2); }
 .dg-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  height: 78vh;
-  max-height: 740px;
-  min-height: 420px;
   gap: 5px;
 }
 
-/* Item — las 2 columnas */
+/* Item — un slot por escort */
 .dg-item {
   position: relative;
   overflow: hidden;
   cursor: pointer;
   background: #0a0a0a;
   border-radius: 4px;
+  height: 500px;
 }
 
 /* Dos imágenes apiladas para crossfade real */
@@ -639,7 +637,7 @@ p  { line-height: 1.7; color: var(--t2); }
     max-height: none;
     gap: 4px;
   }
-  .dg-item { height: 55vw; min-height: 260px; }
+  .dg-item { height: 58vw; min-height: 240px; }
   .dg-name { font-size: .88rem; }
 }
 /* ────────────────────────────────────────────────────────── */
