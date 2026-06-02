@@ -1,5 +1,5 @@
 # CLAUDE.md — Proyecto Doncellas
-> Contexto completo para continuar el desarrollo en un nuevo chat
+> Estado real del proyecto al 1 de junio de 2026. Actualizado leyendo todos los archivos.
 
 ---
 
@@ -7,17 +7,18 @@
 
 | Campo | Detalle |
 |-------|---------|
-| **Nombre** | Doncellas (antes: VelvetStage) |
+| **Nombre** | Doncellas GDL |
 | **Giro** | Plataforma de escorts en Guadalajara, México |
 | **Nombre para las chicas** | "Las Doncellas" |
+| **Tagline** | "La Elegancia del Placer" |
 | **Ciudad inicial** | Guadalajara, Jalisco, México |
 | **Expansión futura** | CDMX, Monterrey, Cancún |
-| **Dominio objetivo** | doncellas.mx + doncellas.com (~$315 MXN ambos/año en akky.mx) |
-| **URL en vivo** | https://pakogq.github.io/Doncellas/ |
+| **Dominio activo** | doncellas.mx (con HTTPS via Cloudflare) |
+| **Dominio alterno** | doncellas.com.mx → redirect a doncellas.mx (propagando) |
+| **URL GitHub Pages** | https://pakogq.github.io/Doncellas/ |
 | **Color principal** | Negro `#0A0A0A` |
 | **Color acento** | Dorado `#C9A84C` |
 | **Carpeta del proyecto** | `~/doncellas` en Mac |
-| **Herramienta de desarrollo** | Claude Code en Mac |
 | **Repositorio GitHub** | https://github.com/pakogq/Doncellas |
 
 ---
@@ -26,11 +27,9 @@
 
 - **Nombre:** Francisco (Paco) Gaitan Quintero
 - **Ubicación:** Guadalajara, México (doble nacionalidad mexicana-americana, nacido en Los Ángeles CA)
-- **Situación:** Ya tiene escorts listas para iniciar — lanzamiento casi inmediato
-- **Claude Code:** Instalado y funcionando en Mac, carpeta `~/doncellas`
-- **GitHub Pages:** Configurado y en vivo en `pakogq.github.io/Doncellas/`
-- **Canva:** Cuenta activa, logo subido (ID diseño: `DAHHd8_Xx8o`), PNG descargado
-- **Otro negocio:** Empresa de agentes IA para PyMEs en USA (contadores, abogados migratorios, logística México-USA) con paquetes Essential/Pro/Elite
+- **Correo:** francisco.gaitanq@gmail.com
+- **Situación:** Plataforma lista para beta — en proceso de incorporar primeras escorts reales
+- **Otro negocio:** Empresa de agentes IA para PyMEs en USA (contadores, abogados migratorios, logística México-USA)
 
 ---
 
@@ -40,10 +39,19 @@
 |------|-----------|--------|
 | Frontend | HTML + CSS + JS vanilla | ✅ Construido |
 | Hosting | GitHub Pages | ✅ Activo |
-| Base de datos | Supabase | ⏳ Pendiente conectar |
-| Agente IA | Claude API + Make.com + WhatsApp API + Telegram | ⏳ Pendiente construir |
-| Dominio | doncellas.mx + doncellas.com | ⏳ Pendiente comprar en akky.mx |
+| Dominio | doncellas.mx | ✅ Activo con HTTPS |
+| CDN/DNS | Cloudflare | ✅ Configurado |
+| Base de datos | Supabase | ✅ Conectado |
+| PWA | manifest.json + sw.js | ✅ Funcional |
+| Agente IA | GPT-4o mini + Make.com + Telegram + WhatsApp Business | ⏳ Pendiente (Mes 2) |
 | Hosting futuro | Vercel | ⏳ Pendiente migrar |
+
+### Supabase
+- **URL:** `https://lhfmyfxltxhpgfgymyzo.supabase.co`
+- **Key (anon):** `sb_publishable_R5iQ_m8bkQqe2eK3UiWhWw_6YFx7cIw`
+- **Configurado en:** `supabase-config.js` — expone `window.sbClient`
+- **Tablas activas:** escorts, fotos, servicios, disponibilidad, citas, resenas, resenas_clientes, usuarios
+- **5 escorts demo cargadas:** Valentina, Camila, Isabella, Sofía, Renata
 
 ---
 
@@ -51,360 +59,322 @@
 
 ```
 ~/doncellas/
-├── index.html          ← Página principal
-├── modelos.html        ← Grid de escorts (llamada "Doncellas")
-├── categorias.html     ← Categorías de escorts
-├── perfil.html         ← Perfil individual de escort
-├── panel-admin.html    ← Panel de administrador
-├── panel-modelo.html   ← Panel de escort
-├── membresias.html     ← Planes y precios
-├── styles.css          ← Todos los estilos
-├── app.js              ← Lógica JavaScript
-├── manifest.json       ← PWA manifest
-└── sw.js               ← Service Worker PWA
+├── index.html           ← Página principal
+├── modelos.html         ← Directorio completo de escorts
+├── categorias.html      ← Categorías y zonas
+├── perfil.html          ← Perfil individual de escort
+├── panel-admin.html     ← Panel de administrador
+├── panel-modelo.html    ← Panel de escort
+├── membresias.html      ← Página de afiliación (NO precios — lead gen)
+├── legal.html           ← Aviso legal / términos integrados
+├── terminos.html        ← Términos de uso
+├── privacidad.html      ← Política de privacidad
+├── cookies.html         ← Política de cookies
+├── offline.html         ← Página offline PWA
+├── styles.css           ← Todos los estilos
+├── app.js               ← Lógica JS principal (login, modelos, galería, admin)
+├── supabase-config.js   ← Conexión a Supabase (window.sbClient)
+├── schema.sql           ← Esquema de base de datos
+├── manifest.json        ← PWA manifest
+├── sw.js                ← Service Worker PWA
+├── logo.png             ← Logo Doncellas (PNG)
+├── doncellas-logo.svg   ← Logo en SVG
+├── watermark.png        ← Marca de agua para galería de fotos
+├── CNAME                ← doncellas.mx (GitHub Pages custom domain)
+├── sitemap.xml          ← SEO sitemap
+├── robots.txt           ← SEO robots
+├── agente/              ← Carpeta para el agente IA (pendiente de construir)
+└── assets/              ← Iconos PWA y otros assets
 ```
 
-**Credenciales de demo:**
-- Admin: `admin` / `admin123`
-- Escort demo: `isabella` / `modelo123`
+**Credenciales de acceso (hardcodeadas en app.js + Supabase):**
+- Admin: `admin` / `admin123` → panel-admin.html
+- Escort demo 1: `valentina` / `modelo123` → panel-modelo.html
+- Escort demo 2: `camila` / `modelo123` → panel-modelo.html
+- Escort demo 3: `isabella` / `modelo123` → panel-modelo.html
+- Escorts reales: login via tabla `usuarios` en Supabase
 
 ---
 
 ## 5. FUNCIONES CONSTRUIDAS
 
 ### index.html — Página principal
-- Hero banner rotativo 3 slides, altura 260px en móvil
-- Selector de ciudades (solo GDL activo)
-- Buscador debajo del banner, alineado a la izquierda en móvil
-- Strip "Disponibles para una cita ahora" con avatares
-- Secciones rotativas con barra de progreso 4s
-- Grid de escorts con carrusel hover (fade 1.2s, barras blancas)
-- Banner PWA instalación
-- Modo discreto (cambia a página de clima)
-- CTA flotante "¿Quieres ser escort?"
-- Bottom navigation fija en móvil (Inicio / Doncellas / Categorías / Cuenta)
+- **Navbar:** Logo + "Doncellas" + tagline centrado + links (Inicio/Doncellas/Categorías/Legal) + botón "Iniciar Sesión" a la derecha. Mobile: solo logo, tagline cursiva dorada, hamburger que abre drawer.
+- **Mobile Drawer:** Slide-in lateral con links completos (incluye Afiliación)
+- **Hero dinámico:** Slides generadas por JS desde escorts con promo. Sin slides estáticos.
+- **City bar (mobile):** Chips de zonas de GDL (Toda GDL / Zona Rosa / Providencia / Chapultepec / Tlaquepaque / Zapopan / Andares)
+- **Search bar:** Buscador expandible en mobile (icono lupa) con filtros zona + categoría (2 grupos: principales + más filtros). Botón "Buscar".
+- **Stats bar:** Doncellas activas (cuenta de Supabase) · Perfiles verificados · 100% discreto · Atención 24h
+- **Galería "Nuestras Doncellas":** Sección `#doncellaGallery` construida por JS con tarjetas animadas (crossfade Ken Burns). Link "Ver todas".
+- **Cómo funciona:** 3 pasos (Explora / Agenda por Telegram / Disfruta). CTA → @DocenllasGDLbot
+- **CTA Banner:** "¿Quieres ser una de nuestras Doncellas?" → WhatsApp
+- **¿Por qué elegirnos?:** 4 cards (Verificados / Disponibilidad Real / Total Discreción / Reseñas Reales)
+- **FAQ:** 6 preguntas con `<details>` accordion nativo
+- **Footer:** 4 columnas (brand + social / Plataforma / Para Doncellas / Legal)
+- **Botones flotantes:** Telegram (@DocenllasGDLbot) + WhatsApp
+- **Bottom nav (mobile):** Inicio / Doncellas / Categorías / Cuenta (abre loginModal)
+- **Login modal:** Username + password, cuentas demo precargables
+- **PWA install banner:** Se muestra en mobile si no está instalada
+- **Modo discreto:** `(display-mode: standalone)` detectado
 
-### perfil.html — Perfil de escort
-- Pill "Disponible" (verde) + badge "Verificada" + badge "TOP 10"
-- Botones de acción: Guardar, Compartir, WhatsApp, Telegram
-- Stats: fotos, videos, seguidores, calificación
-- Galería con pestañas Todo/Fotos/Videos
-- Apartado "Citas" colapsable con calendario de disponibilidad
-- Días verdes = disponibles, click activa botón "Agendar"
-- Modal de confirmación con hora/nombre/WhatsApp
-- Secciones: Sobre mí, Características, Servicios, Reseñas
-- Reseñas al final en móvil (order: 99)
-- Sidebar con WhatsApp, info personal, idiomas
+### modelos.html — Directorio de Doncellas
+- **Page header:** Título + contador de resultados (`#resultsCount`) + toggle grid/lista + select orden (Destacadas/Nuevas/Mejor calificadas/Precio ↑↓)
+- **Search bar:** Input con lupa + botón limpiar
+- **Filters bar:** Zona · Categoría · Tarifa (rangos MXN) · Disponibilidad (toggle Todas/Disponible/No Disponible) · Rating · botón Limpiar
+- **Active filter pills:** Muestra filtros activos como chips removibles
+- **Grid `#modelosGrid`:** Construido por JS. Carga desde Supabase si disponible, si no genera 10 modelos demo con RNG determinista.
+- **Quick View Modal:** Preview de perfil sin salir de la página
+- **Login modal:** Mismo que en todas las páginas
 
-### panel-admin.html
-- Login: `admin` / `admin123`
-- Dashboard: stats, gráfica de visitas
-- Ingresos: gráfica barras, proyección anual, tabla de cobros
-- Escorts: tabla con plan/estado/verificación/calificación
-- Alta de escorts controlada por admin (no se registran solas)
-- Calendario editable por escort
-- Reseñas: aprobar o rechazar antes de publicar
-- Referidos: historial y bonos
+### categorias.html — Categorías
+- **Search dropdown:** Input con resultados live (`#catSearchDrop`)
+- **Feature grid CSS:** `.cat-feature-grid` — primera card ocupa 2 columnas + 2 filas (520px), resto 240px. Responsive a 2 col y 1 col en mobile.
+- **`#catFeatureGrid`:** Cards grandes para categorías principales (con imagen, overlay, count)
+- **`#allCatsGrid`:** Grid de todas las especialidades
+- **`#zonesGrid`:** Cards de zonas con icono + flecha hover
+- **`#popularTags`:** Tags populares en chips
 
-### panel-modelo.html
-- Login: `isabella` / `modelo123`
-- Toggle Online/Offline sticky (verde cuando activa)
-- Estadísticas: visitas, seguidores, gráfica diaria, horarios pico
-- Contenido: upload, grid de archivos
-- Perfil editable (nombre artístico bloqueado 🔒)
-- Mis citas: lista con estado, confirmar/cancelar
-- Calendario: click en días para marcar disponible
-- Referidos: link personalizado, contador, historial
-- Mi plan: puede cambiar entre Starter/Gold/Elite
+### perfil.html — Perfil individual
+- **Carrusel hero:** Track deslizable con 5 fotos demo, blur bg dinámico, overlay, botones prev/next, contador "1 / 5"
+- **Barra de info:** Pills (Disponible / Verificada / Top 10), nombre, meta (zona/edad/altura/stars), botones acción
+- **Botones mobile:** `.botones-perfil-mobile` — Guardar / Compartir / WhatsApp / Telegram
+- **Layout 2 columnas:** Columna izquierda (contenido) + columna derecha sticky (sidebar)
+- **Sobre mí + tags**
+- **Galería:** Vista principal (4/3) con flechas nav + columna de thumbnails + botón pantalla completa. Funciones `navigateMedia()`, `openFullscreen()`, `playMainVideo()`
+- **Servicios | Características:** Side by side en grid 1fr 1fr. Características: grid `.caract-grid`
+- **Reseñas:** Rating numérico + barras de distribución (68%/22%/7%/3%) + lista construida por JS + "Cargar más"
+- **Sidebar:** Card de tarifas (1h/$2,500 · 3h/$6,500 · Día/$18,000) + promo box (oculto por defecto) + métodos de pago · Calendario colapsable · Contacto rápido · Perfiles similares
+- **Calendario colapsable:** `.calendar-wrap` con header mes, grid días, leyenda (Verde=disponible/Dorado=hoy/Gris=no disponible)
+- **Fullscreen viewer:** `#fullscreenViewer` — overlay 97% negro con nav, contador, soporte imagen+video
+- **Gallery Modal:** Grid auto-fill minmax(180px)
 
-### membresias.html
-- 3 planes: Starter $199 / Gold $299 / Elite $499 MXN/mes
-- Toggle mensual/anual con ahorro calculado
-- Primer mes gratis
-- Pasarela pagos: tarjeta / OXXO / SPEI
+### panel-admin.html — Panel Administrador
+- **Login:** admin/admin123
+- **Sidebar fijo:** Dashboard · Doncellas · Contenido · Citas · Reseñas (badge 7) | Ingresos · Membresías · Pagos | Configuración · Moderación
+- **Mobile bottom nav:** Dashboard / Escorts / Reseñas / Ingresos
+- **Dashboard:** 6 KPIs (Ingresos mes/Citas/Activas/Miembros VIP/Rating/Reseñas pendientes) + 4 gráficas Chart.js (Ingresos mensuales con tabs 7D/30D/90D/1A, Distribución pie, Citas por día, Nuevas membresías) + tabla Actividad Reciente
+- **Doncellas (Gestión):** Tabla con columnas (Doncella/Zona/Categoría/Plan/Citas mes/Ingresos/Estado/Acciones) + filtros + paginación. Botón "Agregar Doncella".
+- **Modal "Agregar Doncella":** Nombre artístico → auto-genera username. Campos: nombre/edad/zona/categoría/plan (default Elite)/tarifa/teléfono/descripción + sección credenciales con generador de contraseña. Botón "Crear cuenta y guardar".
+- **Contenido:** Grid de modelos por foto, buscador
+- **Citas:** Calendario mes con grid 7 columnas + panel "Citas de hoy"
+- **Reseñas:** Tabs Pendientes (7) / Aprobadas / Rechazadas — moderación antes de publicar
+- **Ingresos:** 4 KPIs (semana/mes/año/comisión 20%) + gráfica + tabla transacciones con Export CSV
+- **Membresías:** KPIs por plan (Elite 234 / Gold 415 / Silver 243) + cancelaciones
+- **Pagos:** Tabla historial completo
+- **Configuración:** Nombre plataforma + comisión % + ciudad + toggles notificaciones
+- **Moderación:** Contenido reportado
 
-### PWA
-- manifest.json y sw.js creados
-- Banner de instalación en móvil
-- Funciona como app instalable en iOS y Android
+### panel-modelo.html — Panel Escort
+- **Login:** isabella/modelo123 (o cualquier escort de Supabase)
+- **Navbar:** Toggle Disponible/No Disponible (verde, naranja si en cita, rojo) + nombre + avatar
+- **Mobile sticky bar:** `.mobile-avail-bar` — toggle disponibilidad fijo en mobile
+- **Lógica de cita activa:** Si hay cita en curso → toggle bloqueado "En cita hasta HH:MM", se restaura al terminar (polling cada 30s)
+- **Sidebar:** Mini perfil + progreso (72% completo) + nav: Estadísticas / Mi Contenido / Mis Citas / Disponibilidad / Editar Perfil / Configuración + links "Ver mi perfil" y "Mejorar plan"
+- **Mobile bottom nav (5 items):** Inicio / Contenido / Citas / Calendario / Perfil
+- **Estadísticas:** 6 KPIs (Ingresos/Citas/Rating/Visitas/Favoritos/Reseñas nuevas) + 4 gráficas (Ingresos semanal con tabs, Fuentes de contacto pie, Visitas al perfil, Satisfacción del cliente con barras de progreso)
+- **Mi Contenido:** Drop zone con `<input type="file" multiple>` + preview grid + galería actual con ordenar/eliminar
+- **Mis Citas:** Tabs Próximas (badge 3) / Historial / Por confirmar + items tipo `.cita-item` con fecha visual + estado
+- **Disponibilidad:** Toggle global "Disponible ahora" + week-grid (7 días × horas, click para activar/desactivar) + bloqueo de fechas específicas con chips removibles
+- **Editar Perfil:** Foto con preview + Información básica (nombre artístico read-only 🔒, descripción, edad, altura, zona) + Medidas (busto/cintura/cadera/ojos/cabello/piel) + Servicios (tabla Sí/Extra con 8 servicios) + Tarifas (1h/3h/día completo) + WhatsApp/Telegram
+- **Configuración:** Credenciales read-only (solo admin puede cambiar) + toggles notificaciones
+- **Modal Reseña de Cliente:** Sistema privado solo entre escorts y admin. Tipos: Buen cliente / Neutral / Cuidado. Tags predefinidos para cada tipo. Notas opcionales. Se guarda en tabla `resenas_clientes` en Supabase. Función `loadClientBadge()` muestra historial del cliente en las citas.
 
----
-
-## 6. DECISIONES DE DISEÑO TOMADAS
-
-- Admin controla el alta de escorts — ellas NO se registran solas
-- Las escorts editan su contenido pero NO nombre artístico ni plan
-- WhatsApp directo (wa.me/número) en lugar de chat interno
-- Pill dice "Disponible" (no "En línea")
-- Calendario colapsable bajo label "Citas"
-- Reseñas moderadas — admin aprueba antes de publicar
-- Solo Guadalajara al inicio — arquitectura lista para más ciudades
-- Las escorts proporcionan sus propias fotos y videos ($0 costo producción)
-- Carrusel hover en todos los grids
-- Indicadores del banner: líneas horizontales delgadas (no dots)
-- Bottom navigation fija en móvil en lugar de hamburguesa
-
-### Categorías de escorts (actualizadas)
-1. VIP
-2. Universitarias
-3. GFE — Novia por un día
-4. Venezolanas
-5. A domicilio
-6. Petite
-7. Eventos y cenas
-8. Nuevas
-
----
-
-## 7. OPTIMIZACIÓN MÓVIL APLICADA
-
-### Navbar móvil
-- Solo logo "Doncellas" a la izquierda
-- Palabra "Escorts" en cursiva dorada a la derecha
-- Sin botones de inicio de sesión ni hamburguesa en móvil
-- Cambio aplicado en: index.html, modelos.html, categorias.html
-
-### Hero banner móvil
-- Altura 260px
-- Sin mini-cards flotantes
-- Sin indicadores de navegación (barras/dots)
-- Título font-size 22px
-
-### Buscador móvil
-- Debajo del banner
-- Alineado a la izquierda
-
-### Grid de escorts móvil
-- 2 columnas exactas
-- gap 8px
-
-### Perfil móvil
-- Oculto: ubicación, edad, estatura, estrellas, reseñas del bloque superior
-- Botones de acción: solo iconos, debajo del carrusel de fotos
-- Servicios debajo de Características
-- Reseñas al final (order: 99)
-
-### Paneles en móvil
-- Sidebar lateral → bottom navigation inferior
-- Todas las funcionalidades accesibles
-- Formularios en columna única, inputs 44px mínimo
+### membresias.html — Afiliación (no es de precios)
+- **Hero:** "¿Quieres ser una Doncella?" + banner invitación selecta
+- **Formulario lead-gen:** Nombre artístico + WhatsApp + Ciudad + Bio (opcional) + checkbox mayor de 18. Submit → estado de éxito (simulado, 1.4s). Alternativa WhatsApp directo.
+- **Trust badges:** Discreción total / Datos protegidos / Sin costo inicial
+- **Proceso en 4 pasos**
+- **Beneficios:** 6 items (Perfil publicado / Galería / Calendario / Estadísticas / Privacidad / Soporte)
+- **FAQ de afiliación:** 6 preguntas (accordion JS) — sin `<details>`, usa clases open/close
+- **NOTA:** Los precios de membresías (Silver $1,500 / Gold $2,000 / Elite $2,500) solo aparecen en panel-admin.html sección Membresías. En beta todas las escorts son Elite GRATIS.
 
 ---
 
-## 8. NAVBAR DESKTOP
+## 6. LÓGICA DE APP.JS (puntos clave)
 
-- Izquierda: logo D + "DONCELLAS"
-- Centro: links de navegación
-- Derecha: "Escorts" en cursiva dorada + botón "Iniciar sesión"
-- El botón Iniciar sesión va a la DERECHA de "Escorts"
+### Login (`doLogin`)
+1. Busca en USERS hardcodeados (admin, valentina, camila, isabella)
+2. Si no encuentra → consulta tabla `usuarios` en Supabase con join a `escorts`
+3. Guarda en `sessionStorage`: `userRole`, `userNombre`, `escortId`
+4. Redirige a panel correspondiente
+
+### Generación de modelos demo (`generateModels`)
+- Genera **10 modelos** con RNG determinista (seed por índice)
+- Campos: id, name, age, height, zone, cat, tags, rate, rating, reviews, citas, available, featured, isNew, img, photos (3), hasVideo, hairColor, eyeColor, skinColor, waist, hips, bust, nationality, services (8 tipos Sí/Extra), promo
+- 25 modelos de los 10 tienen promo (índices múltiples de 4)
+
+### Pool de promos (8 plantillas)
+- 4 sobre precio hora: 2x1 · 30% off · 3x2 · 40% off
+- 4 con servicio gratis: Oral natural · Trato de novios · Oral terminado · Relaciones ilimitadas
+
+### Mapeo Supabase → modelo (`mapEscortToModel`)
+- Convierte registro de tabla `escorts` (con joins fotos, servicios) al formato de MODELS
+- Fallback a foto Unsplash si la escort no tiene fotos cargadas
+
+### Watermark
+- `watermark.png` se aplica como overlay en galería de fotos (`.wm-overlay` con CSS background)
 
 ---
 
-## 9. LOGO DE DONCELLAS
+## 7. DECISIONES DE DISEÑO TOMADAS
 
-- Diseño: letra D caligráfica con perfil femenino sutil, dorado sobre negro
-- Canva ID diseño: `DAHHd8_Xx8o`
-- PNG: descargado en carpeta de Descargas
-- SVG: requiere Canva Pro (alternativa: generarlo desde Claude Code)
-- JPG: pendiente de descargar (mismo proceso que PNG en Canva)
+- **Alta de escorts:** Solo Paco las da de alta desde panel-admin → "Agregar Doncella" → genera credenciales → les manda por WhatsApp
+- **Las escorts editan** su contenido, descripción, medidas, servicios, tarifas, disponibilidad — pero NO nombre artístico ni credenciales
+- **WhatsApp directo** (wa.me) en lugar de chat interno — contacto va al número central
+- **Telegram bot:** @DocenllasGDLbot (typo provisional — corregir a @DoncellasGDLbot al crear bot nuevo con GPT-4o mini)
+- **Número WhatsApp placeholder:** +52 33 1234 5678 (cambiar cuando haya número Business real)
+- **Membresías en beta:** Todas Elite GRATIS (primeras 15-20 escorts). Precios: Silver $1,500 / Gold $2,000 / Elite $2,500 MXN/mes. Rediseñar membresias.html con precios cuando haya feedback.
+- **Reseñas de clientes:** Sistema privado entre escorts — ayuda a identificar clientes problemáticos antes de aceptar citas. Solo visible en panel-modelo y admin.
+- **Moderación de reseñas públicas:** Admin aprueba antes de publicar en perfil
+- **Programa de referidos:** Eliminado completamente
+
+### Navbar
+- **Desktop:** Logo + Doncellas · tagline centrado · links (Inicio/Doncellas/Categorías/Legal) + "Iniciar Sesión" dorado
+- **Mobile:** Logo + "Doncellas" izquierda · tagline dorada cursiva derecha · ícono hamburger → drawer
+
+### Categorías principales (en filtros y dropdowns)
+VIP · Universitaria · GFE — Novia por un día · Venezolana · A domicilio · Petite · Eventos y cenas · Nuevas
+
+### Categorías extendidas (filtro modelos.html)
+Milf · Nalgona · Voluptuosa · Chichona · Extranjera · Jovencita · Fit · Natural · Tuneada · Chaparrita · Alta
 
 ---
 
-## 10. AGENTE DE MARKETING IA — DISEÑADO, PENDIENTE DE CONSTRUIR
+## 8. OPTIMIZACIÓN MÓVIL
 
-### Stack
-- Claude API (cerebro del agente)
-- Make.com (orquestador de flujos)
-- WhatsApp Business API
-- Telegram Bot API
-- Supabase (base de datos)
-- Costo estimado: ~$30-65 USD/mes (~$1,300 MXN/mes)
+- `class="page-mobile-min-nav"` en `<body>` → aplica estilos mobile a las páginas públicas
+- `class="panel-page panel-admin"` / `"panel-page panel-modelo"` → paneles sin bottom nav público
+- City bar con chips de zonas solo en mobile (homepage)
+- Search bar expandible en mobile (toggle con ícono lupa)
+- Grid de escorts 2 columnas en mobile
+- Botones de acción del perfil: `.botones-perfil-mobile` debajo del carrusel
+- Bottom nav fija (4 items en páginas públicas, 5 items en panel-modelo)
+- Paneles: sidebar → oculta en mobile, bottom nav de panel toma el control
 
-### Flujo 1 — Publicación automática
-Cuando escort marca "Disponible" → Make.com detecta el cambio → Claude genera texto elegante + foto → publica automáticamente en canal Telegram + estado WhatsApp Business
+---
 
-### Flujo 2 — Chatbot conversacional + Confirmación de cita
-1. Cliente escribe en Telegram o WhatsApp
-2. Agente consulta Supabase → presenta escorts disponibles con perfil
-3. Cliente elige una escort
-4. Agente le avisa al cliente: *"Perfecto, le voy a preguntar a [nombre] si tiene disponibilidad ⏳"*
-5. Agente manda WhatsApp a la escort: *"Tienes solicitud de cita para [día/hora]. ¿Puedes asistir? Responde SÍ o NO"*
-6. **Si escort dice SÍ** → agente confirma al cliente: *"¡Listo! Tu cita está confirmada 🌹"* → cita guardada en panel
-7. **Si escort dice NO o no responde en 15 min** → agente avisa al cliente: *"[Nombre] tuvo un imprevisto 😔 ¿Te presento a [otras disponibles] o prefieres cancelar?"*
+## 9. SEO TÉCNICO (ya implementado)
 
-### Flujo 3 — Recordatorios escalonados
-- **30 min antes al cliente:** escort recibe aviso primero con 30 min de margen
-- Escort confirma → 30 min después cliente recibe confirmación final
-- **Si escort NO confirma o cancela en ese margen:**
-  - Cliente recibe: *"[Nombre] tuvo un imprevisto. ¿Te presento opciones disponibles o cancelamos?"*
-  - Se ofrecen escorts alternativas disponibles esa noche
-  - Panel se actualiza con el nuevo estado de la cita
+- Meta tags completos en todas las páginas
+- Open Graph para compartir en redes
+- Structured data (JSON-LD LocalBusiness) en index.html
+- `sitemap.xml` y `robots.txt` activos
+- Links canónicos apuntando a doncellas.mx
+- **Pendiente:** Registrar en Google Search Console cuando haya perfiles reales
 
-### Flujo 4 — Canal privado temporal (números protegidos)
-Una vez que ambos confirman asistencia, el agente activa un **canal de mensajes relay** entre cliente y escort:
+---
 
-1. **Ambos confirman** → agente activa el relay
-2. Agente avisa a los dos:
-   - Al cliente: *"[Nombre] ya confirmó. Si surge algo antes de verse, escríbeme aquí y yo le aviso 😊"*
-   - A la escort: *"Tu cita confirmó. Si necesitas avisarle algo escríbeme aquí y se lo hago llegar"*
-3. **Cómo funciona el relay:**
-   - Cliente escribe al bot → agente reenvía a la escort (sin revelar número del cliente)
-   - Escort escribe al bot → agente reenvía al cliente (sin revelar número/Telegram de la escort)
-   - Ninguno ve el contacto real del otro en ningún momento
-4. **Ejemplos de uso:**
-   - *"Voy a llegar 10 minutos tarde"* → agente lo reenvía al otro
-   - *"¿Puedes ir a [otra dirección]?"* → agente lo reenvía
-   - *"Ya estoy en el lobby del hotel"* → agente lo reenvía
-5. **Cierre del canal:**
-   - Cuando cliente escribe *"ya estamos juntos"* o *"ya llegué"* o la escort confirma lo mismo → agente desactiva el relay
-   - Agente confirma: *"¡Que lo disfruten! 🌹 El canal se ha cerrado"*
-   - Los números/cuentas nunca quedan expuestos
+## 10. AGENTE DE MARKETING IA — PENDIENTE (Mes 2)
 
-**Beneficio clave:** La escort nunca da su número real al cliente. Todo pasa por el agente. Esto protege a las chicas y mantiene el control del negocio en Doncellas GDL.
+### Stack definitivo
+- **GPT-4o mini** (cerebro — menos restricciones que Claude API para contenido adulto)
+- **Make.com** (orquestador)
+- **Telegram Bot API** — canal @DoncellasGDL (crear cuando haya 3+ escorts)
+- **WhatsApp Business API** — con número dedicado
+- **Baileys** — para WhatsApp Estados automáticos (20+ diarios con timing aleatorio)
+- **Supabase** — sincronización de disponibilidad, citas, clientes
+- **Costo estimado:** ~$39 USD/mes en producción
 
-### Stack para versión final del agente
-- **GPT-4o mini** (cerebro — reemplaza Claude API por menos restricciones de contenido)
-- **Make.com** (orquestador de flujos y tiempos)
-- **WhatsApp Business API** (mensajes a escorts y clientes)
-- **Telegram Bot** (canal público + chatbot clientes)
-- **Supabase** (escorts, citas, disponibilidad, clientes)
-- Costo estimado: ~$39 USD/mes (~$700 MXN/mes)
+### Flujos planeados
+1. **Publicación automática:** Escort marca Disponible → Make detecta → GPT genera texto + foto → publica en canal Telegram + estado WhatsApp Business
+2. **Chatbot conversacional:** Cliente escribe → agente presenta escorts disponibles → cliente elige → agente notifica a la escort (SÍ/NO en 15 min) → confirma o presenta alternativas
+3. **Recordatorios escalonados:** Escort recibe aviso 30 min antes que el cliente → confirma → cliente recibe confirmación final
+4. **Relay privado:** Canal de mensajes intermediado escort↔cliente — ninguno ve el número del otro. Se activa al confirmar cita, se cierra cuando ambos confirman presencia.
 
 ---
 
 ## 11. ESTRATEGIA DE MARKETING
 
-### Principio clave: discreción total en ambos lados
-- Las escorts NO comparten sus perfiles en redes sociales (quieren privacidad)
-- Los clientes NO quieren listas de difusión ni rastro de que contratan el servicio
-- Todo el marketing lo maneja Doncellas GDL como agencia, nunca las escorts directamente
+| Canal | Estado | Descripción |
+|-------|--------|-------------|
+| Skokka.mx / Mileroticos.com | ⏳ Activar con perfiles reales | Paco publica manualmente (captcha) |
+| Canal Telegram @DoncellasGDL | ⏳ Crear con 3+ escorts | Agente publica disponibilidad automáticamente |
+| WhatsApp Estados | ⏳ Manual en beta → automático Mes 3 | Agente genera, Paco publica; luego Baileys |
+| SEO Google | 🟡 Base lista | Activar GSC cuando haya perfiles reales |
+| Instagram discreto | ⏳ Pendiente | Siluetas sin rostros, manejado por la agencia |
+| Google Ads | ⏳ Mes 4-5 con 20+ perfiles | |
+| Boca a boca | — | El más poderoso en este giro |
 
-### Canales principales
-
-| Canal | Impacto | Descripción |
-|-------|---------|-------------|
-| Directorios de adultos | Alto | Skokka.mx, Mileroticos.com, Vivastreet — clientes llegan buscando activamente |
-| SEO en Google | Alto (mediano plazo) | Keywords: "escorts Guadalajara", "acompañantes GDL" — tráfico orgánico constante |
-| Canal de Telegram propio | Medio | La AGENCIA publica disponibilidad — cliente se une anónimamente si quiere |
-| Bot de Telegram | Medio | Clientes regresan cuando quieren, sin rastro, sin lista de contactos |
-| Instagram discreto | Medio | Siluetas elegantes sin rostros, manejado por la agencia |
-| Boca a boca | Alto | El más poderoso en este giro — clientes satisfechos traen más clientes |
-| Google Ads | — | Activar en mes 4-5 cuando haya 20+ perfiles activos |
-
-### ❌ Estrategias descartadas
-- ~~Escorts comparten sus perfiles~~ — quieren privacidad total
-- ~~WhatsApp Business difusión~~ — clientes no quieren rastro en su teléfono
-
-### Timeline
-| Momento | Acción |
-|---------|--------|
-| Cuando haya 3-5 escorts | Subir perfiles reales + registrar en Google Search Console |
-| Semana 1 | Publicar en Skokka y Mileroticos con link a doncellas.mx |
-| Semana 2 | Canal de Telegram activo como agencia |
-| Mes 2 | Agente real con GPT-4o mini funcionando |
-| Mes 4-5 | Google Ads si hay 20+ perfiles |
-
-### SEO técnico — Ya implementado ✅
-- Meta tags optimizados en todas las páginas
-- Open Graph para compartir en redes
-- Structured data (JSON-LD) para Google
-- sitemap.xml y robots.txt activos
-- Pendiente: registrar en Google Search Console cuando haya perfiles reales
+**Principio:** Las escorts NO comparten perfiles (quieren privacidad). Doncellas GDL marketing = 100% por la agencia.
 
 ---
 
-## 12. COSTOS DEL PROYECTO
+## 12. COSTOS
 
 | Concepto | Costo |
 |----------|-------|
-| Inversión inicial (dominios) | $315 MXN una sola vez |
-| Mes 1-2 (sin agente) | ~$100 MXN/mes |
-| Mes 3+ (con agente IA) | ~$1,300 MXN/mes |
-| Mes 5+ (con Google Ads) | ~$5,000-7,300 MXN/mes |
-| Punto de equilibrio | 1 escort en Starter ($199 MXN) |
-| Proyección mes 6 (30 escorts) | ~$8,970 MXN/mes |
+| Dominios (ya comprados) | $315 MXN (única vez) |
+| Beta sin agente (ahora) | ~$100 MXN/mes |
+| Mes 3+ (con agente IA) | ~$700 MXN/mes (~$39 USD) |
+| Mes 5+ (con Google Ads) | ~$5,000–7,000 MXN/mes |
+| Punto de equilibrio | 1 escort en Silver ($1,500 MXN) |
 
 ---
 
-## 13. ANÁLISIS DE COMPETENCIA
-
-| Sitio | SEO | Diseño | Lo que tomamos |
-|-------|-----|--------|----------------|
-| tentacionesgdl.com | 8/10 | 4/10 | Niveles visibles en cards, banner con precios |
-| laboutique.vip | 9/10 | 6/10 | Carrusel hover, calendario viajes |
-| goldenescortgdl.com | 5/10 | 3/10 | Canal de Telegram como comunidad |
-
----
-
-## 14. FLUJO DE TRABAJO CON CLAUDE CODE
+## 13. FLUJO DE TRABAJO CON CLAUDE CODE
 
 ```bash
-# Entrar al proyecto
-cd doncellas
-claude
+# Abrir el proyecto (alias en Terminal)
+doncellas          # equivale a: cd ~/doncellas && claude --model claude-sonnet-4-6
 
-# Pegar el prompt en Claude Code (español)
-> [prompt aquí]
-
-# Salir de Claude Code
-> /exit
-
-# Subir cambios a GitHub (en Terminal)
+# Subir cambios a GitHub (siempre al final de cada sesión)
 git add . && git commit -m "descripción del cambio" && git push
 ```
 
-**Regla:** Prompts en español → Claude Code `>`  |  Comandos git → Terminal `%`
-
----
-
-## 15. PENDIENTES
-
-### Técnicos
-- [x] Comprar dominios doncellas.mx + doncellas.com.mx en akky.mx
-- [x] Conectar dominio a GitHub Pages via Cloudflare
-- [x] doncellas.mx activo con HTTPS
-- [x] Bot de Telegram demo funcionando (@DocenllasGDLbot — typo provisional)
-- [ ] Corregir username del bot: @DocenllasGDLbot → @DoncellasGDLbot (hacerlo al migrar a GPT-4o mini — crear bot nuevo con nombre correcto)
-- [ ] Redirección doncellas.com.mx → doncellas.mx (pendiente propagar)
-- [ ] Conectar Supabase como base de datos real
-- [ ] Construir agente real (Make.com + GPT-4o mini + WhatsApp Business + Telegram)
-- [ ] Flujo de confirmación: escort confirma ANTES de notificar al cliente
-- [ ] Recordatorios escalonados: escort 30 min antes que cliente
-- [ ] Descargar logo en JPG desde Canva
-- [ ] Generar SVG del logo desde Claude Code
-
-### Marketing y negocio
-- [ ] Crear canal de Telegram "Doncellas GDL"
-- [ ] Configurar WhatsApp Business con número dedicado
-- [ ] Registrar doncellas.mx en Google Search Console
-- [ ] Crear cuenta de Instagram discreta
-- [ ] Subir primeros perfiles de escorts reales
-- [ ] Activar programa de referidos
-- [ ] Primeros artículos SEO en el blog
-
----
-
-## 16. PROMPTS ÚTILES PARA CLAUDE CODE
-
-### Subir cambios a GitHub (siempre al final)
-```bash
-git add . && git commit -m "descripción" && git push
-```
-
-### Si Claude Code pide login
-```bash
-claude
-/login
-```
+**Regla:** Prompts en español → Claude Code `>` | Comandos git → Terminal `%`
 
 ### Ver la página localmente en el celular
 ```bash
 npx serve .
-ipconfig getifaddr en0   # te da la IP de tu Mac
+ipconfig getifaddr en0   # IP de tu Mac
 # Abrir en celular: http://[IP]:3000
 ```
 
+### Flujo de alta de una escort real
+1. Escort contacta a Paco por WhatsApp — verificación en persona
+2. Paco abre panel-admin.html → "Agregar Doncella"
+3. Llena: nombre artístico, edad, zona, categoría, plan (Elite), tarifa, WhatsApp
+4. Sistema genera usuario automático + genera contraseña
+5. Paco le manda credenciales por WhatsApp a la escort
+6. Escort entra a panel-modelo.html, sube fotos y configura disponibilidad
+
 ---
 
-*Archivo generado automáticamente el 23 de abril de 2026*
-*Proyecto Doncellas — Guadalajara, México*
+## 14. PENDIENTES
+
+### Técnicos prioritarios
+- [ ] Reemplazar número WhatsApp placeholder (+52 33 1234 5678) con número Business real
+- [ ] Activar supabase-auth real (tabla usuarios actual es temporal con password en texto plano)
+- [ ] Corregir username del bot: @DocenllasGDLbot → @DoncellasGDLbot (crear nuevo bot al activar agente)
+- [ ] Probar flujo completo login de escort real (Supabase tabla usuarios)
+- [ ] Registrar doncellas.mx en Google Search Console
+
+### Técnicos Mes 2-3
+- [ ] Construir agente IA (Make.com + GPT-4o mini + Telegram + WhatsApp Business + Supabase)
+- [ ] Canal Telegram @DoncellasGDL (cuando haya 3+ escorts activas)
+- [ ] Flujo de confirmación de citas con relay privado
+- [ ] Recordatorios escalonados
+- [ ] WhatsApp Estados automáticos con Baileys
+- [ ] Migrar hosting a Vercel
+
+### Marketing y negocio
+- [ ] Subir primeros perfiles de escorts reales con fotos reales
+- [ ] Publicar en Skokka y Mileroticos con link a doncellas.mx
+- [ ] Crear cuenta de Instagram discreta
+- [ ] Rediseñar membresias.html con precios reales cuando haya feedback de escorts
+- [ ] Activar Google Ads (Mes 4-5 con 20+ perfiles)
+
+---
+
+## 15. ANÁLISIS DE COMPETENCIA (referencia)
+
+| Sitio | SEO | Diseño | Lo que tomamos |
+|-------|-----|--------|----------------|
+| tentacionesgdl.com | 8/10 | 4/10 | Niveles visibles en cards, banner con precios |
+| laboutique.vip | 9/10 | 6/10 | Carrusel hover, calendario de disponibilidad |
+| goldenescortgdl.com | 5/10 | 3/10 | Canal de Telegram como comunidad |
+
+---
+
+*Actualizado el 1 de junio de 2026 leyendo el estado real de todos los archivos.*
+*Proyecto Doncellas GDL — Guadalajara, México*
