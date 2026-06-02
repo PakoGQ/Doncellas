@@ -627,17 +627,6 @@ p  { line-height: 1.7; color: var(--t2); }
   transform: translateY(0);
 }
 
-/* Grid estático: todas las escorts de 2 en 2 */
-.dg-static-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 5px;
-  margin-top: 5px;
-}
-
-.dg-static-grid .dg-item {
-  height: 500px;
-}
 
 /* Mobile: foto única apilada verticalmente */
 @media (max-width: 768px) {
