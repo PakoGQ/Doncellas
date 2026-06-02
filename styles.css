@@ -508,7 +508,7 @@ p  { line-height: 1.7; color: var(--t2); }
   cursor: pointer;
   background: #0a0a0a;
   border-radius: 4px;
-  height: 500px;
+  height: 620px;
 }
 
 /* Dos imágenes apiladas para crossfade real */
@@ -637,7 +637,7 @@ p  { line-height: 1.7; color: var(--t2); }
     max-height: none;
     gap: 4px;
   }
-  .dg-item { height: 58vw; min-height: 240px; }
+  .dg-item { height: 70vw; min-height: 300px; }
   .dg-name { font-size: .88rem; }
 }
 /* ────────────────────────────────────────────────────────── */
