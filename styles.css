@@ -494,10 +494,11 @@ p  { line-height: 1.7; color: var(--t2); }
   margin: .3rem 0 0;
 }
 
-/* ── Galería 2 fotos completas con crossfade ─────────────── */
+/* ── Galería: 10 escorts, 2 por fila, crossfade ─────────── */
 .dg-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  grid-auto-rows: 540px;
   gap: 5px;
 }
 
@@ -508,7 +509,6 @@ p  { line-height: 1.7; color: var(--t2); }
   cursor: pointer;
   background: #0a0a0a;
   border-radius: 4px;
-  height: 620px;
 }
 
 /* Dos imágenes apiladas para crossfade real */
@@ -519,7 +519,7 @@ p  { line-height: 1.7; color: var(--t2); }
   object-fit: cover;
   object-position: center top;
   opacity: 0;
-  transition: opacity 1.4s ease, transform 8s ease;
+  transition: opacity 2.8s ease;
   transform: scale(1.04);
 }
 .dg-img.dg-active {
@@ -527,13 +527,13 @@ p  { line-height: 1.7; color: var(--t2); }
   transform: scale(1);
 }
 
-/* Ken Burns suave en la foto activa */
+/* Ken Burns lento en la foto activa */
 @keyframes kenburns {
-  0%   { transform: scale(1.0) translate(0,0); }
-  50%  { transform: scale(1.06) translate(-1%,-1%); }
-  100% { transform: scale(1.0) translate(0,0); }
+  0%   { transform: scale(1.0) translate(0, 0); }
+  50%  { transform: scale(1.05) translate(-0.8%, -0.8%); }
+  100% { transform: scale(1.0) translate(0, 0); }
 }
-.dg-img.dg-active { animation: kenburns 10s ease-in-out infinite; }
+.dg-img.dg-active { animation: kenburns 14s ease-in-out infinite; }
 
 /* Gradiente sutil siempre visible */
 .dg-item::before {

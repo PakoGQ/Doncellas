@@ -826,8 +826,8 @@ function buildDoncellaGallery() {
 
     /* Pool: solo las fotos de esta escort */
     const pool = m.photos.map(p => ({ src: p, name: m.name, id: m.id, available: m.available }));
-    /* Columnas pares 5.2s, impares 4.6s → nunca cambian al mismo tiempo */
-    const interval = i % 2 === 0 ? 5200 : 4600;
+    /* Intervalos escalonados — nunca cambian dos al mismo tiempo */
+    const interval = 9000 + i * 500;
     startSlotCycle(i, pool, 0, interval);
   });
 }
