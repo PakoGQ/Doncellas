@@ -172,7 +172,9 @@
 - **Sidebar:** Mini perfil + progreso (72% completo) + nav: Estadísticas / Mi Contenido / Mis Citas / Disponibilidad / Editar Perfil / Configuración + links "Ver mi perfil" y "Mejorar plan"
 - **Mobile bottom nav (5 items):** Inicio / Contenido / Citas / Calendario / Perfil
 - **Estadísticas:** 6 KPIs (Ingresos/Citas/Rating/Visitas/Favoritos/Reseñas nuevas) + 4 gráficas (Ingresos semanal con tabs, Fuentes de contacto pie, Visitas al perfil, Satisfacción del cliente con barras de progreso)
-- **Mi Contenido:** Drop zone con `<input type="file" multiple>` + preview grid + galería actual con ordenar/eliminar
+- **Mi Contenido:** Dos pestañas:
+  - **📸 Perfil** — fotos/videos de alta calidad para galería en doncellas.mx
+  - **🎬 Redes** — contenido casual (outfits, selfies, día a día) que el agente usa para publicar en canales. Banner informativo del agente + estado vacío si no hay fotos. Mínimo recomendado: 10 fotos para evitar repetición.
 - **Mis Citas:** Tabs Próximas (badge 3) / Historial / Por confirmar + items tipo `.cita-item` con fecha visual + estado
 - **Disponibilidad:** Toggle global "Disponible ahora" + week-grid (7 días × horas, click para activar/desactivar) + bloqueo de fechas específicas con chips removibles
 - **Editar Perfil:** Foto con preview + Información básica (nombre artístico read-only 🔒, descripción, edad, altura, zona) + Medidas (busto/cintura/cadera/ojos/cabello/piel) + Servicios (tabla Sí/Extra con 8 servicios) + Tarifas (1h/3h/día completo) + WhatsApp/Telegram
@@ -275,11 +277,55 @@ Milf · Nalgona · Voluptuosa · Chichona · Extranjera · Jovencita · Fit · N
 - **Supabase** — sincronización de disponibilidad, citas, clientes
 - **Costo estimado:** ~$39 USD/mes en producción
 
+### Canales del agente
+
+**Comunicación + Estados (clientes recurrentes):**
+- WhatsApp Business — gestiona citas (Flujo 2) + Estados visibles para quien tiene el número guardado
+- Bot Telegram @DoncellasGDLbot — gestiona citas (Flujo 2) + publicaciones visibles para seguidores
+
+**Publicación (captación de clientes nuevos):**
+- Canal Telegram @DoncellasGDL — broadcast abierto
+- Canal de WhatsApp — broadcast abierto
+- Twitter/X — alcance abierto, cuenta marcada como contenido sensible
+
+**Manuales (no automatizar — riesgo de ban):**
+- Facebook, Instagram, TikTok — manejados por Paco/agencia con contenido discreto
+
 ### Flujos planeados
-1. **Publicación automática:** Escort marca Disponible → Make detecta → GPT genera texto + foto → publica en canal Telegram + estado WhatsApp Business
-2. **Chatbot conversacional:** Cliente escribe → agente presenta escorts disponibles → cliente elige → agente notifica a la escort (SÍ/NO en 15 min) → confirma o presenta alternativas
-3. **Recordatorios escalonados:** Escort recibe aviso 30 min antes que el cliente → confirma → cliente recibe confirmación final
-4. **Relay privado:** Canal de mensajes intermediado escort↔cliente — ninguno ve el número del otro. Se activa al confirmar cita, se cierra cuando ambos confirman presencia.
+
+**Flujo 1 — Publicación automática:**
+- Escort marca Disponible → Make detecta → GPT genera texto + toma foto/video del banco "Redes" de esa escort → publica en Canal Telegram + Canal WhatsApp + Twitter/X + Estado WhatsApp Business
+- El agente rota el contenido sin repetir la misma foto dos veces seguidas
+- Si la escort se agota el contenido de redes → aviso para que suba más
+- El agente también puede publicar contenido de redes aunque la escort NO esté disponible (para mantener presencia)
+
+**Flujo 2 — Chatbot conversacional:**
+- Cliente escribe al bot → agente saluda: "Bienvenido a Doncellas GDL 🌹 ¿En qué podemos servirle?"
+- NO presenta escorts de entrada — espera la intención del cliente
+- CASO A: Cliente pide escort específica → agente pregunta fecha/hora/lugar → manda datos a la escort
+  - Escort tiene 20 min para confirmar (si cliente pregunta antes → "estamos contactando a la chica 🙏")
+  - UMBRAL: Cita en menos de 2h → Modo tiempo real (sin Flujo 3)
+  - UMBRAL: Cita en más de 2h → Modo programado (Flujo 3 se programa)
+  - Escort confirma → agente confirma al cliente + programa Flujo 3 o activa Flujo 4
+  - Escort confirma con ajuste de hora → agente consulta al cliente si acepta el nuevo horario
+  - Cliente acepta → forma de pago → info a escort → Flujo 4
+  - Cliente no acepta → ¿otra chica? → si no → disculpa + fin
+  - Escort no confirma en 20 min → presenta todas las disponibles + links a perfiles
+- CASO B: Cliente pide opciones → presenta disponibles + links → cliente elige → Caso A
+
+**Flujo 3 — Confirmación escalonada (solo citas programadas +2h):**
+- T-1h30: Mensaje a escort → tiene 30 min para confirmar
+- Escort confirma → mensaje al cliente → tiene 30 min para confirmar
+  - Cliente confirma → pregunta forma de pago → info a escort → Flujo 4
+  - Cliente no confirma en 30 min → cita cancelada → aviso a escort
+- Escort no confirma en 30 min → mensaje al cliente con disculpa → presenta todas las disponibles + links
+  - Ciclo: cada opción tiene 10 min para confirmar → si confirma → protocolo normal → Flujo 4
+  - Ninguna disponible o cliente no quiere ninguna → disculpa + cancelación
+
+**Flujo 4 — Canal directo temporal:**
+- Cita tiempo real (<2h): canal se activa a los 5 min de confirmar ambos
+- Cita programada (+2h): canal se activa en T-30min
+- Cierre: ambos confirman presencia física → canal se cierra automáticamente
 
 ---
 

@@ -272,33 +272,101 @@
       <h2 class="admin-page-title">Mi Contenido</h2>
       <p class="admin-page-sub">Sube y gestiona tus fotos y videos</p>
 
-      <!-- Upload zone -->
-      <div class="upload-zone" id="uploadZone">
-        <input type="file" id="fileInput" accept="image/*,video/*" multiple onchange="handleFileUpload(event)" />
-        <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
-        <h4>Arrastra tus fotos aquí</h4>
-        <p>o haz clic para seleccionar archivos</p>
-        <p class="text-xs" style="margin-top:.5rem">PNG, JPG, HEIC, MP4 — máx. 10 MB por archivo</p>
-        <button class="btn btn-gold btn-sm" style="margin-top:1rem;position:relative;z-index:1">
-          <i class="fas fa-folder-open"></i> Explorar archivos
+      <!-- Tabs perfil / redes -->
+      <div class="tabs" style="margin-bottom:1.5rem">
+        <button class="tab-btn active" onclick="switchTab('contenido-tipo','perfil',this)">
+          <i class="fas fa-user" style="margin-right:.4rem"></i> Perfil
+        </button>
+        <button class="tab-btn" onclick="switchTab('contenido-tipo','redes',this)">
+          <i class="fas fa-share-alt" style="margin-right:.4rem"></i> Redes
         </button>
       </div>
 
-      <div class="upload-preview-grid" id="uploadPreviewGrid"></div>
+      <!-- ── TAB PERFIL ── -->
+      <div class="tab-panel active" id="contenido-tipo-perfil">
+        <p style="font-size:.85rem;color:var(--t2);margin-bottom:1.25rem">
+          Fotos y videos de alta calidad para tu perfil en Doncellas GDL. Estos aparecen en tu galería principal.
+        </p>
 
-      <!-- Current gallery -->
-      <div style="margin-top:2rem">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
-          <h4>Fotos actuales <span style="font-size:.8rem;color:var(--t2);font-weight:400">(12 fotos)</span></h4>
-          <div style="display:flex;gap:.5rem">
-            <button class="btn btn-outline btn-sm"><i class="fas fa-sort"></i> Ordenar</button>
-            <button class="btn btn-outline btn-sm"><i class="fas fa-trash"></i> Eliminar seleccionadas</button>
+        <!-- Upload zone perfil -->
+        <div class="upload-zone" id="uploadZonePerfil">
+          <input type="file" id="fileInputPerfil" accept="image/*,video/*" multiple onchange="handleFileUpload(event,'perfil')" />
+          <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+          <h4>Arrastra tus fotos aquí</h4>
+          <p>o haz clic para seleccionar archivos</p>
+          <p class="text-xs" style="margin-top:.5rem">PNG, JPG, HEIC, MP4 — máx. 10 MB por archivo</p>
+          <button class="btn btn-gold btn-sm" style="margin-top:1rem;position:relative;z-index:1">
+            <i class="fas fa-folder-open"></i> Explorar archivos
+          </button>
+        </div>
+
+        <div class="upload-preview-grid" id="uploadPreviewGridPerfil"></div>
+
+        <!-- Galería perfil -->
+        <div style="margin-top:2rem">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+            <h4>Fotos actuales <span style="font-size:.8rem;color:var(--t2);font-weight:400">(12 fotos)</span></h4>
+            <div style="display:flex;gap:.5rem">
+              <button class="btn btn-outline btn-sm"><i class="fas fa-sort"></i> Ordenar</button>
+              <button class="btn btn-outline btn-sm"><i class="fas fa-trash"></i> Eliminar seleccionadas</button>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.75rem" id="currentGallery">
+            <!-- Built by JS -->
           </div>
         </div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.75rem" id="currentGallery">
-          <!-- Built by JS -->
+      </div>
+
+      <!-- ── TAB REDES ── -->
+      <div class="tab-panel" id="contenido-tipo-redes">
+        <p style="font-size:.85rem;color:var(--t2);margin-bottom:1.25rem">
+          Contenido casual del día a día — outfits, lugares, momentos. El agente usa estas fotos para publicar en WhatsApp, Telegram, Twitter/X y más.
+        </p>
+
+        <!-- Info banner -->
+        <div style="background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.25);border-radius:10px;padding:1rem 1.25rem;margin-bottom:1.5rem;display:flex;align-items:flex-start;gap:.75rem">
+          <i class="fas fa-robot" style="color:var(--gold);margin-top:.15rem;flex-shrink:0"></i>
+          <div style="font-size:.85rem;color:var(--t2);line-height:1.5">
+            El agente publica automáticamente cuando marcas disponible. Sube más fotos para que las publicaciones no se repitan.
+            <span style="color:var(--gold)">Mínimo recomendado: 10 fotos.</span>
+          </div>
+        </div>
+
+        <!-- Upload zone redes -->
+        <div class="upload-zone" id="uploadZoneRedes">
+          <input type="file" id="fileInputRedes" accept="image/*,video/*" multiple onchange="handleFileUpload(event,'redes')" />
+          <div class="upload-icon"><i class="fas fa-share-alt" style="color:var(--gold)"></i></div>
+          <h4>Arrastra tu contenido para redes</h4>
+          <p>Fotos casuales, outfits, selfies, videos cortos</p>
+          <p class="text-xs" style="margin-top:.5rem">PNG, JPG, HEIC, MP4 — máx. 10 MB por archivo</p>
+          <button class="btn btn-gold btn-sm" style="margin-top:1rem;position:relative;z-index:1">
+            <i class="fas fa-folder-open"></i> Explorar archivos
+          </button>
+        </div>
+
+        <div class="upload-preview-grid" id="uploadPreviewGridRedes"></div>
+
+        <!-- Galería redes -->
+        <div style="margin-top:2rem">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+            <h4>Contenido para redes <span style="font-size:.8rem;color:var(--t2);font-weight:400">(0 fotos)</span></h4>
+            <div style="display:flex;gap:.5rem">
+              <button class="btn btn-outline btn-sm"><i class="fas fa-sort"></i> Ordenar</button>
+              <button class="btn btn-outline btn-sm"><i class="fas fa-trash"></i> Eliminar seleccionadas</button>
+            </div>
+          </div>
+          <!-- Estado vacío -->
+          <div id="redesGalleryEmpty" style="text-align:center;padding:3rem 1rem;color:var(--t2)">
+            <i class="fas fa-share-alt" style="font-size:2rem;margin-bottom:1rem;opacity:.3;display:block"></i>
+            <p style="font-size:.9rem">Aún no tienes contenido para redes.</p>
+            <p style="font-size:.8rem;margin-top:.25rem">Sube fotos casuales para que el agente las use en las publicaciones.</p>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.75rem;display:none" id="redesGallery">
+            <!-- Built by JS -->
+          </div>
         </div>
       </div>
+
     </div>
 
     <!-- ── Citas ── -->
