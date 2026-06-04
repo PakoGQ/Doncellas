@@ -328,7 +328,8 @@ Milf · Nalgona · Voluptuosa · Chichona · Extranjera · Jovencita · Fit · N
 - **GPT-4o mini** (cerebro — menos restricciones que Claude API para contenido adulto)
 - **Make.com** (orquestador)
 - **Telegram Bot API** — bot @DoncellasGDLbot ✅ creado | canal @DoncellasGDL ✅ creado
-- **WhatsApp Business API** — con número dedicado
+- **WhatsApp Business App** ✅ instalada — número dedicado, nombre "Doncellas", categoría Beauty
+- **WhatsApp Business API** — cuenta Meta Business pendiente (cuenta Facebook nueva, esperar 1h para crear Meta Business)
 - **Baileys** — para WhatsApp Estados automáticos (20+ diarios con timing aleatorio)
 - **Supabase** — sincronización de disponibilidad, citas, clientes
 - **Costo estimado:** ~$39 USD/mes en producción
@@ -431,7 +432,8 @@ Milf · Nalgona · Voluptuosa · Chichona · Extranjera · Jovencita · Fit · N
 | Canal | Estado | Descripción |
 |-------|--------|-------------|
 | Skokka.mx / Mileroticos.com | ⏳ Activar con perfiles reales | Paco publica manualmente (captcha) |
-| Canal Telegram @DoncellasGDL | ⏳ Crear con 3+ escorts | Agente publica disponibilidad automáticamente |
+| Canal Telegram @DoncellasGDL | ✅ Creado | Agente publica disponibilidad automáticamente |
+| WhatsApp Business | ✅ App instalada / API pendiente Meta Business | Estados + chatbot de citas |
 | WhatsApp Estados | ⏳ Manual en beta → automático Mes 3 | Agente genera, Paco publica; luego Baileys |
 | SEO Google | 🟡 Base lista | Activar GSC cuando haya perfiles reales |
 | Instagram discreto | ⏳ Pendiente | Siluetas sin rostros, manejado por la agencia |
@@ -490,12 +492,24 @@ ipconfig getifaddr en0   # IP de tu Mac
 - [ ] Activar supabase-auth real (tabla usuarios actual es temporal con password en texto plano)
 - [x] Bot @DoncellasGDLbot ✅ creado con logo, descripción y token
 - [x] Canal Telegram @DoncellasGDL ✅ creado, público, con logo
+- [x] WhatsApp Business App ✅ instalada con número dedicado
+- [ ] Crear Meta Business en business.facebook.com (cuenta Facebook nueva — esperar 1h para activar)
+- [ ] Conectar número dedicado a WhatsApp Business API via Meta
+- [ ] Reemplazar número placeholder en index.html con número real
 - [ ] Probar flujo completo login de escort real (Supabase tabla usuarios)
 - [ ] Registrar doncellas.mx en Google Search Console
 
+### Credenciales y accesos del agente
+- **Telegram Bot Token:** `8620840103:AAEMStKPn02v4p2RSWB05YBOmTpNLrKg6fA`
+- **Bot:** @DoncellasGDLbot | **Canal:** @DoncellasGDL
+- **WhatsApp Business:** número dedicado (Paco tiene el cel)
+- **Correo Meta/Facebook:** doncellasgdl@gmail.com
+- **Make.com:** ⏳ pendiente crear cuenta
+- **OpenAI API:** ⏳ pendiente crear cuenta
+
 ### Técnicos Mes 2-3
 - [ ] Construir agente IA (Make.com + GPT-4o mini + Telegram + WhatsApp Business + Supabase)
-- [ ] Canal Telegram @DoncellasGDL (cuando haya 3+ escorts activas)
+- [ ] Canal de WhatsApp (crear cuando Meta Business esté verificado)
 - [ ] Flujo de confirmación de citas con relay privado
 - [ ] Recordatorios escalonados
 - [ ] WhatsApp Estados automáticos con Baileys
