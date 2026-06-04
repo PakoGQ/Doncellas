@@ -329,7 +329,7 @@ Milf · Nalgona · Voluptuosa · Chichona · Extranjera · Jovencita · Fit · N
 - **Make.com** (orquestador)
 - **Telegram Bot API** — bot @DoncellasGDLbot ✅ creado | canal @DoncellasGDL ✅ creado
 - **WhatsApp Business App** ✅ instalada — número dedicado, nombre "Doncellas", categoría Beauty
-- **WhatsApp Business API** — cuenta Meta Business pendiente (cuenta Facebook nueva, esperar 1h para crear Meta Business)
+- **WhatsApp Business API** ✅ conectada — número +52 33 2168 5023 verificado en Meta
 - **Baileys** — para WhatsApp Estados automáticos (20+ diarios con timing aleatorio)
 - **Supabase** — sincronización de disponibilidad, citas, clientes
 - **Costo estimado:** ~$39 USD/mes en producción
@@ -493,8 +493,8 @@ ipconfig getifaddr en0   # IP de tu Mac
 - [x] Bot @DoncellasGDLbot ✅ creado con logo, descripción y token
 - [x] Canal Telegram @DoncellasGDL ✅ creado, público, con logo
 - [x] WhatsApp Business App ✅ instalada con número dedicado
-- [ ] Crear Meta Business en business.facebook.com (cuenta Facebook nueva — esperar 1h para activar)
-- [ ] Conectar número dedicado a WhatsApp Business API via Meta
+- [x] Crear Meta Business en business.facebook.com ✅
+- [x] Conectar número dedicado a WhatsApp Business API via Meta ✅
 - [ ] Reemplazar número placeholder en index.html con número real
 - [ ] Probar flujo completo login de escort real (Supabase tabla usuarios)
 - [ ] Registrar doncellas.mx en Google Search Console
@@ -504,6 +504,10 @@ ipconfig getifaddr en0   # IP de tu Mac
 - **Bot:** @DoncellasGDLbot | **Canal:** @DoncellasGDL
 - **WhatsApp Business:** número dedicado (Paco tiene el cel)
 - **Correo Meta/Facebook:** doncellasgdl@gmail.com
+- **WhatsApp número:** +52 33 2168 5023
+- **Phone Number ID:** 1250996401420685
+- **WhatsApp Business Account ID:** 27174755062182821
+- **Token de acceso:** guardado por Paco (temporal — generar permanente al conectar Make.com)
 - **Make.com:** ⏳ pendiente crear cuenta
 - **OpenAI API:** ⏳ pendiente crear cuenta
 
