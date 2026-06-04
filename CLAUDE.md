@@ -327,7 +327,7 @@ Milf · Nalgona · Voluptuosa · Chichona · Extranjera · Jovencita · Fit · N
 ### Stack definitivo
 - **GPT-4o mini** (cerebro — menos restricciones que Claude API para contenido adulto)
 - **Make.com** (orquestador)
-- **Telegram Bot API** — canal @DoncellasGDL (crear cuando haya 3+ escorts)
+- **Telegram Bot API** — bot @DoncellasGDLbot ✅ creado | canal @DoncellasGDL ✅ creado
 - **WhatsApp Business API** — con número dedicado
 - **Baileys** — para WhatsApp Estados automáticos (20+ diarios con timing aleatorio)
 - **Supabase** — sincronización de disponibilidad, citas, clientes
@@ -488,7 +488,8 @@ ipconfig getifaddr en0   # IP de tu Mac
 ### Técnicos prioritarios
 - [ ] Reemplazar número WhatsApp placeholder (+52 33 1234 5678) con número Business real
 - [ ] Activar supabase-auth real (tabla usuarios actual es temporal con password en texto plano)
-- [ ] Corregir username del bot: @DocenllasGDLbot → @DoncellasGDLbot (crear nuevo bot al activar agente)
+- [x] Bot @DoncellasGDLbot ✅ creado con logo, descripción y token
+- [x] Canal Telegram @DoncellasGDL ✅ creado, público, con logo
 - [ ] Probar flujo completo login de escort real (Supabase tabla usuarios)
 - [ ] Registrar doncellas.mx en Google Search Console
 
