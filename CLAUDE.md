@@ -308,8 +308,9 @@ Milf · Nalgona · Voluptuosa · Chichona · Extranjera · Jovencita · Fit · N
 - Todo el sistema de registro es interno — el cliente nunca sabe que existe
 
 **Lugar de la cita:**
-- Por ahora solo hoteles y moteles — el cliente elige
-- Puede sugerir zonas según la escort pero no recomienda establecimientos específicos
+- Por ahora solo hoteles y moteles — el cliente elige el lugar
+- El agente nunca recomienda establecimientos específicos
+- Si el cliente pregunta dónde → "El lugar lo eliges tú, nosotros nos adaptamos 😊"
 
 **Cancelaciones:**
 - Cancelación normal → notifica a la escort
