@@ -511,13 +511,27 @@ ipconfig getifaddr en0   # IP de tu Mac
 - **Make.com:** ⏳ pendiente crear cuenta
 - **OpenAI API:** ⏳ pendiente crear cuenta
 
-### Técnicos Mes 2-3
-- [ ] Construir agente IA (Make.com + GPT-4o mini + Telegram + WhatsApp Business + Supabase)
-- [ ] Canal de WhatsApp (crear cuando Meta Business esté verificado)
-- [ ] Flujo de confirmación de citas con relay privado
-- [ ] Recordatorios escalonados
-- [ ] WhatsApp Estados automáticos con Baileys
-- [ ] Migrar hosting a Vercel
+### Agente IA — próximos pasos (en orden)
+1. [ ] Crear cuenta Make.com (plan gratuito para pruebas, Core $10.59/mes para producción)
+2. [ ] Crear cuenta OpenAI y agregar $5 USD de crédito (GPT-4o mini)
+3. [ ] Construir Flujo 1 en Make.com (publicación automática — el más fácil, ~3-4h)
+4. [ ] Construir Flujo 2 en Make.com (chatbot conversacional — el más importante, ~6-8h)
+5. [ ] Construir Flujo 3 en Make.com (confirmaciones escalonadas, ~3-4h)
+6. [ ] Construir Flujo 4 en Make.com (relay privado, ~4-6h)
+7. [ ] Conectar Supabase webhooks con Make.com
+8. [ ] Crear Canal de WhatsApp (cuando Meta Business esté verificado)
+9. [ ] WhatsApp Estados automáticos con Baileys (Mes 3)
+10. [ ] Migrar hosting a Vercel
+
+### Pendientes de negocio (bloquean partes del agente)
+- [ ] Hablar con escorts sobre forma de pagos → define lógica en Flujo 2 y 3
+- [ ] Confirmar si escorts quieren recibir a domicilio → actualizar base de conocimiento del agente
+- [ ] Reemplazar número placeholder +52 33 1234 5678 con número real en index.html
+
+### Técnicos prioritarios de la plataforma
+- [ ] Activar supabase-auth real (contraseñas en texto plano — hacer ANTES de escorts reales)
+- [ ] Probar flujo completo login de escort real (Supabase tabla usuarios)
+- [ ] Registrar doncellas.mx en Google Search Console
 
 ### Marketing y negocio
 - [ ] Subir primeros perfiles de escorts reales con fotos reales
@@ -538,5 +552,5 @@ ipconfig getifaddr en0   # IP de tu Mac
 
 ---
 
-*Actualizado el 1 de junio de 2026 leyendo el estado real de todos los archivos.*
+*Actualizado el 4 de junio de 2026 — sesión de planeación del agente IA y setup de canales.*
 *Proyecto Doncellas GDL — Guadalajara, México*
