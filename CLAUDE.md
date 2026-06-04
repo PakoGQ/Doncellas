@@ -106,12 +106,12 @@
 - **Search bar:** Buscador expandible en mobile (icono lupa) con filtros zona + categoría (2 grupos: principales + más filtros). Botón "Buscar".
 - **Stats bar:** Doncellas activas (cuenta de Supabase) · Perfiles verificados · 100% discreto · Atención 24h
 - **Galería "Nuestras Doncellas":** Sección `#doncellaGallery` construida por JS con tarjetas animadas (crossfade Ken Burns). Link "Ver todas".
-- **Cómo funciona:** 3 pasos (Explora / Agenda por Telegram / Disfruta). CTA → @DocenllasGDLbot
+- **Cómo funciona:** 3 pasos (Explora / Agenda por Telegram / Disfruta). CTA → @DoncellasGDLbot
 - **CTA Banner:** "¿Quieres ser una de nuestras Doncellas?" → WhatsApp
 - **¿Por qué elegirnos?:** 4 cards (Verificados / Disponibilidad Real / Total Discreción / Reseñas Reales)
 - **FAQ:** 6 preguntas con `<details>` accordion nativo
 - **Footer:** 4 columnas (brand + social / Plataforma / Para Doncellas / Legal)
-- **Botones flotantes:** Telegram (@DocenllasGDLbot) + WhatsApp
+- **Botones flotantes:** Telegram (@DoncellasGDLbot) + WhatsApp
 - **Bottom nav (mobile):** Inicio / Doncellas / Categorías / Cuenta (abre loginModal)
 - **Login modal:** Username + password, cuentas demo precargables
 - **PWA install banner:** Se muestra en mobile si no está instalada
@@ -223,7 +223,7 @@
 - **Alta de escorts:** Solo Paco las da de alta desde panel-admin → "Agregar Doncella" → genera credenciales → les manda por WhatsApp
 - **Las escorts editan** su contenido, descripción, medidas, servicios, tarifas, disponibilidad — pero NO nombre artístico ni credenciales
 - **WhatsApp directo** (wa.me) en lugar de chat interno — contacto va al número central
-- **Telegram bot:** @DocenllasGDLbot (typo provisional — corregir a @DoncellasGDLbot al crear bot nuevo con GPT-4o mini)
+- **Telegram bot:** @DoncellasGDLbot (typo provisional — corregir a @DoncellasGDLbot al crear bot nuevo con GPT-4o mini)
 - **Número WhatsApp placeholder:** +52 33 1234 5678 (cambiar cuando haya número Business real)
 - **Membresías en beta:** Todas Elite GRATIS (primeras 15-20 escorts). Precios: Silver $1,500 / Gold $2,000 / Elite $2,500 MXN/mes. Rediseñar membresias.html con precios cuando haya feedback.
 - **Reseñas de clientes:** Sistema privado entre escorts — ayuda a identificar clientes problemáticos antes de aceptar citas. Solo visible en panel-modelo y admin.
