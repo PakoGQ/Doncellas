@@ -866,9 +866,13 @@ function startSlotCycle(slotIdx, pool, startIdx, interval) {
     });
   }
 
-  /* Carga la primera foto de inmediato */
+  /* Carga la primera foto de inmediato — oculta el slot hasta que cargue */
+  slot.style.opacity = '0';
+  slot.style.transition = 'opacity .4s ease';
   imgA.src = pool[idx].src;
   imgA.alt = pool[idx].name;
+  imgA.onload = () => { slot.style.opacity = '1'; };
+  imgA.onerror = () => { slot.style.opacity = '1'; };
   nameEl.textContent  = pool[idx].name;
   statTxt.textContent = pool[idx].available ? 'Disponible ahora' : 'No disponible';
   statEl.className    = `dg-status${pool[idx].available ? ' disponible' : ''}`;

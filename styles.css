@@ -507,8 +507,18 @@ p  { line-height: 1.7; color: var(--t2); }
   position: relative;
   overflow: hidden;
   cursor: pointer;
-  background: #0a0a0a;
+  background: linear-gradient(135deg, #161616 0%, #1a1a1a 50%, #161616 100%);
+  background-size: 200% 200%;
+  animation: skeleton-shimmer 1.8s ease infinite;
   border-radius: 4px;
+}
+.dg-item:has(.dg-img.dg-active[src]:not([src=""])) {
+  animation: none;
+}
+@keyframes skeleton-shimmer {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 /* Dos imágenes apiladas para crossfade real */
@@ -637,7 +647,8 @@ p  { line-height: 1.7; color: var(--t2); }
     max-height: none;
     gap: 4px;
   }
-  .dg-item { height: 70vw; min-height: 300px; }
+  .dg-item { height: 80vw; min-height: 260px; max-height: 380px; }
+  .dg-img { object-position: center 20%; }
   .dg-name { font-size: .88rem; }
 }
 /* ────────────────────────────────────────────────────────── */
