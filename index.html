@@ -45,6 +45,12 @@
 </head>
 <body class="page-mobile-min-nav">
 
+<!-- ── PWA Update Banner ── -->
+<div class="pwa-update-banner" id="pwaUpdateBanner" style="display:none">
+  <span>✨ Hay una versión nueva disponible</span>
+  <button id="pwaUpdateBtn" type="button">Actualizar</button>
+</div>
+
 <!-- ── PWA Install Banner (mobile only) ── -->
 <div class="pwa-install-banner" id="pwaInstallBanner" role="region" aria-label="Instalar aplicación">
   <img src="logo.png" alt="Doncellas" class="pwa-install-mark" />
@@ -441,6 +447,20 @@
 <script src="supabase-config.js"></script>
 <script src="app.js"></script>
 <script>
+  // ── PWA: Update banner ──
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.addEventListener('message', (e) => {
+      if (e.data?.type === 'SW_UPDATED') {
+        const banner = document.getElementById('pwaUpdateBanner');
+        if (banner) banner.style.display = 'flex';
+      }
+    });
+    const updateBtn = document.getElementById('pwaUpdateBtn');
+    if (updateBtn) {
+      updateBtn.addEventListener('click', () => window.location.reload());
+    }
+  }
+
   // ── PWA: Service Worker registration ──
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {

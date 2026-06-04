@@ -1,4 +1,4 @@
-const CACHE_NAME = 'doncellas-v4';
+const CACHE_NAME = 'doncellas-v5';
 const OFFLINE_URL = '/offline.html';
 
 const STATIC_ASSETS = [
@@ -35,7 +35,12 @@ self.addEventListener('activate', (e) => {
   e.waitUntil(
     caches.keys().then((keys) =>
       Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k)))
-    )
+    ).then(() => {
+      // Notifica a todos los clientes que hay una versión nueva
+      self.clients.matchAll({ type: 'window' }).then((clients) => {
+        clients.forEach((client) => client.postMessage({ type: 'SW_UPDATED' }));
+      });
+    })
   );
   self.clients.claim();
 });

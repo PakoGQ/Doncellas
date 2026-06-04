@@ -3071,6 +3071,33 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
 /* ═══════════════════════════════════════════════════════════
    PWA INSTALL BANNER — shown only on mobile
    ═══════════════════════════════════════════════════════════ */
+
+/* ── PWA Update Banner ── */
+.pwa-update-banner {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 9999;
+  background: var(--gold);
+  color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: .6rem 1rem;
+  font-size: .85rem;
+  font-weight: 600;
+}
+.pwa-update-banner button {
+  background: #000;
+  color: var(--gold);
+  border: none;
+  border-radius: 20px;
+  padding: .3rem .9rem;
+  font-size: .8rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
 .pwa-install-banner {
   display: none;
   align-items: center;
