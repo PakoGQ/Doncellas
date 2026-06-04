@@ -302,9 +302,10 @@ Milf · Nalgona · Voluptuosa · Chichona · Extranjera · Jovencita · Fit · N
 - Siempre sugiere ver el perfil para detalle completo
 
 **Discreción:**
-- Al cliente: "Solo guardamos tu número/usuario para darte mejor atención"
+- Al cliente solo se le dice: "Tu información es completamente confidencial 🔒"
+- Nunca se menciona que se guarda su número o usuario
 - Internamente registra: número/usuario, clasificación (nuevo/frecuente/esporádico), reseña de escort, marca de cancelación tardía o no-show
-- El sistema de reseñas es interno — el cliente nunca sabe que existe
+- Todo el sistema de registro es interno — el cliente nunca sabe que existe
 
 **Lugar de la cita:**
 - Por ahora solo hoteles y moteles — el cliente elige
