@@ -294,10 +294,51 @@ Milf · Nalgona · Voluptuosa · Chichona · Extranjera · Jovencita · Fit · N
 ### Flujos planeados
 
 **Flujo 1 — Publicación automática:**
-- Escort marca Disponible → Make detecta → GPT genera texto + toma foto/video del banco "Redes" de esa escort → publica en Canal Telegram + Canal WhatsApp + Twitter/X + Estado WhatsApp Business
-- El agente rota el contenido sin repetir la misma foto dos veces seguidas
-- Si la escort se agota el contenido de redes → aviso para que suba más
-- El agente también puede publicar contenido de redes aunque la escort NO esté disponible (para mantener presencia)
+
+*Fuente de contenido:*
+- Primera opción: fotos/videos del banco "Redes" de la escort (contenido casual, día a día)
+- Si no hay contenido nuevo en Redes: usa fotos del banco "Perfil"
+- El agente nunca repite la misma foto dos veces seguidas
+- Si la escort agota su contenido → aviso automático para que suba más
+- El agente puede publicar aunque la escort NO esté marcada disponible (mantener presencia)
+
+*Canales y contenido — regla de unicidad:*
+- Nunca se publica el mismo contenido en dos canales el mismo día
+- Cada canal tiene su propia personalidad y contenido exclusivo
+- Excepción: promociones de la plataforma → se publican en todos los canales el mismo día pero con copy y foto diferente en cada uno
+
+*Tipos de publicación (rotan en cada canal):*
+- TIPO 1 — Carta de presentación (catálogo): foto + nombre + 1 línea sugerente + link al perfil
+- TIPO 2 — Disponible ahora: foto casual + copy con horario sugerente + link al perfil
+- TIPO 3 — Promocional: promo al WhatsApp Business, Canal Telegram, doncellas.mx o futuras redes
+
+*Personalidad por canal:*
+- Canal Telegram @DoncellasGDL → catálogo + comunidad (cartas de presentación, perfiles destacados)
+- Canal WhatsApp → disponibilidad + exclusivo (quién está disponible ahora, contenido más íntimo)
+- Estado WhatsApp Business → personal + cercano (contenido casual de Redes, muy sugerente)
+- Estado Bot Telegram → dinámico + directo (mezcla disponibilidad y promociones)
+
+*Frecuencia — Estados (WhatsApp Business + Bot Telegram):*
+- Máximo 2 estados por escort por día
+- Entre los 2 estados de la misma escort: mínimo 4 horas de diferencia
+- Entre estados de diferentes escorts: intervalo aleatorio entre 23 y 47 minutos (nunca número redondo)
+- En los huecos entre escorts se insertan estados promocionales (máx. 2 promos por día)
+- Horario permitido: 8:00am — 11:30pm (salvo que la escort esté disponible en madrugada)
+- Promos rotan en orden: Canal WhatsApp → Canal Telegram → futuras redes al agregarlas
+
+*Frecuencia — Canales (Telegram + WhatsApp):*
+- 2 a 3 publicaciones por día por canal
+- Intervalos variables entre publicaciones (misma lógica anti-bot)
+- Máximo 1 publicación promocional por día por canal
+- Nunca dos publicaciones del mismo tipo seguidas
+- Nunca la misma escort dos veces el mismo día en el mismo canal
+- Todas las escorts rotan para tener visibilidad similar
+
+*Copy — lógica del texto:*
+- El agente toma 3 variables: descripción de la escort + categoría + horario de publicación
+- Horarios: 🌅 Mañana (6-12) / ☀️ Tarde (12-19) / 🌙 Noche (19-24) / 🌑 Madrugada (0-6)
+- Adapta el tono y las referencias al momento del día
+- Ejemplo: escort Milf con servicio oral publicada a las 9am → "¿Se te antoja un rico oral mañanero? 🌅 Sofía te espera → doncellas.mx/..."
 
 **Flujo 2 — Chatbot conversacional:**
 - Cliente escribe al bot → agente saluda: "Bienvenido a Doncellas GDL 🌹 ¿En qué podemos servirle?"
