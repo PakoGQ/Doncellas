@@ -492,10 +492,14 @@ ipconfig getifaddr en0   # IP de tu Mac
 - [ ] Activar supabase-auth real (tabla usuarios actual es temporal con password en texto plano)
 - [x] Bot @DoncellasGDLbot ✅ creado con logo, descripción y token
 - [x] Canal Telegram @DoncellasGDL ✅ creado, público, con logo
-- [x] WhatsApp Business App ✅ instalada con número dedicado
+- [x] WhatsApp Business App ✅ instalada con número dedicado (luego eliminada para conectar API)
 - [x] Crear Meta Business en business.facebook.com ✅
-- [x] Conectar número dedicado a WhatsApp Business API via Meta ✅
-- [ ] Reemplazar número placeholder en index.html con número real
+- [x] Conectar número dedicado +52 33 2168 5023 a WhatsApp Business API via Meta ✅
+- [x] App Meta para developers creada (DoncellasGDL) ✅
+- [x] Galería mobile: franjas negras corregidas, grid 2 columnas con altura proporcional ✅
+- [x] PWA: banner reaparece cada 5 días (antes era permanente) ✅
+- [x] PWA: banner dorado "Hay versión nueva" fuerza actualización automática ✅
+- [ ] Reemplazar número placeholder +52 33 1234 5678 con número real en index.html
 - [ ] Probar flujo completo login de escort real (Supabase tabla usuarios)
 - [ ] Registrar doncellas.mx en Google Search Console
 
@@ -552,5 +556,5 @@ ipconfig getifaddr en0   # IP de tu Mac
 
 ---
 
-*Actualizado el 4 de junio de 2026 — sesión de planeación del agente IA y setup de canales.*
+*Actualizado el 4 de junio de 2026 — agente IA planeado, Telegram + WhatsApp Business API conectados, fixes mobile PWA.*
 *Proyecto Doncellas GDL — Guadalajara, México*
