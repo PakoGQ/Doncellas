@@ -642,12 +642,13 @@ p  { line-height: 1.7; color: var(--t2); }
   .dg-header  { padding: 0 1.25rem; margin-bottom: 1rem; }
   .dg-title   { font-size: 1.4rem; }
   .dg-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
+    grid-auto-rows: 52vw;
     height: auto;
     max-height: none;
     gap: 4px;
   }
-  .dg-item { height: 80vw; min-height: 260px; max-height: 380px; }
+  .dg-item { height: 52vw; min-height: unset; max-height: unset; }
   .dg-img { object-position: center 20%; }
   .dg-name { font-size: .88rem; }
 }
