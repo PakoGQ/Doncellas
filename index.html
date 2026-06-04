@@ -455,12 +455,14 @@
   const pwaBanner    = document.getElementById('pwaInstallBanner');
   const pwaInstall   = document.getElementById('pwaInstallBtn');
   const pwaDismiss   = document.getElementById('pwaDismissBtn');
-  const pwaDismissed = localStorage.getItem('pwaBannerDismissed') === '1';
+  const PWA_DISMISS_DAYS = 5;
+  const pwaDismissedAt  = localStorage.getItem('pwaBannerDismissedAt');
+  const pwaDismissed    = pwaDismissedAt &&
+    (Date.now() - parseInt(pwaDismissedAt)) < PWA_DISMISS_DAYS * 24 * 60 * 60 * 1000;
   const pwaInstalled = window.matchMedia('(display-mode: standalone)').matches ||
                        window.navigator.standalone === true;
 
   if (pwaBanner && !pwaDismissed && !pwaInstalled) {
-    // Show the banner by default on mobile (CSS toggles desktop off).
     pwaBanner.classList.add('is-visible');
   }
 
@@ -476,19 +478,18 @@
         deferredPWAPrompt.prompt();
         const choice = await deferredPWAPrompt.userChoice;
         if (choice.outcome === 'accepted') {
-          localStorage.setItem('pwaBannerDismissed', '1');
+          localStorage.setItem('pwaBannerDismissedAt', Date.now().toString());
           pwaBanner.classList.remove('is-visible');
         }
         deferredPWAPrompt = null;
       } else {
-        // Fallback: show instructions (iOS doesn't fire beforeinstallprompt).
         alert('Para instalar: toca el botón Compartir y selecciona "Agregar a pantalla de inicio".');
       }
     });
   }
   if (pwaDismiss) {
     pwaDismiss.addEventListener('click', () => {
-      localStorage.setItem('pwaBannerDismissed', '1');
+      localStorage.setItem('pwaBannerDismissedAt', Date.now().toString());
       pwaBanner.classList.remove('is-visible');
     });
   }
