@@ -1542,7 +1542,7 @@ function onCatSearch(q) {
     matchCats.forEach(c => {
       html += `<a href="modelos.html?cat=${encodeURIComponent(c.name)}" class="cat-search-row">
         <div class="cat-search-icon"><i class="fas ${c.icon||'fa-tag'}"></i></div>
-        <div><div class="cat-search-name">${c.name}</div><div class="cat-search-sub">${c.count} Doncellas</div></div>
+        <div><div class="cat-search-name">${c.name}</div><div class="cat-search-sub">Ver perfiles</div></div>
       </a>`;
     });
   }
@@ -1568,12 +1568,11 @@ function buildCatFeatureGrid() {
     g.insertAdjacentHTML('beforeend', `
       <a href="modelos.html?cat=${encodeURIComponent(c.name)}" class="cat-hero-card">
         <img src="${c.img}" alt="${c.name}" loading="lazy" />
-        <div class="wm-overlay" style="background-size:55%"></div>
         <div class="cat-hero-overlay"></div>
         <div class="cat-hero-info">
           <h3>${c.name}</h3>
           <p>${c.desc}</p>
-          <div class="count"><i class="fas fa-users"></i> ${c.count} Doncellas</div>
+          <div class="count"><i class="fas fa-arrow-right"></i> Ver perfiles</div>
         </div>
       </a>`);
   });
@@ -1594,7 +1593,7 @@ function buildAllCatsGrid() {
     g.insertAdjacentHTML('beforeend', `
       <a href="modelos.html?cat=${encodeURIComponent(c.name)}" class="zone-card">
         <div class="zone-icon"><i class="fas ${c.icon||'fa-tag'}"></i></div>
-        <div class="zone-info"><h4>${c.name}</h4><p>${c.count} Doncellas disponibles</p></div>
+        <div class="zone-info"><h4>${c.name}</h4><p>${c.desc || 'Ver perfiles'}</p></div>
         <i class="fas fa-chevron-right zone-arrow"></i>
       </a>`);
   });
