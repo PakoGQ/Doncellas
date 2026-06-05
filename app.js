@@ -113,20 +113,17 @@ const TAG_POOL    = [
   'Bailarina','Bilingüe','Colombiana','Venezolana','Argentina','Brasileña',
 ];
 
-/* ─── Pool de promos (8 plantillas) ────────────────────── */
-/* 4 sobre el costo por hora, 4 con un servicio incluido gratis */
+/* ─── Pool de promos (6 plantillas realistas) ──────────── */
+/* Inspiradas en lo que ofrece la competencia (Pasarela, Golden, etc.):
+   tiempo extra, mañaneros, primera cita, paquetes y cliente frecuente.
+   Tono elegante acorde a la marca premium. */
 const PROMO_POOL = [
-  /* ─ Promociones sobre el costo por hora ─ */
-  { badge:'2x1',              title:'2 horas al precio de 1',           desc:'Paga 1 hora y disfruta 2 completas.',                  discount:50, validUntil:'31 May 2026' },
-  { badge:'30% OFF',          title:'30% off en tu primera hora',       desc:'Oferta exclusiva para nuevos clientes.',               discount:30, validUntil:'31 May 2026' },
-  { badge:'3x2',              title:'3 horas pagando solo 2',           desc:'Tercera hora completamente gratis.',                   discount:33, validUntil:'30 Jun 2026' },
-  { badge:'-40%',             title:'40% off en tarifa por hora',       desc:'Oferta relámpago — solo esta semana.',                 discount:40, validUntil:'22 Abr 2026' },
-
-  /* ─ Promociones con servicio incluido gratis ─ */
-  { badge:'Oral Gratis',      title:'Oral natural incluido sin costo',  desc:'Servicio gratis al reservar 1 hora o más.',            discount:0,  validUntil:'30 May 2026' },
-  { badge:'Novios Gratis',    title:'Trato de novios sin cargo extra',  desc:'Servicio incluido sin costo adicional en tu cita.',    discount:0,  validUntil:'31 May 2026' },
-  { badge:'Terminado Gratis', title:'Oral terminado incluido',          desc:'Sin cargo extra en reservas de 2 horas o más.',        discount:0,  validUntil:'20 May 2026' },
-  { badge:'Ilimitado',        title:'Relaciones ilimitadas incluidas',  desc:'Sin cargo extra durante toda la cita.',                discount:0,  validUntil:'15 Jun 2026' },
+  { badge:'30 min gratis',    title:'30 minutos extra de regalo',   desc:'En reservas de 2 horas o más.',                    discount:0,  validUntil:'30 Jun 2026' },
+  { badge:'Mañanero',         title:'Tarifa especial de mañana',    desc:'Citas antes del mediodía con precio preferencial.', discount:20, validUntil:'30 Jun 2026' },
+  { badge:'1ª cita −20%',     title:'20% en tu primera cita',       desc:'Bienvenida exclusiva para nuevos clientes.',       discount:20, validUntil:'31 Jul 2026' },
+  { badge:'3x2',              title:'Tu tercera hora va de regalo', desc:'Reserva 3 horas y paga solo 2.',                   discount:33, validUntil:'30 Jun 2026' },
+  { badge:'Cliente frecuente',title:'Premio a tu preferencia',      desc:'Descuento especial desde tu tercera cita.',        discount:15, validUntil:'31 Jul 2026' },
+  { badge:'Noche completa',   title:'Paquete noche entera',         desc:'Tarifa preferencial por toda la noche.',           discount:0,  validUntil:'30 Jun 2026' },
 ];
 
 /* Índices de modelos con promo (25 en total) */
@@ -555,20 +552,11 @@ function goHeroSlide(idx) {
       _mosaicOffset = (_mosaicOffset + 4) % Math.max(4, featuredCount);
       refreshMosaicImages();
     }
-    /* Offer slides: rotan cada 2 vueltas */
+    /* Slides de oferta/destacadas: rotan cada 2 vueltas para mostrar variedad */
     if (_mosaicRoundCount % 2 === 0) {
-      _heroOfferIdx = (_heroOfferIdx + 2) % Math.max(1, _offerModels().length);
+      const offerPoolLen = _offerModels().length || MODELS.filter(m => !m.hidden).length;
+      _heroOfferIdx = (_heroOfferIdx + 2) % Math.max(1, offerPoolLen);
       refreshOfferSlides();
-    }
-    /* Gold slides: rotan cada 5 vueltas */
-    if (_mosaicRoundCount % 5 === 0) {
-      _heroGoldIdx = (_heroGoldIdx + 2) % Math.max(1, _goldModels().length);
-      _allElite() ? refreshAllEliteSlides() : refreshGoldSlides();
-    }
-    /* Elite slides: rotan cada 10 vueltas */
-    if (_mosaicRoundCount % 10 === 0) {
-      _heroEliteIdx = (_heroEliteIdx + 2) % Math.max(1, _eliteModels().length);
-      _allElite() ? refreshAllEliteSlides() : refreshEliteSlides();
     }
   }
   clearInterval(heroTimer);
@@ -1082,8 +1070,6 @@ function initMagneticBtns() {
 let _mosaicOffset = 0;
 let _mosaicRoundCount = 0;   /* cuenta cuántas veces el carrusel completa una vuelta */
 let _heroOfferIdx  = 0;      /* offset en el pool de offer slides (rota cada 2 vueltas) */
-let _heroGoldIdx   = 0;      /* offset en el pool Gold (rota cada 5 vueltas) */
-let _heroEliteIdx  = 0;      /* offset en el pool Elite (rota cada 10 vueltas) */
 function _mosaicPic(i, offset) {
   const off = offset == null ? _mosaicOffset : offset;
   const pool = MODELS.filter(m => m.featured && !m.hidden);
@@ -1117,21 +1103,11 @@ function refreshMosaicImages() {
 function getModelPlan(m) {
   return ['Silver','Gold','Elite'][(m.id - 1) % 3];
 }
-function _allElite() {
-  const visible = MODELS.filter(m => !m.hidden);
-  return visible.length > 0 && visible.every(m => getModelPlan(m) === 'Elite');
-}
 function _offerModels() {
   /* Modelos con promo, ordenados: Elite primero, luego Gold, luego Silver */
   const priority = { Elite:0, Gold:1, Silver:2 };
   return MODELS.filter(m => !m.hidden && m.promo)
                .sort((a,b) => priority[getModelPlan(a)] - priority[getModelPlan(b)]);
-}
-function _goldModels() {
-  return MODELS.filter(m => !m.hidden && getModelPlan(m) === 'Gold');
-}
-function _eliteModels() {
-  return MODELS.filter(m => !m.hidden && getModelPlan(m) === 'Elite');
 }
 
 /* Aplica datos de un modelo a un slide `<a>` de perfil */
@@ -1155,7 +1131,6 @@ function _applyProfileSlide(el, m, badgeText) {
     <div class="hero-promo-overlay">
       <div class="hero-promo-badge">${badge}</div>
       <div class="hero-promo-name">${m.name}</div>
-      <div class="hero-promo-zone"><i class="fas fa-map-marker-alt"></i> ${m.zone}</div>
       ${m.promo?.title ? `<div class="hero-promo-offer">${m.promo.title}</div>` : ''}
       ${m.promo?.desc  ? `<div class="hero-promo-desc">${m.promo.desc}</div>` : ''}
       <div class="hero-promo-prices">${pricesHTML}</div>
@@ -1164,40 +1139,24 @@ function _applyProfileSlide(el, m, badgeText) {
 }
 
 function refreshOfferSlides() {
-  const pool = _offerModels();
+  /* 1º: doncellas con promo. Si no hay promos definidas (ej. escorts reales
+     que aún no las activan), cae a destacadas y luego a todas las visibles,
+     para que las slots nunca queden vacías. */
+  let pool = _offerModels();
+  if (!pool.length) pool = MODELS.filter(m => !m.hidden && m.featured);
+  if (!pool.length) pool = MODELS.filter(m => !m.hidden);
   if (!pool.length) return;
-  _applyProfileSlide(document.getElementById('heroSlideOffer0'), pool[_heroOfferIdx % pool.length], `${getModelPlan(pool[_heroOfferIdx % pool.length])} · Oferta`);
-  _applyProfileSlide(document.getElementById('heroSlideOffer1'), pool[(_heroOfferIdx+1) % pool.length], `${getModelPlan(pool[(_heroOfferIdx+1) % pool.length])} · Oferta`);
-}
-function refreshGoldSlides() {
-  /* 2 slots Gold */
-  const pool = _goldModels();
-  if (!pool.length) return;
-  ['Gold0','Gold1'].forEach((suffix, i) => {
-    _applyProfileSlide(document.getElementById(`heroSlide${suffix}`), pool[(_heroGoldIdx + i) % pool.length], '⭐ Gold');
-  });
-}
-function refreshEliteSlides() {
-  /* 3 slots Elite */
-  const pool = _eliteModels();
-  if (!pool.length) return;
-  ['Elite0','Elite1','Elite2'].forEach((suffix, i) => {
-    _applyProfileSlide(document.getElementById(`heroSlide${suffix}`), pool[(_heroEliteIdx + i) % pool.length], '💎 Elite');
-  });
-}
-function refreshAllEliteSlides() {
-  /* Cuando todas son Elite: los 9 slots de perfil muestran Elites */
-  const pool = _eliteModels();
-  if (!pool.length) return;
-  ['Offer0','Offer1','Gold0','Gold1','Elite0','Elite1','Elite2'].forEach((suffix, i) => {
-    _applyProfileSlide(document.getElementById(`heroSlide${suffix}`), pool[(_heroEliteIdx + i) % pool.length], '💎 Elite');
-  });
+  _applyProfileSlide(document.getElementById('heroSlideOffer0'), pool[_heroOfferIdx % pool.length], '💎 Destacada');
+  _applyProfileSlide(document.getElementById('heroSlideOffer1'), pool[(_heroOfferIdx+1) % pool.length], '💎 Destacada');
 }
 
-/* Genera slides del hero — estructura fija de 9 slides */
+/* Genera slides del hero: Marca · 2 Ofertas · Telegram · WhatsApp · Agenda */
 function buildHeroSlides() {
   const wrap = document.getElementById('heroSlides');
   if (!wrap) return;
+
+  /* Conteo honesto de disponibles ahora (señal premium real, no inflada) */
+  const availCount = MODELS.filter(m => m.available && !m.hidden).length || MODELS.filter(m => !m.hidden).length;
 
   /* ── Slide 0: Marca principal (active) ─── */
   const brandSlide = document.createElement('div');
@@ -1220,11 +1179,11 @@ function buildHeroSlides() {
         <a href="membresias.html" class="hero-brand-cta-sec" onclick="event.stopPropagation()">Únete</a>
       </div>
       <div class="hero-brand-stats">
-        <div class="hero-brand-stat"><span class="hero-brand-stat-n">240+</span><span class="hero-brand-stat-l">Doncellas</span></div>
+        <div class="hero-brand-stat"><span class="hero-brand-stat-n">100%</span><span class="hero-brand-stat-l">Verificadas</span></div>
         <div class="hero-brand-stat-div"></div>
-        <div class="hero-brand-stat"><span class="hero-brand-stat-n">98%</span><span class="hero-brand-stat-l">Verificadas</span></div>
+        <div class="hero-brand-stat"><span class="hero-brand-stat-n">24/7</span><span class="hero-brand-stat-l">Disponibilidad</span></div>
         <div class="hero-brand-stat-div"></div>
-        <div class="hero-brand-stat"><span class="hero-brand-stat-n">4,800</span><span class="hero-brand-stat-l">Citas/mes</span></div>
+        <div class="hero-brand-stat"><span class="hero-brand-stat-n">${availCount}</span><span class="hero-brand-stat-l">Disponibles hoy</span></div>
       </div>
     </div>
     <div class="hero-brand-mosaic">
@@ -1239,7 +1198,15 @@ function buildHeroSlides() {
     </div>`;
   wrap.appendChild(brandSlide);
 
-  /* ── Slide 1: Canal de Telegram ─── */
+  /* ── Slides 1–2: Doncellas con oferta / destacadas ─── */
+  ['Offer0','Offer1'].forEach(suffix => {
+    const s = document.createElement('a');
+    s.className = 'hero-slide hero-slide-profile';
+    s.id = `heroSlide${suffix}`;
+    wrap.appendChild(s);
+  });
+
+  /* ── Slide 3: Canal de Telegram ─── */
   const tgSlide = document.createElement('div');
   tgSlide.className = 'hero-slide hero-slide-telegram';
   tgSlide.innerHTML = `
@@ -1285,7 +1252,7 @@ function buildHeroSlides() {
         <div class="hero-tg-pill"><i class="fab fa-telegram"></i> Gratis para siempre</div>
       </div>
 
-      <a href="https://t.me/doncellas" target="_blank" rel="noopener"
+      <a href="https://t.me/DoncellasGDL" target="_blank" rel="noopener"
          onclick="event.stopPropagation()" class="hero-tg-cta">
         <i class="fab fa-telegram"></i>
         <span>Unirme gratis ahora</span>
@@ -1295,59 +1262,97 @@ function buildHeroSlides() {
     </div>`;
   wrap.appendChild(tgSlide);
 
-  /* ── Slides 2–10: Perfiles rotantes ─── */
-  const allElite = _allElite();
-  /* 2 Offer · 4 Gold · 3 Elite */
-  const slotIds = ['Offer0','Offer1','Gold0','Gold1','Elite0','Elite1','Elite2'];
-  slotIds.forEach(suffix => {
-    const s = document.createElement('a');
-    s.className = 'hero-slide hero-slide-profile';
-    s.id = `heroSlide${suffix}`;
-    wrap.appendChild(s);
-  });
-
-  /* ── Slide 8: Pagos ─── */
-  const pagoSlide = document.createElement('div');
-  pagoSlide.className = 'hero-slide hero-slide-pagos';
-  pagoSlide.innerHTML = `
-    <div class="hero-slide-pagos-bg">
-      <div class="hp-grid"></div>
-      <div class="hp-glow-1"></div>
-      <div class="hp-glow-2"></div>
+  /* ── Slide 4: Canal de WhatsApp ─── */
+  /* Reutiliza las clases .hero-tg-* (mismos estilos + reglas mobile);
+     el bloque .hero-slide-whatsapp en styles.css las recolorea a verde.
+     NOTA: el Canal de WhatsApp aún no existe → el CTA va al chat de
+     WhatsApp Business. Cambiar el href al canal cuando esté creado. */
+  const waSlide = document.createElement('div');
+  waSlide.className = 'hero-slide hero-slide-whatsapp';
+  waSlide.innerHTML = `
+    <div class="hero-tg-bg">
+      <div class="hero-tg-glow-main"></div>
+      <div class="hero-tg-glow-sec"></div>
+      <i class="fab fa-whatsapp hero-tg-float hero-tg-f1"></i>
+      <i class="fab fa-whatsapp hero-tg-float hero-tg-f2"></i>
+      <i class="fab fa-whatsapp hero-tg-float hero-tg-f3"></i>
+      <i class="fab fa-whatsapp hero-tg-float hero-tg-f4"></i>
+      <i class="fab fa-whatsapp hero-tg-float hero-tg-f5"></i>
+      <i class="fab fa-whatsapp hero-tg-float hero-tg-f6"></i>
     </div>
-    <div class="hero-pagos-content">
-      <div class="hero-brand-label"><i class="fas fa-shield-alt"></i> Transacciones seguras</div>
-      <h2 class="hero-brand-title">Pagos seguros,<br><em>a tu manera</em></h2>
-      <p class="hero-brand-desc">Acepta tu forma favorita de pago. Todas las transacciones<br>están protegidas con encriptación de extremo a extremo.</p>
-      <div class="hero-pagos-grid">
-        <div class="hero-pago-item">
-          <div class="hero-pago-icon"><i class="fas fa-credit-card"></i></div>
-          <div class="hero-pago-name">Tarjeta</div>
-          <div class="hero-pago-sub">Visa · Mastercard · Amex</div>
+
+    <div class="hero-tg-content">
+
+      <div class="hero-tg-top-row">
+        <div class="hero-tg-icon-ring">
+          <i class="fab fa-whatsapp"></i>
         </div>
-        <div class="hero-pago-item">
-          <div class="hero-pago-icon"><i class="fas fa-university"></i></div>
-          <div class="hero-pago-name">Transferencia</div>
-          <div class="hero-pago-sub">SPEI · OXXO Pay</div>
-        </div>
-        <div class="hero-pago-item">
-          <div class="hero-pago-icon" style="color:#25D366;border-color:rgba(37,211,102,.35);background:rgba(37,211,102,.1)"><i class="fab fa-whatsapp"></i></div>
-          <div class="hero-pago-name">WhatsApp Pay</div>
-          <div class="hero-pago-sub">Pago directo y rápido</div>
+        <div class="hero-tg-channel-tag">
+          <i class="fab fa-whatsapp"></i> Doncellas &nbsp;·&nbsp; Canal de WhatsApp
         </div>
       </div>
-      <div class="hero-pagos-badge"><i class="fas fa-lock"></i> Encriptación SSL 256-bit · Pagos 100% protegidos</div>
+
+      <h2 class="hero-tg-title">
+        Síguenos por<br>
+        <em>WhatsApp <i class="fab fa-whatsapp hero-tg-title-icon"></i></em>
+      </h2>
+
+      <div class="hero-tg-desc-box">
+        <p>Recibe en tu chat quién está <strong>disponible hoy</strong>,
+        perfiles nuevos y <em>ofertas exclusivas</em> —<br>
+        directo a tu WhatsApp, con total discreción.</p>
+      </div>
+
+      <div class="hero-tg-pills">
+        <div class="hero-tg-pill"><i class="fab fa-whatsapp"></i> Disponibilidad al instante</div>
+        <div class="hero-tg-pill"><i class="fas fa-bell"></i> Avisos de nuevas Doncellas</div>
+        <div class="hero-tg-pill"><i class="fas fa-tag"></i> Ofertas exclusivas</div>
+        <div class="hero-tg-pill"><i class="fas fa-user-secret"></i> 100% discreto</div>
+      </div>
+
+      <a href="https://wa.me/523312345678?text=Hola%2C%20quiero%20recibir%20novedades%20y%20disponibilidad%20de%20Doncellas"
+         target="_blank" rel="noopener"
+         onclick="event.stopPropagation()" class="hero-tg-cta">
+        <i class="fab fa-whatsapp"></i>
+        <span>Seguir por WhatsApp</span>
+        <i class="fas fa-arrow-right hero-tg-cta-arrow"></i>
+      </a>
+
     </div>`;
-  wrap.appendChild(pagoSlide);
+  wrap.appendChild(waSlide);
+
+  /* ── Slide 5: Agenda tu cita ─── */
+  const agendaSlide = document.createElement('div');
+  agendaSlide.className = 'hero-slide hero-slide-agenda';
+  agendaSlide.innerHTML = `
+    <div class="hero-agenda-bg">
+      <div class="hero-agenda-glow"></div>
+      <i class="fas fa-calendar-check hero-agenda-float hero-af1"></i>
+      <i class="fas fa-heart hero-agenda-float hero-af2"></i>
+      <i class="fas fa-gem hero-agenda-float hero-af3"></i>
+    </div>
+    <div class="hero-agenda-content">
+      <div class="hero-brand-label"><i class="fas fa-calendar-check"></i> Reserva en minutos</div>
+      <h2 class="hero-agenda-title">Agenda tu <em>cita</em></h2>
+      <p class="hero-agenda-desc">Escríbenos por tu medio favorito. <br>Nuestro asistente te atiende al instante, con total discreción.</p>
+      <div class="hero-agenda-btns">
+        <a href="https://wa.me/523312345678?text=Hola%2C%20quiero%20agendar%20una%20cita"
+           target="_blank" rel="noopener" onclick="event.stopPropagation()"
+           class="hero-agenda-btn hero-agenda-btn-wa">
+          <i class="fab fa-whatsapp"></i> <span>Agendar por WhatsApp</span>
+        </a>
+        <a href="https://t.me/DoncellasGDLbot"
+           target="_blank" rel="noopener" onclick="event.stopPropagation()"
+           class="hero-agenda-btn hero-agenda-btn-tg">
+          <i class="fab fa-telegram"></i> <span>Agendar por Telegram</span>
+        </a>
+      </div>
+      <div class="hero-agenda-note"><i class="fas fa-clock"></i> Respuesta inmediata · Atención 24/7</div>
+    </div>`;
+  wrap.appendChild(agendaSlide);
 
   /* ── Poblar slots de perfil inicialmente ─── */
-  if (allElite) {
-    refreshAllEliteSlides();
-  } else {
-    refreshOfferSlides();
-    refreshGoldSlides();
-    refreshEliteSlides();
-  }
+  refreshOfferSlides();
 }
 
 function buildFeaturedCarousel() {

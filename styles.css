@@ -6082,6 +6082,157 @@ details.faq-item[open] .faq-a {
 }
 
 /* ═══════════════════════════════════════════════════════════
+   HERO SLIDE — CANAL DE WHATSAPP
+   Reutiliza las clases .hero-tg-* (mismos estilos + reglas mobile)
+   y solo recolorea de azul Telegram a verde WhatsApp.
+   ═══════════════════════════════════════════════════════════ */
+.hero-slide-whatsapp {
+  background: linear-gradient(150deg, #04100a 0%, #07261a 35%, #0a3826 60%, #050f0a 100%);
+  display: block;
+  cursor: default;
+}
+.hero-slide-whatsapp .hero-tg-glow-main {
+  background: radial-gradient(circle, rgba(37,211,102,.20) 0%, rgba(37,211,102,.06) 45%, transparent 70%);
+}
+.hero-slide-whatsapp .hero-tg-float { color: #25D366; }
+.hero-slide-whatsapp .hero-tg-icon-ring {
+  background: rgba(37,211,102,.15);
+  border-color: rgba(37,211,102,.4);
+  color: #25D366;
+  box-shadow: 0 0 28px rgba(37,211,102,.3), inset 0 0 16px rgba(37,211,102,.1);
+  animation: none;
+}
+.hero-slide-whatsapp .hero-tg-channel-tag {
+  background: rgba(37,211,102,.12);
+  border-color: rgba(37,211,102,.3);
+  color: #25D366;
+}
+.hero-slide-whatsapp .hero-tg-title em { color: #25D366; }
+.hero-slide-whatsapp .hero-tg-title-icon { animation: none; }
+.hero-slide-whatsapp .hero-tg-desc-box {
+  background: rgba(37,211,102,.07);
+  border-color: rgba(37,211,102,.2);
+  border-left-color: #25D366;
+}
+.hero-slide-whatsapp .hero-tg-desc-box em { color: #C9A84C; }
+.hero-slide-whatsapp .hero-tg-pill i { color: #25D366; }
+.hero-slide-whatsapp .hero-tg-pill:hover {
+  background: rgba(37,211,102,.15);
+  border-color: rgba(37,211,102,.4);
+}
+.hero-slide-whatsapp .hero-tg-cta {
+  background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+  box-shadow: 0 4px 28px rgba(37,211,102,.4);
+}
+.hero-slide-whatsapp .hero-tg-cta:hover {
+  box-shadow: 0 10px 40px rgba(37,211,102,.55);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   HERO SLIDE — AGENDA TU CITA
+   ═══════════════════════════════════════════════════════════ */
+.hero-slide-agenda {
+  background: linear-gradient(150deg, #0a0a0a 0%, #14110a 45%, #1c160a 70%, #0a0a0a 100%);
+  display: block;
+  cursor: default;
+}
+.hero-agenda-bg { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.hero-agenda-glow {
+  position: absolute;
+  width: 600px; height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(201,168,76,.18) 0%, rgba(201,168,76,.05) 45%, transparent 70%);
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  animation: tgGlowPulse 5s ease-in-out infinite;
+}
+.hero-agenda-float { position: absolute; color: var(--gold); pointer-events: none; font-style: normal; }
+.hero-af1 { font-size: 7rem; opacity: .05; top: -1rem; left: -1rem;  animation: tgFloat1 10s ease-in-out infinite; }
+.hero-af2 { font-size: 4rem; opacity: .07; bottom: 2rem; right: 5rem; animation: tgFloat2 8s ease-in-out infinite; }
+.hero-af3 { font-size: 9rem; opacity: .04; bottom: -2rem; right: -2rem; animation: tgFloat3 12s ease-in-out infinite; }
+
+.hero-agenda-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: .9rem 2rem;
+  text-align: center;
+  gap: .7rem;
+}
+.hero-agenda-title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.8rem, 4.2vw, 3rem);
+  line-height: 1.1;
+  margin: 0;
+  color: #fff;
+  font-weight: 700;
+}
+.hero-agenda-title em { color: var(--gold); font-style: italic; }
+.hero-agenda-desc {
+  font-family: var(--font-serif);
+  font-size: clamp(.85rem, 1.8vw, 1rem);
+  color: rgba(255,255,255,.78);
+  line-height: 1.5;
+  margin: 0;
+  font-style: italic;
+}
+.hero-agenda-btns {
+  display: flex;
+  gap: .8rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: .2rem;
+}
+.hero-agenda-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .7rem 1.6rem;
+  border-radius: 100px;
+  font-weight: 700;
+  font-size: .92rem;
+  text-decoration: none;
+  color: #fff;
+  transition: all .25s;
+}
+.hero-agenda-btn-wa {
+  background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+  box-shadow: 0 4px 24px rgba(37,211,102,.38);
+}
+.hero-agenda-btn-wa:hover { transform: translateY(-3px); box-shadow: 0 10px 36px rgba(37,211,102,.5); }
+.hero-agenda-btn-tg {
+  background: linear-gradient(135deg, #229ED9 0%, #1a7fb8 100%);
+  box-shadow: 0 4px 24px rgba(34,158,217,.38);
+}
+.hero-agenda-btn-tg:hover { transform: translateY(-3px); box-shadow: 0 10px 36px rgba(34,158,217,.5); }
+.hero-agenda-note {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  font-size: .72rem;
+  color: rgba(255,255,255,.55);
+  letter-spacing: .03em;
+  margin-top: .2rem;
+}
+.hero-agenda-note i { color: var(--gold); }
+
+@media (max-width: 768px) {
+  .hero-agenda-content { padding: 8px 16px; gap: .5rem; }
+  .hero-agenda-title { font-size: clamp(1.3rem, 6vw, 1.7rem); }
+  .hero-agenda-desc { font-size: .72rem; line-height: 1.4; }
+  .hero-agenda-desc br { display: none; }
+  .hero-agenda-btns { flex-direction: column; gap: .5rem; width: 100%; max-width: 280px; }
+  .hero-agenda-btn { width: 100%; justify-content: center; padding: .6rem 1.2rem; font-size: .82rem; }
+  .hero-agenda-note { font-size: .62rem; }
+  .hero-af1 { font-size: 4rem; }
+  .hero-af3 { font-size: 5rem; }
+}
+
+/* ═══════════════════════════════════════════════════════════
    INDEX — MOBILE REFINEMENTS (≤768px)
    Stats bar · Section headers · Carousels · Card footer
    Appended last to win all specificity ties.
