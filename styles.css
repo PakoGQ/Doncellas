@@ -3339,12 +3339,6 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
     grid-row: auto !important;
     height: 260px;
   }
-  .cat-feature-grid > *:not(:first-child) ~ *,
-  .featured-small-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-  }
 
   /* ── Profile page ── */
   .profile-hero { height: auto; }
