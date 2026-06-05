@@ -3,6 +3,22 @@
 
 ---
 
+## ⚡ ACTUALIZACIONES — 5 junio 2026 (LEER PRIMERO; sustituye descripciones viejas de abajo)
+
+> Registro detallado en memoria: `sesion-2026-06-05-cambios.md`. Resumen de cambios que
+> superan lo que digan las secciones 5–6 más abajo:
+
+- **ZONAS ELIMINADAS de todo lo público** — decisión: todas las escorts cubren la ZMG, no se segmentan por zona. Se quitó el city-bar, los filtros de zona (index/modelos), la sección de zonas (categorias) y la zona del perfil. **Las cards ahora muestran EDAD en vez de zona.** Zona queda solo como metadata interna en Supabase.
+- **HERO rediseñado a 6 slides**: Marca (stats HONESTOS dinámicos: 100% Verificadas · 24/7 · N Disponibles hoy) · 2 Ofertas (simulan promos rotando — flag `HERO_SIMULATE_PROMOS`) · Telegram · **WhatsApp (nuevo)** · **Agenda tu cita (nuevo)**. Slide de **Pagos ELIMINADO** (hasta definir con escorts). Promos reescritas a 6 realistas (30 min gratis, Mañanero, 1ª cita −20%, 3x2, Cliente frecuente, Noche completa).
+- **Números falsos → dinámicos**: stats-bar index, contador y KPI "Doncellas activas" del panel-admin (ya no "240").
+- **10 enlaces de Telegram corregidos**: `t.me/doncellas` (roto) → `t.me/DoncellasGDLbot` (bot). El canal es `t.me/DoncellasGDL`.
+- **Posicionamiento**: marca en CALIDAD (escala), NUNCA en escasez/exclusividad — Paco va a crecer gradualmente (ver `estrategia-numero-escorts.md`).
+- **Arranque**: ~12-15 escorts activas + lista de espera escalonada (no "10").
+- **BLOQUEADO hasta hablar con escorts**: promociones y métodos de pago.
+- **Pendientes vivos**: reemplazar número WhatsApp placeholder `523312345678`; quitar cuentas demo del login antes de abrir al público; poner `HERO_SIMULATE_PROMOS=false` con clientes reales; crear Canal de WhatsApp.
+
+---
+
 ## 1. IDENTIDAD DEL PROYECTO
 
 | Campo | Detalle |
