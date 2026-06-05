@@ -69,6 +69,7 @@
       .cat-feature-grid .cat-hero-card:first-child { grid-column: span 1; height: 260px; }
     }
 
+    /* Tarjetas de la lista "Todas las Especialidades" (reusa estas clases). */
     .zone-card {
       background: var(--card);
       border: 1px solid var(--border);
@@ -136,7 +137,7 @@
   <div style="position:relative">
     <i class="fas fa-search" style="position:absolute;left:1.25rem;top:50%;transform:translateY(-50%);color:var(--t3);font-size:.9rem;pointer-events:none;z-index:1"></i>
     <input type="text" id="catSearchInput"
-      placeholder="Busca categorías, zonas o tipos de Doncella…"
+      placeholder="Busca categorías o tipos de Doncella…"
       oninput="onCatSearch(this.value)"
       autocomplete="off"
       style="width:100%;padding:.9rem 1.2rem .9rem 3rem;background:var(--card);border:1px solid var(--border);border-radius:100px;color:var(--t1);font-size:.9rem;outline:none;transition:border-color .2s;box-sizing:border-box" />
@@ -194,8 +195,9 @@
     <div>
       <p class="footer-heading">Legal</p>
       <ul class="footer-links">
-        <li><a href="#">Términos</a></li>
-        <li><a href="#">Privacidad</a></li>
+        <li><a href="terminos.html">Términos de Uso</a></li>
+        <li><a href="privacidad.html">Privacidad</a></li>
+        <li><a href="cookies.html">Cookies</a></li>
       </ul>
     </div>
   </div>
@@ -205,7 +207,7 @@
 </footer>
 
 <div class="float-btns">
-  <a href="https://t.me/doncellas" target="_blank" class="float-btn float-btn-telegram" aria-label="Telegram"><i class="fab fa-telegram"></i></a>
+  <a href="https://t.me/DoncellasGDLbot" target="_blank" class="float-btn float-btn-telegram" aria-label="Telegram"><i class="fab fa-telegram"></i></a>
   <a href="https://wa.me/523312345678" target="_blank" class="float-btn float-btn-wa" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
 </div>
 

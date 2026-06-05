@@ -326,15 +326,6 @@ const CATEGORIES = [
   { name:'Alta',          count:27, icon:'fa-sort-amount-up', img: photoUrl(PHOTO_POOL[12],400,400), desc:'Esbeltas y de gran estatura con porte elegante' },
 ];
 
-const ZONES_LIST = [
-  { name:'Zona Rosa',        count:52, icon:'fa-heart' },
-  { name:'Providencia',      count:38, icon:'fa-tree'  },
-  { name:'Chapultepec',      count:31, icon:'fa-landmark' },
-  { name:'Tlaquepaque',      count:27, icon:'fa-store' },
-  { name:'Zapopan',          count:45, icon:'fa-city'  },
-  { name:'Centro Histórico', count:22, icon:'fa-church' },
-];
-
 const TAGS_POPULAR = ['Universitaria','Milf','Petite','Nalgona','Voluptuosa','Chichona','Extranjera','Jovencita','Fit','Natural','Tuneada','Chaparrita','Alta','VIP','Premium','Elite'];
 
 /* ─── Reviews ───────────────────────────────────────────── */
@@ -604,7 +595,7 @@ function modelCardHTML(m) {
     <div class="model-card-info">
       <div class="model-card-name">${m.name}</div>
       <div class="model-card-meta">
-        <span><i class="fas fa-map-marker-alt" style="color:var(--gold);margin-right:.25rem"></i>${m.zone}</span>
+        <span><i class="fas fa-birthday-cake" style="color:var(--gold);margin-right:.25rem"></i>${m.age} años</span>
         <span class="stars" style="font-size:.7rem">${stars(m.rating)} <span style="color:var(--t2);margin-left:.2rem">${m.rating}</span></span>
       </div>
       <div class="model-card-tags">
@@ -618,7 +609,7 @@ function modelCardHTML(m) {
         <button class="btn btn-ghost btn-sm" style="font-size:.72rem;padding:.35rem .65rem" onclick="event.stopPropagation();openQuickView(${m.id})">
           <i class="fas fa-eye"></i> Ver
         </button>
-        <button class="btn btn-telegram btn-sm" onclick="event.stopPropagation();window.open('https://t.me/doncellas','_blank')" title="Telegram">
+        <button class="btn btn-telegram btn-sm" onclick="event.stopPropagation();window.open('https://t.me/DoncellasGDLbot','_blank')" title="Telegram">
           <i class="fab fa-telegram"></i>
         </button>
         <button class="btn btn-wa btn-sm" onclick="event.stopPropagation();window.open('https://wa.me/523312345678?text=Hola%20${encodeURIComponent(m.name)}','_blank')" title="WhatsApp">
@@ -735,7 +726,7 @@ function buildHeroMosaic() {
             : `<span class="pill pill-busy" style="font-size:.6rem;margin-bottom:.4rem">No Disponible</span>`}
           <div class="hm-name">${m.name}</div>
           <div class="hm-meta">
-            <i class="fas fa-map-marker-alt" style="color:var(--gold);margin-right:.25rem;font-size:.7rem"></i>${m.zone}
+            <i class="fas fa-birthday-cake" style="color:var(--gold);margin-right:.25rem;font-size:.7rem"></i>${m.age} años
             &nbsp;·&nbsp;${m.cat}
             &nbsp;·&nbsp;${stars(m.rating)} ${m.rating}
           </div>
@@ -1471,7 +1462,7 @@ function applyFilters(list) {
         if (m.rate < lo || m.rate > hi) return false;
       }
     }
-    if (q && !m.name.toLowerCase().includes(q) && !m.zone.toLowerCase().includes(q) &&
+    if (q && !m.name.toLowerCase().includes(q) &&
              !m.cat.toLowerCase().includes(q) && !m.tags.join(' ').toLowerCase().includes(q)) return false;
     return true;
   });
@@ -1497,7 +1488,6 @@ function clearFilters() {
 function initCategorias() {
   buildCatFeatureGrid();
   buildAllCatsGrid();
-  buildZonesGrid();
   buildPopularTags();
   initCatSearch();
 }
@@ -1537,7 +1527,6 @@ function onCatSearch(q) {
   const matchModels = MODELS.filter(m => !m.hidden && (
     m.name.toLowerCase().includes(ql) ||
     m.cat.toLowerCase().includes(ql) ||
-    m.zone.toLowerCase().includes(ql) ||
     TAGS_POPULAR.some(t => t.toLowerCase().includes(ql))
   )).slice(0, 5);
 
@@ -1562,7 +1551,7 @@ function onCatSearch(q) {
     matchModels.forEach(m => {
       html += `<a href="perfil.html?id=${m.id}" class="cat-search-row">
         <img src="${m.photos[0]}" class="cat-search-avatar" alt="${m.name}" />
-        <div style="flex:1;min-width:0"><div class="cat-search-name">${m.name}</div><div class="cat-search-sub">${m.cat} · ${m.zone}</div></div>
+        <div style="flex:1;min-width:0"><div class="cat-search-name">${m.name}</div><div class="cat-search-sub">${m.cat} · ${m.age} años</div></div>
         ${m.available ? '<span class="pill pill-available" style="font-size:.6rem;flex-shrink:0">Disponible</span>' : ''}
       </a>`;
     });
@@ -1611,19 +1600,6 @@ function buildAllCatsGrid() {
   });
 }
 
-function buildZonesGrid() {
-  const g = document.getElementById('zonesGrid');
-  if (!g) return;
-  ZONES_LIST.forEach(z => {
-    g.insertAdjacentHTML('beforeend', `
-      <a href="modelos.html?zona=${encodeURIComponent(z.name)}" class="zone-card">
-        <div class="zone-icon"><i class="fas ${z.icon}"></i></div>
-        <div class="zone-info"><h4>${z.name}</h4><p>${z.count} Doncellas en esta zona</p></div>
-        <i class="fas fa-chevron-right zone-arrow"></i>
-      </a>`);
-  });
-}
-
 function buildPopularTags() {
   const w = document.getElementById('popularTags');
   if (!w) return;
@@ -1661,7 +1637,6 @@ function initPerfil() {
   const metaEl = document.getElementById('profileMeta');
   if (metaEl) {
     metaEl.innerHTML = `
-      <span class="profile-meta-item"><i class="fas fa-map-marker-alt"></i> ${m.zone}, Guadalajara</span>
       <span class="profile-meta-item"><i class="fas fa-birthday-cake"></i> ${m.age} años</span>
       <span class="profile-meta-item"><i class="fas fa-ruler-vertical"></i> ${(m.height/100).toFixed(2)} m</span>
       <span class="profile-meta-item stars">${stars(m.rating)}
@@ -2048,7 +2023,7 @@ function buildSimilarProfiles(currentModel) {
     wrap.insertAdjacentHTML('beforeend', `
       <a href="perfil.html?id=${m.id}" style="display:flex;align-items:center;gap:.75rem;padding:.5rem;border-radius:var(--r-md);transition:var(--transition)" onmouseover="this.style.background='var(--surface)'" onmouseout="this.style.background=''">
         <img src="${m.img}" alt="${m.name}" style="width:44px;height:44px;border-radius:50%;object-fit:cover;border:1px solid var(--border-h)" />
-        <div><div style="font-size:.88rem;font-weight:500">${m.name}</div><div style="font-size:.72rem;color:var(--t2)">${m.zone} · ${fmtMXN(m.rate)}/hr</div></div>
+        <div><div style="font-size:.88rem;font-weight:500">${m.name}</div><div style="font-size:.72rem;color:var(--t2)">${m.cat} · ${fmtMXN(m.rate)}/hr</div></div>
         ${m.available ? '<span class="pill pill-available" style="margin-left:auto;font-size:.58rem">Disponible</span>' : ''}
       </a>`);
   });
@@ -3000,7 +2975,7 @@ window.openQuickView = function(id) {
             <span class="pill ${m.available ? 'pill-available' : 'pill-busy'}" style="font-size:.65rem">${m.available ? 'Disponible' : 'No Disponible'}</span>
             ${m.promo ? `<span class="pill pill-gold" style="font-size:.65rem">🔥 ${m.promo.badge}</span>` : ''}
           </div>
-          <div style="font-size:.82rem;color:var(--t2)"><i class="fas fa-map-marker-alt" style="color:var(--gold)"></i> ${m.zone} · ${m.cat}</div>
+          <div style="font-size:.82rem;color:var(--t2)"><i class="fas fa-birthday-cake" style="color:var(--gold)"></i> ${m.age} años · ${m.cat}</div>
           <div class="stars" style="margin-top:.35rem;font-size:.8rem">${stars(m.rating)} <span style="color:var(--t2);font-size:.75rem">${m.rating}</span></div>
         </div>
         <div style="border-top:1px solid var(--border);padding-top:.75rem">
@@ -3040,7 +3015,7 @@ window.openQuickView = function(id) {
                     onclick="window.open('https://wa.me/523312345678?text=Hola%2C%20me%20interesa%20${encodeURIComponent(m.name)}','_blank')">
               <i class="fab fa-whatsapp"></i> WhatsApp
             </button>
-            <a href="https://t.me/doncellas" target="_blank" class="btn btn-telegram" style="justify-content:center">
+            <a href="https://t.me/DoncellasGDLbot" target="_blank" class="btn btn-telegram" style="justify-content:center">
               <i class="fab fa-telegram"></i> Telegram
             </a>
           </div>
