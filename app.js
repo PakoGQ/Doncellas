@@ -2062,7 +2062,7 @@ window.saveNewModelo = async function() {
   const nombre   = document.getElementById('newNombre')?.value.trim();
   const username = document.getElementById('newUsername')?.value.trim().toLowerCase();
   const pass     = document.getElementById('newPass')?.value.trim();
-  const zona   = document.getElementById('newZona')?.value;
+  const zona   = 'Guadalajara';   // zona ya no se segmenta: todas cubren la ZMG
   const cat    = document.getElementById('newCat')?.value;
   const plan   = document.getElementById('newPlan')?.value;
   const tarifa = parseInt(document.getElementById('newTarifa')?.value) || 2500;
@@ -2234,12 +2234,18 @@ function buildModelosTable() {
   const tbody = document.getElementById('modelosTbody');
   if (!tbody) return;
   const plans = ['Silver','Gold','Elite'];
+  const total = MODELS.length;
+  const countEl = document.getElementById('modelosTableCount');
+  if (countEl) countEl.textContent = `Mostrando ${Math.min(total, 50)} de ${total} Doncellas`;
+  const subEl = document.getElementById('modelosPageSub');
+  if (subEl) subEl.textContent = `${total} Doncellas registradas`;
+  const kpiEl = document.getElementById('kpiDoncellasActivas');
+  if (kpiEl) kpiEl.textContent = MODELS.filter(m => m.available && !m.hidden).length;
   MODELS.slice(0, 50).forEach(m => {
     const plan = plans[m.id % 3];
     tbody.insertAdjacentHTML('beforeend',`
       <tr data-model-row="${m.id}">
         <td><div class="table-avatar"><img src="${m.img}" alt="${m.name}" /><div><div class="table-name">${m.name}</div><div class="table-sub">${m.age} años · ${m.nationality}</div></div></div></td>
-        <td><span style="color:var(--t2)">${m.zone}</span></td>
         <td>${m.cat}</td>
         <td><span class="pill ${plan==='Elite'?'pill-new':plan==='Gold'?'pill-gold':'pill-available'}" style="font-size:.65rem">${plan}</span></td>
         <td style="font-family:var(--font-serif)">${m.citas}</td>
@@ -2314,9 +2320,6 @@ function editModel(id) {
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem 1rem">
       <div class="form-group"><label class="form-label">Nombre</label><input type="text" class="form-input" id="edit-name" value="${m.name}" /></div>
       <div class="form-group"><label class="form-label">Edad</label><input type="number" class="form-input" id="edit-age" value="${m.age}" min="18" max="60" /></div>
-      <div class="form-group"><label class="form-label">Zona</label>
-        <select class="form-input filter-select" id="edit-zone">${ZONES.map(z=>`<option${z===m.zone?' selected':''}>${z}</option>`).join('')}</select>
-      </div>
       <div class="form-group"><label class="form-label">Categoría</label>
         <select class="form-input filter-select" id="edit-cat">${CATS.map(c=>`<option${c===m.cat?' selected':''}>${c}</option>`).join('')}</select>
       </div>
