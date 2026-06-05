@@ -2127,6 +2127,8 @@ canvas { width: 100% !important; }
 }
 @media (max-width: 768px) {
   .section { padding: 3rem 1.25rem; }
+  /* "Cómo funciona": 3 columnas se apretaban (~85px c/u) — apilar en móvil */
+  .how-steps-grid { grid-template-columns: 1fr !important; gap: .6rem !important; }
   .search-bar-wrap { padding: 8px 1rem 0; margin-top: 16px; }
   .hero-brand-actions > .hero-brand-cta-sec { display: none !important; }
   .hero-content { padding: 0 1.25rem 4rem; }

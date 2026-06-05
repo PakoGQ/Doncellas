@@ -775,6 +775,9 @@ function buildDoncellaGallery() {
   if (!el) return;
 
   const escorts = MODELS.filter(m => !m.hidden);
+  /* Contador honesto del stats-bar = doncellas reales (no número inflado) */
+  const statsCountEl = document.getElementById('statsCount');
+  if (statsCountEl) statsCountEl.textContent = escorts.length;
   if (!escorts.length) return;
 
   escorts.forEach((m, i) => {
