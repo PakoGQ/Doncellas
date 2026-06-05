@@ -485,21 +485,6 @@ document.addEventListener('DOMContentLoaded', () => {
   applyMobilePlaceholder();
   mq.addEventListener?.('change', applyMobilePlaceholder);
 
-  /* ── Mobile-only: city-chip activation + sync to zona select ── */
-  const chips = document.querySelectorAll('.city-bar .city-chip');
-  const zonaSelect = document.getElementById('searchZona');
-  chips.forEach(chip => {
-    chip.addEventListener('click', () => {
-      chips.forEach(c => c.classList.remove('is-active'));
-      chip.classList.add('is-active');
-      if (zonaSelect) {
-        const v = chip.getAttribute('data-city') || '';
-        // If chip value isn't in the select options, leave select untouched.
-        const opt = Array.from(zonaSelect.options).find(o => o.value === v || o.text === v);
-        if (opt) zonaSelect.value = opt.value || opt.text;
-      }
-    });
-  });
 });
 
 /* ─── Hero Slider ───────────────────────────────────────── */
@@ -1399,11 +1384,9 @@ function setupSearchForm() {
   form.addEventListener('submit', e => {
     e.preventDefault();
     const q    = document.getElementById('searchInput')?.value.trim();
-    const zona = document.getElementById('searchZona')?.value;
     const cat  = document.getElementById('searchCat')?.value;
     const p = new URLSearchParams();
     if (q)    p.set('q', q);
-    if (zona) p.set('zona', zona);
     if (cat)  p.set('cat', cat);
     window.location.href = 'modelos.html?' + p.toString();
   });
@@ -1418,7 +1401,7 @@ function initModelos() {
 
   document.getElementById('clearFilters')?.addEventListener('click', clearFilters);
   document.getElementById('sortSelect')?.addEventListener('change', renderModelos);
-  ['fZona','fCat','fPrice','fRating'].forEach(id =>
+  ['fCat','fPrice','fRating'].forEach(id =>
     document.getElementById(id)?.addEventListener('change', renderModelos));
   const searchEl = document.getElementById('modelosSearch');
   if (searchEl) {
@@ -1437,7 +1420,6 @@ function initModelos() {
   });
 
   const p = new URLSearchParams(window.location.search);
-  if (p.get('zona')) { const s = document.getElementById('fZona'); if (s) s.value = p.get('zona'); }
   if (p.get('cat'))  { const s = document.getElementById('fCat');  if (s) s.value = p.get('cat');  }
   if (p.get('filter') === 'available') {
     document.querySelectorAll('[data-filter-avail]').forEach(b => b.classList.remove('active'));
@@ -1459,7 +1441,6 @@ function renderModelos() {
 }
 
 function applyFilters(list) {
-  const zona   = document.getElementById('fZona')?.value  || '';
   const cat    = document.getElementById('fCat')?.value   || '';
   const price  = document.getElementById('fPrice')?.value || '';
   const avail  = document.querySelector('[data-filter-avail].active')?.dataset.filterAvail || 'all';
@@ -1470,7 +1451,6 @@ function applyFilters(list) {
 
   let r = list.filter(m => {
     if (m.hidden) return false;
-    if (zona && m.zone !== zona) return false;
     if (cat  && m.cat  !== cat)  return false;
     if (avail === 'available' && !m.available) return false;
     if (avail === 'busy'      &&  m.available) return false;
@@ -1496,7 +1476,7 @@ function applyFilters(list) {
 }
 
 function clearFilters() {
-  ['fZona','fCat','fPrice','fRating'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+  ['fCat','fPrice','fRating'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
   const s = document.getElementById('sortSelect'); if (s) s.value = 'featured';
   document.querySelectorAll('[data-filter-avail]').forEach(b => b.classList.remove('active'));
   document.querySelector('[data-filter-avail="all"]')?.classList.add('active');
