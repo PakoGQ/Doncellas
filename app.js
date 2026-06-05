@@ -552,12 +552,10 @@ function goHeroSlide(idx) {
       _mosaicOffset = (_mosaicOffset + 4) % Math.max(4, featuredCount);
       refreshMosaicImages();
     }
-    /* Slides de oferta/destacadas: rotan cada 2 vueltas para mostrar variedad */
-    if (_mosaicRoundCount % 2 === 0) {
-      const offerPoolLen = _offerModels().length || MODELS.filter(m => !m.hidden).length;
-      _heroOfferIdx = (_heroOfferIdx + 2) % Math.max(1, offerPoolLen);
-      refreshOfferSlides();
-    }
+    /* Slides de oferta: rotan cada vuelta (perfil + promo) para mostrar variedad */
+    const offerPoolLen = MODELS.filter(m => !m.hidden).length;
+    _heroOfferIdx = (_heroOfferIdx + 1) % Math.max(1, offerPoolLen);
+    refreshOfferSlides();
   }
   clearInterval(heroTimer);
   heroTimer = setInterval(nextHeroSlide, 5500);
@@ -1100,15 +1098,11 @@ function refreshMosaicImages() {
 }
 
 /* ─── Helpers para slides de perfil rotativas ─────────── */
-function getModelPlan(m) {
-  return ['Silver','Gold','Elite'][(m.id - 1) % 3];
-}
-function _offerModels() {
-  /* Modelos con promo, ordenados: Elite primero, luego Gold, luego Silver */
-  const priority = { Elite:0, Gold:1, Silver:2 };
-  return MODELS.filter(m => !m.hidden && m.promo)
-               .sort((a,b) => priority[getModelPlan(a)] - priority[getModelPlan(b)]);
-}
+/* Showcase de promos en el hero: si está en true, los slides de oferta
+   simulan una promoción (rotando el pool) en las doncellas que no tengan
+   una real — sirve para enseñar a las escorts cómo se vería su promo.
+   Poner en false para que solo se muestren promociones REALES. */
+const HERO_SIMULATE_PROMOS = true;
 
 /* Aplica datos de un modelo a un slide `<a>` de perfil */
 function _applyProfileSlide(el, m, badgeText) {
@@ -1139,15 +1133,22 @@ function _applyProfileSlide(el, m, badgeText) {
 }
 
 function refreshOfferSlides() {
-  /* 1º: doncellas con promo. Si no hay promos definidas (ej. escorts reales
-     que aún no las activan), cae a destacadas y luego a todas las visibles,
-     para que las slots nunca queden vacías. */
-  let pool = _offerModels();
-  if (!pool.length) pool = MODELS.filter(m => !m.hidden && m.featured);
-  if (!pool.length) pool = MODELS.filter(m => !m.hidden);
+  /* Rota TODAS las doncellas visibles por los 2 slots de oferta.
+     A cada una le muestra su promo real; si no tiene y el showcase está
+     activo, le simula una del pool (rotando) para enseñar cómo se vería.
+     No muta el modelo original: usa una copia con la promo a mostrar. */
+  const pool = MODELS.filter(m => !m.hidden);
   if (!pool.length) return;
-  _applyProfileSlide(document.getElementById('heroSlideOffer0'), pool[_heroOfferIdx % pool.length], '💎 Destacada');
-  _applyProfileSlide(document.getElementById('heroSlideOffer1'), pool[(_heroOfferIdx+1) % pool.length], '💎 Destacada');
+  [0, 1].forEach(slot => {
+    const m = pool[(_heroOfferIdx + slot) % pool.length];
+    let promo = m.promo;
+    if (!promo && HERO_SIMULATE_PROMOS) {
+      promo = PROMO_POOL[(_heroOfferIdx + slot) % PROMO_POOL.length];
+    }
+    const display = promo ? { ...m, promo } : m;
+    const badge = promo ? `🔥 ${promo.badge}` : '💎 Destacada';
+    _applyProfileSlide(document.getElementById(`heroSlideOffer${slot}`), display, badge);
+  });
 }
 
 /* Genera slides del hero: Marca · 2 Ofertas · Telegram · WhatsApp · Agenda */
