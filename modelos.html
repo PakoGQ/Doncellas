@@ -52,13 +52,13 @@
 </nav>
 
 <!-- Page Header -->
-<div style="padding:calc(var(--nav-h) + 3rem) 2.5rem 2rem;max-width:1400px;margin:0 auto;display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:1rem">
+<div class="modelos-page-header" style="padding:calc(var(--nav-h) + 3rem) 2.5rem 2rem;max-width:1400px;margin:0 auto;display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:1rem">
   <div>
     <p class="section-label"><i class="fas fa-users"></i> Directorio completo</p>
     <h1 style="font-size:clamp(1.8rem,3vw,2.8rem)">Nuestras <span class="gold">Doncellas</span></h1>
     <p class="text-muted mt-1" id="resultsCount">Cargando perfiles…</p>
   </div>
-  <div style="display:flex;gap:.75rem;align-items:center;flex-wrap:wrap">
+  <div class="modelos-head-controls" style="display:flex;gap:.75rem;align-items:center;flex-wrap:wrap">
     <div style="display:flex;gap:.4rem">
       <button class="tbl-btn active" id="viewGrid" title="Vista cuadrícula"><i class="fas fa-th"></i></button>
       <button class="tbl-btn" id="viewList" title="Vista lista"><i class="fas fa-list"></i></button>
@@ -116,7 +116,7 @@
       </select>
     </div>
     <div class="filter-divider"></div>
-    <div class="filter-group">
+    <div class="filter-group fg-avail">
       <label><i class="fas fa-circle-check"></i> Disponibilidad</label>
       <div class="filter-toggle-group">
         <button class="filter-toggle active" data-filter-avail="all">Todas</button>

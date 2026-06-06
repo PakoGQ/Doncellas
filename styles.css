@@ -3063,19 +3063,47 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
   .card-carousel-dots { opacity: 1; }
 }
 
-/* ─── Filter bar — scroll horizontal en mobile ──────────── */
+/* ─── Filtros en mobile — cuadrícula, todo visible sin scroll ─ */
 @media (max-width: 600px) {
+  /* Quitar "Destacadas" + iconos grid/lista → el buscador sube solo */
+  .modelos-head-controls { display: none !important; }
+
+  /* Header: el nav es sticky (ya ocupa su espacio) → quitar el padding-top
+     duplicado que dejaba un hueco negro, y alinear a 14px como el resto */
+  .modelos-page-header { padding: 1.1rem 14px 1rem !important; }
+
   .filters-bar {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+    overflow: visible !important;
+    gap: .7rem;
     padding: .85rem 1rem;
-    gap: .5rem;
-    scrollbar-width: none;
   }
   .filters-bar::-webkit-scrollbar { display: none; }
-  .filter-group { flex-shrink: 0; }
   .filter-divider { display: none; }
+
+  /* Cada filtro: etiqueta arriba, control abajo a todo el ancho de su celda */
+  .filters-bar .filter-group {
+    flex-direction: column;
+    align-items: stretch;
+    gap: .35rem;
+    min-width: 0;
+  }
+  .filters-bar .filter-group label { font-size: .68rem; }
+  .filters-bar .filter-group .filter-select { width: 100%; }
+
+  /* Disponibilidad ocupa toda la fila (3 botones repartidos) */
+  .filters-bar .fg-avail { grid-column: 1 / -1; }
+  .filters-bar .fg-avail .filter-toggle-group { display: flex; gap: .4rem; }
+  .filters-bar .fg-avail .filter-toggle { flex: 1; text-align: center; padding-left: 0; padding-right: 0; }
+
+  /* Botón Limpiar a todo el ancho, al final */
+  .filters-bar #clearFilters {
+    grid-column: 1 / -1;
+    margin-left: 0 !important;
+    justify-content: center;
+  }
 }
 
 /* ─── Page header — padding safe area ───────────────────── */
