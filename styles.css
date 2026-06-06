@@ -4646,6 +4646,9 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
 /* Mobile availability bar (modelo): hidden on desktop */
 .mobile-avail-bar { display: none; }
 
+/* Logout button in navbar: mobile-only */
+.btn-logout-mobile-nav { display: none; }
+
 @media (max-width: 768px) {
 
   /* ── Panel header (nav) ─────────────────────────────────── */
@@ -4674,7 +4677,7 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
     align-items: center;
     gap: 8px;
   }
-  body.panel-admin .nav .nav-admin-right > :not(:first-child) { display: none !important; }
+  body.panel-admin .nav .nav-admin-right > :not(:first-child):not(.btn-logout-mobile-nav) { display: none !important; }
   body.panel-admin .nav .nav-admin-right > span {
     font-size: 11px !important;
     color: var(--t2);
@@ -4687,13 +4690,30 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
     align-items: center;
     gap: 8px;
   }
-  body.panel-modelo .nav .nav-modelo-right > button,
+  body.panel-modelo .nav .nav-modelo-right > button:not(.btn-logout-mobile-nav),
   body.panel-modelo .nav .nav-modelo-right > .pill,
   body.panel-modelo .nav .nav-modelo-right > img { display: none !important; }
   body.panel-modelo .nav .nav-modelo-right > span {
     font-size: 11px !important;
     color: var(--t2);
   }
+
+  .btn-logout-mobile-nav {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--gold);
+    border-radius: 10px;
+    background: transparent;
+    color: var(--gold);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background .2s;
+    flex-shrink: 0;
+  }
+  .btn-logout-mobile-nav:active { background: rgba(201,168,76,.15); }
 
   /* ── Hide sidebars ──────────────────────────────────────── */
   body.panel-page .admin-sidebar,
