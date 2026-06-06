@@ -2185,22 +2185,36 @@ function chartOptions() {
   };
 }
 
+/* ─── Estados vacíos (beta sin datos reales) ──────────────
+   Las gráficas/tablas demo se reemplazan por un estado vacío honesto.
+   Cuando haya datos reales (Supabase), restaurar los `new Chart(...)`
+   y los builders con datos. */
+function renderEmptyChart(canvasId, msg) {
+  const c = document.getElementById(canvasId);
+  if (!c) return;
+  const wrap = c.closest('.chart-canvas-wrap') || c.parentElement;
+  if (!wrap) return;
+  wrap.innerHTML = `<div class="empty-state">
+    <i class="fas fa-chart-simple"></i>
+    <span>${msg || 'Sin datos todavía'}</span>
+    <small>Se activa con actividad real</small>
+  </div>`;
+}
+function renderEmptyRow(tbodyId, cols, msg) {
+  const t = document.getElementById(tbodyId);
+  if (!t) return;
+  t.innerHTML = `<tr><td colspan="${cols}" class="empty-state-row">${msg || 'Sin registros todavía'}</td></tr>`;
+}
+
 function buildAdminCharts() {
-  const c1 = document.getElementById('revenueChart');
-  if (c1) new Chart(c1,{ type:'line', data:{ labels:['L','M','X','J','V','S','D'], datasets:[{ data:[38000,42000,35000,55000,48000,62000,58000], borderColor:'#C9A84C', backgroundColor:'rgba(201,168,76,.08)', fill:true, tension:.4, pointBackgroundColor:'#C9A84C', pointRadius:4 }] }, options:chartOptions() });
-  const c2 = document.getElementById('distChart');
-  if (c2) new Chart(c2,{ type:'doughnut', data:{ labels:['Citas','Membresías','Eventos'], datasets:[{ data:[50,35,15], backgroundColor:['#C9A84C','#4CAF82','#5078C9'], borderWidth:0 }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'bottom', labels:{ color:'#A89070', font:{size:11} } } }, cutout:'65%' } });
-  const c3 = document.getElementById('citasChart');
-  if (c3) new Chart(c3,{ type:'bar', data:{ labels:['L','M','X','J','V','S','D'], datasets:[{ data:[28,35,31,44,52,65,48], backgroundColor:'rgba(201,168,76,.4)', borderColor:'#C9A84C', borderWidth:1, borderRadius:4 }] }, options:chartOptions() });
-  const c4 = document.getElementById('membChart');
-  if (c4) new Chart(c4,{ type:'line', data:{ labels:['Ene','Feb','Mar','Abr'], datasets:[{ data:[80,95,112,138], borderColor:'#4CAF82', backgroundColor:'rgba(76,175,130,.08)', fill:true, tension:.4, pointBackgroundColor:'#4CAF82', pointRadius:4 }] }, options:chartOptions() });
+  renderEmptyChart('revenueChart', 'Sin ingresos todavía');
+  renderEmptyChart('distChart',    'Sin distribución aún');
+  renderEmptyChart('citasChart',   'Sin citas todavía');
+  renderEmptyChart('membChart',    'Sin membresías aún');
 }
 
 function buildIngresosChart() {
-  const ctx = document.getElementById('ingresosChart');
-  if (!ctx || ctx.dataset.built) return;
-  ctx.dataset.built='1';
-  new Chart(ctx,{ type:'bar', data:{ labels:['Ene','Feb','Mar','Abr'], datasets:[ { label:'Citas', data:[85000,92000,108000,124000], backgroundColor:'#C9A84C', borderRadius:4 }, { label:'Membresías', data:[55000,61000,72000,89000], backgroundColor:'#4CAF82', borderRadius:4 }, { label:'Eventos', data:[22000,28000,31000,40000], backgroundColor:'#5078C9', borderRadius:4 } ] }, options:{ ...chartOptions(), plugins:{ legend:{ labels:{ color:'#A89070' } } }, scales:{ x:{ stacked:true, ticks:{color:'#5A5045'}, grid:{color:'rgba(201,168,76,.06)'} }, y:{ stacked:true, ticks:{color:'#5A5045'}, grid:{color:'rgba(201,168,76,.06)'} } } } });
+  renderEmptyChart('ingresosChart', 'Sin ingresos todavía');
 }
 
 function setChartPeriod(period, btn) {
@@ -2209,24 +2223,7 @@ function setChartPeriod(period, btn) {
 }
 
 function buildActivityTable() {
-  const tbody = document.getElementById('activityTbody');
-  if (!tbody) return;
-  [
-    ['Nueva cita','Valentina R. — Hotel Fiesta Americana','$2,500','Hoy 14:32','success'],
-    ['Membresía Gold','Eduardo L.','$2,000','Hoy 12:15','success'],
-    ['Pago rechazado','Roberto A.','$2,500','Hoy 10:48','error'],
-    ['Nuevo perfil','Mariana F.','—','Hoy 09:20','info'],
-    ['Cita cancelada','Isabella M.','−$4,500','Ayer 18:05','error'],
-    ['Membresía Elite','Héctor F.','$2,500','Ayer 15:30','success'],
-  ].forEach(r => {
-    tbody.insertAdjacentHTML('beforeend',`
-      <tr>
-        <td>${r[0]}</td><td style="color:var(--t2)">${r[1]}</td>
-        <td style="font-family:var(--font-serif);color:var(--gold)">${r[2]}</td>
-        <td style="color:var(--t3)">${r[3]}</td>
-        <td><span class="pill ${r[4]==='success'?'pill-available':r[4]==='error'?'pill-busy':'pill-gold'}" style="font-size:.65rem">${r[4]==='success'?'Exitoso':r[4]==='error'?'Fallido':'Info'}</span></td>
-      </tr>`);
-  });
+  renderEmptyRow('activityTbody', 5, 'Sin actividad todavía');
 }
 
 function buildModelosTable() {
@@ -2608,49 +2605,19 @@ function removeModelVideo(id) {
 function buildPendingReviews() {
   const list = document.getElementById('pendingReviewsList');
   if (!list) return;
-  REVIEWS_DATA.slice(0,4).forEach(r => {
-    list.insertAdjacentHTML('beforeend',`
-      <div class="chart-card" style="margin-bottom:0">
-        <div style="display:flex;gap:1rem;flex-wrap:wrap">
-          <div class="review-avatar">${r.initials}</div>
-          <div style="flex:1">
-            <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.4rem;flex-wrap:wrap">
-              <strong>${r.name}</strong><div class="stars">${stars(r.rating)}</div>
-              <span style="color:var(--t3);font-size:.72rem">${r.date}</span>
-            </div>
-            <p style="font-size:.85rem;color:var(--t2)">${r.text}</p>
-            <div style="display:flex;gap:.5rem;margin-top:.6rem">
-              <button class="btn btn-sm" style="background:rgba(76,175,130,.12);color:var(--green);border:1px solid rgba(76,175,130,.3)" onclick="this.closest('.chart-card').style.opacity='.4';this.closest('.chart-card').style.pointerEvents='none';showToast('Reseña aprobada','success')"><i class="fas fa-check"></i> Aprobar</button>
-              <button class="btn btn-sm" style="background:rgba(224,80,80,.1);color:var(--red);border:1px solid rgba(224,80,80,.25)" onclick="this.closest('.chart-card').remove();showToast('Reseña rechazada','info')"><i class="fas fa-times"></i> Rechazar</button>
-            </div>
-          </div>
-        </div>
-      </div>`);
-  });
+  list.innerHTML = `<div class="empty-state" style="min-height:140px">
+    <i class="fas fa-comments"></i>
+    <span>Sin reseñas por revisar</span>
+    <small>Aquí llegarán las reseñas de clientes para que las apruebes</small>
+  </div>`;
 }
 
 function buildTxTable() {
-  const tbody = document.getElementById('txTbody');
-  if (!tbody) return;
-  [['#4821','Valentina R.','Cita 1hr','$2,500','$500','17 Abr','Tarjeta'],
-   ['#4820','Carlos M.','Membresía Gold','$2,000','$400','17 Abr','OXXO'],
-   ['#4819','Renata P.','Cita 3hr','$6,500','$1,300','16 Abr','SPEI'],
-   ['#4818','Ximena A.','Cita Día','$18,000','$3,600','16 Abr','Tarjeta'],
-   ['#4817','Andrea T.','Membresía Elite','$2,500','$500','15 Abr','Tarjeta'],
-  ].forEach(r => {
-    tbody.insertAdjacentHTML('beforeend',`<tr><td style="color:var(--t3)">${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td style="color:var(--gold);font-family:var(--font-serif)">${r[3]}</td><td style="color:var(--green)">${r[4]}</td><td style="color:var(--t3)">${r[5]}</td><td><span class="pill pill-available" style="font-size:.65rem">${r[6]}</span></td></tr>`);
-  });
+  renderEmptyRow('txTbody', 7, 'Sin transacciones todavía');
 }
 
 function buildPagosTable() {
-  const tbody = document.getElementById('pagosTbody');
-  if (!tbody) return;
-  [['#P001','Carlos M.','Membresía Gold','$2,000','Tarjeta','Aprobado','17 Abr'],
-   ['#P002','Roberto A.','Membresía Elite','$2,500','SPEI','Pendiente','17 Abr'],
-   ['#P003','Eduardo L.','Cita Valentina R.','$2,500','OXXO','Aprobado','16 Abr'],
-  ].forEach(r => {
-    tbody.insertAdjacentHTML('beforeend',`<tr><td style="color:var(--t3)">${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td style="color:var(--gold);font-family:var(--font-serif)">${r[3]}</td><td>${r[4]}</td><td><span class="pill ${r[5]==='Aprobado'?'pill-available':'pill-gold'}" style="font-size:.65rem">${r[5]}</span></td><td style="color:var(--t3)">${r[6]}</td></tr>`);
-  });
+  renderEmptyRow('pagosTbody', 7, 'Sin pagos todavía');
 }
 
 let adminCalDate = new Date();
@@ -2672,8 +2639,7 @@ function renderAdminCalendar() {
   for(let i=0;i<first;i++) html+='<div class="calendar-day empty"></div>';
   for(let d=1;d<=dim;d++){
     const isToday=new Date(yr,mo,d).toDateString()===today.toDateString();
-    const count=Math.floor(((d*13+mo*7)%8));
-    html+=`<div class="calendar-day${isToday?' today':''}" title="${count} citas">${d}${count>0?`<br><span style="font-size:.58rem;color:var(--gold)">${count}</span>`:''}</div>`;
+    html+=`<div class="calendar-day${isToday?' today':''}">${d}</div>`;
   }
   grid.innerHTML=html;
 }
@@ -2687,19 +2653,10 @@ function _lugarIcon(tipo) {
 function buildTodayCitas() {
   const w=document.getElementById('todayCitas');
   if(!w)return;
-  /* [escort, tipo_lugar, lugar, hora, duracion] */
-  [['Valentina R.','Hotel','Fiesta Americana','10:00','1hr'],
-   ['Renata M.','Motel','Las Villas','14:00','3hr'],
-   ['Camila V.','Hotel','Hilton GDL','17:30','1hr']
-  ].forEach(c=>{
-    w.insertAdjacentHTML('beforeend',`
-      <div style="padding:.75rem;background:var(--surface);border-radius:var(--r-md);border:1px solid var(--border)">
-        <div style="display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:.2rem">
-          <strong>${c[0]}</strong><span style="color:var(--gold)">${c[3]}</span>
-        </div>
-        <div style="font-size:.75rem;color:var(--t2)">${_lugarIcon(c[1])} ${c[1]} ${c[2]} · ${c[4]}</div>
-      </div>`);
-  });
+  w.innerHTML = `<div class="empty-state" style="min-height:120px">
+    <i class="fas fa-calendar-day"></i>
+    <span>Sin citas para hoy</span>
+  </div>`;
 }
 
 /* ─── Panel Doncellas ───────────────────────────────────── */
@@ -2721,12 +2678,9 @@ function showModeloPage(page) {
 }
 
 function buildModeloCharts() {
-  const c1=document.getElementById('modeloRevenueChart');
-  if(c1) new Chart(c1,{type:'bar',data:{labels:['L','M','X','J','V','S','D'],datasets:[{data:[2500,0,3200,2500,6500,8000,2500],backgroundColor:'rgba(201,168,76,.5)',borderColor:'#C9A84C',borderWidth:1,borderRadius:4}]},options:chartOptions()});
-  const c2=document.getElementById('contactSourceChart');
-  if(c2) new Chart(c2,{type:'doughnut',data:{labels:['WhatsApp','Búsqueda','Directo'],datasets:[{data:[58,28,14],backgroundColor:['#25D366','#C9A84C','#5078C9'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#A89070',font:{size:10}}}},cutout:'60%'}});
-  const c3=document.getElementById('visitasChart');
-  if(c3) new Chart(c3,{type:'line',data:{labels:['L','M','X','J','V','S','D'],datasets:[{data:[120,145,132,178,195,220,180],borderColor:'#5078C9',backgroundColor:'rgba(80,120,201,.08)',fill:true,tension:.4,pointBackgroundColor:'#5078C9',pointRadius:3}]},options:chartOptions()});
+  renderEmptyChart('modeloRevenueChart', 'Sin ingresos todavía');
+  renderEmptyChart('contactSourceChart', 'Sin contactos aún');
+  renderEmptyChart('visitasChart',       'Sin visitas todavía');
 }
 
 function buildCurrentGallery() {

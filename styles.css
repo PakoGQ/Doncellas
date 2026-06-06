@@ -6680,3 +6680,38 @@ details.faq-item[open] .faq-a {
   position: relative;
 }
 /* Las imágenes subidas ya tienen watermark incrustado via canvas — sin duplicar */
+
+/* ─── Estado vacío (paneles en beta sin datos reales) ─────── */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  height: 100%;
+  min-height: 160px;
+  text-align: center;
+  color: var(--t3);
+  padding: 1.5rem;
+}
+.empty-state i {
+  font-size: 1.6rem;
+  color: var(--gold);
+  opacity: .45;
+}
+.empty-state span {
+  font-size: .9rem;
+  color: var(--t2);
+  font-weight: 500;
+}
+.empty-state small {
+  font-size: .72rem;
+  color: var(--t3);
+  max-width: 260px;
+}
+.empty-state-row {
+  text-align: center !important;
+  color: var(--t3);
+  font-size: .85rem;
+  padding: 2.25rem 1rem !important;
+}
