@@ -6298,21 +6298,20 @@ details.faq-item[open] .faq-a {
    ═══════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
 
-  /* ── 1. Stats bar: single scrollable row ─────────────────── */
+  /* ── 1. Stats bar: cuadrícula 2×2, todo visible sin scroll ─── */
   .stats-bar {
-    flex-wrap:    nowrap !important;
-    overflow-x:   auto !important;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    justify-content: flex-start !important;
-    gap:          .85rem !important;
-    padding:      .5rem 1rem !important;
-    font-size:    .76rem !important;
+    display:      grid !important;
+    grid-template-columns: 1fr 1fr;
+    overflow:     visible !important;
+    gap:          .4rem .6rem !important;
+    padding:      .6rem .9rem !important;
   }
   .stats-bar::-webkit-scrollbar { display: none; }
   .stats-bar > div {
-    flex-shrink: 0;
-    font-size:   .76rem;
+    font-size:    .72rem !important;
+    white-space:  nowrap;
+    justify-content: center;
+    gap:          .35rem !important;
   }
 
   /* ── 2. Section spacing: tighter vertical rhythm ─────────── */
