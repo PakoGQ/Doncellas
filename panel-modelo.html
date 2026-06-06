@@ -136,7 +136,6 @@
     </div>
     <div class="admin-nav-item" onclick="showModeloPage('citas')">
       <i class="fas fa-calendar-alt fa-fw"></i> Mis Citas
-      <span class="badge">3</span>
     </div>
     <div class="admin-nav-item" onclick="showModeloPage('disponibilidad')">
       <i class="fas fa-clock fa-fw"></i> Disponibilidad
@@ -237,31 +236,10 @@
           <div class="chart-header">
             <span class="chart-title">Satisfacción del cliente</span>
           </div>
-          <div style="display:flex;flex-direction:column;gap:.6rem;margin-top:.5rem">
-            <div>
-              <div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:.3rem">
-                <span>Puntualidad</span><span style="color:var(--gold)">4.9</span>
-              </div>
-              <div class="progress-bar"><div class="progress-fill" style="width:98%"></div></div>
-            </div>
-            <div>
-              <div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:.3rem">
-                <span>Presentación</span><span style="color:var(--gold)">4.8</span>
-              </div>
-              <div class="progress-bar"><div class="progress-fill" style="width:96%"></div></div>
-            </div>
-            <div>
-              <div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:.3rem">
-                <span>Comunicación</span><span style="color:var(--gold)">4.7</span>
-              </div>
-              <div class="progress-bar"><div class="progress-fill" style="width:94%"></div></div>
-            </div>
-            <div>
-              <div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:.3rem">
-                <span>Profesionalismo</span><span style="color:var(--gold)">4.9</span>
-              </div>
-              <div class="progress-bar"><div class="progress-fill" style="width:98%"></div></div>
-            </div>
+          <div class="empty-state" style="min-height:150px">
+            <i class="fas fa-face-smile"></i>
+            <span>Aún sin reseñas</span>
+            <small>La satisfacción de tus clientes aparecerá aquí cuando tengas reseñas</small>
           </div>
         </div>
       </div>
@@ -375,7 +353,7 @@
       <p class="admin-page-sub">Gestiona tus citas y reservaciones</p>
 
       <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('citas-modelo','proximas',this)">Próximas <span class="pill pill-gold" style="font-size:.6rem">3</span></button>
+        <button class="tab-btn active" onclick="switchTab('citas-modelo','proximas',this)">Próximas</button>
         <button class="tab-btn" onclick="switchTab('citas-modelo','historial',this)">Historial</button>
         <button class="tab-btn" onclick="switchTab('citas-modelo','pendientes-conf',this)">Por confirmar</button>
       </div>
@@ -962,12 +940,10 @@ function blockDate() {
 
 let _modelAvail = true;
 
-/* Cita activa de la modelo logueada (Valentina, demo).
-   Mientras now ∈ [start,end] el toggle queda bloqueado en "No Disponible". */
-const _myActiveCita = (() => {
-  const now = Date.now();
-  return { client: 'Carlos M.', start: now - 18 * 60_000, end: now + 42 * 60_000 };
-})();
+/* Cita activa de la modelo logueada. En beta no hay citas reales → null.
+   Cuando haya citas reales (Supabase), poblar con { client, start, end } y
+   el toggle se bloqueará en "En cita hasta HH:MM" mientras now ∈ [start,end]. */
+const _myActiveCita = null;
 
 function _isMyCitaActive() {
   if (!_myActiveCita) return false;
