@@ -4700,20 +4700,38 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
 
   .btn-logout-mobile-nav {
     display: flex !important;
+    position: fixed;
+    bottom: calc(56px + 6px);
+    z-index: 201;
     align-items: center;
     justify-content: center;
-    width: 36px;
-    height: 36px;
+    gap: 4px;
+    height: 24px;
+    padding: 0 10px;
     border: 1px solid var(--gold);
-    border-radius: 10px;
-    background: transparent;
+    border-radius: 7px;
+    background: rgba(10,10,10,.96);
     color: var(--gold);
-    font-size: 1rem;
+    font-size: .68rem;
+    font-weight: 600;
+    letter-spacing: .04em;
     cursor: pointer;
-    transition: background .2s;
-    flex-shrink: 0;
+    white-space: nowrap;
   }
+  .btn-logout-mobile-nav i { font-size: .68rem; }
   .btn-logout-mobile-nav:active { background: rgba(201,168,76,.15); }
+
+  /* Admin: centrado sobre item "Escorts" (2º de 4, 25–50% ancho) */
+  body.panel-admin .btn-logout-mobile-nav {
+    left: calc(25% + 2px);
+    width: calc(25% - 4px);
+  }
+
+  /* Modelo: centrado sobre item "Perfil" (5º de 5, 80–100% ancho) */
+  body.panel-modelo .btn-logout-mobile-nav {
+    left: calc(80% + 2px);
+    width: calc(20% - 4px);
+  }
 
   /* ── Hide sidebars ──────────────────────────────────────── */
   body.panel-page .admin-sidebar,
