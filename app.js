@@ -2230,37 +2230,41 @@ function _setKpi(el, value, deltaHTML, deltaClass) {
 }
 function applyDemoData() {
   if (!DEMO_MODE) return;
-  /* Admin — Dashboard (índice 2 = Doncellas activas: queda REAL, no se toca) */
+  /* Conteo real de doncellas (para coherencia del demo) */
+  const nDoncellas = (typeof MODELS !== 'undefined') ? MODELS.filter(m => !m.hidden).length : 0;
+
+  /* Admin — Dashboard (índice 2 = Doncellas activas: queda REAL, no se toca).
+     Escala realista de boutique en arranque (~15 doncellas, beta). */
   const dash = document.querySelectorAll('#page-dashboard .kpi-value');
   if (dash.length >= 6) {
-    _setKpi(dash[0], '$284,500', '<i class="fas fa-arrow-up"></i> +18.3% vs mes anterior', 'up');
-    _setKpi(dash[1], '1,248',    '<i class="fas fa-arrow-up"></i> +12.1%', 'up');
-    _setKpi(dash[3], '892',      '<i class="fas fa-arrow-up"></i> +45 este mes', 'up');
-    _setKpi(dash[4], '4.7',      '<i class="fas fa-arrow-up"></i> +0.1', 'up');
-    _setKpi(dash[5], '7',        'Requieren revisión', 'down');
+    _setKpi(dash[0], '$124,000', '<i class="fas fa-arrow-up"></i> +18% vs mes anterior', 'up');
+    _setKpi(dash[1], '48',       '<i class="fas fa-arrow-up"></i> +9 esta semana', 'up');
+    _setKpi(dash[3], '41',       '<i class="fas fa-arrow-up"></i> +12 nuevos', 'up');
+    _setKpi(dash[4], '4.8',      '<i class="fas fa-arrow-up"></i> +0.1', 'up');
+    _setKpi(dash[5], '2',        'Requieren revisión', 'down');
   }
   /* Admin — Ingresos */
   const ing = document.querySelectorAll('#page-ingresos .kpi-value');
   if (ing.length >= 4) {
-    _setKpi(ing[0], '$67,200',  '<i class="fas fa-arrow-up"></i> +11%', 'up');
-    _setKpi(ing[1], '$284,500', '<i class="fas fa-arrow-up"></i> +18%', 'up');
-    _setKpi(ing[2], '$1.2M',    '<i class="fas fa-arrow-up"></i> +34%', 'up');
-    _setKpi(ing[3], '$56,900',  '20% promedio', 'up');
+    _setKpi(ing[0], '$31,000',  '<i class="fas fa-arrow-up"></i> +11%', 'up');
+    _setKpi(ing[1], '$124,000', '<i class="fas fa-arrow-up"></i> +18%', 'up');
+    _setKpi(ing[2], '$312,000', '<i class="fas fa-arrow-up"></i> +34%', 'up');
+    _setKpi(ing[3], '$24,800',  '20% por cita', 'up');
   }
-  /* Admin — Membresías */
+  /* Admin — Membresías (beta: TODAS en Elite gratis) */
   const mem = document.querySelectorAll('#page-membresias-admin .kpi-value');
   if (mem.length >= 4) {
-    _setKpi(mem[0], '234', '$2,500/mes', 'up');
-    _setKpi(mem[1], '415', '$2,000/mes', 'up');
-    _setKpi(mem[2], '243', '$1,500/mes', 'up');
-    _setKpi(mem[3], '28',  'Este mes', 'down');
+    _setKpi(mem[0], String(nDoncellas), '$2,500/mes · gratis en beta', 'up');
+    _setKpi(mem[1], '0', '$2,000/mes', 'up');
+    _setKpi(mem[2], '0', '$1,500/mes', 'up');
+    _setKpi(mem[3], '0', 'Este mes', 'down');
   }
   const memSub = document.querySelector('#page-membresias-admin .admin-page-sub');
-  if (memSub) memSub.textContent = '892 miembros activos';
-  /* Modelo — Estadísticas (stat-mini sin delta) */
+  if (memSub) memSub.textContent = 'Todas las Doncellas en Elite (beta gratis)';
+  /* Modelo — Estadísticas (una escort, ~1 mes en beta) */
   const sm = document.querySelectorAll('#page-stats .stat-mini-n');
   if (sm.length >= 6) {
-    const vals = ['$24,500','18','4.8','1,240','87','12'];
+    const vals = ['$16,500','6','4.9','380','28','2'];
     sm.forEach((el,i)=>{ if (vals[i]!==undefined) el.textContent = vals[i]; });
   }
   /* Modelo — Satisfacción del cliente */
@@ -2286,13 +2290,13 @@ function buildAdminCharts() {
     return;
   }
   const c1 = document.getElementById('revenueChart');
-  if (c1) new Chart(c1,{ type:'line', data:{ labels:['L','M','X','J','V','S','D'], datasets:[{ data:[38000,42000,35000,55000,48000,62000,58000], borderColor:'#C9A84C', backgroundColor:'rgba(201,168,76,.08)', fill:true, tension:.4, pointBackgroundColor:'#C9A84C', pointRadius:4 }] }, options:chartOptions() });
+  if (c1) new Chart(c1,{ type:'line', data:{ labels:['L','M','X','J','V','S','D'], datasets:[{ data:[3200,4100,3500,5200,6800,5400,3000], borderColor:'#C9A84C', backgroundColor:'rgba(201,168,76,.08)', fill:true, tension:.4, pointBackgroundColor:'#C9A84C', pointRadius:4 }] }, options:chartOptions() });
   const c2 = document.getElementById('distChart');
-  if (c2) new Chart(c2,{ type:'doughnut', data:{ labels:['Citas','Membresías','Eventos'], datasets:[{ data:[50,35,15], backgroundColor:['#C9A84C','#4CAF82','#5078C9'], borderWidth:0 }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'bottom', labels:{ color:'#A89070', font:{size:11} } } }, cutout:'65%' } });
+  if (c2) new Chart(c2,{ type:'doughnut', data:{ labels:['1 hora','3 horas','Día completo'], datasets:[{ data:[62,28,10], backgroundColor:['#C9A84C','#4CAF82','#5078C9'], borderWidth:0 }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'bottom', labels:{ color:'#A89070', font:{size:11} } } }, cutout:'65%' } });
   const c3 = document.getElementById('citasChart');
-  if (c3) new Chart(c3,{ type:'bar', data:{ labels:['L','M','X','J','V','S','D'], datasets:[{ data:[28,35,31,44,52,65,48], backgroundColor:'rgba(201,168,76,.4)', borderColor:'#C9A84C', borderWidth:1, borderRadius:4 }] }, options:chartOptions() });
+  if (c3) new Chart(c3,{ type:'bar', data:{ labels:['L','M','X','J','V','S','D'], datasets:[{ data:[1,2,2,2,3,2,1], backgroundColor:'rgba(201,168,76,.4)', borderColor:'#C9A84C', borderWidth:1, borderRadius:4 }] }, options:chartOptions() });
   const c4 = document.getElementById('membChart');
-  if (c4) new Chart(c4,{ type:'line', data:{ labels:['Ene','Feb','Mar','Abr'], datasets:[{ data:[80,95,112,138], borderColor:'#4CAF82', backgroundColor:'rgba(76,175,130,.08)', fill:true, tension:.4, pointBackgroundColor:'#4CAF82', pointRadius:4 }] }, options:chartOptions() });
+  if (c4) new Chart(c4,{ type:'line', data:{ labels:['Mar','Abr','May','Jun'], datasets:[{ data:[3,7,11,15], borderColor:'#4CAF82', backgroundColor:'rgba(76,175,130,.08)', fill:true, tension:.4, pointBackgroundColor:'#4CAF82', pointRadius:4 }] }, options:chartOptions() });
 }
 
 function buildIngresosChart() {
@@ -2300,7 +2304,7 @@ function buildIngresosChart() {
   const ctx = document.getElementById('ingresosChart');
   if (!ctx || ctx.dataset.built) return;
   ctx.dataset.built='1';
-  new Chart(ctx,{ type:'bar', data:{ labels:['Ene','Feb','Mar','Abr'], datasets:[ { label:'Citas', data:[85000,92000,108000,124000], backgroundColor:'#C9A84C', borderRadius:4 }, { label:'Membresías', data:[55000,61000,72000,89000], backgroundColor:'#4CAF82', borderRadius:4 }, { label:'Eventos', data:[22000,28000,31000,40000], backgroundColor:'#5078C9', borderRadius:4 } ] }, options:{ ...chartOptions(), plugins:{ legend:{ labels:{ color:'#A89070' } } }, scales:{ x:{ stacked:true, ticks:{color:'#5A5045'}, grid:{color:'rgba(201,168,76,.06)'} }, y:{ stacked:true, ticks:{color:'#5A5045'}, grid:{color:'rgba(201,168,76,.06)'} } } } });
+  new Chart(ctx,{ type:'bar', data:{ labels:['Mar','Abr','May','Jun'], datasets:[ { label:'Citas', data:[58000,82000,104000,124000], backgroundColor:'#C9A84C', borderRadius:4 }, { label:'Membresías (gratis beta)', data:[0,0,0,0], backgroundColor:'#4CAF82', borderRadius:4 }, { label:'Eventos', data:[0,0,0,0], backgroundColor:'#5078C9', borderRadius:4 } ] }, options:{ ...chartOptions(), plugins:{ legend:{ labels:{ color:'#A89070' } } }, scales:{ x:{ stacked:true, ticks:{color:'#5A5045'}, grid:{color:'rgba(201,168,76,.06)'} }, y:{ stacked:true, ticks:{color:'#5A5045'}, grid:{color:'rgba(201,168,76,.06)'} } } } });
 }
 
 function setChartPeriod(period, btn) {
@@ -2314,11 +2318,11 @@ function buildActivityTable() {
   if (!tbody) return;
   [
     ['Nueva cita','Valentina R. — Hotel Fiesta Americana','$2,500','Hoy 14:32','success'],
-    ['Membresía Gold','Eduardo L.','$2,000','Hoy 12:15','success'],
-    ['Pago rechazado','Roberto A.','$2,500','Hoy 10:48','error'],
+    ['Cita completada','Camila V. — Motel Las Villas','$6,500','Hoy 12:15','success'],
     ['Nuevo perfil','Mariana F.','—','Hoy 09:20','info'],
-    ['Cita cancelada','Isabella M.','−$4,500','Ayer 18:05','error'],
-    ['Membresía Elite','Héctor F.','$2,500','Ayer 15:30','success'],
+    ['Reseña recibida','Isabella M. ★★★★★','—','Ayer 20:10','success'],
+    ['Cita cancelada','Renata P.','—','Ayer 18:05','error'],
+    ['Nueva cita','Sofía L. — Hotel Hilton GDL','$2,500','Ayer 15:30','success'],
   ].forEach(r => {
     tbody.insertAdjacentHTML('beforeend',`
       <tr>
@@ -2742,11 +2746,11 @@ function buildTxTable() {
   if (!DEMO_MODE) { renderEmptyRow('txTbody', 7, 'Sin transacciones todavía'); return; }
   const tbody = document.getElementById('txTbody');
   if (!tbody) return;
-  [['#4821','Valentina R.','Cita 1hr','$2,500','$500','17 Abr','Tarjeta'],
-   ['#4820','Carlos M.','Membresía Gold','$2,000','$400','17 Abr','OXXO'],
-   ['#4819','Renata P.','Cita 3hr','$6,500','$1,300','16 Abr','SPEI'],
-   ['#4818','Ximena A.','Cita Día','$18,000','$3,600','16 Abr','Tarjeta'],
-   ['#4817','Andrea T.','Membresía Elite','$2,500','$500','15 Abr','Tarjeta'],
+  [['#0034','Valentina R.','Cita 1hr','$2,500','$500','5 Jun','Efectivo'],
+   ['#0033','Camila V.','Cita 3hr','$6,500','$1,300','5 Jun','Transferencia'],
+   ['#0032','Renata P.','Cita 1hr','$2,500','$500','4 Jun','Efectivo'],
+   ['#0031','Sofía L.','Cita Día','$18,000','$3,600','4 Jun','Transferencia'],
+   ['#0030','Isabella M.','Cita 1hr','$2,500','$500','3 Jun','Efectivo'],
   ].forEach(r => {
     tbody.insertAdjacentHTML('beforeend',`<tr><td style="color:var(--t3)">${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td style="color:var(--gold);font-family:var(--font-serif)">${r[3]}</td><td style="color:var(--green)">${r[4]}</td><td style="color:var(--t3)">${r[5]}</td><td><span class="pill pill-available" style="font-size:.65rem">${r[6]}</span></td></tr>`);
   });
@@ -2756,9 +2760,9 @@ function buildPagosTable() {
   if (!DEMO_MODE) { renderEmptyRow('pagosTbody', 7, 'Sin pagos todavía'); return; }
   const tbody = document.getElementById('pagosTbody');
   if (!tbody) return;
-  [['#P001','Carlos M.','Membresía Gold','$2,000','Tarjeta','Aprobado','17 Abr'],
-   ['#P002','Roberto A.','Membresía Elite','$2,500','SPEI','Pendiente','17 Abr'],
-   ['#P003','Eduardo L.','Cita Valentina R.','$2,500','OXXO','Aprobado','16 Abr'],
+  [['#0034','Cliente — Valentina R.','Cita 1hr','$2,500','Efectivo','Completado','5 Jun'],
+   ['#0033','Cliente — Camila V.','Cita 3hr','$6,500','Transferencia','Completado','5 Jun'],
+   ['#0032','Cliente — Renata P.','Cita 1hr','$2,500','Efectivo','Pendiente','4 Jun'],
   ].forEach(r => {
     tbody.insertAdjacentHTML('beforeend',`<tr><td style="color:var(--t3)">${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td style="color:var(--gold);font-family:var(--font-serif)">${r[3]}</td><td>${r[4]}</td><td><span class="pill ${r[5]==='Aprobado'?'pill-available':'pill-gold'}" style="font-size:.65rem">${r[5]}</span></td><td style="color:var(--t3)">${r[6]}</td></tr>`);
   });
@@ -2847,11 +2851,11 @@ function buildModeloCharts() {
     return;
   }
   const c1=document.getElementById('modeloRevenueChart');
-  if(c1) new Chart(c1,{type:'bar',data:{labels:['L','M','X','J','V','S','D'],datasets:[{data:[2500,0,3200,2500,6500,8000,2500],backgroundColor:'rgba(201,168,76,.5)',borderColor:'#C9A84C',borderWidth:1,borderRadius:4}]},options:chartOptions()});
+  if(c1) new Chart(c1,{type:'bar',data:{labels:['L','M','X','J','V','S','D'],datasets:[{data:[2800,0,0,3200,0,5400,0],backgroundColor:'rgba(201,168,76,.5)',borderColor:'#C9A84C',borderWidth:1,borderRadius:4}]},options:chartOptions()});
   const c2=document.getElementById('contactSourceChart');
   if(c2) new Chart(c2,{type:'doughnut',data:{labels:['WhatsApp','Búsqueda','Directo'],datasets:[{data:[58,28,14],backgroundColor:['#25D366','#C9A84C','#5078C9'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#A89070',font:{size:10}}}},cutout:'60%'}});
   const c3=document.getElementById('visitasChart');
-  if(c3) new Chart(c3,{type:'line',data:{labels:['L','M','X','J','V','S','D'],datasets:[{data:[120,145,132,178,195,220,180],borderColor:'#5078C9',backgroundColor:'rgba(80,120,201,.08)',fill:true,tension:.4,pointBackgroundColor:'#5078C9',pointRadius:3}]},options:chartOptions()});
+  if(c3) new Chart(c3,{type:'line',data:{labels:['L','M','X','J','V','S','D'],datasets:[{data:[9,13,11,15,19,14,8],borderColor:'#5078C9',backgroundColor:'rgba(80,120,201,.08)',fill:true,tension:.4,pointBackgroundColor:'#5078C9',pointRadius:3}]},options:chartOptions()});
 }
 
 function buildCurrentGallery() {
@@ -2888,9 +2892,9 @@ function buildCitasProximas() {
     return;
   }
   /* [tipo_lugar, lugar, fecha, hora, duracion, tarifa, clienteWa, citaId] */
-  [['Hotel','Fiesta Americana','Vie 18 Abr','10:00','1hr','$2,500','3312345001','demo-1'],
-   ['Motel','Las Villas',      'Sáb 19 Abr','14:00','3hr','$6,500','3312345002','demo-2'],
-   ['Hotel','Hilton GDL',      'Lun 21 Abr','17:00','1hr','$2,500','3312345003','demo-3'],
+  [['Hotel','Fiesta Americana','Vie 6 Jun','10:00','1hr','$2,500','3312345001','demo-1'],
+   ['Motel','Las Villas',      'Sáb 7 Jun','14:00','3hr','$6,500','3312345002','demo-2'],
+   ['Hotel','Hilton GDL',      'Lun 9 Jun','17:00','1hr','$2,500','3312345003','demo-3'],
   ].forEach((c,idx)=>{
     const [tipo,lugar,fecha,hora,dur,tarifa,cWa,cId]=c;
     const badgeId=`badge-prox-${idx}`;
@@ -2933,10 +2937,10 @@ function buildCitasHistorial() {
     return;
   }
   /* [tipo_lugar, lugar, fecha, hora, duracion, tarifa, estado, clienteWa, citaId] */
-  [['Motel','El Paraíso', 'Mié 16 Abr','11:00','1hr', '$2,500', 'Completada','3312345001','demo-h1'],
-   ['Hotel','Marriott',   'Lun 14 Abr','15:00','3hr', '$6,500', 'Completada','3312345002','demo-h2'],
-   ['Hotel','Crown Plaza','Sáb 12 Abr','09:00','Día', '$18,000','Completada','3312345004','demo-h3'],
-   ['Motel','Los Pinos',  'Jue 10 Abr','18:00','1hr', '$2,500', 'Cancelada', '3312345005','demo-h4'],
+  [['Motel','El Paraíso', 'Mié 4 Jun', '11:00','1hr', '$2,500', 'Completada','3312345001','demo-h1'],
+   ['Hotel','Marriott',   'Lun 2 Jun', '15:00','3hr', '$6,500', 'Completada','3312345002','demo-h2'],
+   ['Hotel','Crown Plaza','Sáb 31 May','09:00','Día', '$18,000','Completada','3312345004','demo-h3'],
+   ['Motel','Los Pinos',  'Jue 29 May','18:00','1hr', '$2,500', 'Cancelada', '3312345005','demo-h4'],
   ].forEach((c,idx)=>{
     const [tipo,lugar,fecha,hora,dur,tarifa,estado,cWa,cId]=c;
     const completada = estado==='Completada';
