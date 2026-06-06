@@ -552,6 +552,7 @@ ipconfig getifaddr en0   # IP de tu Mac
 - [ ] Activar supabase-auth real (contraseñas en texto plano — hacer ANTES de escorts reales)
 - [ ] Probar flujo completo login de escort real (Supabase tabla usuarios)
 - [ ] Registrar doncellas.mx en Google Search Console
+- [ ] **Conectar "Editar Perfil" del panel-modelo a Supabase (NO persiste aún).** Todos los formularios de panel-modelo.html → Editar Perfil son demo: `saveModelServices()` (servicios + modalidad de Relaciones), medidas, tarifas, colores de ojos/cabello/piel, descripción y etiquetas solo muestran un toast, no guardan a la tabla `escorts`/`servicios`. Resultado: lo que la modelo edita NO se refleja en su perfil real. Falta leer los campos del form, hacer UPDATE a Supabase por `escortId` (localStorage) y refrescar. El modal de edición del admin (`editModel`/`saveEditModel`) sí actualiza MODELS en memoria, pero tampoco persiste a Supabase. Para el servicio "Relaciones" guardar `{ si, modalidad }` (columna `modalidad` en `servicios` o equivalente).
 
 ### Marketing y negocio
 - [ ] Subir primeros perfiles de escorts reales con fotos reales
