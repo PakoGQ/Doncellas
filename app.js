@@ -13,6 +13,14 @@
    ════════════════════════════════════════════════════════════ */
 const DEMO_MODE = true;
 
+/* ─── WhatsApp central / agente ──────────────────────────────
+   Número CENTRAL de Doncellas (el agente). TODA comunicación de
+   citas pasa por aquí — la escort NUNCA contacta al cliente directo
+   ni ve su número (discreción · Flujo 4 del agente).
+   ⚠️ Placeholder — reemplazar por el número real (+52 33 2168 5023)
+   junto con los demás wa.me del sitio. */
+const WA_CENTRAL = '523312345678';
+
 /* ─── Usuarios / Login ──────────────────────────────────── */
 const USERS = [
   { username:'admin',     pass:'admin123',  role:'admin',  name:'Administrador', redirect:'panel-admin.html' },
@@ -2955,6 +2963,9 @@ function buildCitasProximas() {
   ].forEach((c,idx)=>{
     const [tipo,lugar,fecha,hora,dur,tarifa,cWa,cId]=c;
     const badgeId=`badge-prox-${idx}`;
+    /* Coordinación SIEMPRE vía el número central (el agente), nunca con el
+       número del cliente. Mensaje con contexto de la cita para identificarla. */
+    const agenteMsg = encodeURIComponent(`Hola, necesito coordinar mi cita del ${fecha} a las ${hora} (${tipo} ${lugar}).`);
     w.insertAdjacentHTML('beforeend',`
       <div class="cita-item">
         <div class="cita-date">
@@ -2971,7 +2982,7 @@ function buildCitasProximas() {
         <div style="text-align:right">
           <div style="font-family:var(--font-serif);color:var(--gold)">${tarifa}</div>
           <div style="display:flex;gap:.4rem;margin-top:.4rem;flex-wrap:wrap;justify-content:flex-end">
-            <button class="btn btn-wa btn-sm" onclick="window.open('https://wa.me/${cWa}')"><i class="fab fa-whatsapp"></i></button>
+            <button class="btn btn-wa btn-sm" title="Coordinar esta cita con Doncellas" onclick="window.open('https://wa.me/${WA_CENTRAL}?text=${agenteMsg}','_blank')"><i class="fab fa-whatsapp"></i> Coordinar</button>
             <button class="btn btn-outline btn-sm">Cancelar</button>
           </div>
         </div>
