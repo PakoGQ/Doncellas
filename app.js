@@ -235,7 +235,7 @@ function generateModels() {
       hasVideo: i % 7 === 0,
       hairColor, eyeColor, skinColor, waist, hips, bust, nationality,
       services,
-      hidden: false,
+      hidden: false, suspended: false, suspendedFrom: null, suspHistory: [],
       promo,
     });
   }
@@ -243,6 +243,56 @@ function generateModels() {
 }
 
 let MODELS = generateModels();
+
+/* ─── Estados de escort: Oculta / Suspendida (persisten en localStorage) ───
+   - hidden:    fuera de la página pública. El agente SIGUE publicando y se
+                pueden agendar citas. (privacidad de la escort)
+   - suspended: fuera de la página + el agente NO publica + NO se agendan citas.
+                Registra rango de fechas (desde/hasta) para el cobro de membresía.
+   Compartido por origen → el admin lo marca y el sitio público lo lee. */
+const ESTADOS_KEY = 'doncellas_escort_estados';
+function loadEscortStates() {
+  try { return JSON.parse(localStorage.getItem(ESTADOS_KEY)) || {}; }
+  catch (e) { return {}; }
+}
+function saveEscortStates(s) {
+  try { localStorage.setItem(ESTADOS_KEY, JSON.stringify(s)); } catch (e) {}
+}
+function persistEscortState(m) {
+  const states = loadEscortStates();
+  states[m.id] = {
+    hidden:        !!m.hidden,
+    suspended:     !!m.suspended,
+    suspendedFrom: m.suspendedFrom || null,
+    history:       m.suspHistory || []
+  };
+  saveEscortStates(states);
+}
+function applyEscortStates() {
+  const states = loadEscortStates();
+  MODELS.forEach(m => {
+    const s = states[m.id];
+    if (s) {
+      m.hidden        = !!s.hidden;
+      m.suspended     = !!s.suspended;
+      m.suspendedFrom = s.suspendedFrom || null;
+      m.suspHistory   = Array.isArray(s.history) ? s.history : [];
+    } else {
+      m.suspHistory = m.suspHistory || [];
+    }
+  });
+}
+function todayISO() { return new Date().toISOString().slice(0, 10); }
+function fmtFecha(iso) {
+  if (!iso) return '—';
+  const p = iso.split('-');
+  const meses = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+  return `${parseInt(p[2])} ${meses[parseInt(p[1]) - 1]} ${p[0]}`;
+}
+function diasEntre(fromISO, toISO) {
+  const a = new Date(fromISO), b = new Date(toISO);
+  return Math.max(1, Math.round((b - a) / 86400000));
+}
 
 /* ─── Supabase: mapeo de escort → formato MODELS ───────────── */
 function mapEscortToModel(e) {
@@ -289,6 +339,7 @@ function mapEscortToModel(e) {
     nationality: e.nacionalidad || 'Mexicana',
     services:    Object.keys(serviciosMap).length ? serviciosMap : null,
     hidden:      false,
+    suspended:   false, suspendedFrom: null, suspHistory: [],
     promo:       null,
     whatsapp:    e.whatsapp,
     descripcion: e.descripcion,
@@ -588,12 +639,12 @@ function goHeroSlide(idx) {
     _mosaicRoundCount++;
     /* Mosaico de marca: rota cada 2 vueltas */
     if (_mosaicRoundCount % 2 === 0) {
-      const featuredCount = MODELS.filter(m => m.featured && !m.hidden).length || 2;
+      const featuredCount = MODELS.filter(m => m.featured && !m.hidden && !m.suspended).length || 2;
       _mosaicOffset = (_mosaicOffset + 4) % Math.max(4, featuredCount);
       refreshMosaicImages();
     }
     /* Slides de oferta: rotan cada vuelta (perfil + promo) para mostrar variedad */
-    const offerPoolLen = MODELS.filter(m => !m.hidden).length;
+    const offerPoolLen = MODELS.filter(m => !m.hidden && !m.suspended).length;
     _heroOfferIdx = (_heroOfferIdx + 1) % Math.max(1, offerPoolLen);
     refreshOfferSlides();
   }
@@ -754,14 +805,14 @@ function buildHeroMosaic() {
   if (!el || window.innerWidth < 900) return;
 
   const pool = [
-    ...MODELS.filter(m => m.featured && !m.hidden),
-    ...MODELS.filter(m => m.available && !m.featured && !m.hidden),
-    ...MODELS.filter(m => !m.available && !m.featured && !m.hidden),
+    ...MODELS.filter(m => m.featured && !m.hidden && !m.suspended),
+    ...MODELS.filter(m => m.available && !m.featured && !m.hidden && !m.suspended),
+    ...MODELS.filter(m => !m.available && !m.featured && !m.hidden && !m.suspended),
   ].slice(0, 4);
 
   if (!pool.length) return;
 
-  const avCount = MODELS.filter(m => m.available && !m.hidden).length;
+  const avCount = MODELS.filter(m => m.available && !m.hidden && !m.suspended).length;
 
   const slot = (m, isMain) => `
     <div class="hm-slot${isMain ? ' hm-main' : ' hm-sm'}"
@@ -814,7 +865,7 @@ function buildDoncellaGallery() {
   const el = document.getElementById('doncellaGallery');
   if (!el) return;
 
-  const escorts = MODELS.filter(m => !m.hidden);
+  const escorts = MODELS.filter(m => !m.hidden && !m.suspended);
   /* Contador honesto del stats-bar = doncellas reales (no número inflado) */
   const statsCountEl = document.getElementById('statsCount');
   if (statsCountEl) statsCountEl.textContent = escorts.length;
@@ -1113,7 +1164,7 @@ let _mosaicRoundCount = 0;   /* cuenta cuántas veces el carrusel completa una v
 let _heroOfferIdx  = 0;      /* offset en el pool de offer slides (rota cada 2 vueltas) */
 function _mosaicPic(i, offset) {
   const off = offset == null ? _mosaicOffset : offset;
-  const pool = MODELS.filter(m => m.featured && !m.hidden);
+  const pool = MODELS.filter(m => m.featured && !m.hidden && !m.suspended);
   const m = pool.length ? pool[(i + off) % pool.length] : null;
   if (m) {
     const idMatch = m.photos[0].match(/images\.unsplash\.com\/([^?]+)/);
@@ -1180,7 +1231,7 @@ function refreshOfferSlides() {
      A cada una le muestra su promo real; si no tiene y el showcase está
      activo, le simula una del pool (rotando) para enseñar cómo se vería.
      No muta el modelo original: usa una copia con la promo a mostrar. */
-  const pool = MODELS.filter(m => !m.hidden);
+  const pool = MODELS.filter(m => !m.hidden && !m.suspended);
   if (!pool.length) return;
   [0, 1].forEach(slot => {
     const m = pool[(_heroOfferIdx + slot) % pool.length];
@@ -1200,7 +1251,7 @@ function buildHeroSlides() {
   if (!wrap) return;
 
   /* Conteo honesto de disponibles ahora (señal premium real, no inflada) */
-  const availCount = MODELS.filter(m => m.available && !m.hidden).length || MODELS.filter(m => !m.hidden).length;
+  const availCount = MODELS.filter(m => m.available && !m.hidden && !m.suspended).length || MODELS.filter(m => !m.hidden && !m.suspended).length;
 
   /* ── Slide 0: Marca principal (active) ─── */
   const brandSlide = document.createElement('div');
@@ -1499,7 +1550,7 @@ function applyFilters(list) {
                   new URLSearchParams(window.location.search).get('q') || '').toLowerCase();
 
   let r = list.filter(m => {
-    if (m.hidden) return false;
+    if (m.hidden || m.suspended) return false;
     if (cat  && m.cat  !== cat)  return false;
     if (avail === 'available' && !m.available) return false;
     if (avail === 'busy'      &&  m.available) return false;
@@ -1573,7 +1624,7 @@ function onCatSearch(q) {
     .filter(c => c.name.toLowerCase().includes(ql))
     .slice(0, 5);
 
-  const matchModels = MODELS.filter(m => !m.hidden && (
+  const matchModels = MODELS.filter(m => !m.hidden && !m.suspended && (
     m.name.toLowerCase().includes(ql) ||
     m.cat.toLowerCase().includes(ql) ||
     TAGS_POPULAR.some(t => t.toLowerCase().includes(ql))
@@ -2214,6 +2265,7 @@ window.saveNewModelo = async function() {
 function initAdmin() {
   buildAdminCharts();
   buildActivityTable();
+  buildSuspendidasTable();
   buildModelosTable();
   buildPendingReviews();
   buildTxTable();
@@ -2282,7 +2334,7 @@ function _setKpi(el, value, deltaHTML, deltaClass) {
 function applyDemoData() {
   if (!DEMO_MODE) return;
   /* Conteo real de doncellas (para coherencia del demo) */
-  const nDoncellas = (typeof MODELS !== 'undefined') ? MODELS.filter(m => !m.hidden).length : 0;
+  const nDoncellas = (typeof MODELS !== 'undefined') ? MODELS.filter(m => !m.hidden && !m.suspended).length : 0;
 
   /* Admin — Dashboard (índice 2 = Doncellas activas: queda REAL, no se toca).
      Escala realista de boutique en arranque (~15 doncellas, beta). */
@@ -2395,26 +2447,41 @@ function buildModelosTable() {
   const subEl = document.getElementById('modelosPageSub');
   if (subEl) subEl.textContent = `${total} Doncellas registradas`;
   const kpiEl = document.getElementById('kpiDoncellasActivas');
-  if (kpiEl) kpiEl.textContent = MODELS.filter(m => m.available && !m.hidden).length;
+  if (kpiEl) kpiEl.textContent = MODELS.filter(m => m.available && !m.hidden && !m.suspended).length;
   MODELS.slice(0, 50).forEach(m => {
     const plan = plans[m.id % 3];
+    let estadoHTML;
+    if (m.suspended) {
+      estadoHTML = `<span class="pill pill-busy" style="font-size:.65rem"><i class="fas fa-ban"></i> Suspendida</span>`;
+    } else {
+      estadoHTML = `<span class="pill ${m.available?'pill-available':'pill-busy'}" style="font-size:.65rem">${m.available?'Activa':'No Disponible'}</span>`;
+      if (m.hidden) estadoHTML += `<br><span class="pill pill-gold" style="font-size:.6rem;margin-top:.25rem;display:inline-block"><i class="fas fa-eye-slash"></i> Oculta</span>`;
+    }
     tbody.insertAdjacentHTML('beforeend',`
-      <tr data-model-row="${m.id}">
+      <tr data-model-row="${m.id}"${m.suspended?' style="opacity:.55"':''}>
         <td><div class="table-avatar"><img src="${m.img}" alt="${m.name}" /><div><div class="table-name">${m.name}</div><div class="table-sub">${m.age} años · ${m.nationality}</div></div></div></td>
         <td>${m.cat}</td>
         <td><span class="pill ${plan==='Elite'?'pill-new':plan==='Gold'?'pill-gold':'pill-available'}" style="font-size:.65rem">${plan}</span></td>
         <td style="font-family:var(--font-serif)">${m.citas}</td>
         <td style="color:var(--gold);font-family:var(--font-serif)">${fmtMXN(m.rate*12)}</td>
-        <td><span class="pill ${m.available?'pill-available':'pill-busy'}" style="font-size:.65rem">${m.available?'Activa':'No Disponible'}</span></td>
+        <td>${estadoHTML}</td>
         <td><div class="table-actions">
           <button class="tbl-btn" onclick="window.open('perfil.html?id=${m.id}')" title="Ver perfil"><i class="fas fa-eye"></i></button>
           <button class="tbl-btn" onclick="editModel(${m.id})" title="Editar"><i class="fas fa-edit"></i></button>
           <button class="tbl-btn" onclick="openModelContent(${m.id})" title="Contenido"><i class="fas fa-photo-video"></i></button>
-          <button class="tbl-btn" onclick="toggleHideModel(${m.id},this)" title="${m.hidden?'Mostrar':'Ocultar'}" style="${m.hidden?'color:var(--gold)':''}"><i class="fas fa-${m.hidden?'eye':'eye-slash'}"></i></button>
+          <button class="tbl-btn" onclick="toggleHideModel(${m.id},this)" title="${m.hidden?'Mostrar en la página':'Ocultar de la página (solo página)'}" style="${m.hidden?'color:var(--gold)':''}"><i class="fas fa-${m.hidden?'eye':'eye-slash'}"></i></button>
+          <button class="tbl-btn" onclick="toggleSuspendModel(${m.id},this)" title="${m.suspended?'Reactivar':'Suspender (página + agente + citas)'}" style="${m.suspended?'color:#3ecf8e':'color:#e5658a'}"><i class="fas fa-${m.suspended?'circle-play':'ban'}"></i></button>
           <button class="tbl-btn danger" onclick="deleteModel(${m.id})" title="Eliminar"><i class="fas fa-trash"></i></button>
         </div></td>
       </tr>`);
   });
+}
+
+/* Reconstruye la tabla de doncellas (limpia y vuelve a pintar) */
+function rebuildModelosTable() {
+  const tbody = document.getElementById('modelosTbody');
+  if (tbody) tbody.innerHTML = '';
+  buildModelosTable();
 }
 
 /* Admin: content grid */
@@ -2642,16 +2709,80 @@ function confirmDeleteModel(id) {
   showToast(`Perfil de ${name} eliminado`, 'info');
 }
 
-/* Admin: ocultar/mostrar modelo */
+/* Admin: OCULTAR — quita a la escort solo de la página pública.
+   El agente sigue publicando y se pueden agendar citas (privacidad). */
 function toggleHideModel(id, btn) {
   const m = MODELS.find(x => x.id === id);
   if (!m) return;
+  if (m.suspended) { showToast(`${m.name} está suspendida — reactívala primero`, 'info'); return; }
   m.hidden = !m.hidden;
-  const icon = btn.querySelector('i');
-  icon.className = `fas fa-${m.hidden ? 'eye' : 'eye-slash'}`;
-  btn.style.color = m.hidden ? 'var(--gold)' : '';
-  btn.title = m.hidden ? 'Mostrar' : 'Ocultar';
-  showToast(m.hidden ? `${m.name} ocultada del sitio` : `${m.name} visible en el sitio`, m.hidden ? 'info' : 'success');
+  persistEscortState(m);
+  rebuildModelosTable();
+  showToast(
+    m.hidden
+      ? `${m.name} oculta de la página · el agente sigue publicando y agendando`
+      : `${m.name} visible de nuevo en la página`,
+    m.hidden ? 'info' : 'success'
+  );
+}
+
+/* Admin: SUSPENDER — fuera de la página + el agente NO publica + NO se agendan
+   citas. Para vacaciones o falta de pago. Registra fechas para el cobro. */
+function toggleSuspendModel(id, btn) {
+  const m = MODELS.find(x => x.id === id);
+  if (!m) return;
+  m.suspHistory = m.suspHistory || [];
+  if (m.suspended) {
+    if (m.suspendedFrom) m.suspHistory.push({ from: m.suspendedFrom, to: todayISO() });
+    m.suspended = false;
+    m.suspendedFrom = null;
+    showToast(`${m.name} reactivada — vuelve a la página y al agente`, 'success');
+  } else {
+    m.suspended = true;
+    m.suspendedFrom = todayISO();
+    showToast(`${m.name} suspendida — fuera de la página, sin agente ni citas`, 'info');
+  }
+  persistEscortState(m);
+  rebuildModelosTable();
+  buildSuspendidasTable();
+  const kpiEl = document.getElementById('kpiDoncellasActivas');
+  if (kpiEl) kpiEl.textContent = MODELS.filter(x => x.available && !x.hidden && !x.suspended).length;
+}
+
+/* Admin: tabla "Doncellas suspendidas" en el dashboard.
+   Una fila por periodo (historial + suspensión en curso) con días para cobro. */
+function buildSuspendidasTable() {
+  const tbody = document.getElementById('suspendidasTbody');
+  if (!tbody) return;
+  const rows = [];
+  MODELS.forEach(m => {
+    (m.suspHistory || []).forEach(p => rows.push({ name: m.name, img: m.img, from: p.from, to: p.to, activa: false }));
+    if (m.suspended && m.suspendedFrom) rows.push({ name: m.name, img: m.img, from: m.suspendedFrom, to: null, activa: true });
+  });
+  rows.sort((a, b) => (b.activa - a.activa) || (b.from || '').localeCompare(a.from || ''));
+
+  const countEl = document.getElementById('suspendidasCount');
+  const enCurso = rows.filter(r => r.activa).length;
+  if (countEl) countEl.textContent = enCurso ? `${enCurso} en curso` : (rows.length ? `${rows.length} en historial` : '');
+
+  if (!rows.length) {
+    tbody.innerHTML = `<tr><td colspan="5" class="empty-state-row">Ninguna doncella suspendida</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = rows.map(r => {
+    const dias = diasEntre(r.from, r.to || todayISO());
+    const hasta = r.activa ? '<span style="color:#e5658a;font-weight:600">En curso</span>' : fmtFecha(r.to);
+    const estado = r.activa
+      ? '<span class="pill pill-busy" style="font-size:.65rem"><i class="fas fa-ban"></i> Suspendida</span>'
+      : '<span class="pill pill-available" style="font-size:.65rem">Reactivada</span>';
+    return `<tr>
+      <td><div class="table-avatar"><img src="${r.img}" alt="${r.name}" /><div><div class="table-name">${r.name}</div></div></div></td>
+      <td style="color:var(--t2)">${fmtFecha(r.from)}</td>
+      <td style="color:var(--t2)">${hasta}</td>
+      <td style="font-family:var(--font-serif);color:var(--gold)">${dias} día${dias !== 1 ? 's' : ''}</td>
+      <td>${estado}</td>
+    </tr>`;
+  }).join('');
 }
 
 /* Admin: gestión de contenido (fotos/videos) */
@@ -3325,6 +3456,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     MODELS = sbModels;
     syncModelAvailabilityWithCitas();
   }
+
+  /* Aplicar estados Oculta/Suspendida guardados (admin → sitio público) */
+  applyEscortStates();
 
   const raw  = window.location.pathname.split('/').pop();
   const path = raw.replace(/\.html$/, '');

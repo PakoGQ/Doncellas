@@ -245,6 +245,10 @@
 - **Reseñas de clientes:** Sistema privado entre escorts — ayuda a identificar clientes problemáticos antes de aceptar citas. Solo visible en panel-modelo y admin.
 - **Moderación de reseñas públicas:** Admin aprueba antes de publicar en perfil
 - **Programa de referidos:** Eliminado completamente
+- **Estados de escort (Oculta vs Suspendida):** Dos botones en la tabla del panel-admin (Gestión de Doncellas):
+  - **Ocultar** (ojo): la quita SOLO de la página pública. El agente sigue publicando y se pueden agendar citas. Para escorts que por privacidad no quieren salir en la web pero sí quieren todo lo demás.
+  - **Suspender** (🚫): la quita de la página + el agente NO publica + NO se agendan citas. Para vacaciones o falta de pago. Registra rango de fechas (desde/hasta) en la sección **"Doncellas suspendidas"** del dashboard, con días calculados para saber qué cobrar de membresía.
+  - Ambos estados persisten en **localStorage** (clave `doncellas_escort_estados`, por id de escort), compartido por origen → admin marca / sitio público lee. **PENDIENTE: migrar a Supabase** (columnas `hidden`, `suspended`, `suspended_from` + tabla de historial de suspensiones) cuando se conecte el resto del admin. El agente IA (Mes 2) debe consultar `suspended` antes de publicar/agendar.
 
 ### Navbar
 - **Desktop:** Logo + Doncellas · tagline centrado · links (Inicio/Doncellas/Categorías/Legal) + "Iniciar Sesión" dorado
