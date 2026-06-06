@@ -2292,6 +2292,26 @@ canvas { width: 100% !important; }
 /* ─── Hero main content fade ────────────────────────────── */
 .hero-content { transition: opacity .55s ease; }
 
+/* ─── Texto del hero: se desvanece rápido al salir ──────────
+   El FONDO (imagen) conserva su crossfade lento de 1.2s, pero el
+   TEXTO del slide que sale se oculta en ~.3s para que no se encime
+   (efecto fantasma) con el texto del slide que entra. El entrante
+   aparece con un pequeño retraso, ya que el fondo terminó de cruzar. */
+.hero-slide .hero-brand-content,
+.hero-slide .hero-promo-overlay,
+.hero-slide .hero-tg-content,
+.hero-slide .hero-agenda-content {
+  opacity: 0;
+  transition: opacity .3s ease;
+}
+.hero-slide.active .hero-brand-content,
+.hero-slide.active .hero-promo-overlay,
+.hero-slide.active .hero-tg-content,
+.hero-slide.active .hero-agenda-content {
+  opacity: 1;
+  transition: opacity .6s ease .2s;
+}
+
 /* ─── Hero brand slide background ───────────────────────── */
 .hero-slide-brand-bg {
   position: absolute;
