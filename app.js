@@ -4,6 +4,15 @@
    ============================================================ */
 'use strict';
 
+/* ════════════════════════════════════════════════════════════
+   🎛️  MODO DEMO — interruptor único para los paneles
+   true  = paneles admin/modelo llenos con datos simulados
+           (gráficas, tablas, citas, fotos, videos, KPIs)
+   false = estado limpio/real (todo vacío, listo para datos reales)
+   👉 Para quitar TODA la info demo de los paneles: poner en false.
+   ════════════════════════════════════════════════════════════ */
+const DEMO_MODE = true;
+
 /* ─── Usuarios / Login ──────────────────────────────────── */
 const USERS = [
   { username:'admin',     pass:'admin123',  role:'admin',  name:'Administrador', redirect:'panel-admin.html' },
@@ -2161,6 +2170,7 @@ function initAdmin() {
   buildAdminCalendar();
   buildTodayCitas();
   buildContentGrid();
+  applyDemoData();
 }
 
 function showAdminPage(page) {
@@ -2206,15 +2216,91 @@ function renderEmptyRow(tbodyId, cols, msg) {
   t.innerHTML = `<tr><td colspan="${cols}" class="empty-state-row">${msg || 'Sin registros todavía'}</td></tr>`;
 }
 
+/* Llena los KPIs/secciones estáticas (HTML) con datos demo cuando DEMO_MODE.
+   Si DEMO_MODE=false no hace nada → el HTML muestra el estado limpio (0/—). */
+function _setKpi(el, value, deltaHTML, deltaClass) {
+  if (!el) return;
+  el.textContent = value;
+  const d = el.nextElementSibling;
+  if (d && d.classList.contains('kpi-delta')) {
+    d.className = 'kpi-delta ' + (deltaClass || '');
+    d.style.color = '';
+    d.innerHTML = deltaHTML;
+  }
+}
+function applyDemoData() {
+  if (!DEMO_MODE) return;
+  /* Admin — Dashboard (índice 2 = Doncellas activas: queda REAL, no se toca) */
+  const dash = document.querySelectorAll('#page-dashboard .kpi-value');
+  if (dash.length >= 6) {
+    _setKpi(dash[0], '$284,500', '<i class="fas fa-arrow-up"></i> +18.3% vs mes anterior', 'up');
+    _setKpi(dash[1], '1,248',    '<i class="fas fa-arrow-up"></i> +12.1%', 'up');
+    _setKpi(dash[3], '892',      '<i class="fas fa-arrow-up"></i> +45 este mes', 'up');
+    _setKpi(dash[4], '4.7',      '<i class="fas fa-arrow-up"></i> +0.1', 'up');
+    _setKpi(dash[5], '7',        'Requieren revisión', 'down');
+  }
+  /* Admin — Ingresos */
+  const ing = document.querySelectorAll('#page-ingresos .kpi-value');
+  if (ing.length >= 4) {
+    _setKpi(ing[0], '$67,200',  '<i class="fas fa-arrow-up"></i> +11%', 'up');
+    _setKpi(ing[1], '$284,500', '<i class="fas fa-arrow-up"></i> +18%', 'up');
+    _setKpi(ing[2], '$1.2M',    '<i class="fas fa-arrow-up"></i> +34%', 'up');
+    _setKpi(ing[3], '$56,900',  '20% promedio', 'up');
+  }
+  /* Admin — Membresías */
+  const mem = document.querySelectorAll('#page-membresias-admin .kpi-value');
+  if (mem.length >= 4) {
+    _setKpi(mem[0], '234', '$2,500/mes', 'up');
+    _setKpi(mem[1], '415', '$2,000/mes', 'up');
+    _setKpi(mem[2], '243', '$1,500/mes', 'up');
+    _setKpi(mem[3], '28',  'Este mes', 'down');
+  }
+  const memSub = document.querySelector('#page-membresias-admin .admin-page-sub');
+  if (memSub) memSub.textContent = '892 miembros activos';
+  /* Modelo — Estadísticas (stat-mini sin delta) */
+  const sm = document.querySelectorAll('#page-stats .stat-mini-n');
+  if (sm.length >= 6) {
+    const vals = ['$24,500','18','4.8','1,240','87','12'];
+    sm.forEach((el,i)=>{ if (vals[i]!==undefined) el.textContent = vals[i]; });
+  }
+  /* Modelo — Satisfacción del cliente */
+  const sat = document.getElementById('satisfaccionBox');
+  if (sat) {
+    const rows = [['Puntualidad','4.9',98],['Presentación','4.8',96],['Comunicación','4.7',94],['Profesionalismo','4.9',98]];
+    sat.innerHTML = `<div style="display:flex;flex-direction:column;gap:.6rem;margin-top:.5rem">` +
+      rows.map(r=>`<div>
+        <div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:.3rem">
+          <span>${r[0]}</span><span style="color:var(--gold)">${r[1]}</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${r[2]}%"></div></div>
+      </div>`).join('') + `</div>`;
+  }
+}
+
 function buildAdminCharts() {
-  renderEmptyChart('revenueChart', 'Sin ingresos todavía');
-  renderEmptyChart('distChart',    'Sin distribución aún');
-  renderEmptyChart('citasChart',   'Sin citas todavía');
-  renderEmptyChart('membChart',    'Sin membresías aún');
+  if (!DEMO_MODE) {
+    renderEmptyChart('revenueChart', 'Sin ingresos todavía');
+    renderEmptyChart('distChart',    'Sin distribución aún');
+    renderEmptyChart('citasChart',   'Sin citas todavía');
+    renderEmptyChart('membChart',    'Sin membresías aún');
+    return;
+  }
+  const c1 = document.getElementById('revenueChart');
+  if (c1) new Chart(c1,{ type:'line', data:{ labels:['L','M','X','J','V','S','D'], datasets:[{ data:[38000,42000,35000,55000,48000,62000,58000], borderColor:'#C9A84C', backgroundColor:'rgba(201,168,76,.08)', fill:true, tension:.4, pointBackgroundColor:'#C9A84C', pointRadius:4 }] }, options:chartOptions() });
+  const c2 = document.getElementById('distChart');
+  if (c2) new Chart(c2,{ type:'doughnut', data:{ labels:['Citas','Membresías','Eventos'], datasets:[{ data:[50,35,15], backgroundColor:['#C9A84C','#4CAF82','#5078C9'], borderWidth:0 }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'bottom', labels:{ color:'#A89070', font:{size:11} } } }, cutout:'65%' } });
+  const c3 = document.getElementById('citasChart');
+  if (c3) new Chart(c3,{ type:'bar', data:{ labels:['L','M','X','J','V','S','D'], datasets:[{ data:[28,35,31,44,52,65,48], backgroundColor:'rgba(201,168,76,.4)', borderColor:'#C9A84C', borderWidth:1, borderRadius:4 }] }, options:chartOptions() });
+  const c4 = document.getElementById('membChart');
+  if (c4) new Chart(c4,{ type:'line', data:{ labels:['Ene','Feb','Mar','Abr'], datasets:[{ data:[80,95,112,138], borderColor:'#4CAF82', backgroundColor:'rgba(76,175,130,.08)', fill:true, tension:.4, pointBackgroundColor:'#4CAF82', pointRadius:4 }] }, options:chartOptions() });
 }
 
 function buildIngresosChart() {
-  renderEmptyChart('ingresosChart', 'Sin ingresos todavía');
+  if (!DEMO_MODE) { renderEmptyChart('ingresosChart', 'Sin ingresos todavía'); return; }
+  const ctx = document.getElementById('ingresosChart');
+  if (!ctx || ctx.dataset.built) return;
+  ctx.dataset.built='1';
+  new Chart(ctx,{ type:'bar', data:{ labels:['Ene','Feb','Mar','Abr'], datasets:[ { label:'Citas', data:[85000,92000,108000,124000], backgroundColor:'#C9A84C', borderRadius:4 }, { label:'Membresías', data:[55000,61000,72000,89000], backgroundColor:'#4CAF82', borderRadius:4 }, { label:'Eventos', data:[22000,28000,31000,40000], backgroundColor:'#5078C9', borderRadius:4 } ] }, options:{ ...chartOptions(), plugins:{ legend:{ labels:{ color:'#A89070' } } }, scales:{ x:{ stacked:true, ticks:{color:'#5A5045'}, grid:{color:'rgba(201,168,76,.06)'} }, y:{ stacked:true, ticks:{color:'#5A5045'}, grid:{color:'rgba(201,168,76,.06)'} } } } });
 }
 
 function setChartPeriod(period, btn) {
@@ -2223,7 +2309,25 @@ function setChartPeriod(period, btn) {
 }
 
 function buildActivityTable() {
-  renderEmptyRow('activityTbody', 5, 'Sin actividad todavía');
+  if (!DEMO_MODE) { renderEmptyRow('activityTbody', 5, 'Sin actividad todavía'); return; }
+  const tbody = document.getElementById('activityTbody');
+  if (!tbody) return;
+  [
+    ['Nueva cita','Valentina R. — Hotel Fiesta Americana','$2,500','Hoy 14:32','success'],
+    ['Membresía Gold','Eduardo L.','$2,000','Hoy 12:15','success'],
+    ['Pago rechazado','Roberto A.','$2,500','Hoy 10:48','error'],
+    ['Nuevo perfil','Mariana F.','—','Hoy 09:20','info'],
+    ['Cita cancelada','Isabella M.','−$4,500','Ayer 18:05','error'],
+    ['Membresía Elite','Héctor F.','$2,500','Ayer 15:30','success'],
+  ].forEach(r => {
+    tbody.insertAdjacentHTML('beforeend',`
+      <tr>
+        <td>${r[0]}</td><td style="color:var(--t2)">${r[1]}</td>
+        <td style="font-family:var(--font-serif);color:var(--gold)">${r[2]}</td>
+        <td style="color:var(--t3)">${r[3]}</td>
+        <td><span class="pill ${r[4]==='success'?'pill-available':r[4]==='error'?'pill-busy':'pill-gold'}" style="font-size:.65rem">${r[4]==='success'?'Exitoso':r[4]==='error'?'Fallido':'Info'}</span></td>
+      </tr>`);
+  });
 }
 
 function buildModelosTable() {
@@ -2605,19 +2709,59 @@ function removeModelVideo(id) {
 function buildPendingReviews() {
   const list = document.getElementById('pendingReviewsList');
   if (!list) return;
-  list.innerHTML = `<div class="empty-state" style="min-height:140px">
-    <i class="fas fa-comments"></i>
-    <span>Sin reseñas por revisar</span>
-    <small>Aquí llegarán las reseñas de clientes para que las apruebes</small>
-  </div>`;
+  if (!DEMO_MODE) {
+    list.innerHTML = `<div class="empty-state" style="min-height:140px">
+      <i class="fas fa-comments"></i>
+      <span>Sin reseñas por revisar</span>
+      <small>Aquí llegarán las reseñas de clientes para que las apruebes</small>
+    </div>`;
+    return;
+  }
+  REVIEWS_DATA.slice(0,4).forEach(r => {
+    list.insertAdjacentHTML('beforeend',`
+      <div class="chart-card" style="margin-bottom:0">
+        <div style="display:flex;gap:1rem;flex-wrap:wrap">
+          <div class="review-avatar">${r.initials}</div>
+          <div style="flex:1">
+            <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.4rem;flex-wrap:wrap">
+              <strong>${r.name}</strong><div class="stars">${stars(r.rating)}</div>
+              <span style="color:var(--t3);font-size:.72rem">${r.date}</span>
+            </div>
+            <p style="font-size:.85rem;color:var(--t2)">${r.text}</p>
+            <div style="display:flex;gap:.5rem;margin-top:.6rem">
+              <button class="btn btn-sm" style="background:rgba(76,175,130,.12);color:var(--green);border:1px solid rgba(76,175,130,.3)" onclick="this.closest('.chart-card').style.opacity='.4';this.closest('.chart-card').style.pointerEvents='none';showToast('Reseña aprobada','success')"><i class="fas fa-check"></i> Aprobar</button>
+              <button class="btn btn-sm" style="background:rgba(224,80,80,.1);color:var(--red);border:1px solid rgba(224,80,80,.25)" onclick="this.closest('.chart-card').remove();showToast('Reseña rechazada','info')"><i class="fas fa-times"></i> Rechazar</button>
+            </div>
+          </div>
+        </div>
+      </div>`);
+  });
 }
 
 function buildTxTable() {
-  renderEmptyRow('txTbody', 7, 'Sin transacciones todavía');
+  if (!DEMO_MODE) { renderEmptyRow('txTbody', 7, 'Sin transacciones todavía'); return; }
+  const tbody = document.getElementById('txTbody');
+  if (!tbody) return;
+  [['#4821','Valentina R.','Cita 1hr','$2,500','$500','17 Abr','Tarjeta'],
+   ['#4820','Carlos M.','Membresía Gold','$2,000','$400','17 Abr','OXXO'],
+   ['#4819','Renata P.','Cita 3hr','$6,500','$1,300','16 Abr','SPEI'],
+   ['#4818','Ximena A.','Cita Día','$18,000','$3,600','16 Abr','Tarjeta'],
+   ['#4817','Andrea T.','Membresía Elite','$2,500','$500','15 Abr','Tarjeta'],
+  ].forEach(r => {
+    tbody.insertAdjacentHTML('beforeend',`<tr><td style="color:var(--t3)">${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td style="color:var(--gold);font-family:var(--font-serif)">${r[3]}</td><td style="color:var(--green)">${r[4]}</td><td style="color:var(--t3)">${r[5]}</td><td><span class="pill pill-available" style="font-size:.65rem">${r[6]}</span></td></tr>`);
+  });
 }
 
 function buildPagosTable() {
-  renderEmptyRow('pagosTbody', 7, 'Sin pagos todavía');
+  if (!DEMO_MODE) { renderEmptyRow('pagosTbody', 7, 'Sin pagos todavía'); return; }
+  const tbody = document.getElementById('pagosTbody');
+  if (!tbody) return;
+  [['#P001','Carlos M.','Membresía Gold','$2,000','Tarjeta','Aprobado','17 Abr'],
+   ['#P002','Roberto A.','Membresía Elite','$2,500','SPEI','Pendiente','17 Abr'],
+   ['#P003','Eduardo L.','Cita Valentina R.','$2,500','OXXO','Aprobado','16 Abr'],
+  ].forEach(r => {
+    tbody.insertAdjacentHTML('beforeend',`<tr><td style="color:var(--t3)">${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td style="color:var(--gold);font-family:var(--font-serif)">${r[3]}</td><td>${r[4]}</td><td><span class="pill ${r[5]==='Aprobado'?'pill-available':'pill-gold'}" style="font-size:.65rem">${r[5]}</span></td><td style="color:var(--t3)">${r[6]}</td></tr>`);
+  });
 }
 
 let adminCalDate = new Date();
@@ -2639,7 +2783,8 @@ function renderAdminCalendar() {
   for(let i=0;i<first;i++) html+='<div class="calendar-day empty"></div>';
   for(let d=1;d<=dim;d++){
     const isToday=new Date(yr,mo,d).toDateString()===today.toDateString();
-    html+=`<div class="calendar-day${isToday?' today':''}">${d}</div>`;
+    const count=DEMO_MODE?Math.floor(((d*13+mo*7)%8)):0;
+    html+=`<div class="calendar-day${isToday?' today':''}"${count>0?` title="${count} citas"`:''}>${d}${count>0?`<br><span style="font-size:.58rem;color:var(--gold)">${count}</span>`:''}</div>`;
   }
   grid.innerHTML=html;
 }
@@ -2653,10 +2798,26 @@ function _lugarIcon(tipo) {
 function buildTodayCitas() {
   const w=document.getElementById('todayCitas');
   if(!w)return;
-  w.innerHTML = `<div class="empty-state" style="min-height:120px">
-    <i class="fas fa-calendar-day"></i>
-    <span>Sin citas para hoy</span>
-  </div>`;
+  if (!DEMO_MODE) {
+    w.innerHTML = `<div class="empty-state" style="min-height:120px">
+      <i class="fas fa-calendar-day"></i>
+      <span>Sin citas para hoy</span>
+    </div>`;
+    return;
+  }
+  /* [escort, tipo_lugar, lugar, hora, duracion] */
+  [['Valentina R.','Hotel','Fiesta Americana','10:00','1hr'],
+   ['Renata M.','Motel','Las Villas','14:00','3hr'],
+   ['Camila V.','Hotel','Hilton GDL','17:30','1hr']
+  ].forEach(c=>{
+    w.insertAdjacentHTML('beforeend',`
+      <div style="padding:.75rem;background:var(--surface);border-radius:var(--r-md);border:1px solid var(--border)">
+        <div style="display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:.2rem">
+          <strong>${c[0]}</strong><span style="color:var(--gold)">${c[3]}</span>
+        </div>
+        <div style="font-size:.75rem;color:var(--t2)">${_lugarIcon(c[1])} ${c[1]} ${c[2]} · ${c[4]}</div>
+      </div>`);
+  });
 }
 
 /* ─── Panel Doncellas ───────────────────────────────────── */
@@ -2666,6 +2827,7 @@ function initPanelModelo() {
   buildCitasProximas();
   buildCitasHistorial();
   buildAvailWeekGrid();
+  applyDemoData();
 }
 
 function showModeloPage(page) {
@@ -2678,41 +2840,130 @@ function showModeloPage(page) {
 }
 
 function buildModeloCharts() {
-  renderEmptyChart('modeloRevenueChart', 'Sin ingresos todavía');
-  renderEmptyChart('contactSourceChart', 'Sin contactos aún');
-  renderEmptyChart('visitasChart',       'Sin visitas todavía');
+  if (!DEMO_MODE) {
+    renderEmptyChart('modeloRevenueChart', 'Sin ingresos todavía');
+    renderEmptyChart('contactSourceChart', 'Sin contactos aún');
+    renderEmptyChart('visitasChart',       'Sin visitas todavía');
+    return;
+  }
+  const c1=document.getElementById('modeloRevenueChart');
+  if(c1) new Chart(c1,{type:'bar',data:{labels:['L','M','X','J','V','S','D'],datasets:[{data:[2500,0,3200,2500,6500,8000,2500],backgroundColor:'rgba(201,168,76,.5)',borderColor:'#C9A84C',borderWidth:1,borderRadius:4}]},options:chartOptions()});
+  const c2=document.getElementById('contactSourceChart');
+  if(c2) new Chart(c2,{type:'doughnut',data:{labels:['WhatsApp','Búsqueda','Directo'],datasets:[{data:[58,28,14],backgroundColor:['#25D366','#C9A84C','#5078C9'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#A89070',font:{size:10}}}},cutout:'60%'}});
+  const c3=document.getElementById('visitasChart');
+  if(c3) new Chart(c3,{type:'line',data:{labels:['L','M','X','J','V','S','D'],datasets:[{data:[120,145,132,178,195,220,180],borderColor:'#5078C9',backgroundColor:'rgba(80,120,201,.08)',fill:true,tension:.4,pointBackgroundColor:'#5078C9',pointRadius:3}]},options:chartOptions()});
 }
 
 function buildCurrentGallery() {
   const g=document.getElementById('currentGallery');
   if(!g)return;
-  /* Sin fotos reales subidas todavía → estado vacío.
-     Cuando haya persistencia de uploads, renderizar aquí las fotos de la escort. */
-  g.innerHTML = `<div class="empty-state" style="grid-column:1/-1;min-height:140px">
-    <i class="fas fa-images"></i>
-    <span>Aún no has subido fotos</span>
-    <small>Arrastra o explora archivos arriba para empezar tu galería</small>
-  </div>`;
+  if (!DEMO_MODE) {
+    g.innerHTML = `<div class="empty-state" style="grid-column:1/-1;min-height:140px">
+      <i class="fas fa-images"></i>
+      <span>Aún no has subido fotos</span>
+      <small>Arrastra o explora archivos arriba para empezar tu galería</small>
+    </div>`;
+    return;
+  }
+  GALLERY_MEDIA.slice(0,6).forEach((item,i)=>{
+    g.insertAdjacentHTML('beforeend',`
+      <div class="upload-preview-item" style="aspect-ratio:1">
+        <img src="${item.thumb}" alt="Media ${i+1}" />
+        <div class="wm-overlay"></div>
+        ${item.type==='video'?`<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.4);z-index:9"><i class="fas fa-play" style="color:#fff;font-size:.9rem"></i></div>`:''}
+        <button class="upload-preview-remove" style="z-index:10" onclick="this.closest('.upload-preview-item').remove();showToast('Eliminado','info')"><i class="fas fa-times"></i></button>
+      </div>`);
+  });
 }
 
 function buildCitasProximas() {
   const w=document.getElementById('citasProximas');
   if(!w)return;
-  w.innerHTML = `<div class="empty-state" style="min-height:140px">
-    <i class="fas fa-calendar-plus"></i>
-    <span>Sin citas próximas</span>
-    <small>Cuando agendes una cita, aparecerá aquí</small>
-  </div>`;
+  if (!DEMO_MODE) {
+    w.innerHTML = `<div class="empty-state" style="min-height:140px">
+      <i class="fas fa-calendar-plus"></i>
+      <span>Sin citas próximas</span>
+      <small>Cuando agendes una cita, aparecerá aquí</small>
+    </div>`;
+    return;
+  }
+  /* [tipo_lugar, lugar, fecha, hora, duracion, tarifa, clienteWa, citaId] */
+  [['Hotel','Fiesta Americana','Vie 18 Abr','10:00','1hr','$2,500','3312345001','demo-1'],
+   ['Motel','Las Villas',      'Sáb 19 Abr','14:00','3hr','$6,500','3312345002','demo-2'],
+   ['Hotel','Hilton GDL',      'Lun 21 Abr','17:00','1hr','$2,500','3312345003','demo-3'],
+  ].forEach((c,idx)=>{
+    const [tipo,lugar,fecha,hora,dur,tarifa,cWa,cId]=c;
+    const badgeId=`badge-prox-${idx}`;
+    w.insertAdjacentHTML('beforeend',`
+      <div class="cita-item">
+        <div class="cita-date">
+          <div class="day">${fecha.split(' ')[1]}</div>
+          <div class="month">${fecha.split(' ')[2]}</div>
+        </div>
+        <div class="cita-info">
+          <h4 style="display:flex;align-items:center;gap:.4rem">
+            ${_lugarIcon(tipo)}<span>${tipo} ${lugar}</span>
+          </h4>
+          <p>${hora} · ${dur}</p>
+          <div id="${badgeId}" style="margin-top:.3rem"></div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-family:var(--font-serif);color:var(--gold)">${tarifa}</div>
+          <div style="display:flex;gap:.4rem;margin-top:.4rem;flex-wrap:wrap;justify-content:flex-end">
+            <button class="btn btn-wa btn-sm" onclick="window.open('https://wa.me/${cWa}')"><i class="fab fa-whatsapp"></i></button>
+            <button class="btn btn-outline btn-sm">Cancelar</button>
+          </div>
+        </div>
+      </div>`);
+    if (typeof loadClientBadge === 'function') {
+      loadClientBadge(cWa, document.getElementById(badgeId));
+    }
+  });
 }
 
 function buildCitasHistorial() {
   const w=document.getElementById('citasHistorial');
   if(!w)return;
-  w.innerHTML = `<div class="empty-state" style="min-height:140px">
-    <i class="fas fa-clock-rotate-left"></i>
-    <span>Sin historial todavía</span>
-    <small>Tus citas completadas aparecerán aquí</small>
-  </div>`;
+  if (!DEMO_MODE) {
+    w.innerHTML = `<div class="empty-state" style="min-height:140px">
+      <i class="fas fa-clock-rotate-left"></i>
+      <span>Sin historial todavía</span>
+      <small>Tus citas completadas aparecerán aquí</small>
+    </div>`;
+    return;
+  }
+  /* [tipo_lugar, lugar, fecha, hora, duracion, tarifa, estado, clienteWa, citaId] */
+  [['Motel','El Paraíso', 'Mié 16 Abr','11:00','1hr', '$2,500', 'Completada','3312345001','demo-h1'],
+   ['Hotel','Marriott',   'Lun 14 Abr','15:00','3hr', '$6,500', 'Completada','3312345002','demo-h2'],
+   ['Hotel','Crown Plaza','Sáb 12 Abr','09:00','Día', '$18,000','Completada','3312345004','demo-h3'],
+   ['Motel','Los Pinos',  'Jue 10 Abr','18:00','1hr', '$2,500', 'Cancelada', '3312345005','demo-h4'],
+  ].forEach((c,idx)=>{
+    const [tipo,lugar,fecha,hora,dur,tarifa,estado,cWa,cId]=c;
+    const completada = estado==='Completada';
+    w.insertAdjacentHTML('beforeend',`
+      <div class="cita-item">
+        <div class="cita-date">
+          <div class="day">${fecha.split(' ')[1]}</div>
+          <div class="month">${fecha.split(' ')[2]}</div>
+        </div>
+        <div class="cita-info">
+          <h4 style="display:flex;align-items:center;gap:.4rem">
+            ${_lugarIcon(tipo)}<span>${tipo} ${lugar}</span>
+          </h4>
+          <p>${hora} · ${dur}</p>
+        </div>
+        <div style="text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:.35rem">
+          <div style="font-family:var(--font-serif);color:var(--gold)">${tarifa}</div>
+          <span class="pill ${completada?'pill-available':'pill-busy'}" style="font-size:.65rem">${estado}</span>
+          ${completada
+            ? `<button class="btn btn-ghost btn-sm" style="font-size:.68rem;padding:.2rem .6rem"
+                onclick="openClientReview('${cId}','${cWa}')">
+                <i class="fas fa-star" style="color:var(--gold)"></i> Reseñar cliente
+               </button>`
+            : ''}
+        </div>
+      </div>`);
+  });
 }
 
 function buildAvailWeekGrid() {
@@ -2725,7 +2976,7 @@ function buildAvailWeekGrid() {
   times.forEach((t,ti)=>{
     html+=`<div class="week-time">${t}</div>`;
     days.forEach((_,di)=>{
-      const on=(ti+di)%3!==0;
+      const on=DEMO_MODE && (ti+di)%3!==0;
       html+=`<div class="week-slot${on?' on':''}" onclick="this.classList.toggle('on')"></div>`;
     });
   });
