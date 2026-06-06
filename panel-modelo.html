@@ -273,7 +273,7 @@
           <h4>Arrastra tus fotos aquí</h4>
           <p>o haz clic para seleccionar archivos</p>
           <p class="text-xs" style="margin-top:.5rem">PNG, JPG, HEIC, MP4 — máx. 10 MB por archivo</p>
-          <button class="btn btn-gold btn-sm" style="margin-top:1rem;position:relative;z-index:1">
+          <button class="btn btn-gold btn-sm" style="margin-top:1rem;position:relative;z-index:1" onclick="document.getElementById('fileInputPerfil').click()">
             <i class="fas fa-folder-open"></i> Explorar archivos
           </button>
         </div>
@@ -283,11 +283,7 @@
         <!-- Galería perfil -->
         <div style="margin-top:2rem">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
-            <h4>Fotos actuales <span style="font-size:.8rem;color:var(--t2);font-weight:400">(12 fotos)</span></h4>
-            <div style="display:flex;gap:.5rem">
-              <button class="btn btn-outline btn-sm"><i class="fas fa-sort"></i> Ordenar</button>
-              <button class="btn btn-outline btn-sm"><i class="fas fa-trash"></i> Eliminar seleccionadas</button>
-            </div>
+            <h4>Fotos actuales</h4>
           </div>
           <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.75rem" id="currentGallery">
             <!-- Built by JS -->
@@ -317,7 +313,7 @@
           <h4>Arrastra tu contenido para redes</h4>
           <p>Fotos casuales, outfits, selfies, videos cortos</p>
           <p class="text-xs" style="margin-top:.5rem">PNG, JPG, HEIC, MP4 — máx. 10 MB por archivo</p>
-          <button class="btn btn-gold btn-sm" style="margin-top:1rem;position:relative;z-index:1">
+          <button class="btn btn-gold btn-sm" style="margin-top:1rem;position:relative;z-index:1" onclick="document.getElementById('fileInputRedes').click()">
             <i class="fas fa-folder-open"></i> Explorar archivos
           </button>
         </div>
@@ -327,11 +323,7 @@
         <!-- Galería redes -->
         <div style="margin-top:2rem">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
-            <h4>Contenido para redes <span style="font-size:.8rem;color:var(--t2);font-weight:400">(0 fotos)</span></h4>
-            <div style="display:flex;gap:.5rem">
-              <button class="btn btn-outline btn-sm"><i class="fas fa-sort"></i> Ordenar</button>
-              <button class="btn btn-outline btn-sm"><i class="fas fa-trash"></i> Eliminar seleccionadas</button>
-            </div>
+            <h4>Contenido para redes</h4>
           </div>
           <!-- Estado vacío -->
           <div id="redesGalleryEmpty" style="text-align:center;padding:3rem 1rem;color:var(--t2)">

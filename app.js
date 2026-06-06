@@ -2686,15 +2686,13 @@ function buildModeloCharts() {
 function buildCurrentGallery() {
   const g=document.getElementById('currentGallery');
   if(!g)return;
-  GALLERY_MEDIA.slice(0,6).forEach((item,i)=>{
-    g.insertAdjacentHTML('beforeend',`
-      <div class="upload-preview-item" style="aspect-ratio:1">
-        <img src="${item.thumb}" alt="Media ${i+1}" />
-        <div class="wm-overlay"></div>
-        ${item.type==='video'?`<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.4);z-index:9"><i class="fas fa-play" style="color:#fff;font-size:.9rem"></i></div>`:''}
-        <button class="upload-preview-remove" style="z-index:10" onclick="this.closest('.upload-preview-item').remove();showToast('Eliminado','info')"><i class="fas fa-times"></i></button>
-      </div>`);
-  });
+  /* Sin fotos reales subidas todavía → estado vacío.
+     Cuando haya persistencia de uploads, renderizar aquí las fotos de la escort. */
+  g.innerHTML = `<div class="empty-state" style="grid-column:1/-1;min-height:140px">
+    <i class="fas fa-images"></i>
+    <span>Aún no has subido fotos</span>
+    <small>Arrastra o explora archivos arriba para empezar tu galería</small>
+  </div>`;
 }
 
 function buildCitasProximas() {

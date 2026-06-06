@@ -184,7 +184,6 @@
       <div class="chart-card">
         <div class="chart-header">
           <span class="chart-title">Actividad Reciente</span>
-          <button class="btn btn-outline btn-sm">Ver todo</button>
         </div>
         <div class="admin-table-wrap">
           <table class="admin-table" id="activityTable">
@@ -360,7 +359,7 @@
       <div class="chart-card mt-2">
         <div class="chart-header">
           <span class="chart-title">Transacciones recientes</span>
-          <button class="btn btn-outline btn-sm"><i class="fas fa-download"></i> Exportar CSV</button>
+          <button class="btn btn-outline btn-sm" onclick="showToast('No hay transacciones para exportar todavía','info')"><i class="fas fa-download"></i> Exportar CSV</button>
         </div>
         <div class="admin-table-wrap">
           <table class="admin-table">
@@ -440,7 +439,7 @@
             <label class="form-label">Ciudad principal</label>
             <input class="form-input" value="Guadalajara, Jalisco" />
           </div>
-          <button class="btn btn-gold">Guardar cambios</button>
+          <button class="btn btn-gold" onclick="showToast('Configuración guardada','success')">Guardar cambios</button>
         </div>
         <div class="chart-card">
           <h4 style="margin-bottom:1rem">Notificaciones</h4>
