@@ -3077,32 +3077,52 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
     grid-template-columns: 1fr 1fr;
     align-items: start;
     overflow: visible !important;
-    gap: .7rem;
-    padding: .85rem 1rem;
+    gap: .35rem .5rem;
+    padding: .55rem .65rem !important;
+    margin-bottom: 1rem !important;
   }
   .filters-bar::-webkit-scrollbar { display: none; }
   .filter-divider { display: none; }
 
-  /* Cada filtro: etiqueta arriba, control abajo a todo el ancho de su celda */
+  /* Cada filtro: etiqueta arriba, control abajo (compacto) */
   .filters-bar .filter-group {
     flex-direction: column;
     align-items: stretch;
-    gap: .35rem;
+    gap: .1rem;
     min-width: 0;
   }
-  .filters-bar .filter-group label { font-size: .68rem; }
-  .filters-bar .filter-group .filter-select { width: 100%; }
+  .filters-bar .filter-group label {
+    font-size: .58rem;
+    letter-spacing: .02em;
+    gap: .25rem;
+  }
+  .filters-bar .filter-group .filter-select {
+    width: 100%;
+    padding: .26rem .5rem;
+    font-size: .72rem;
+    min-height: 0;
+  }
 
-  /* Disponibilidad ocupa toda la fila (3 botones repartidos) */
+  /* Disponibilidad ocupa toda la fila (3 botones repartidos, chiquitos) */
   .filters-bar .fg-avail { grid-column: 1 / -1; }
-  .filters-bar .fg-avail .filter-toggle-group { display: flex; gap: .4rem; }
-  .filters-bar .fg-avail .filter-toggle { flex: 1; text-align: center; padding-left: 0; padding-right: 0; }
+  .filters-bar .fg-avail .filter-toggle-group { display: flex; gap: .3rem; }
+  .filters-bar .fg-avail .filter-toggle {
+    flex: 1;
+    text-align: center;
+    min-height: 28px;
+    min-width: 0;
+    padding: .2rem .15rem;
+    font-size: .66rem;
+  }
 
-  /* Botón Limpiar a todo el ancho, al final */
+  /* Botón Limpiar a todo el ancho, compacto */
   .filters-bar #clearFilters {
     grid-column: 1 / -1;
     margin-left: 0 !important;
     justify-content: center;
+    min-height: 28px;
+    padding: .25rem .5rem;
+    font-size: .72rem;
   }
 }
 
