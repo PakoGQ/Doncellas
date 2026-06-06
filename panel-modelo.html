@@ -761,8 +761,11 @@
 
 <!-- Mobile Panel Bottom Navigation -->
 <nav class="panel-bottom-nav" aria-label="Navegación del panel">
-  <button type="button" class="panel-bottom-nav-item active" data-page="stats" onclick="goPanelModelo('stats', this)">
+  <a href="index.html" class="panel-bottom-nav-item">
     <i class="fas fa-home"></i><span>Inicio</span>
+  </a>
+  <button type="button" class="panel-bottom-nav-item active" data-page="stats" onclick="goPanelModelo('stats', this)">
+    <i class="fas fa-chart-line"></i><span>Gráficas</span>
   </button>
   <button type="button" class="panel-bottom-nav-item" data-page="contenido" onclick="goPanelModelo('contenido', this)">
     <i class="fas fa-camera"></i><span>Contenido</span>
