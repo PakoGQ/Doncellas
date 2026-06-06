@@ -151,9 +151,12 @@
       <a href="perfil.html" class="btn btn-outline btn-sm w-full" style="justify-content:center;margin-bottom:.5rem">
         <i class="fas fa-eye"></i> Ver mi perfil
       </a>
-      <a href="membresias.html" class="btn btn-gold btn-sm w-full" style="justify-content:center">
+      <a href="membresias.html" class="btn btn-gold btn-sm w-full" style="justify-content:center;margin-bottom:.5rem">
         <i class="fas fa-crown"></i> Mejorar plan
       </a>
+      <button onclick="cerrarSesion()" class="btn btn-ghost btn-sm w-full" style="justify-content:center;color:var(--t3)">
+        <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+      </button>
     </div>
   </aside>
 
@@ -1016,6 +1019,15 @@ function toggleModelAvail() {
 document.addEventListener('DOMContentLoaded', () => {
   _applyAvailUI();
   setInterval(_applyAvailUI, 30_000);
+
+  /* Mostrar el nombre real de la usuaria logueada */
+  const nombre = localStorage.getItem('userNombre');
+  if (nombre) {
+    const navName = document.getElementById('navModeloNombre');
+    if (navName) navName.textContent = nombre;
+    const sideName = document.querySelector('.modelo-profile-mini .name');
+    if (sideName) sideName.textContent = nombre;
+  }
 });
 
 function previewProfilePhoto(input) {
@@ -1087,7 +1099,7 @@ async function submitClientReview() {
 
   if (!clienteWa) { showToast('No se encontró el número del cliente', 'error'); return; }
 
-  const escortId = sessionStorage.getItem('escortId') || null;
+  const escortId = localStorage.getItem('escortId') || null;
 
   if (window.sbClient) {
     const { error } = await window.sbClient

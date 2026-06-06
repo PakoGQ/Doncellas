@@ -255,6 +255,12 @@ p  { line-height: 1.7; color: var(--t2); }
 .nav-links a:hover::after, .nav-links a.active::after { transform: scaleX(1); }
 .nav-cta { display: flex; align-items: center; gap: .75rem; }
 .nav-menu-btn { display: none; flex-direction: column; gap: 5px; padding: 4px; }
+
+/* ─── Sesión activa en el nav de escritorio ──────────────── */
+.nav-session { display: flex; align-items: center; gap: .5rem; }
+.nav-session-link { max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* En móvil/PWA la cuenta se maneja por el bottom nav, no aquí */
+@media (max-width: 768px) { .nav-session { display: none; } }
 .nav-menu-btn span { display: block; width: 24px; height: 2px; background: var(--gold); border-radius: 2px; transition: transform var(--transition), opacity var(--transition); }
 
 /* ─── Nav Brand (logo + escorts below) ──────────────────── */
@@ -4201,9 +4207,11 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
     pointer-events: none;
   }
 
-  /* ── Login button — elegant outlined style ── */
+  /* ── Login button — elegant outlined style (también nombre de sesión) ── */
   .nav .nav-cta .btn.btn-gold.btn-sm.nav-login-btn,
-  .nav .nav-cta .btn.btn-ghost.btn-sm.nav-login-btn {
+  .nav .nav-cta .btn.btn-ghost.btn-sm.nav-login-btn,
+  .nav .nav-cta .btn.btn-gold.btn-sm.nav-session-link,
+  .nav .nav-cta .btn.btn-ghost.btn-sm.nav-session-out {
     display: inline-flex !important;
     align-items: center;
     gap: .5rem;
@@ -4224,7 +4232,9 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
     white-space: nowrap;
   }
   .nav .nav-cta .btn.btn-gold.btn-sm.nav-login-btn:hover,
-  .nav .nav-cta .btn.btn-ghost.btn-sm.nav-login-btn:hover {
+  .nav .nav-cta .btn.btn-ghost.btn-sm.nav-login-btn:hover,
+  .nav .nav-cta .btn.btn-gold.btn-sm.nav-session-link:hover,
+  .nav .nav-cta .btn.btn-ghost.btn-sm.nav-session-out:hover {
     background: #C9A84C;
     color: #000;
     border-color: #C9A84C;

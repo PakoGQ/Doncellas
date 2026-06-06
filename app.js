@@ -21,6 +21,33 @@ const USERS = [
   { username:'isabella',  pass:'modelo123', role:'modelo', name:'Isabella M.',   redirect:'panel-modelo.html' },
 ];
 
+/* ─── Sesión PERSISTENTE ────────────────────────────────────
+   Se guarda en localStorage (NO sessionStorage) para que la
+   sesión sobreviva al cerrar la pestaña, el navegador o la PWA.
+   Solo se cierra cuando el usuario toca "Cerrar sesión".
+   ──────────────────────────────────────────────────────────── */
+const SESSION_KEYS = ['userRole', 'userNombre', 'escortId'];
+
+function setSession(role, nombre, escortId) {
+  localStorage.setItem('userRole',   role);
+  localStorage.setItem('userNombre', nombre || '');
+  if (escortId !== undefined && escortId !== null && escortId !== '') {
+    localStorage.setItem('escortId', escortId);
+  }
+}
+
+function getSession() {
+  return {
+    role:     localStorage.getItem('userRole'),
+    nombre:   localStorage.getItem('userNombre'),
+    escortId: localStorage.getItem('escortId'),
+  };
+}
+
+function clearSession() {
+  SESSION_KEYS.forEach(k => localStorage.removeItem(k));
+}
+
 async function doLogin() {
   const username = document.getElementById('loginEmail')?.value.trim().toLowerCase();
   const pass     = document.getElementById('loginPass')?.value;
@@ -31,8 +58,7 @@ async function doLogin() {
   const hardUser = USERS.find(u => u.username === username && u.pass === pass);
   if (hardUser) {
     if (errEl) errEl.style.display = 'none';
-    sessionStorage.setItem('userRole',   hardUser.role);
-    sessionStorage.setItem('userNombre', hardUser.name);
+    setSession(hardUser.role, hardUser.name);
     showToast(`Bienvenida, ${hardUser.name}`, 'success');
     setTimeout(() => { window.location.href = hardUser.redirect; }, 800);
     return;
@@ -50,9 +76,7 @@ async function doLogin() {
 
     if (data) {
       if (errEl) errEl.style.display = 'none';
-      sessionStorage.setItem('userRole',   'modelo');
-      sessionStorage.setItem('userNombre', data.escorts?.nombre || 'Doncella');
-      sessionStorage.setItem('escortId',   data.escort_id);
+      setSession('modelo', data.escorts?.nombre || 'Doncella', data.escort_id);
       showToast(`Bienvenida, ${data.escorts?.nombre || 'Doncella'} 🌹`, 'success');
       setTimeout(() => { window.location.href = 'panel-modelo.html'; }, 800);
       return;
@@ -3188,41 +3212,61 @@ document.addEventListener('keydown', e => {
   if (e.key === 'ArrowRight')  navigateFullscreen(1);
 });
 
-/* ─── Sesión activa en nav público ──────────────────────── */
+/* ─── Sesión activa en nav público ──────────────────────────
+   Si hay sesión guardada, en TODAS las páginas públicas:
+   · Escritorio: el botón "Iniciar Sesión" → nombre del usuario
+     (clic = va a su panel) + ícono de cerrar sesión.
+   · Móvil/PWA: el item "Cuenta" del bottom nav → nombre + panel.
+   · Drawer móvil: "Iniciar Sesión" → "Mi Panel" + "Cerrar sesión".
+   ──────────────────────────────────────────────────────────── */
 function initNavSession() {
-  const role   = sessionStorage.getItem('userRole');
-  const nombre = sessionStorage.getItem('userNombre');
+  const { role, nombre } = getSession();
   if (!role) return;
 
-  const loginBtn = document.querySelector('.nav-login-btn');
-  if (!loginBtn) return;
+  const panel   = role === 'admin' ? 'panel-admin.html' : 'panel-modelo.html';
+  const display = nombre || (role === 'admin' ? 'Administrador' : 'Mi Panel');
+  const first   = display.split(' ')[0] || (role === 'admin' ? 'Admin' : 'Cuenta');
 
-  if (role === 'admin') {
+  /* 1. Botón "Iniciar Sesión" del nav de escritorio → nombre + panel */
+  const loginBtn = document.querySelector('button.nav-login-btn');
+  if (loginBtn) {
     loginBtn.outerHTML = `
-      <div style="display:flex;align-items:center;gap:.6rem">
-        <a href="panel-admin.html" class="btn btn-gold btn-sm" style="font-size:.75rem">
-          <i class="fas fa-shield-alt"></i> Panel Admin
+      <div class="nav-session">
+        <a href="${panel}" class="btn btn-gold btn-sm nav-session-link" title="Ir a mi panel">
+          <i class="fas fa-user-circle"></i> ${display}
         </a>
-        <button onclick="cerrarSesion()" class="btn btn-ghost btn-sm" style="font-size:.72rem;color:var(--t3)" title="Cerrar sesión">
-          <i class="fas fa-sign-out-alt"></i>
-        </button>
-      </div>`;
-  } else if (role === 'modelo') {
-    loginBtn.outerHTML = `
-      <div style="display:flex;align-items:center;gap:.6rem">
-        <span style="font-size:.78rem;color:var(--t2);max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${nombre || 'Mi Panel'}</span>
-        <a href="panel-modelo.html" class="btn btn-gold btn-sm" style="font-size:.75rem">
-          <i class="fas fa-user-circle"></i> Mi Panel
-        </a>
-        <button onclick="cerrarSesion()" class="btn btn-ghost btn-sm" style="font-size:.72rem;color:var(--t3)" title="Cerrar sesión">
+        <button onclick="cerrarSesion()" class="btn btn-ghost btn-sm nav-session-out" title="Cerrar sesión">
           <i class="fas fa-sign-out-alt"></i>
         </button>
       </div>`;
   }
+
+  /* 2. Bottom nav móvil/PWA: item "Cuenta" → nombre + panel */
+  const acct = document.querySelector('.bottom-nav-item[onclick*="loginModal"]');
+  if (acct) {
+    acct.setAttribute('href', panel);
+    acct.removeAttribute('onclick');
+    acct.innerHTML = `<i class="fas fa-user-circle"></i><span>${first}</span>`;
+  }
+
+  /* 3. Drawer móvil: link "Iniciar Sesión" → Mi Panel + Cerrar sesión */
+  const drawerLink = document.querySelector('.mobile-drawer-links a[onclick*="loginModal"]');
+  if (drawerLink) {
+    drawerLink.setAttribute('href', panel);
+    drawerLink.removeAttribute('onclick');
+    drawerLink.innerHTML = `<i class="fas fa-user-circle"></i> ${role === 'admin' ? 'Panel Admin' : 'Mi Panel'}`;
+    const li = drawerLink.closest('li');
+    if (li && !li.nextElementSibling?.classList.contains('drawer-logout')) {
+      const out = document.createElement('li');
+      out.className = 'drawer-logout';
+      out.innerHTML = `<a href="#" onclick="cerrarSesion();return false;"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</a>`;
+      li.after(out);
+    }
+  }
 }
 
 function cerrarSesion() {
-  sessionStorage.clear();
+  clearSession();
   window.location.href = 'index.html';
 }
 
