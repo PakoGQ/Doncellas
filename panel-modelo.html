@@ -521,19 +521,19 @@
 
         <div style="display:flex;flex-direction:column;gap:.35rem" id="modelServicesList">
 
-          <!-- Relaciones ilimitadas -->
+          <!-- Relaciones: elige modalidad (Ilimitadas o 1 x Hora) — la elegida sale en el perfil -->
           <div style="display:grid;grid-template-columns:1fr 80px 80px;gap:.4rem;align-items:center;padding:.55rem .75rem;border:1px solid var(--border);border-radius:var(--r-md);transition:var(--transition)" id="srow-rel"
                onmouseenter="this.style.borderColor='var(--border-h)'" onmouseleave="this.style.borderColor='var(--border)'">
-            <span style="font-size:.85rem">Relaciones ilimitadas</span>
-            <div style="text-align:center">
-              <input type="checkbox" id="msvc-si-rel" checked style="accent-color:var(--gold);width:17px;height:17px;cursor:pointer"
-                     onchange="toggleExtraCheck('msvc-extra-rel',this.checked)" />
-              <span id="msvc-si-rel-lbl" class="pill pill-available" style="font-size:.6rem;margin-left:.3rem">Sí</span>
-            </div>
-            <div style="text-align:center">
-              <input type="checkbox" id="msvc-extra-rel" style="accent-color:var(--gold);width:17px;height:17px;cursor:pointer"
-                     onchange="toggleExtraLabel('msvc-extra-rel-lbl',this.checked)" />
-              <span id="msvc-extra-rel-lbl" class="pill pill-gold" style="font-size:.6rem;margin-left:.3rem;display:none">Extra</span>
+            <span style="font-size:.85rem">Relaciones</span>
+            <div style="grid-column:2 / span 2;display:flex;gap:1rem;justify-content:flex-end;align-items:center">
+              <label style="display:flex;align-items:center;gap:.35rem;font-size:.78rem;cursor:pointer;white-space:nowrap">
+                <input type="radio" name="rel-modalidad" id="msvc-rel-ilimitadas" value="Ilimitadas" checked style="accent-color:var(--gold);width:16px;height:16px;cursor:pointer" />
+                Ilimitadas
+              </label>
+              <label style="display:flex;align-items:center;gap:.35rem;font-size:.78rem;cursor:pointer;white-space:nowrap">
+                <input type="radio" name="rel-modalidad" id="msvc-rel-porhora" value="1 x Hora" style="accent-color:var(--gold);width:16px;height:16px;cursor:pointer" />
+                1 x Hora
+              </label>
             </div>
           </div>
 

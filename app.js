@@ -137,7 +137,7 @@ const CATS        = ['Universitaria','Milf','Petite','Nalgona','Voluptuosa','Chi
 const HAIR_COLORS = ['Castaño','Negro','Rubio','Castaño oscuro','Castaño claro','Rubio oscuro','Pelirrojo'];
 const EYE_COLORS  = ['Café','Verde','Azul','Miel','Gris','Avellana'];
 const SKIN_COLORS = ['Blanca','Morena clara','Morena','Trigueña','Canela'];
-const ALL_SERVICES = ['Relaciones ilimitadas','Trato de novios','Oral con protección','Oral natural','Oral terminado','Tiro MHM','Tiro HMH','Anal'];
+const ALL_SERVICES = ['Relaciones','Trato de novios','Oral con protección','Oral natural','Oral terminado','Tiro MHM','Tiro HMH','Anal'];
 const NATIONALITIES = ['Mexicana','Colombiana','Argentina','Brasileña','Española','Venezolana','Cubana','Peruana'];
 const TAG_POOL    = [
   'Universitaria','Milf','Petite','Nalgona','Voluptuosa','Chichona','Extranjera','Jovencita',
@@ -202,6 +202,10 @@ function generateModels() {
     rSvc(); rSvc(); rSvc(); rSvc(); /* warm-up: small seeds give near-zero on first calls */
     ALL_SERVICES.forEach(svc => {
       const active = rSvc() > 0.35;
+      if (svc === 'Relaciones') {
+        services[svc] = { si: true, modalidad: rSvc() > 0.5 ? 'Ilimitadas' : '1 x Hora' };
+        return;
+      }
       const extra  = active && rSvc() > 0.62;
       services[svc] = { si: active, extra };
     });
@@ -242,7 +246,11 @@ function mapEscortToModel(e) {
 
   const serviciosMap = {};
   (e.servicios || []).forEach(s => {
-    serviciosMap[s.nombre] = { si: s.incluido, extra: s.tiene_costo_extra };
+    if (/relaciones/i.test(s.nombre || '')) {
+      serviciosMap['Relaciones'] = { si: s.incluido, modalidad: s.modalidad || 'Ilimitadas' };
+    } else {
+      serviciosMap[s.nombre] = { si: s.incluido, extra: s.tiene_costo_extra };
+    }
   });
 
   return {
@@ -1716,7 +1724,7 @@ function initPerfil() {
   const svcList = document.getElementById('serviciosList');
   if (svcList) {
     const SVC_ICONS = {
-      'Relaciones ilimitadas': 'fa-infinity',
+      'Relaciones':            'fa-infinity',
       'Trato de novios':       'fa-heart',
       'Oral con protección':   'fa-shield-alt',
       'Oral natural':          'fa-smile',
@@ -1729,6 +1737,14 @@ function initPerfil() {
     svcList.innerHTML = ALL_SERVICES.map(s => {
       const hasSi    = !!(svcMap[s]?.si);
       const hasExtra = !!(svcMap[s]?.extra);
+      const isRel    = s === 'Relaciones';
+      const modalidad = svcMap[s]?.modalidad || 'Ilimitadas';
+      const pills = isRel
+        ? (hasSi
+            ? `<span class="pill pill-gold" style="font-size:.65rem">${modalidad}</span>`
+            : '<span class="pill pill-busy" style="font-size:.65rem">No</span>')
+        : `${hasSi    ? '<span class="pill pill-available" style="font-size:.65rem">Sí</span>' : '<span class="pill pill-busy" style="font-size:.65rem">No</span>'}
+           ${hasExtra ? '<span class="pill pill-gold"      style="font-size:.65rem">Extra</span>' : ''}`;
       return `
         <div class="servicio-item" style="justify-content:space-between;${!hasSi ? 'opacity:.45;' : ''}">
           <div style="display:flex;align-items:center;gap:.6rem">
@@ -1740,8 +1756,7 @@ function initPerfil() {
             </div>
           </div>
           <div style="display:flex;gap:.35rem;flex-shrink:0;min-width:80px;justify-content:flex-end">
-            ${hasSi    ? '<span class="pill pill-available" style="font-size:.65rem">Sí</span>' : '<span class="pill pill-busy" style="font-size:.65rem">No</span>'}
-            ${hasExtra ? '<span class="pill pill-gold"      style="font-size:.65rem">Extra</span>' : ''}
+            ${pills}
           </div>
         </div>`;
     }).join('');
@@ -2492,6 +2507,15 @@ function editModel(id) {
         ${ALL_SERVICES.map(s => {
           const cur = m.services?.[s] || { si: false, extra: false };
           const key = s.replace(/\s+/g,'_').replace(/[^a-zA-Z0-9_]/g,'');
+          if (s === 'Relaciones') {
+            const mod = cur.modalidad || 'Ilimitadas';
+            return `
+        <div style="font-size:.82rem">Relaciones</div>
+        <div style="grid-column:2 / span 2;display:flex;gap:1rem;justify-content:flex-end;align-items:center">
+          <label style="display:flex;align-items:center;gap:.3rem;font-size:.75rem;cursor:pointer;white-space:nowrap"><input type="radio" name="esvc-rel-modalidad" value="Ilimitadas" ${mod!=='1 x Hora'?'checked':''} style="accent-color:var(--gold);cursor:pointer" /> Ilimitadas</label>
+          <label style="display:flex;align-items:center;gap:.3rem;font-size:.75rem;cursor:pointer;white-space:nowrap"><input type="radio" name="esvc-rel-modalidad" value="1 x Hora" ${mod==='1 x Hora'?'checked':''} style="accent-color:var(--gold);cursor:pointer" /> 1 x Hora</label>
+        </div>`;
+          }
           return `
         <div style="font-size:.82rem">${s}</div>
         <div style="text-align:center"><input type="checkbox" id="esvc-si-${key}" ${cur.si?'checked':''} style="accent-color:var(--gold);width:16px;height:16px;cursor:pointer"
@@ -2532,6 +2556,11 @@ function saveEditModel(id) {
   /* services */
   const newServices = {};
   ALL_SERVICES.forEach(s => {
+    if (s === 'Relaciones') {
+      const mod = document.querySelector('input[name="esvc-rel-modalidad"]:checked')?.value || 'Ilimitadas';
+      newServices[s] = { si: true, modalidad: mod };
+      return;
+    }
     const key = s.replace(/\s+/g,'_').replace(/[^a-zA-Z0-9_]/g,'');
     const siEl    = document.getElementById(`esvc-si-${key}`);
     const extraEl = document.getElementById(`esvc-extra-${key}`);
