@@ -2101,6 +2101,9 @@ window.saveNewModelo = async function() {
   const edad   = parseInt(document.getElementById('newEdad')?.value) || 25;
   const tel    = (document.getElementById('newTel')?.value || '').replace(/\D/g,'');
   const desc   = document.getElementById('newDesc')?.value.trim() || '';
+  const ojos    = document.getElementById('newOjos')?.value.trim()    || null;
+  const cabello = document.getElementById('newCabello')?.value.trim() || null;
+  const piel    = document.getElementById('newPiel')?.value.trim()    || null;
 
   if (!nombre)   { showToast('El nombre artístico es obligatorio', 'error'); return; }
   if (!username) { showToast('El usuario es obligatorio', 'error'); return; }
@@ -2118,6 +2121,7 @@ window.saveNewModelo = async function() {
       .insert({
         slug, nombre, edad, zona, categoria: cat, plan,
         precio_hora: tarifa, whatsapp: tel, descripcion: desc,
+        ojos, cabello, piel,
         disponible: false, activa: true, es_nueva: true,
         tags: [cat],
       })
@@ -2151,7 +2155,7 @@ window.saveNewModelo = async function() {
       id: newId, name: nombre, age: edad, zone: zona, cat, rate: tarifa,
       rating: 5.0, available: false, featured: false, isNew: true, hasVideo: false,
       img: photoUrl(pId), photos: [photoUrl(pId)], tags: [cat], plan, promo: null,
-      skinColor: 'Morena clara', hairColor: 'Castaño', eyeColor: 'Café',
+      skinColor: piel || 'Morena clara', hairColor: cabello || 'Castaño', eyeColor: ojos || 'Café',
       bust: 86, waist: 62, hips: 90, whatsapp: tel, descripcion: desc,
       services: Object.fromEntries(ALL_SERVICES.map(s => [s, { si: false, extra: false }])),
       hidden: false,
@@ -2176,7 +2180,7 @@ window.saveNewModelo = async function() {
 
   /* ── Limpiar formulario tras 3.5 s ── */
   setTimeout(() => {
-    ['newNombre','newEdad','newUsername','newPass','newTarifa','newDesc','newTel']
+    ['newNombre','newEdad','newUsername','newPass','newTarifa','newDesc','newTel','newOjos','newCabello','newPiel']
       .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
     if (box) box.style.display = 'none';
     closeModal('addModeloModal');
