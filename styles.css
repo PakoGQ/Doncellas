@@ -63,6 +63,13 @@
     width: auto;
     margin-top: 0;
   }
+  /* En los PANELES el logo NO debe crecer: si crece (flex:1) empuja los
+     links del nav contra "Panel Administrador" y se enciman. Con flex:0 el
+     space-between reparte el hueco y deja aire entre los links y el lado
+     derecho. Solo afecta a los paneles, no al sitio público. */
+  body.panel-page .nav .nav-logo { flex: 0 0 auto; }
+  body.panel-admin  .nav .nav-admin-right,
+  body.panel-modelo .nav .nav-modelo-right { margin-left: auto; }
 }
 
 /* Mobile: same crop applied proportionally (108px image → 70px visible gold area).
