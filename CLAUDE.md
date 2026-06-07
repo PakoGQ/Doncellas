@@ -3,6 +3,18 @@
 
 ---
 
+## ⚡ ACTUALIZACIONES — 7 junio 2026 (LEER PRIMERO)
+
+> Registro detallado en memoria: `sesion-2026-06-07-cambios.md`. Lo más nuevo de esta sesión:
+- **Estados de escort OCULTAR vs SUSPENDER** (panel-admin): ocultar = solo fuera de la página; suspender = fuera de página + sin agente + sin citas, con sección "Doncellas suspendidas" en el dashboard (fechas para cobro). Persisten en localStorage (`doncellas_escort_estados`). **Pendiente:** migrar a Supabase. Ver sección 7.
+- **Categorías unificadas** en un **menú multi-selección** (admin alta/editar + panel-modelo). Lista canónica `CATEGORIAS_ALL` (19) en `app.js`. Primera elegida = `categoria`, todas en `tags`.
+- **Favoritos "Guardar" ELIMINADO** de todo (era cosmético). Recomendación localStorage para 20+ escorts (sección 14).
+- **UX móvil:** botón cerrar sesión en navbar de paneles; bottom nav con "Inicio"→index.html (+ "Gráficas" en panel-modelo); stats-bar en grid 2×2; filtros de modelos.html compactos en cuadrícula sin scroll; perfil sin Contacto Rápido / Ver disponibilidad / WhatsApp-Telegram del hero escritorio.
+- **Hero:** el mosaico del slide principal rota a otros modelos **una vez por vuelta del carrusel** (sin parpadeo: precarga + crossfade).
+- **PWA FIX:** `app.js`/`styles.css` ahora **network-first** + `CACHE_NAME=doncellas-v6` (antes cache-first servía código viejo → "en escritorio seguía igual"). Ya NO hace falta subir versión por cada cambio de JS/CSS.
+
+---
+
 ## ⚡ ACTUALIZACIONES — 5 junio 2026 (LEER PRIMERO; sustituye descripciones viejas de abajo)
 
 > Registro detallado en memoria: `sesion-2026-06-05-cambios.md`. Resumen de cambios que
