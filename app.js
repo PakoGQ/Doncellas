@@ -579,7 +579,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ─── Hero Slider ───────────────────────────────────────── */
-let heroIndex = 0, heroTimer = null;
+let heroIndex = 0, heroTimer = null, heroMosaicTimer = null;
 
 function initHero() {
   const slides   = document.querySelectorAll('.hero-slide');
@@ -595,6 +595,9 @@ function initHero() {
   });
 
   heroTimer = setInterval(nextHeroSlide, 5500);
+  /* La slide principal arranca activa → rotar su mosaico de modelos */
+  if (heroMosaicTimer) clearInterval(heroMosaicTimer);
+  heroMosaicTimer = setInterval(advanceMosaic, 2800);
   /* sync stats visibility on initial load */
   const stats = document.getElementById('heroStats');
   if (stats) stats.style.opacity = heroIndex < 2 ? '0' : '1';
@@ -637,16 +640,15 @@ function goHeroSlide(idx) {
   const total = document.querySelectorAll('.hero-slide').length;
   const isStaticSlide = heroIndex === 0 || heroIndex === 1 || heroIndex === total - 1;
   if (stats) stats.style.opacity = isStaticSlide ? '0' : '1';
-  /* Cada vez que el carrusel completa una vuelta, cuenta y rota slides de perfil */
+  /* Mosaico de marca: mientras la slide principal está a la vista, rota las
+     fotos a otros modelos cada pocos segundos (antes solo cada ~66s). */
+  if (heroMosaicTimer) { clearInterval(heroMosaicTimer); heroMosaicTimer = null; }
   if (heroIndex === 0) {
-    _mosaicRoundCount++;
-    /* Mosaico de marca: rota cada 2 vueltas */
-    if (_mosaicRoundCount % 2 === 0) {
-      const featuredCount = MODELS.filter(m => m.featured && !m.hidden && !m.suspended).length || 2;
-      _mosaicOffset = (_mosaicOffset + 4) % Math.max(4, featuredCount);
-      refreshMosaicImages();
-    }
-    /* Slides de oferta: rotan cada vuelta (perfil + promo) para mostrar variedad */
+    heroMosaicTimer = setInterval(advanceMosaic, 2800);
+  }
+
+  /* Cada vez que el carrusel vuelve al inicio: rota los slides de oferta */
+  if (heroIndex === 0) {
     const offerPoolLen = MODELS.filter(m => !m.hidden && !m.suspended).length;
     _heroOfferIdx = (_heroOfferIdx + 1) % Math.max(1, offerPoolLen);
     refreshOfferSlides();
@@ -1151,9 +1153,16 @@ function initMagneticBtns() {
 let _mosaicOffset = 0;
 let _mosaicRoundCount = 0;   /* cuenta cuántas veces el carrusel completa una vuelta */
 let _heroOfferIdx  = 0;      /* offset en el pool de offer slides (rota cada 2 vueltas) */
+/* Pool del mosaico de marca: TODAS las doncellas visibles, destacadas
+   primero. Antes era solo `featured` (a veces 4 = nº de tiles → nunca
+   cambiaba). Con todas hay variedad real al rotar. */
+function _mosaicPool() {
+  const vis = MODELS.filter(m => !m.hidden && !m.suspended);
+  return vis.filter(m => m.featured).concat(vis.filter(m => !m.featured));
+}
 function _mosaicPic(i, offset) {
   const off = offset == null ? _mosaicOffset : offset;
-  const pool = MODELS.filter(m => m.featured && !m.hidden && !m.suspended);
+  const pool = _mosaicPool();
   const m = pool.length ? pool[(i + off) % pool.length] : null;
   if (m) {
     const idMatch = m.photos[0].match(/images\.unsplash\.com\/([^?]+)/);
@@ -1178,6 +1187,16 @@ function refreshMosaicImages() {
       img.onload = () => { img.style.opacity = '1'; };
     }, i * 120);
   });
+}
+
+/* Avanza el mosaico de marca a OTROS modelos (con crossfade). Se llama en
+   un intervalo mientras la slide principal está a la vista, para que las
+   fotos vayan mostrando diferentes doncellas y no se vean estáticas. */
+function advanceMosaic() {
+  const len = _mosaicPool().length;
+  if (len <= 1) return;
+  _mosaicOffset = (_mosaicOffset + 2) % len;   // paso 2 → siempre cambia las fotos visibles
+  refreshMosaicImages();
 }
 
 /* ─── Helpers para slides de perfil rotativas ─────────── */
