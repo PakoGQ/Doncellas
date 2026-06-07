@@ -580,6 +580,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 /* ─── Hero Slider ───────────────────────────────────────── */
 let heroIndex = 0, heroTimer = null, heroMosaicTimer = null;
+const HERO_MOSAIC_MS = 3500;   // cada cuánto rota el mosaico de la slide principal
 
 function initHero() {
   const slides   = document.querySelectorAll('.hero-slide');
@@ -597,7 +598,7 @@ function initHero() {
   heroTimer = setInterval(nextHeroSlide, 5500);
   /* La slide principal arranca activa → rotar su mosaico de modelos */
   if (heroMosaicTimer) clearInterval(heroMosaicTimer);
-  heroMosaicTimer = setInterval(advanceMosaic, 2800);
+  heroMosaicTimer = setInterval(advanceMosaic, HERO_MOSAIC_MS);
   /* sync stats visibility on initial load */
   const stats = document.getElementById('heroStats');
   if (stats) stats.style.opacity = heroIndex < 2 ? '0' : '1';
@@ -644,7 +645,7 @@ function goHeroSlide(idx) {
      fotos a otros modelos cada pocos segundos (antes solo cada ~66s). */
   if (heroMosaicTimer) { clearInterval(heroMosaicTimer); heroMosaicTimer = null; }
   if (heroIndex === 0) {
-    heroMosaicTimer = setInterval(advanceMosaic, 2800);
+    heroMosaicTimer = setInterval(advanceMosaic, HERO_MOSAIC_MS);
   }
 
   /* Cada vez que el carrusel vuelve al inicio: rota los slides de oferta */
@@ -1181,11 +1182,16 @@ function _mosaicPic(i, offset) {
 function refreshMosaicImages() {
   const imgs = document.querySelectorAll('.hero-brand-mosaic .hbm-img-wrap img');
   imgs.forEach((img, i) => {
-    img.style.opacity = '0';
-    setTimeout(() => {
-      img.src = _mosaicPic(i);
-      img.onload = () => { img.style.opacity = '1'; };
-    }, i * 120);
+    const nextSrc = _mosaicPic(i);
+    if (!nextSrc || img.src === nextSrc) return;   // misma foto → no parpadear
+    /* Precargar la imagen ANTES de mostrarla, luego crossfade limpio:
+       fade out (.4s CSS) → swap ya cacheado (instantáneo) → fade in. */
+    const pre = new Image();
+    pre.onload = () => {
+      img.style.opacity = '0';
+      setTimeout(() => { img.src = nextSrc; img.style.opacity = '1'; }, 420);
+    };
+    pre.src = nextSrc;
   });
 }
 
