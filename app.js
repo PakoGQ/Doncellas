@@ -142,6 +142,9 @@ const NAMES_F = [
 const SURNAMES    = ['R.','M.','V.','L.','G.','H.','F.','C.','T.','A.','P.','S.','B.','Z.','N.'];
 const ZONES       = ['Zona Rosa','Providencia','Chapultepec','Tlaquepaque','Zapopan','Centro Histórico'];
 const CATS        = ['Universitaria','Milf','Petite','Nalgona','Voluptuosa','Chichona','Extranjera','Jovencita','Fit','Natural','Tuneada','Chaparrita','Alta'];
+/* Lista CANÓNICA de categorías (principales + extendidas) — usada por el
+   multiselect de categorías en admin (alta/editar) y panel-modelo. */
+const CATEGORIAS_ALL = ['VIP','Universitaria','GFE — Novia por un día','Venezolana','A domicilio','Petite','Eventos y cenas','Nuevas','Milf','Nalgona','Voluptuosa','Chichona','Extranjera','Jovencita','Fit','Natural','Tuneada','Chaparrita','Alta'];
 const HAIR_COLORS = ['Castaño','Negro','Rubio','Castaño oscuro','Castaño claro','Rubio oscuro','Pelirrojo'];
 const EYE_COLORS  = ['Café','Verde','Azul','Miel','Gris','Avellana'];
 const SKIN_COLORS = ['Blanca','Morena clara','Morena','Trigueña','Canela'];
@@ -2155,7 +2158,8 @@ window.saveNewModelo = async function() {
   const username = document.getElementById('newUsername')?.value.trim().toLowerCase();
   const pass     = document.getElementById('newPass')?.value.trim();
   const zona   = 'Guadalajara';   // zona ya no se segmenta: todas cubren la ZMG
-  const cat    = document.getElementById('newCat')?.value;
+  const cats   = getCatMultiValues('newCatMulti');
+  const cat    = cats[0] || 'VIP';   // categoría principal = primera elegida
   const plan   = document.getElementById('newPlan')?.value;
   const tarifa = parseInt(document.getElementById('newTarifa')?.value) || 2500;
   const edad   = parseInt(document.getElementById('newEdad')?.value) || 25;
@@ -2168,6 +2172,7 @@ window.saveNewModelo = async function() {
   if (!nombre)   { showToast('El nombre artístico es obligatorio', 'error'); return; }
   if (!username) { showToast('El usuario es obligatorio', 'error'); return; }
   if (!pass)     { showToast('Genera o escribe una contraseña', 'error'); return; }
+  if (!cats.length) { showToast('Selecciona al menos una categoría', 'error'); return; }
 
   const btn = document.querySelector('#addModeloModal .btn-gold');
   if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Guardando…'; }
@@ -2183,7 +2188,7 @@ window.saveNewModelo = async function() {
         precio_hora: tarifa, whatsapp: tel, descripcion: desc,
         ojos, cabello, piel,
         disponible: false, activa: true, es_nueva: true,
-        tags: [cat],
+        tags: cats,
       })
       .select()
       .single();
@@ -2214,7 +2219,7 @@ window.saveNewModelo = async function() {
     MODELS.unshift({
       id: newId, name: nombre, age: edad, zone: zona, cat, rate: tarifa,
       rating: 5.0, available: false, featured: false, isNew: true, hasVideo: false,
-      img: photoUrl(pId), photos: [photoUrl(pId)], tags: [cat], plan, promo: null,
+      img: photoUrl(pId), photos: [photoUrl(pId)], tags: cats, plan, promo: null,
       skinColor: piel || 'Morena clara', hairColor: cabello || 'Castaño', eyeColor: ojos || 'Café',
       bust: 86, waist: 62, hips: 90, whatsapp: tel, descripcion: desc,
       services: Object.fromEntries(ALL_SERVICES.map(s => [s, { si: false, extra: false }])),
@@ -2242,10 +2247,63 @@ window.saveNewModelo = async function() {
   setTimeout(() => {
     ['newNombre','newEdad','newUsername','newPass','newTarifa','newDesc','newTel','newOjos','newCabello','newPiel']
       .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+    buildCatMultiselect('newCatMulti', []);   // limpiar categorías
     if (box) box.style.display = 'none';
     closeModal('addModeloModal');
   }, 3500);
 };
+
+/* ─── Multiselect de categorías (mismo componente en admin y modelo) ──
+   Menú desplegable con checkboxes de TODAS las categorías; permite elegir
+   varias (no solo una).
+     Construir:  buildCatMultiselect('idContenedor', ['VIP','Fit'])
+     Leer:       getCatMultiValues('idContenedor')  → ['VIP','Fit']        */
+function buildCatMultiselect(containerId, selected) {
+  const cont = document.getElementById(containerId);
+  if (!cont) return;
+  const sel = new Set(selected || []);
+  cont.classList.add('cat-multi');
+  cont.dataset.open = 'false';
+  cont.innerHTML = `
+    <button type="button" class="cat-multi-toggle" onclick="toggleCatMulti('${containerId}')">
+      <span class="cat-multi-summary placeholder">Selecciona categorías…</span>
+      <i class="fas fa-chevron-down cat-multi-arrow"></i>
+    </button>
+    <div class="cat-multi-panel">
+      ${CATEGORIAS_ALL.map(c => `
+        <label class="cat-multi-opt">
+          <input type="checkbox" value="${c}"${sel.has(c) ? ' checked' : ''} onchange="updateCatMultiSummary('${containerId}')" />
+          <span>${c}</span>
+        </label>`).join('')}
+    </div>`;
+  updateCatMultiSummary(containerId);
+}
+function toggleCatMulti(id) {
+  const cont = document.getElementById(id);
+  if (!cont) return;
+  const willOpen = cont.dataset.open !== 'true';
+  document.querySelectorAll('.cat-multi').forEach(c => { c.dataset.open = 'false'; });
+  cont.dataset.open = willOpen ? 'true' : 'false';
+}
+function updateCatMultiSummary(id) {
+  const cont = document.getElementById(id);
+  if (!cont) return;
+  const vals = getCatMultiValues(id);
+  const sum = cont.querySelector('.cat-multi-summary');
+  if (!sum) return;
+  if (vals.length) { sum.textContent = vals.join(', '); sum.classList.remove('placeholder'); }
+  else { sum.textContent = 'Selecciona categorías…'; sum.classList.add('placeholder'); }
+}
+function getCatMultiValues(id) {
+  const cont = document.getElementById(id);
+  if (!cont) return [];
+  return [...cont.querySelectorAll('.cat-multi-panel input[type="checkbox"]:checked')].map(c => c.value);
+}
+/* Cerrar el menú al hacer click fuera */
+document.addEventListener('click', (e) => {
+  if (e.target.closest('.cat-multi')) return;
+  document.querySelectorAll('.cat-multi[data-open="true"]').forEach(c => { c.dataset.open = 'false'; });
+});
 
 /* ─── Admin ─────────────────────────────────────────────── */
 function initAdmin() {
@@ -2259,6 +2317,7 @@ function initAdmin() {
   buildAdminCalendar();
   buildTodayCitas();
   buildContentGrid();
+  buildCatMultiselect('newCatMulti', []);   // categorías de "Agregar Doncella"
   applyDemoData();
 }
 
@@ -2528,8 +2587,8 @@ function editModel(id) {
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem 1rem">
       <div class="form-group"><label class="form-label">Nombre</label><input type="text" class="form-input" id="edit-name" value="${m.name}" /></div>
       <div class="form-group"><label class="form-label">Edad</label><input type="number" class="form-input" id="edit-age" value="${m.age}" min="18" max="60" /></div>
-      <div class="form-group"><label class="form-label">Categoría</label>
-        <select class="form-input filter-select" id="edit-cat">${CATS.map(c=>`<option${c===m.cat?' selected':''}>${c}</option>`).join('')}</select>
+      <div class="form-group" style="grid-column:span 2"><label class="form-label">Categorías <span style="color:var(--t3);font-weight:400">(elige una o varias)</span></label>
+        <div id="edit-cat-multi"></div>
       </div>
       <div class="form-group"><label class="form-label">Tarifa/hr ($MXN)</label><input type="number" class="form-input" id="edit-rate" value="${m.rate}" /></div>
       <div class="form-group"><label class="form-label">Altura (cm)</label><input type="number" class="form-input" id="edit-height" value="${m.height}" /></div>
@@ -2590,6 +2649,7 @@ function editModel(id) {
       <button class="btn btn-gold" onclick="saveEditModel(${id})"><i class="fas fa-save"></i> Guardar cambios</button>
     </div>`;
 
+  buildCatMultiselect('edit-cat-multi', (m.tags && m.tags.length) ? m.tags : [m.cat]);
   openModal('editModelModal');
 }
 
@@ -2602,7 +2662,8 @@ function saveEditModel(id) {
   m.name        = g('edit-name')?.value.trim()        || m.name;
   m.age         = parseInt(g('edit-age')?.value)       || m.age;
   m.zone        = g('edit-zone')?.value                || m.zone;
-  m.cat         = g('edit-cat')?.value                 || m.cat;
+  const editCats = getCatMultiValues('edit-cat-multi');
+  if (editCats.length) { m.cat = editCats[0]; m.tags = editCats; }
   m.rate        = parseInt(g('edit-rate')?.value)      || m.rate;
   m.height      = parseInt(g('edit-height')?.value)    || m.height;
   m.nationality = g('edit-nationality')?.value.trim()  || m.nationality;
@@ -3013,6 +3074,7 @@ function initPanelModelo() {
   buildCitasProximas();
   buildCitasHistorial();
   buildAvailWeekGrid();
+  buildCatMultiselect('modelCatMulti', ['Universitaria','Fit','Natural','VIP']);
   applyDemoData();
 }
 
