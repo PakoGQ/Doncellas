@@ -579,8 +579,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ─── Hero Slider ───────────────────────────────────────── */
-let heroIndex = 0, heroTimer = null, heroMosaicTimer = null;
-const HERO_MOSAIC_MS = 3500;   // cada cuánto rota el mosaico de la slide principal
+let heroIndex = 0, heroTimer = null;
 
 function initHero() {
   const slides   = document.querySelectorAll('.hero-slide');
@@ -596,9 +595,6 @@ function initHero() {
   });
 
   heroTimer = setInterval(nextHeroSlide, 5500);
-  /* La slide principal arranca activa → rotar su mosaico de modelos */
-  if (heroMosaicTimer) clearInterval(heroMosaicTimer);
-  heroMosaicTimer = setInterval(advanceMosaic, HERO_MOSAIC_MS);
   /* sync stats visibility on initial load */
   const stats = document.getElementById('heroStats');
   if (stats) stats.style.opacity = heroIndex < 2 ? '0' : '1';
@@ -641,15 +637,10 @@ function goHeroSlide(idx) {
   const total = document.querySelectorAll('.hero-slide').length;
   const isStaticSlide = heroIndex === 0 || heroIndex === 1 || heroIndex === total - 1;
   if (stats) stats.style.opacity = isStaticSlide ? '0' : '1';
-  /* Mosaico de marca: mientras la slide principal está a la vista, rota las
-     fotos a otros modelos cada pocos segundos (antes solo cada ~66s). */
-  if (heroMosaicTimer) { clearInterval(heroMosaicTimer); heroMosaicTimer = null; }
+  /* En cada vuelta completa del carrusel (al volver a la slide principal):
+     rota el mosaico de marca a otros modelos y los slides de oferta. */
   if (heroIndex === 0) {
-    heroMosaicTimer = setInterval(advanceMosaic, HERO_MOSAIC_MS);
-  }
-
-  /* Cada vez que el carrusel vuelve al inicio: rota los slides de oferta */
-  if (heroIndex === 0) {
+    advanceMosaic();
     const offerPoolLen = MODELS.filter(m => !m.hidden && !m.suspended).length;
     _heroOfferIdx = (_heroOfferIdx + 1) % Math.max(1, offerPoolLen);
     refreshOfferSlides();
