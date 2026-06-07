@@ -1,4 +1,4 @@
-const CACHE_NAME = 'doncellas-v5';
+const CACHE_NAME = 'doncellas-v6';
 const OFFLINE_URL = '/offline.html';
 
 const STATIC_ASSETS = [
@@ -56,8 +56,15 @@ self.addEventListener('fetch', (e) => {
                  url.pathname.endsWith('.html') ||
                  url.pathname === '/';
 
-  if (isHTML) {
-    // Network-first for HTML pages
+  // El código (JS/CSS) también va network-first → los cambios llegan al
+  // instante sin tener que subir CACHE_NAME en cada deploy. Las imágenes/
+  // iconos siguen cache-first (rápido, casi nunca cambian).
+  const isNetworkFirst = isHTML ||
+                         url.pathname.endsWith('.js') ||
+                         url.pathname.endsWith('.css');
+
+  if (isNetworkFirst) {
+    // Network-first: red primero, caché como respaldo offline
     e.respondWith(
       fetch(request)
         .then((res) => {
