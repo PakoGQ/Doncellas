@@ -1070,22 +1070,6 @@ p  { line-height: 1.7; color: var(--t2); }
   padding: .18rem .5rem !important;
 }
 
-/* Fav heart — top-right corner, smaller */
-.card-fav-btn {
-  position: absolute;
-  top: .35rem; right: .4rem;
-  width: 26px; height: 26px;
-  border-radius: 50%;
-  background: rgba(10,10,10,.55);
-  backdrop-filter: blur(8px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--t2);
-  font-size: .78rem;
-  transition: var(--transition);
-}
-.card-fav-btn:hover, .card-fav-btn.active { color: var(--red); }
 .model-card-info {
   padding: 1rem 1.1rem 1.1rem;
 }
@@ -2880,13 +2864,13 @@ canvas { width: 100% !important; }
 /* ─── Touch targets — minimum 44×44px ───────────────────── */
 .btn, .nav-links a, .filter-toggle, .tab-btn,
 .social-icon, .float-btn, .modal-close, .tbl-btn,
-.h-carousel-nav, .card-fav-btn, .calendar-nav-btn {
+.h-carousel-nav, .calendar-nav-btn {
   min-height: 44px;
   min-width: 44px;
 }
 /* Inline/flex buttons that shouldn't grow wide */
 .filter-toggle, .tab-btn, .tbl-btn, .social-icon,
-.modal-close, .card-fav-btn, .calendar-nav-btn,
+.modal-close, .calendar-nav-btn,
 .h-carousel-nav { min-width: 44px; }
 
 /* ─── Search bar — colapsable en mobile ──────────────────── */
@@ -4592,19 +4576,17 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
   .botones-perfil-mobile .btn i { font-size: 16px; margin: 0; }
   .botones-perfil-mobile .btn span { font-size: 0 !important; }
 
-  /* 1. Guardar (heart) */
-  .botones-perfil-mobile > *:nth-child(1) { flex: 1; width: 100%; }
-  /* 2. Compartir — smaller fixed square */
-  .botones-perfil-mobile > *:nth-child(2) { flex: 0 0 44px; width: 44px; }
-  /* 3. WhatsApp */
-  .botones-perfil-mobile > *:nth-child(3) {
+  /* 1. Compartir — smaller fixed square */
+  .botones-perfil-mobile > *:nth-child(1) { flex: 0 0 44px; width: 44px; }
+  /* 2. WhatsApp */
+  .botones-perfil-mobile > *:nth-child(2) {
     flex: 2;
     background: #25D366;
     color: #fff;
     border: none;
   }
-  /* 4. Telegram */
-  .botones-perfil-mobile > *:nth-child(4) {
+  /* 3. Telegram */
+  .botones-perfil-mobile > *:nth-child(3) {
     flex: 2;
     background: #0088cc;
     color: #fff;

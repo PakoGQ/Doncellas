@@ -91,11 +91,8 @@
         </div>
       </div>
       <div class="profile-actions">
-        <button class="btn btn-outline" id="favBtn" onclick="toggleFav(this)">
-          <i class="far fa-heart"></i> Guardar
-        </button>
         <button class="btn btn-outline" onclick="shareProfile()">
-          <i class="fas fa-share-alt"></i>
+          <i class="fas fa-share-alt"></i> Compartir
         </button>
       </div>
     </div>
@@ -103,9 +100,6 @@
 </div>
 
 <div class="botones-perfil-mobile">
-  <button class="btn btn-outline" onclick="toggleFav(this)">
-    <i class="far fa-heart"></i> Guardar
-  </button>
   <button class="btn btn-outline" onclick="shareProfile()">
     <i class="fas fa-share-alt"></i>
   </button>
@@ -416,20 +410,6 @@
 <script src="supabase-config.js"></script>
 <script src="app.js"></script>
 <script>
-function toggleFav(btn) {
-  btn.classList.toggle('active');
-  const icon = btn.querySelector('i');
-  if (btn.classList.contains('active')) {
-    icon.className = 'fas fa-heart';
-    icon.style.color = 'var(--red)';
-    btn.innerHTML = '<i class="fas fa-heart" style="color:var(--red)"></i> Guardado';
-    showToast('Perfil guardado en favoritos', 'success');
-  } else {
-    btn.innerHTML = '<i class="far fa-heart"></i> Guardar';
-    showToast('Eliminado de favoritos', 'info');
-  }
-}
-
 function shareProfile() {
   if (navigator.share) {
     navigator.share({ title: 'Valentina R. — Doncellas', url: window.location.href });

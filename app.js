@@ -687,9 +687,6 @@ function modelCardHTML(m) {
         ${m.hasVideo ? '<span class="pill pill-gold"><i class="fas fa-video"></i></span>' : ''}
         ${m.promo    ? `<span class="pill pill-gold">🔥 ${m.promo.badge}</span>` : ''}
       </div>
-      <button class="card-fav-btn" onclick="event.stopPropagation();toggleCardFav(this)" aria-label="Guardar">
-        <i class="far fa-heart"></i>
-      </button>
       ${m.photos.length > 1 ? `<div class="card-carousel-dots">${m.photos.map((_,i)=>`<div class="card-carousel-dot${i===0?' active':''}"></div>`).join('')}</div>` : ''}
     </div>
     <div class="model-card-info">
@@ -774,17 +771,6 @@ function initCardCarousels() {
       dots.forEach((d,i) => d.classList.toggle('active', i===0));
     });
   });
-}
-
-function toggleCardFav(btn) {
-  const i = btn.querySelector('i');
-  if (i.classList.contains('far')) {
-    i.className = 'fas fa-heart'; i.style.color = 'var(--red)';
-    showToast('Guardado en favoritos', 'success');
-  } else {
-    i.className = 'far fa-heart'; i.style.color = '';
-    showToast('Eliminado de favoritos', 'info');
-  }
 }
 
 function initHCarouselNav() {

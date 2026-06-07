@@ -565,6 +565,18 @@ ipconfig getifaddr en0   # IP de tu Mac
 - [ ] Rediseñar membresias.html con precios reales cuando haya feedback de escorts
 - [ ] Activar Google Ads (Mes 4-5 con 20+ perfiles)
 
+### Ideas / recomendaciones a futuro
+- [ ] **Favoritos del cliente (cuando haya MÁS escorts)** — RETOMAR. La función "Guardar"
+  (corazón) se ELIMINÓ de todas partes (cards + perfil) el 6-jun-2026 porque era 100%
+  cosmética: no guardaba nada, no hay cuentas de cliente y generaba falsas expectativas
+  ("¿dónde veo mis favoritas?"). **Recomendación para cuando el catálogo crezca:**
+  reimplementarla con **localStorage** (sin cuenta) — guardar los IDs de escorts favoritas
+  en el navegador del cliente + una página/sección "Mis Favoritas". Funciona sin login y
+  encaja con el modelo discreto (todo por WhatsApp), pero solo persiste en ese
+  dispositivo/navegador. Con pocas escorts no aporta; con 20+ sí ayuda al cliente a armar
+  su lista. Archivos a tocar: `app.js` (botón en card + toggle), `perfil.html` (botón en
+  hero/móvil), nueva vista de favoritas, `styles.css` (`.card-fav-btn`).
+
 ---
 
 ## 15. ANÁLISIS DE COMPETENCIA (referencia)
