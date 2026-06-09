@@ -6954,6 +6954,8 @@ details.faq-item[open] .faq-a {
   color: var(--t2);
   animation: channelNudge 1.6s ease-in-out infinite;
 }
+/* Etiqueta "Canal de …" solo visible en móvil */
+.channel-banner-mob-tag { display: none; }
 @keyframes channelNudge {
   0%, 100% { transform: translateX(0); }
   50%      { transform: translateX(5px); }
@@ -6975,6 +6977,12 @@ details.faq-item[open] .faq-a {
   .channel-banner-sub,
   .channel-banner-arrow,
   .cb-mob-hide { display: none; }
+  .channel-banner-mob-tag {
+    display: block;
+    font-size: .66rem;
+    color: var(--t2);
+    margin-top: .12rem;
+  }
 }
 
 /* Respeta usuarios con movimiento reducido */
