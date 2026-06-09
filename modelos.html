@@ -82,30 +82,24 @@
   </div>
 </div>
 
-<!-- Banner canal Telegram -->
-<div style="max-width:1400px;margin:0 auto;padding:0 2.5rem .75rem">
-  <a href="https://t.me/DoncellasGDL" target="_blank" rel="noopener"
-     style="display:flex;align-items:center;gap:.75rem;background:rgba(0,136,204,.07);border:1px solid rgba(0,136,204,.22);border-radius:var(--r-md);padding:.65rem 1rem;text-decoration:none;color:var(--white)">
-    <i class="fab fa-telegram" style="font-size:1.4rem;color:#29a8e0;flex-shrink:0"></i>
-    <div style="min-width:0">
-      <div style="font-size:.8rem;font-weight:600">Síguenos en <span style="color:#29a8e0">@DoncellasGDL</span></div>
-      <div style="font-size:.72rem;color:var(--t2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Ve quién está disponible hoy · Alertas en tiempo real · Gratis</div>
-    </div>
-    <i class="fas fa-chevron-right" style="margin-left:auto;color:var(--t3);font-size:.8rem;flex-shrink:0"></i>
-  </a>
-</div>
-
-<!-- Banner canal WhatsApp -->
+<!-- Banners de canales (Telegram + WhatsApp), lado a lado en escritorio -->
 <!-- TODO: reemplazar CANAL_WA_PENDIENTE con el link real del Canal de WhatsApp cuando esté creado -->
-<div style="max-width:1400px;margin:0 auto;padding:0 2.5rem .75rem">
-  <a href="https://whatsapp.com/channel/CANAL_WA_PENDIENTE" target="_blank" rel="noopener"
-     style="display:flex;align-items:center;gap:.75rem;background:rgba(37,211,102,.07);border:1px solid rgba(37,211,102,.22);border-radius:var(--r-md);padding:.65rem 1rem;text-decoration:none;color:var(--white)">
-    <i class="fab fa-whatsapp" style="font-size:1.4rem;color:#25d366;flex-shrink:0"></i>
+<div class="channel-banners">
+  <a href="https://t.me/DoncellasGDL" target="_blank" rel="noopener" class="channel-banner tg">
+    <i class="fab fa-telegram channel-banner-icon"></i>
     <div style="min-width:0">
-      <div style="font-size:.8rem;font-weight:600">Canal de <span style="color:#25d366">WhatsApp</span></div>
-      <div style="font-size:.72rem;color:var(--t2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Contenido exclusivo · Disponibilidad diaria · Solo para seguidores</div>
+      <div class="channel-banner-title">Síguenos en <span style="color:#29a8e0">@DoncellasGDL</span></div>
+      <div class="channel-banner-sub">Ve quién está disponible hoy · Alertas en tiempo real · Gratis</div>
     </div>
-    <i class="fas fa-chevron-right" style="margin-left:auto;color:var(--t3);font-size:.8rem;flex-shrink:0"></i>
+    <i class="fas fa-chevron-right channel-banner-arrow"></i>
+  </a>
+  <a href="https://whatsapp.com/channel/CANAL_WA_PENDIENTE" target="_blank" rel="noopener" class="channel-banner wa">
+    <i class="fab fa-whatsapp channel-banner-icon"></i>
+    <div style="min-width:0">
+      <div class="channel-banner-title">Canal de <span style="color:#25d366">WhatsApp</span></div>
+      <div class="channel-banner-sub">Contenido exclusivo · Disponibilidad diaria · Solo para seguidores</div>
+    </div>
+    <i class="fas fa-chevron-right channel-banner-arrow"></i>
   </a>
 </div>
 

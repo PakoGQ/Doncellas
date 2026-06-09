@@ -6866,3 +6866,110 @@ details.faq-item[open] .faq-a {
   font-size: .85rem;
   padding: 2.25rem 1rem !important;
 }
+
+/* ════════════════════════════════════════════════════════
+   Banners de canales (Telegram / WhatsApp) — modelos.html
+   ════════════════════════════════════════════════════════ */
+.channel-banners {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2.5rem .9rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+.channel-banner {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: .85rem;
+  padding: .9rem 1.15rem;
+  border-radius: var(--r-md);
+  text-decoration: none;
+  color: var(--white);
+  border: 1px solid transparent;
+  transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+}
+.channel-banner > * { position: relative; z-index: 1; }
+.channel-banner:hover { transform: translateY(-2px); }
+
+/* Brillo que barre el banner */
+.channel-banner::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -65%;
+  width: 45%; height: 100%;
+  z-index: 0;
+  background: linear-gradient(100deg, transparent, rgba(255,255,255,.18), transparent);
+  transform: skewX(-20deg);
+  animation: channelShine 5.5s ease-in-out infinite;
+}
+.channel-banner.wa::before { animation-delay: 2.75s; }
+@keyframes channelShine {
+  0%   { left: -65%; }
+  32%  { left: 140%; }
+  100% { left: 140%; }
+}
+
+/* Variante Telegram (azul) */
+.channel-banner.tg {
+  background: linear-gradient(125deg, rgba(0,136,204,.30), rgba(0,90,158,.10));
+  border-color: rgba(41,168,224,.45);
+}
+.channel-banner.tg:hover {
+  box-shadow: 0 10px 26px rgba(0,136,204,.30);
+  border-color: rgba(41,168,224,.80);
+}
+.channel-banner.tg .channel-banner-icon { color: #29a8e0; }
+
+/* Variante WhatsApp (verde) */
+.channel-banner.wa {
+  background: linear-gradient(125deg, rgba(37,211,102,.28), rgba(16,120,60,.10));
+  border-color: rgba(37,211,102,.45);
+}
+.channel-banner.wa:hover {
+  box-shadow: 0 10px 26px rgba(37,211,102,.28);
+  border-color: rgba(37,211,102,.80);
+}
+.channel-banner.wa .channel-banner-icon { color: #25d366; }
+
+.channel-banner-icon {
+  font-size: 1.65rem;
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 7px currentColor);
+}
+.channel-banner-title { font-size: .85rem; font-weight: 600; }
+.channel-banner-sub {
+  font-size: .73rem;
+  color: var(--t2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.channel-banner-arrow {
+  margin-left: auto;
+  flex-shrink: 0;
+  font-size: .85rem;
+  color: var(--t2);
+  animation: channelNudge 1.6s ease-in-out infinite;
+}
+@keyframes channelNudge {
+  0%, 100% { transform: translateX(0); }
+  50%      { transform: translateX(5px); }
+}
+
+/* Móvil: apilados (se afinan en otra pasada) */
+@media (max-width: 768px) {
+  .channel-banners {
+    grid-template-columns: 1fr;
+    gap: .6rem;
+    padding: 0 1rem .75rem;
+  }
+}
+
+/* Respeta usuarios con movimiento reducido */
+@media (prefers-reduced-motion: reduce) {
+  .channel-banner::before,
+  .channel-banner-arrow { animation: none; }
+}
