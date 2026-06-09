@@ -141,24 +141,28 @@ const NAMES_F = [
 ];
 const SURNAMES    = ['R.','M.','V.','L.','G.','H.','F.','C.','T.','A.','P.','S.','B.','Z.','N.'];
 const ZONES       = ['Zona Rosa','Providencia','Chapultepec','Tlaquepaque','Zapopan','Centro Histórico'];
-const CATS        = ['Universitaria','Nuevas','Milfs','Petite','Curvy','Voluptuosa','Nalgona','Chichona','Fit','Natural','Alta','Extranjeras'];
-/* Lista CANÓNICA de categorías VISIBLES (12) — usada por el multiselect de
+const CATS        = ['Universitaria','Novatas en el ambiente','Milfs','Petite','Curvy','Voluptuosa','Nalgona','Chichona','Fit','Natural','Alta','Extranjeras'];
+/* Lista CANÓNICA de categorías asignables A MANO — usada por el multiselect de
    categorías en admin (alta/editar) y panel-modelo, los filtros y las cards.
-   Los términos SEO (VIP, GFE, a domicilio, venezolanas, colombianas, morena,
-   blanca, güera, culona, ninfómana, etc.) NO van aquí: viven en los
-   <meta name="keywords"> de index/modelos/categorias y en CATEGORIAS_SEO. */
-const CATEGORIAS_ALL = ['Universitaria','Nuevas','Milfs','Petite','Curvy','Voluptuosa','Nalgona','Chichona','Fit','Natural','Alta','Extranjeras'];
+   NO incluye "Nuevas": esa es AUTOMÁTICA (el sistema mete a la Doncella al
+   registrarla y la saca al mes vía flag isNew/es_nueva; ver PENDIENTE backend).
+   "Novatas en el ambiente" SÍ es manual (escorts nuevas en el oficio).
+   Los términos SEO (VIP, GFE, venezolanas, colombianas, morena, blanca, güera,
+   culona, ninfómana, etc.) NO van aquí: viven en los <meta name="keywords">
+   de index/modelos/categorias y en CATEGORIAS_SEO. */
+const CATEGORIAS_ALL = ['Universitaria','Novatas en el ambiente','Milfs','Petite','Curvy','Voluptuosa','Nalgona','Chichona','Fit','Natural','Alta','Extranjeras'];
 /* Términos solo-SEO (no se muestran como categoría ni filtro). Documentados
    aquí como fuente única; se reflejan en los meta keywords de las páginas.
-   "Teen" se excluye a propósito (riesgo legal/penalización) → "Jovencita 18+". */
-const CATEGORIAS_SEO = ['VIP','Elite','GFE','A domicilio','Eventos y cenas','Venezolanas','Colombianas','Morena','Blanca','Güera','Rubia','Jovencita 18+','Culona','Anal','Ninfómana','Flaca','Embarazada','Tuneada','Chaparrita'];
+   "Teen" se excluye a propósito (riesgo legal/penalización) → "Jovencita 18+".
+   "A domicilio" se quitó: por ahora NO se ofrece ese servicio. */
+const CATEGORIAS_SEO = ['VIP','Elite','GFE','Eventos y cenas','Venezolanas','Colombianas','Morena','Blanca','Güera','Rubia','Jovencita 18+','Culona','Anal','Ninfómana','Flaca','Embarazada','Tuneada','Chaparrita'];
 const HAIR_COLORS = ['Castaño','Negro','Rubio','Castaño oscuro','Castaño claro','Rubio oscuro','Pelirrojo'];
 const EYE_COLORS  = ['Café','Verde','Azul','Miel','Gris','Avellana'];
 const SKIN_COLORS = ['Blanca','Morena clara','Morena','Trigueña','Canela'];
 const ALL_SERVICES = ['Relaciones','Trato de novios','Oral con protección','Oral natural','Oral terminado','Tiro MHM','Tiro HMH','Anal'];
 const NATIONALITIES = ['Mexicana','Colombiana','Argentina','Brasileña','Española','Venezolana','Cubana','Peruana'];
 const TAG_POOL    = [
-  'Universitaria','Milfs','Petite','Curvy','Voluptuosa','Nalgona','Chichona',
+  'Universitaria','Novatas en el ambiente','Milfs','Petite','Curvy','Voluptuosa','Nalgona','Chichona',
   'Fit','Natural','Alta','Extranjeras','VIP','Premium','Elite',
   'Tattoo','Cabello Largo','Rubia','Morena','Güera','Pelirroja','Yoga',
   'Bailarina','Bilingüe','Colombiana','Venezolana','Argentina','Brasileña',
@@ -422,7 +426,8 @@ setInterval(syncModelAvailabilityWithCitas, 60_000);
 /* ─── Categorías ────────────────────────────────────────── */
 const CATEGORIES = [
   { name:'Universitaria', count:52, icon:'fa-graduation-cap', img: photoUrl(PHOTO_POOL[0],400,400),  desc:'Estudiantes universitarias con energía y frescura' },
-  { name:'Nuevas',        count:21, icon:'fa-star',           img: photoUrl(PHOTO_POOL[3],400,400),  desc:'Recién llegadas a Doncellas, las más frescas' },
+  { name:'Nuevas',        count:21, icon:'fa-star',           img: photoUrl(PHOTO_POOL[3],400,400),  desc:'Recién llegadas a la plataforma este mes' },
+  { name:'Novatas en el ambiente', count:14, icon:'fa-seedling', img: photoUrl(PHOTO_POOL[14],400,400), desc:'Nuevas en el ambiente, con frescura y muchas ganas' },
   { name:'Milfs',         count:45, icon:'fa-crown',          img: photoUrl(PHOTO_POOL[4],400,400),  desc:'Mujeres maduras con experiencia y sensualidad' },
   { name:'Petite',        count:38, icon:'fa-feather-alt',    img: photoUrl(PHOTO_POOL[1],400,400),  desc:'Pequeñas y encantadoras, con mucho carácter' },
   { name:'Curvy',         count:44, icon:'fa-heart',          img: photoUrl(PHOTO_POOL[13],400,400), desc:'Curvas en su punto, figura llena y femenina' },
@@ -435,7 +440,7 @@ const CATEGORIES = [
   { name:'Extranjeras',   count:28, icon:'fa-globe',          img: photoUrl(PHOTO_POOL[6],400,400),  desc:'Bellezas internacionales con acento exótico' },
 ];
 
-const TAGS_POPULAR = ['Universitaria','Milfs','Petite','Curvy','Voluptuosa','Nalgona','Chichona','Fit','Natural','Alta','Extranjeras','Venezolanas','Colombianas','Morena','Güera'];
+const TAGS_POPULAR = ['Universitaria','Novatas en el ambiente','Milfs','Petite','Curvy','Voluptuosa','Nalgona','Chichona','Fit','Natural','Alta','Extranjeras','Venezolanas','Colombianas','Morena','Güera'];
 
 /* ─── Reviews ───────────────────────────────────────────── */
 const REVIEWS_DATA = [
@@ -1562,7 +1567,13 @@ function applyFilters(list) {
 
   let r = list.filter(m => {
     if (m.hidden || m.suspended) return false;
-    if (cat  && m.cat  !== cat)  return false;
+    if (cat) {
+      /* "Nuevas" es automática: depende del flag isNew (alta < 1 mes), no de
+         una categoría asignada a mano. El resto hace match con la categoría
+         principal O con las etiquetas (una Doncella puede estar en varias). */
+      if (cat === 'Nuevas') { if (!m.isNew) return false; }
+      else if (m.cat !== cat && !(m.tags || []).includes(cat)) return false;
+    }
     if (avail === 'available' && !m.available) return false;
     if (avail === 'busy'      &&  m.available) return false;
     if (rating && m.rating < rating) return false;

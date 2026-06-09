@@ -3,6 +3,19 @@
 
 ---
 
+## ⚡ ACTUALIZACIONES — 9 junio 2026 (LEER PRIMERO)
+
+- **Categorías reorganizadas** (`app.js`). Decisión: separar lo que se EXHIBE (elegante, navegación) de lo que se BUSCA (SEO). Análisis de competencia (Julyana VIP usa términos crudos: Culona/Teen/Anal/Ninfómana) → Doncellas se diferencia por calidad.
+  - **VISIBLES (cards + filtros + `CATEGORIAS_ALL`):** Universitaria · Nuevas · **Novatas en el ambiente** · Milfs · Petite · **Curvy** · Voluptuosa · Nalgona · Chichona · Fit · Natural · Alta · Extranjeras.
+  - **SOLO-SEO (`CATEGORIAS_SEO` + meta keywords, NO navegación):** VIP/Elite, GFE, Eventos y cenas, Venezolanas, Colombianas, Morena, Blanca, Güera, Rubia, Jovencita 18+, Culona, Anal, Ninfómana, Flaca, Embarazada, Tuneada, Chaparrita. Origen/piel también buscables en el dropdown (`_CAT_EXTRA`).
+  - **"Teen" EXCLUIDO a propósito** → "Jovencita 18+". En SEO adulto "teen" implica menores: Google penaliza + riesgo legal MX.
+  - **Nuevas vs Novatas (¡distintas!):** **Nuevas** = AUTOMÁTICA (estado temporal, flag `isNew`/`es_nueva`); el filtro la resuelve por `isNew`, NO está en el multiselect manual. **Novatas en el ambiente** = MANUAL (escorts nuevas en el oficio), sí asignable. El filtro de categoría ahora hace match con `cat` **o** `tags` (multi-categoría).
+  - **PENDIENTE backend (Nuevas automática):** al registrar perfil → `es_nueva=true`; job/cron que la apague a los **30 días**. Hoy `es_nueva` se mapea directo; falta la lógica de expiración.
+- **"A domicilio" ELIMINADO de todo lo visible** (no se ofrece por ahora): FAQ de index reescrito a "¿Dónde se realizan las citas?" (solo hoteles/moteles, cliente elige); quitado de meta description/keywords/og de index y categorias. Reactivar cuando se ofrezca.
+- **Banners de canal animados** (8-9 jun): Telegram (azul) + WhatsApp (verde) lado a lado en modelos.html (escritorio y móvil compactos con etiqueta "Canal de…"), degradados vivos + brillo que barre + glow + hover. Mismas `.channel-card` en sidebar de perfil, con **Disponibilidad subida arriba** de los canales. Canal WhatsApp con placeholder `CANAL_WA_PENDIENTE` (TODO en 3 archivos).
+
+---
+
 ## ⚡ ACTUALIZACIONES — 8 junio 2026 (LEER PRIMERO)
 
 - **Canal @DoncellasGDL distribuido en el sitio** (8-jun): footer social → canal, banner en modelos.html, card sidebar en perfil.html.
