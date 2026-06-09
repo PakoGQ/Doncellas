@@ -6973,3 +6973,53 @@ details.faq-item[open] .faq-a {
   .channel-banner::before,
   .channel-banner-arrow { animation: none; }
 }
+
+/* ════════════════════════════════════════════════════════
+   Tarjetas de canal en sidebar (perfil.html) — mismo look
+   azul/verde + brillo que los banners de modelos.html
+   ════════════════════════════════════════════════════════ */
+.channel-card {
+  position: relative;
+  overflow: hidden;
+  transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+}
+.channel-card > * { position: relative; z-index: 1; }
+.channel-card:hover { transform: translateY(-2px); }
+
+.channel-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -65%;
+  width: 45%; height: 100%;
+  z-index: 0;
+  background: linear-gradient(100deg, transparent, rgba(255,255,255,.16), transparent);
+  transform: skewX(-20deg);
+  animation: channelShine 5.5s ease-in-out infinite;
+}
+.channel-card.wa::before { animation-delay: 2.75s; }
+
+.channel-card.tg {
+  background: linear-gradient(125deg, rgba(0,136,204,.30), rgba(0,90,158,.10));
+  border-color: rgba(41,168,224,.45);
+}
+.channel-card.tg:hover {
+  box-shadow: 0 10px 26px rgba(0,136,204,.30);
+  border-color: rgba(41,168,224,.80);
+}
+.channel-card.wa {
+  background: linear-gradient(125deg, rgba(37,211,102,.28), rgba(16,120,60,.10));
+  border-color: rgba(37,211,102,.45);
+}
+.channel-card.wa:hover {
+  box-shadow: 0 10px 26px rgba(37,211,102,.28);
+  border-color: rgba(37,211,102,.80);
+}
+.channel-card-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 7px currentColor);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .channel-card::before { animation: none; }
+}

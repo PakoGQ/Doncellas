@@ -303,38 +303,7 @@
       </div>
     </div>
 
-    <!-- Canal Telegram -->
-    <div class="profile-card" style="background:rgba(0,136,204,.06);border-color:rgba(0,136,204,.2)">
-      <div style="display:flex;align-items:center;gap:.65rem">
-        <i class="fab fa-telegram" style="font-size:1.5rem;color:#29a8e0;flex-shrink:0"></i>
-        <div>
-          <div style="font-size:.82rem;font-weight:600;margin-bottom:.15rem">Alertas de disponibilidad</div>
-          <div style="font-size:.72rem;color:var(--t2)">Únete al canal y sé el primero en saber quién está libre esta noche</div>
-        </div>
-      </div>
-      <a href="https://t.me/DoncellasGDL" target="_blank" rel="noopener"
-         class="btn btn-telegram" style="width:100%;justify-content:center;margin-top:.85rem">
-        <i class="fab fa-telegram"></i> Seguir @DoncellasGDL
-      </a>
-    </div>
-
-    <!-- Canal WhatsApp -->
-    <!-- TODO: reemplazar CANAL_WA_PENDIENTE con el link real del Canal de WhatsApp cuando esté creado -->
-    <div class="profile-card" style="background:rgba(37,211,102,.06);border-color:rgba(37,211,102,.2)">
-      <div style="display:flex;align-items:center;gap:.65rem">
-        <i class="fab fa-whatsapp" style="font-size:1.5rem;color:#25d366;flex-shrink:0"></i>
-        <div>
-          <div style="font-size:.82rem;font-weight:600;margin-bottom:.15rem">Canal de WhatsApp</div>
-          <div style="font-size:.72rem;color:var(--t2)">Contenido exclusivo y disponibilidad diaria solo para seguidores</div>
-        </div>
-      </div>
-      <a href="https://whatsapp.com/channel/CANAL_WA_PENDIENTE" target="_blank" rel="noopener"
-         class="btn btn-wa" style="width:100%;justify-content:center;margin-top:.85rem">
-        <i class="fab fa-whatsapp"></i> Seguir el canal
-      </a>
-    </div>
-
-    <!-- Collapsible Calendar -->
+    <!-- Collapsible Calendar (Disponibilidad) — arriba de los canales -->
     <button class="calendar-collapse-btn" id="calToggleBtn" onclick="toggleCalendar()">
       <i class="fas fa-calendar-check" style="color:var(--gold)"></i>
       Disponibilidad
@@ -363,6 +332,37 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- Canal Telegram -->
+    <div class="profile-card channel-card tg">
+      <div style="display:flex;align-items:center;gap:.65rem">
+        <i class="fab fa-telegram channel-card-icon" style="color:#29a8e0"></i>
+        <div>
+          <div style="font-size:.82rem;font-weight:600;margin-bottom:.15rem">Alertas de disponibilidad</div>
+          <div style="font-size:.72rem;color:var(--t2)">Únete al canal y sé el primero en saber quién está libre esta noche</div>
+        </div>
+      </div>
+      <a href="https://t.me/DoncellasGDL" target="_blank" rel="noopener"
+         class="btn btn-telegram" style="width:100%;justify-content:center;margin-top:.85rem">
+        <i class="fab fa-telegram"></i> Seguir @DoncellasGDL
+      </a>
+    </div>
+
+    <!-- Canal WhatsApp -->
+    <!-- TODO: reemplazar CANAL_WA_PENDIENTE con el link real del Canal de WhatsApp cuando esté creado -->
+    <div class="profile-card channel-card wa">
+      <div style="display:flex;align-items:center;gap:.65rem">
+        <i class="fab fa-whatsapp channel-card-icon" style="color:#25d366"></i>
+        <div>
+          <div style="font-size:.82rem;font-weight:600;margin-bottom:.15rem">Canal de WhatsApp</div>
+          <div style="font-size:.72rem;color:var(--t2)">Contenido exclusivo y disponibilidad diaria solo para seguidores</div>
+        </div>
+      </div>
+      <a href="https://whatsapp.com/channel/CANAL_WA_PENDIENTE" target="_blank" rel="noopener"
+         class="btn btn-wa" style="width:100%;justify-content:center;margin-top:.85rem">
+        <i class="fab fa-whatsapp"></i> Seguir el canal
+      </a>
     </div>
 
     <!-- Similar profiles -->
