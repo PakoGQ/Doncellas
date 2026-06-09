@@ -6959,13 +6959,22 @@ details.faq-item[open] .faq-a {
   50%      { transform: translateX(5px); }
 }
 
-/* Móvil: apilados (se afinan en otra pasada) */
+/* Móvil: lado a lado pero compactos (sin subtítulo ni flecha) */
 @media (max-width: 768px) {
   .channel-banners {
-    grid-template-columns: 1fr;
-    gap: .6rem;
+    grid-template-columns: 1fr 1fr;
+    gap: .55rem;
     padding: 0 1rem .75rem;
   }
+  .channel-banner {
+    gap: .55rem;
+    padding: .7rem .8rem;
+  }
+  .channel-banner-icon { font-size: 1.35rem; }
+  .channel-banner-title { font-size: .8rem; line-height: 1.2; }
+  .channel-banner-sub,
+  .channel-banner-arrow,
+  .cb-mob-hide { display: none; }
 }
 
 /* Respeta usuarios con movimiento reducido */
