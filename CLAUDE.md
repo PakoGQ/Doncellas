@@ -3,6 +3,16 @@
 
 ---
 
+## ⚡ ACTUALIZACIONES — 8 junio 2026 (LEER PRIMERO)
+
+- **Canal @DoncellasGDL distribuido en el sitio** (8-jun): footer social → canal, banner en modelos.html, card sidebar en perfil.html.
+- **Pendiente — Telegram sin revelar que es bot** (decisión tomada, no implementado aún):
+  - **Opción B:** Empujar WhatsApp como canal principal para clientes sin Telegram móvil — el número no revela automatización, el cliente guarda "Doncellas GDL" en contactos.
+  - **Opción C:** Canal @DoncellasGDL como puente — el cliente busca `@DoncellasGDL` (sin "bot"), entra al canal, toca un mensaje fijado con botón "Agendar cita" que abre el bot. Nunca ve el username del bot.
+  - **Nota técnica:** Los bots de Telegram SIEMPRE terminan en "bot" — limitación de plataforma, no tiene workaround. El QR también es válido como complemento.
+
+---
+
 ## ⚡ ACTUALIZACIONES — 7 junio 2026 (LEER PRIMERO)
 
 > Registro detallado en memoria: `sesion-2026-06-07-cambios.md`. Lo más nuevo de esta sesión:
