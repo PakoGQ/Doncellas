@@ -141,19 +141,26 @@ const NAMES_F = [
 ];
 const SURNAMES    = ['R.','M.','V.','L.','G.','H.','F.','C.','T.','A.','P.','S.','B.','Z.','N.'];
 const ZONES       = ['Zona Rosa','Providencia','Chapultepec','Tlaquepaque','Zapopan','Centro Histórico'];
-const CATS        = ['Universitaria','Milf','Petite','Nalgona','Voluptuosa','Chichona','Extranjera','Jovencita','Fit','Natural','Tuneada','Chaparrita','Alta'];
-/* Lista CANÓNICA de categorías (principales + extendidas) — usada por el
-   multiselect de categorías en admin (alta/editar) y panel-modelo. */
-const CATEGORIAS_ALL = ['VIP','Universitaria','GFE — Novia por un día','Venezolana','A domicilio','Petite','Eventos y cenas','Nuevas','Milf','Nalgona','Voluptuosa','Chichona','Extranjera','Jovencita','Fit','Natural','Tuneada','Chaparrita','Alta'];
+const CATS        = ['Universitaria','Nuevas','Milfs','Petite','Curvy','Voluptuosa','Nalgona','Chichona','Fit','Natural','Alta','Extranjeras'];
+/* Lista CANÓNICA de categorías VISIBLES (12) — usada por el multiselect de
+   categorías en admin (alta/editar) y panel-modelo, los filtros y las cards.
+   Los términos SEO (VIP, GFE, a domicilio, venezolanas, colombianas, morena,
+   blanca, güera, culona, ninfómana, etc.) NO van aquí: viven en los
+   <meta name="keywords"> de index/modelos/categorias y en CATEGORIAS_SEO. */
+const CATEGORIAS_ALL = ['Universitaria','Nuevas','Milfs','Petite','Curvy','Voluptuosa','Nalgona','Chichona','Fit','Natural','Alta','Extranjeras'];
+/* Términos solo-SEO (no se muestran como categoría ni filtro). Documentados
+   aquí como fuente única; se reflejan en los meta keywords de las páginas.
+   "Teen" se excluye a propósito (riesgo legal/penalización) → "Jovencita 18+". */
+const CATEGORIAS_SEO = ['VIP','Elite','GFE','A domicilio','Eventos y cenas','Venezolanas','Colombianas','Morena','Blanca','Güera','Rubia','Jovencita 18+','Culona','Anal','Ninfómana','Flaca','Embarazada','Tuneada','Chaparrita'];
 const HAIR_COLORS = ['Castaño','Negro','Rubio','Castaño oscuro','Castaño claro','Rubio oscuro','Pelirrojo'];
 const EYE_COLORS  = ['Café','Verde','Azul','Miel','Gris','Avellana'];
 const SKIN_COLORS = ['Blanca','Morena clara','Morena','Trigueña','Canela'];
 const ALL_SERVICES = ['Relaciones','Trato de novios','Oral con protección','Oral natural','Oral terminado','Tiro MHM','Tiro HMH','Anal'];
 const NATIONALITIES = ['Mexicana','Colombiana','Argentina','Brasileña','Española','Venezolana','Cubana','Peruana'];
 const TAG_POOL    = [
-  'Universitaria','Milf','Petite','Nalgona','Voluptuosa','Chichona','Extranjera','Jovencita',
-  'Fit','Natural','Tuneada','Chaparrita','Alta','VIP','Premium','Elite',
-  'Tattoo','Cabello Largo','Rubia','Morena','Pelirroja','Yoga',
+  'Universitaria','Milfs','Petite','Curvy','Voluptuosa','Nalgona','Chichona',
+  'Fit','Natural','Alta','Extranjeras','VIP','Premium','Elite',
+  'Tattoo','Cabello Largo','Rubia','Morena','Güera','Pelirroja','Yoga',
   'Bailarina','Bilingüe','Colombiana','Venezolana','Argentina','Brasileña',
 ];
 
@@ -415,21 +422,20 @@ setInterval(syncModelAvailabilityWithCitas, 60_000);
 /* ─── Categorías ────────────────────────────────────────── */
 const CATEGORIES = [
   { name:'Universitaria', count:52, icon:'fa-graduation-cap', img: photoUrl(PHOTO_POOL[0],400,400),  desc:'Estudiantes universitarias con energía y frescura' },
-  { name:'Milf',          count:45, icon:'fa-crown',          img: photoUrl(PHOTO_POOL[4],400,400),  desc:'Mujeres maduras con experiencia y sensualidad' },
+  { name:'Nuevas',        count:21, icon:'fa-star',           img: photoUrl(PHOTO_POOL[3],400,400),  desc:'Recién llegadas a Doncellas, las más frescas' },
+  { name:'Milfs',         count:45, icon:'fa-crown',          img: photoUrl(PHOTO_POOL[4],400,400),  desc:'Mujeres maduras con experiencia y sensualidad' },
   { name:'Petite',        count:38, icon:'fa-feather-alt',    img: photoUrl(PHOTO_POOL[1],400,400),  desc:'Pequeñas y encantadoras, con mucho carácter' },
-  { name:'Nalgona',       count:48, icon:'fa-heart',          img: photoUrl(PHOTO_POOL[7],400,400),  desc:'Curvas prominentes que te dejarán sin aliento' },
+  { name:'Curvy',         count:44, icon:'fa-heart',          img: photoUrl(PHOTO_POOL[13],400,400), desc:'Curvas en su punto, figura llena y femenina' },
   { name:'Voluptuosa',    count:42, icon:'fa-venus',          img: photoUrl(PHOTO_POOL[2],400,400),  desc:'Cuerpos llenos y sensuales para los que aman las curvas' },
-  { name:'Chichona',      count:40, icon:'fa-fire',           img: photoUrl(PHOTO_POOL[5],400,400),  desc:'Pechos generosos y una presencia irresistible' },
-  { name:'Extranjera',    count:28, icon:'fa-globe',          img: photoUrl(PHOTO_POOL[6],400,400),  desc:'Bellezas internacionales con acento exótico' },
-  { name:'Jovencita',     count:56, icon:'fa-seedling',       img: photoUrl(PHOTO_POOL[3],400,400),  desc:'Mayores de 18 con toda la energía del mundo' },
+  { name:'Nalgona',       count:48, icon:'fa-gem',            img: photoUrl(PHOTO_POOL[7],400,400),  desc:'Retaguardia prominente que te dejará sin aliento' },
+  { name:'Chichona',      count:40, icon:'fa-fire',           img: photoUrl(PHOTO_POOL[5],400,400),  desc:'Busto generoso y una presencia irresistible' },
   { name:'Fit',           count:35, icon:'fa-dumbbell',       img: photoUrl(PHOTO_POOL[8],400,400),  desc:'Cuerpos trabajados, tonificados y atléticos' },
   { name:'Natural',       count:32, icon:'fa-leaf',           img: photoUrl(PHOTO_POOL[9],400,400),  desc:'Sin retoques, belleza genuina y espontánea' },
-  { name:'Tuneada',       count:24, icon:'fa-magic',          img: photoUrl(PHOTO_POOL[10],400,400), desc:'Con mejoras estéticas para una figura espectacular' },
-  { name:'Chaparrita',    count:33, icon:'fa-compress-alt',   img: photoUrl(PHOTO_POOL[11],400,400), desc:'Pequeñas en talla, grandes en personalidad' },
   { name:'Alta',          count:27, icon:'fa-sort-amount-up', img: photoUrl(PHOTO_POOL[12],400,400), desc:'Esbeltas y de gran estatura con porte elegante' },
+  { name:'Extranjeras',   count:28, icon:'fa-globe',          img: photoUrl(PHOTO_POOL[6],400,400),  desc:'Bellezas internacionales con acento exótico' },
 ];
 
-const TAGS_POPULAR = ['Universitaria','Milf','Petite','Nalgona','Voluptuosa','Chichona','Extranjera','Jovencita','Fit','Natural','Tuneada','Chaparrita','Alta','VIP','Premium','Elite'];
+const TAGS_POPULAR = ['Universitaria','Milfs','Petite','Curvy','Voluptuosa','Nalgona','Chichona','Fit','Natural','Alta','Extranjeras','Venezolanas','Colombianas','Morena','Güera'];
 
 /* ─── Reviews ───────────────────────────────────────────── */
 const REVIEWS_DATA = [
@@ -1610,13 +1616,17 @@ function initCatSearch() {
   });
 }
 
+/* Extras buscables en el dropdown de búsqueda de categorías (no son cards
+   destacadas). Sirven para que términos SEO de origen/tono de piel sean
+   encontrables sin ensuciar la navegación principal. */
 const _CAT_EXTRA = [
-  { name:'Colombiana',  count:18, icon:'fa-globe'   },
-  { name:'Venezolana',  count:15, icon:'fa-globe'   },
-  { name:'Rubia',       count:22, icon:'fa-sun'     },
-  { name:'Morena',      count:34, icon:'fa-moon'    },
-  { name:'VIP',         count:12, icon:'fa-gem'     },
-  { name:'Premium',     count:19, icon:'fa-crown'   },
+  { name:'Venezolanas', count:15, icon:'fa-globe' },
+  { name:'Colombianas', count:18, icon:'fa-globe' },
+  { name:'Morena',      count:34, icon:'fa-moon' },
+  { name:'Blanca',      count:26, icon:'fa-snowflake' },
+  { name:'Güera',       count:23, icon:'fa-sun' },
+  { name:'Rubia',       count:22, icon:'fa-sun' },
+  { name:'VIP',         count:12, icon:'fa-gem' },
 ];
 
 function onCatSearch(q) {
