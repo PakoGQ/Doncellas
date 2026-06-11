@@ -193,7 +193,8 @@ const _rng = (seed) => {
 /* ─── Generador de 10 modelos demo (fallback sin Supabase) ── */
 function generateModels() {
   const models = [];
-  for (let i = 0; i < 10; i++) {
+  /* 15 demo = espejo del plan real de arranque (12-15 escorts activas) */
+  for (let i = 0; i < 15; i++) {
     const r       = _rng(i * 997 + 13);
     const age     = 18 + Math.floor(r() * 18);
     const photoId = PHOTO_POOL[i % PHOTO_POOL.length];
@@ -854,7 +855,7 @@ function buildHeroMosaic() {
     + (pool[3] ? slot(pool[3], false) : '');
 }
 
-/* ─── Galería: un slot por escort, 2 en 2 hacia abajo ───── */
+/* ─── Galería: un slot por escort, 3 por fila hacia abajo ── */
 function buildDoncellaGallery() {
   const el = document.getElementById('doncellaGallery');
   if (!el) return;
