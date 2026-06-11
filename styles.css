@@ -261,6 +261,18 @@ p  { line-height: 1.7; color: var(--t2); }
 .nav-links a:hover, .nav-links a.active { color: var(--gold); }
 .nav-links a:hover::after, .nav-links a.active::after { transform: scaleX(1); }
 .nav-cta { display: flex; align-items: center; gap: .75rem; }
+/* Acceso discreto (admin/escorts): reemplaza al botón "Iniciar Sesión".
+   Intencionalmente tenue para no invitar al cliente a "registrarse". */
+.login-key {
+  background: none; border: none; cursor: pointer;
+  color: var(--t3); opacity: .4;
+  font-size: 1rem; line-height: 1;
+  padding: 8px 10px; border-radius: 8px;
+  transition: opacity .25s ease, color .25s ease;
+}
+.login-key:hover, .login-key:focus-visible { opacity: 1; color: var(--gold); outline: none; }
+/* Con sesión activa, el mismo botón lleva al panel y se hace visible */
+.login-key--session { opacity: 1; color: var(--gold); text-decoration: none; display: inline-flex; }
 .nav-menu-btn { display: none; flex-direction: column; gap: 5px; padding: 4px; }
 
 /* ─── Sesión activa en el nav de escritorio ──────────────── */
@@ -4379,11 +4391,20 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
    Removes login button, hamburger and "Escorts" label.
    ═══════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
-  body.page-mobile-min-nav .nav .nav-cta,
   body.page-mobile-min-nav .nav .nav-cta .btn,
   body.page-mobile-min-nav .nav .nav-cta .nav-login-btn,
   body.page-mobile-min-nav .nav .nav-menu-btn,
   body.page-mobile-min-nav .nav .nav-escorts-label { display: none !important; }
+  /* Acceso discreto (⋮): único elemento visible del nav-cta, anclado a la
+     esquina superior derecha sin empujar el tagline centrado. */
+  body.page-mobile-min-nav .nav .nav-cta {
+    display: flex !important;
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 5;
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════

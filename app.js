@@ -3489,11 +3489,12 @@ document.addEventListener('keydown', e => {
 });
 
 /* ─── Sesión activa en nav público ──────────────────────────
+   El acceso es un botón DISCRETO (.login-key, ⋮) en la esquina superior
+   derecha — el cliente lo ignora; solo admin/escorts saben que es el login.
    Si hay sesión guardada, en TODAS las páginas públicas:
-   · Escritorio: el botón "Iniciar Sesión" → nombre del usuario
-     (clic = va a su panel) + ícono de cerrar sesión.
-   · Móvil/PWA: el item "Cuenta" del bottom nav → nombre + panel.
+   · El botón discreto → lleva directo al panel del usuario (visible/dorado).
    · Drawer móvil: "Iniciar Sesión" → "Mi Panel" + "Cerrar sesión".
+   El cierre de sesión vive dentro del panel.
    ──────────────────────────────────────────────────────────── */
 function initNavSession() {
   const { role, nombre } = getSession();
@@ -3501,31 +3502,17 @@ function initNavSession() {
 
   const panel   = role === 'admin' ? 'panel-admin.html' : 'panel-modelo.html';
   const display = nombre || (role === 'admin' ? 'Administrador' : 'Mi Panel');
-  const first   = display.split(' ')[0] || (role === 'admin' ? 'Admin' : 'Cuenta');
 
-  /* 1. Botón "Iniciar Sesión" del nav de escritorio → nombre + panel */
-  const loginBtn = document.querySelector('button.nav-login-btn');
+  /* Botón discreto → acceso directo al panel (se vuelve visible/dorado) */
+  const loginBtn = document.querySelector('.login-key');
   if (loginBtn) {
     loginBtn.outerHTML = `
-      <div class="nav-session">
-        <a href="${panel}" class="btn btn-gold btn-sm nav-session-link" title="Ir a mi panel">
-          <i class="fas fa-user-circle"></i> ${display}
-        </a>
-        <button onclick="cerrarSesion()" class="btn btn-ghost btn-sm nav-session-out" title="Cerrar sesión">
-          <i class="fas fa-sign-out-alt"></i>
-        </button>
-      </div>`;
+      <a href="${panel}" class="login-key login-key--session" title="Ir a mi panel — ${display}" aria-label="Mi panel">
+        <i class="fas fa-user-circle"></i>
+      </a>`;
   }
 
-  /* 2. Bottom nav móvil/PWA: item "Cuenta" → nombre + panel */
-  const acct = document.querySelector('.bottom-nav-item[onclick*="loginModal"]');
-  if (acct) {
-    acct.setAttribute('href', panel);
-    acct.removeAttribute('onclick');
-    acct.innerHTML = `<i class="fas fa-user-circle"></i><span>${first}</span>`;
-  }
-
-  /* 3. Drawer móvil: link "Iniciar Sesión" → Mi Panel + Cerrar sesión */
+  /* Drawer móvil: link "Iniciar Sesión" → Mi Panel + Cerrar sesión */
   const drawerLink = document.querySelector('.mobile-drawer-links a[onclick*="loginModal"]');
   if (drawerLink) {
     drawerLink.setAttribute('href', panel);
