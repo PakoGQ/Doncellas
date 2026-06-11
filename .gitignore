@@ -1,3 +1,8 @@
 .vercel
 .claude/settings.local.json
 .claude/
+
+# Archivos internos — NUNCA publicar (contienen credenciales/estrategia)
+CLAUDE.md
+agente/
+.claude/

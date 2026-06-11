@@ -19,7 +19,7 @@ const DEMO_MODE = true;
    ni ve su número (discreción · Flujo 4 del agente).
    ⚠️ Placeholder — reemplazar por el número real (+52 33 2168 5023)
    junto con los demás wa.me del sitio. */
-const WA_CENTRAL = '523312345678';
+const WA_CENTRAL = '523321685023';
 
 /* ─── Usuarios / Login ──────────────────────────────────── */
 const USERS = [
@@ -441,7 +441,10 @@ const CATEGORIES = [
   { name:'Extranjeras',   count:28, icon:'fa-globe',          img: photoUrl(PHOTO_POOL[6],400,400),  desc:'Bellezas internacionales con acento exótico' },
 ];
 
-const TAGS_POPULAR = ['Universitaria','Novatas en el ambiente','Milfs','Petite','Curvy','Voluptuosa','Nalgona','Chichona','Fit','Natural','Alta','Extranjeras','Venezolanas','Colombianas','Morena','Güera'];
+/* Chips de "tags populares" en categorias.html — enlazan a modelos.html?q=…
+   Solo términos que SÍ matchean tags reales de las escorts (singular):
+   un chip que devuelve 0 resultados es peor que no tenerlo. */
+const TAGS_POPULAR = ['Universitaria','Novatas en el ambiente','Milfs','Petite','Curvy','Voluptuosa','Nalgona','Chichona','Fit','Natural','Alta','Extranjeras','Venezolana','Colombiana'];
 
 /* ─── Reviews ───────────────────────────────────────────── */
 const REVIEWS_DATA = [
@@ -718,7 +721,7 @@ function modelCardHTML(m) {
         <button class="btn btn-telegram btn-sm" onclick="event.stopPropagation();window.open('https://t.me/DoncellasGDLbot','_blank')" title="Telegram">
           <i class="fab fa-telegram"></i>
         </button>
-        <button class="btn btn-wa btn-sm" onclick="event.stopPropagation();window.open('https://wa.me/523312345678?text=Hola%20${encodeURIComponent(m.name)}','_blank')" title="WhatsApp">
+        <button class="btn btn-wa btn-sm" onclick="event.stopPropagation();window.open('https://wa.me/523321685023?text=Hola%20${encodeURIComponent(m.name)}','_blank')" title="WhatsApp">
           <i class="fab fa-whatsapp"></i>
         </button>
       </div>
@@ -1346,7 +1349,7 @@ function buildHeroSlides() {
 
       <h2 class="hero-tg-title">
         Únete al canal<br>
-        <em>más exclusivo <i class="fab fa-telegram hero-tg-title-icon"></i> de GDL</em>
+        <em>más selecto <i class="fab fa-telegram hero-tg-title-icon"></i> de GDL</em>
       </h2>
 
       <div class="hero-tg-desc-box">
@@ -1422,7 +1425,7 @@ function buildHeroSlides() {
         <div class="hero-tg-pill"><i class="fas fa-user-secret"></i> 100% discreto</div>
       </div>
 
-      <a href="https://wa.me/523312345678?text=Hola%2C%20quiero%20recibir%20novedades%20y%20disponibilidad%20de%20Doncellas"
+      <a href="https://wa.me/523321685023?text=Hola%2C%20quiero%20recibir%20novedades%20y%20disponibilidad%20de%20Doncellas"
          target="_blank" rel="noopener"
          onclick="event.stopPropagation()" class="hero-tg-cta">
         <i class="fab fa-whatsapp"></i>
@@ -1448,7 +1451,7 @@ function buildHeroSlides() {
       <h2 class="hero-agenda-title">Agenda tu <em>cita</em></h2>
       <p class="hero-agenda-desc">Escríbenos por tu medio favorito. <br>Nuestro asistente te atiende al instante, con total discreción.</p>
       <div class="hero-agenda-btns">
-        <a href="https://wa.me/523312345678?text=Hola%2C%20quiero%20agendar%20una%20cita"
+        <a href="https://wa.me/523321685023?text=Hola%2C%20quiero%20agendar%20una%20cita"
            target="_blank" rel="noopener" onclick="event.stopPropagation()"
            class="hero-agenda-btn hero-agenda-btn-wa">
           <i class="fab fa-whatsapp"></i> <span>Agendar por WhatsApp</span>
@@ -1753,6 +1756,18 @@ function initPerfil() {
   /* Name + availability pill + meta */
   const nameEl = document.getElementById('profileName');
   if (nameEl) nameEl.textContent = m.name;
+  document.title = `${m.name} | Doncellas GDL`;
+
+  /* Sobre mí + tags (desde Supabase; fallback elegante si no hay descripción) */
+  const aboutEl = document.getElementById('profileAbout');
+  if (aboutEl && m.descripcion) aboutEl.textContent = m.descripcion;
+  const tagsEl = document.getElementById('profileTags');
+  if (tagsEl) tagsEl.innerHTML = (m.tags || [])
+    .map(t => `<span class="tag">${t}</span>`).join('');
+
+  /* Pill Top 10 solo si aplica */
+  const topEl = document.getElementById('top10Pill');
+  if (topEl && m.top10) topEl.style.display = '';
 
   const availPill = document.getElementById('profileAvailPill');
   if (availPill) {
@@ -3112,7 +3127,7 @@ function initPanelModelo() {
   buildCitasProximas();
   buildCitasHistorial();
   buildAvailWeekGrid();
-  buildCatMultiselect('modelCatMulti', ['Universitaria','Fit','Natural','VIP']);
+  buildCatMultiselect('modelCatMulti', ['Universitaria','Fit','Natural']);
   applyDemoData();
 }
 
@@ -3451,7 +3466,7 @@ window.openQuickView = function(id) {
           </a>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem">
             <button class="btn btn-wa" style="justify-content:center"
-                    onclick="window.open('https://wa.me/523312345678?text=Hola%2C%20me%20interesa%20${encodeURIComponent(m.name)}','_blank')">
+                    onclick="window.open('https://wa.me/523321685023?text=Hola%2C%20me%20interesa%20${encodeURIComponent(m.name)}','_blank')">
               <i class="fab fa-whatsapp"></i> WhatsApp
             </button>
             <a href="https://t.me/DoncellasGDLbot" target="_blank" class="btn btn-telegram" style="justify-content:center">
