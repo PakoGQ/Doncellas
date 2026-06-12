@@ -550,7 +550,10 @@ p  { line-height: 1.7; color: var(--t2); }
   100% { background-position: 0% 50%; }
 }
 
-/* Dos imágenes apiladas para crossfade real */
+/* Dos imágenes apiladas para crossfade real.
+   La transición combina opacity + un "focus pull" (blur que se desvanece) para
+   un cambio cinematográfico y fluido. El blur/opacity NO usan transform, así
+   que no chocan con el Ken Burns (que sí anima transform en .dg-active). */
 .dg-img {
   position: absolute;
   inset: 0;
@@ -558,21 +561,29 @@ p  { line-height: 1.7; color: var(--t2); }
   object-fit: cover;
   object-position: center top;
   opacity: 0;
-  transition: opacity 2.8s ease;
-  transform: scale(1.04);
+  filter: blur(14px) saturate(1.15);
+  transition: opacity 2.2s cubic-bezier(.4, 0, .2, 1),
+              filter  2.2s cubic-bezier(.4, 0, .2, 1);
+  will-change: opacity, filter;
 }
 .dg-img.dg-active {
   opacity: 1;
-  transform: scale(1);
+  filter: blur(0) saturate(1.05);
 }
 
-/* Ken Burns lento en la foto activa */
+/* Ken Burns lento en la foto activa — un poco más amplio y suave */
 @keyframes kenburns {
-  0%   { transform: scale(1.0) translate(0, 0); }
-  50%  { transform: scale(1.05) translate(-0.8%, -0.8%); }
-  100% { transform: scale(1.0) translate(0, 0); }
+  0%   { transform: scale(1.02) translate(0, 0); }
+  50%  { transform: scale(1.08) translate(-1.2%, -1%); }
+  100% { transform: scale(1.02) translate(0, 0); }
 }
-.dg-img.dg-active { animation: kenburns 14s ease-in-out infinite; }
+.dg-img.dg-active { animation: kenburns 18s ease-in-out infinite; }
+
+/* Respeta a quien prefiere menos movimiento: sin Ken Burns ni blur de entrada */
+@media (prefers-reduced-motion: reduce) {
+  .dg-img { filter: none; transition: opacity 1.2s ease; }
+  .dg-img.dg-active { animation: none; filter: none; }
+}
 
 /* Gradiente sutil siempre visible */
 .dg-item::before {
