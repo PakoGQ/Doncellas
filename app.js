@@ -77,15 +77,15 @@ async function doLogin() {
   }
 
   /* 2. Usuarios reales en Supabase (admin + escorts).
-     El admin se distingue por role='admin'. */
+     Se valida con la función `verificar_login` (SECURITY DEFINER):
+     verifica usuario+contraseña del lado del servidor y devuelve solo
+     role/nombre — NUNCA expone la tabla ni las contraseñas. La tabla
+     `usuarios` tiene RLS que bloquea la lectura directa con la anon key. */
   if (window.sbClient) {
-    const { data } = await window.sbClient
-      .from('usuarios')
-      .select('*, escorts(id, nombre)')
-      .eq('username', username)
-      .eq('password', pass)
-      .eq('activo', true)
-      .maybeSingle();
+    const { data } = await window.sbClient.rpc('verificar_login', {
+      p_username: username,
+      p_password: pass,
+    });
 
     if (data) {
       if (errEl) errEl.style.display = 'none';
@@ -97,8 +97,9 @@ async function doLogin() {
         return;
       }
 
-      setSession('modelo', data.escorts?.nombre || 'Doncella', data.escort_id);
-      showToast(`Bienvenida, ${data.escorts?.nombre || 'Doncella'} 🌹`, 'success');
+      const nombre = data.escort_nombre || data.nombre || 'Doncella';
+      setSession('modelo', nombre, data.escort_id);
+      showToast(`Bienvenida, ${nombre} 🌹`, 'success');
       setTimeout(() => { window.location.href = 'panel-modelo.html'; }, 800);
       return;
     }
