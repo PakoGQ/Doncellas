@@ -119,6 +119,17 @@ function fillLogin(email, pass) {
   if (errEl) errEl.style.display = 'none';
 }
 
+/* Mostrar/ocultar contraseña — botón ojo junto al campo. */
+function togglePassword(btn) {
+  const input = btn.closest('.pass-wrap')?.querySelector('input');
+  if (!input) return;
+  const show = input.type === 'password';
+  input.type = show ? 'text' : 'password';
+  const icon = btn.querySelector('i');
+  if (icon) icon.className = show ? 'fas fa-eye-slash' : 'fas fa-eye';
+  btn.setAttribute('aria-label', show ? 'Ocultar contraseña' : 'Mostrar contraseña');
+}
+
 /* ─── Fotos Unsplash ────────────────────────────────────── */
 const PHOTO_POOL = [
   'photo-1534528741775-53994a69daeb','photo-1524504388940-b1c1722653e1',

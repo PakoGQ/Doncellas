@@ -1849,6 +1849,29 @@ canvas { width: 100% !important; }
 }
 .form-input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px var(--gold-glow); }
 .form-input::placeholder { color: var(--t3); }
+
+/* Campo de contraseña con botón mostrar/ocultar (ojo) */
+.pass-wrap { position: relative; display: block; }
+.pass-wrap .form-input { padding-right: 2.75rem; }
+.pass-toggle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 2.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: var(--t3);
+  transition: color .2s ease;
+}
+.pass-toggle:hover,
+.pass-toggle:focus-visible { color: var(--gold); outline: none; }
+
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
 .card-input-wrap { position: relative; }
 .card-icons {
