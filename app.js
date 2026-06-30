@@ -21,9 +21,13 @@ const DEMO_MODE = true;
    junto con los demás wa.me del sitio. */
 const WA_CENTRAL = '523321685023';
 
-/* ─── Usuarios / Login ──────────────────────────────────── */
+/* ─── Usuarios / Login ────────────────────────────────────
+   NOTA: el admin YA NO vive aquí. El repo es público, así que
+   cualquier credencial en este archivo es visible para todo el
+   mundo. El admin ahora se autentica contra la tabla `usuarios`
+   de Supabase (role='admin'). Aquí solo quedan las cuentas DEMO
+   de escort para que las chicas prueben el panel-modelo. */
 const USERS = [
-  { username:'admin',     pass:'admin123',  role:'admin',  name:'Administrador', redirect:'panel-admin.html' },
   { username:'valentina', pass:'modelo123', role:'modelo', name:'Valentina R.',  redirect:'panel-modelo.html' },
   { username:'camila',    pass:'modelo123', role:'modelo', name:'Camila V.',     redirect:'panel-modelo.html' },
   { username:'isabella',  pass:'modelo123', role:'modelo', name:'Isabella M.',   redirect:'panel-modelo.html' },
@@ -72,7 +76,8 @@ async function doLogin() {
     return;
   }
 
-  /* 2. Escorts reales en Supabase */
+  /* 2. Usuarios reales en Supabase (admin + escorts).
+     El admin se distingue por role='admin'. */
   if (window.sbClient) {
     const { data } = await window.sbClient
       .from('usuarios')
@@ -84,6 +89,14 @@ async function doLogin() {
 
     if (data) {
       if (errEl) errEl.style.display = 'none';
+
+      if (data.role === 'admin') {
+        setSession('admin', data.nombre || 'Administrador');
+        showToast('Bienvenido, Administrador', 'success');
+        setTimeout(() => { window.location.href = 'panel-admin.html'; }, 800);
+        return;
+      }
+
       setSession('modelo', data.escorts?.nombre || 'Doncella', data.escort_id);
       showToast(`Bienvenida, ${data.escorts?.nombre || 'Doncella'} 🌹`, 'success');
       setTimeout(() => { window.location.href = 'panel-modelo.html'; }, 800);
@@ -2360,6 +2373,13 @@ document.addEventListener('click', (e) => {
 
 /* ─── Admin ─────────────────────────────────────────────── */
 function initAdmin() {
+  /* Guardia de acceso: solo 'admin' puede ver este panel. Sin esto,
+     cualquiera podría escribir la URL panel-admin.html directamente.
+     (Protección de UI — la seguridad real llega con Supabase Auth + RLS.) */
+  if (getSession().role !== 'admin') {
+    window.location.replace('index.html');
+    return;
+  }
   buildAdminCharts();
   buildActivityTable();
   buildSuspendidasTable();
