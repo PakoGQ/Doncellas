@@ -4640,19 +4640,25 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
 
   /* 1. Compartir — smaller fixed square */
   .botones-perfil-mobile > *:nth-child(1) { flex: 0 0 44px; width: 44px; }
-  /* 2. WhatsApp */
+  /* 2. WhatsApp — con texto "Agenda tu cita" (ícono + palabras) */
   .botones-perfil-mobile > *:nth-child(2) {
     flex: 2;
     background: #25D366;
     color: #fff;
     border: none;
+    font-size: 12px;
+    font-weight: 600;
+    gap: 6px;
   }
-  /* 3. Telegram */
+  /* 3. Telegram — con texto "Agenda tu cita" (ícono + palabras) */
   .botones-perfil-mobile > *:nth-child(3) {
     flex: 2;
     background: #0088cc;
     color: #fff;
     border: none;
+    font-size: 12px;
+    font-weight: 600;
+    gap: 6px;
   }
 
   /* ── Info bar spans the full carousel so name sits above the thumbs
