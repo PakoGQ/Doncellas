@@ -60,6 +60,17 @@ function clearSession() {
   SESSION_KEYS.forEach(k => localStorage.removeItem(k));
 }
 
+/* ─── bfcache: recargar limpio al volver con "atrás" ─────────
+   Al regresar con el botón atrás, el navegador puede restaurar una
+   copia CONGELADA de la página desde el back/forward cache (bfcache):
+   los scripts NO se re-ejecutan y el estado del hero/carrusel puede
+   quedar inconsistente (p.ej. el enlace "Ver perfil" deja de responder).
+   Forzar una recarga cuando la página viene del bfcache garantiza un
+   render fresco y correcto. Solo afecta la navegación con "atrás". */
+window.addEventListener('pageshow', (e) => {
+  if (e.persisted) window.location.reload();
+});
+
 async function doLogin() {
   const username = document.getElementById('loginEmail')?.value.trim().toLowerCase();
   const pass     = document.getElementById('loginPass')?.value;
