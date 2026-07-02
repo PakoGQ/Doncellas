@@ -2696,6 +2696,7 @@ function editModel(id) {
       <div class="form-group" style="grid-column:span 2"><label class="form-label">Categorías <span style="color:var(--t3);font-weight:400">(elige una o varias)</span></label>
         <div id="edit-cat-multi"></div>
       </div>
+      <div class="form-group" style="grid-column:span 2"><label class="form-label">Descripción del perfil</label><textarea class="form-input" id="edit-desc" rows="3" placeholder="Sobre mí…">${m.descripcion || ''}</textarea></div>
       <div class="form-group"><label class="form-label">Tarifa/hr ($MXN)</label><input type="number" class="form-input" id="edit-rate" value="${m.rate}" /></div>
       <div class="form-group"><label class="form-label">Estatura (cm)</label><input type="number" class="form-input" id="edit-height" value="${m.height}" /></div>
       <div class="form-group"><label class="form-label">Peso (kg)</label><input type="number" class="form-input" id="edit-peso" value="${m.peso||''}" placeholder="Ej. 55" /></div>
@@ -2792,6 +2793,7 @@ function saveEditModel(id) {
   /* Contacto interno (agente ↔ Doncella). Cadena vacía = borrar el dato. */
   m.whatsapp    = (g('edit-whatsapp')?.value || '').trim();
   m.telegram    = (g('edit-telegram')?.value || '').trim();
+  if (g('edit-desc')) m.descripcion = g('edit-desc').value.trim();
 
   /* services */
   const newServices = {};
@@ -2827,6 +2829,7 @@ function saveEditModel(id) {
   if (window.sbClient) {
     window.sbClient.from('escorts').update({
       nombre: m.name, edad: m.age, categoria: m.cat, tags: m.tags,
+      descripcion: m.descripcion || null,
       precio_hora: m.rate, altura: m.height, peso: m.peso || null,
       nacionalidad: m.nationality, disponible: m.available,
       cabello: m.hairColor, ojos: m.eyeColor, piel: m.skinColor,
