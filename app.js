@@ -497,7 +497,6 @@ const FAQ_DATA = [
   { q:'¿Puedo cancelar en cualquier momento?', a:'Sí, puedes cancelar sin penalización contactando a soporte.' },
   { q:'¿Cómo funcionan los perfiles verificados?', a:'Cada Doncella pasa verificación de identidad con documento oficial y selfie en tiempo real.' },
   { q:'¿Los datos de mi tarjeta están seguros?', a:'Usamos cifrado SSL 256-bit y procesamiento PCI-DSS nivel 1. Nunca almacenamos datos de tarjeta.' },
-  { q:'¿Puedo cambiar de plan en cualquier momento?', a:'Sí. Los cambios se aplican de forma inmediata con prorrateo automático.' },
   { q:'¿Cómo se garantiza la discreción?', a:'Toda la comunicación es cifrada. No compartimos datos con terceros ni aparecemos en buscadores.' },
 ];
 
@@ -2250,7 +2249,10 @@ window.saveNewModelo = async function() {
   const zona   = 'Guadalajara';   // zona ya no se segmenta: todas cubren la ZMG
   const cats   = getCatMultiValues('newCatMulti');
   const cat    = cats[0] || 'VIP';   // categoría principal = primera elegida
-  const plan   = document.getElementById('newPlan')?.value;
+  /* Membresía ÚNICA por ahora: todas entran con el plan más alto.
+     (El selector Silver/Gold/Elite se retiró de la UI — ver memoria
+     membresias-tiers-desactivadas para reactivar los planes.) */
+  const plan   = 'Elite';
   const tarifa = parseInt(document.getElementById('newTarifa')?.value) || 2500;
   const edad   = parseInt(document.getElementById('newEdad')?.value) || 25;
   const tel    = (document.getElementById('newTel')?.value || '').replace(/\D/g,'');
@@ -2504,16 +2506,14 @@ function applyDemoData() {
     _setKpi(ing[2], '$312,000', '<i class="fas fa-arrow-up"></i> +34%', 'up');
     _setKpi(ing[3], '$24,800',  '20% por cita', 'up');
   }
-  /* Admin — Membresías (beta: TODAS en Elite gratis) */
+  /* Admin — Membresías (única por ahora, gratis en beta) */
   const mem = document.querySelectorAll('#page-membresias-admin .kpi-value');
-  if (mem.length >= 4) {
-    _setKpi(mem[0], String(nDoncellas), '$2,500/mes · gratis en beta', 'up');
-    _setKpi(mem[1], '0', '$2,000/mes', 'up');
-    _setKpi(mem[2], '0', '$1,500/mes', 'up');
-    _setKpi(mem[3], '0', 'Este mes', 'down');
+  if (mem.length >= 2) {
+    _setKpi(mem[0], String(nDoncellas), 'Gratis en beta', 'up');
+    _setKpi(mem[1], '0', 'Este mes', 'down');
   }
   const memSub = document.querySelector('#page-membresias-admin .admin-page-sub');
-  if (memSub) memSub.textContent = 'Todas las Doncellas en Elite (beta gratis)';
+  if (memSub) memSub.textContent = 'Membresía única para todas las Doncellas (beta gratis)';
   /* Modelo — Estadísticas (una escort, ~1 mes en beta) */
   const sm = document.querySelectorAll('#page-stats .stat-mini-n');
   if (sm.length >= 6) {
@@ -2590,7 +2590,6 @@ function buildActivityTable() {
 function buildModelosTable() {
   const tbody = document.getElementById('modelosTbody');
   if (!tbody) return;
-  const plans = ['Silver','Gold','Elite'];
   const total = MODELS.length;
   const countEl = document.getElementById('modelosTableCount');
   if (countEl) countEl.textContent = `Mostrando ${Math.min(total, 50)} de ${total} Doncellas`;
@@ -2599,7 +2598,6 @@ function buildModelosTable() {
   const kpiEl = document.getElementById('kpiDoncellasActivas');
   if (kpiEl) kpiEl.textContent = MODELS.filter(m => m.available && !m.hidden && !m.suspended).length;
   MODELS.slice(0, 50).forEach(m => {
-    const plan = plans[m.id % 3];
     let estadoHTML;
     if (m.suspended) {
       estadoHTML = `<span class="pill pill-busy" style="font-size:.65rem"><i class="fas fa-ban"></i> Suspendida</span>`;
@@ -2611,7 +2609,6 @@ function buildModelosTable() {
       <tr data-model-row="${m.id}"${m.suspended?' style="opacity:.55"':''}>
         <td><div class="table-avatar"><img src="${m.img}" alt="${m.name}" /><div><div class="table-name">${m.name}</div><div class="table-sub">${m.age} años · ${m.nationality}</div></div></div></td>
         <td>${m.cat}</td>
-        <td><span class="pill ${plan==='Elite'?'pill-new':plan==='Gold'?'pill-gold':'pill-available'}" style="font-size:.65rem">${plan}</span></td>
         <td style="font-family:var(--font-serif)">${m.citas}</td>
         <td style="color:var(--gold);font-family:var(--font-serif)">${fmtMXN(m.rate*12)}</td>
         <td>${estadoHTML}</td>
