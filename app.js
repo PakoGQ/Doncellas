@@ -255,6 +255,7 @@ function generateModels() {
     const waist       = 58 + Math.floor(r() * 15);
     const hips        = 86 + Math.floor(r() * 15);
     const bust        = 82 + Math.floor(r() * 15);
+    const peso        = Math.round(height - 108);   /* realista y esbelto, sin consumir el RNG */
     const nationality = NATIONALITIES[i % NATIONALITIES.length];
     const services = {};
     const rSvc = _rng(i * 1997 + 101);
@@ -284,7 +285,7 @@ function generateModels() {
       img: photoUrl(photoId),
       photos: [photoUrl(photoId), photoUrl(photo2), photoUrl(photo3)],
       hasVideo: i % 7 === 0,
-      hairColor, eyeColor, skinColor, waist, hips, bust, nationality,
+      hairColor, eyeColor, skinColor, waist, hips, bust, peso, nationality,
       services,
       hidden: false, suspended: false, suspendedFrom: null, suspHistory: [],
       promo,
@@ -368,6 +369,7 @@ function mapEscortToModel(e) {
     name:        e.nombre,
     age:         e.edad         || 25,
     height:      e.altura       || 165,
+    peso:        e.peso         || null,
     zone:        e.zona         || 'Guadalajara',
     cat:         e.categoria    || 'VIP',
     tags:        e.tags         || [e.categoria || 'VIP'],
@@ -1839,14 +1841,13 @@ function initPerfil() {
   if (cg) {
     cg.innerHTML = `
       <div class="caract-item"><span class="caract-lbl"><i class="fas fa-flag"></i> Nacionalidad</span><span class="caract-val">${m.nationality}</span></div>
-      <div class="caract-item"><span class="caract-lbl"><i class="fas fa-ruler-vertical"></i> Altura</span><span class="caract-val">${(m.height/100).toFixed(2)} m</span></div>
+      <div class="caract-item"><span class="caract-lbl"><i class="fas fa-ruler-vertical"></i> Estatura</span><span class="caract-val">${(m.height/100).toFixed(2)} m</span></div>
+      <div class="caract-item"><span class="caract-lbl"><i class="fas fa-weight"></i> Peso</span><span class="caract-val">${m.peso ? m.peso + ' kg' : '—'}</span></div>
       <div class="caract-item"><span class="caract-lbl"><i class="fas fa-birthday-cake"></i> Edad</span><span class="caract-val">${m.age} años</span></div>
       <div class="caract-item"><span class="caract-lbl"><i class="fas fa-eye"></i> Ojos</span><span class="caract-val">${m.eyeColor}</span></div>
       <div class="caract-item"><span class="caract-lbl"><i class="fas fa-paint-brush"></i> Cabello</span><span class="caract-val">${m.hairColor}</span></div>
       <div class="caract-item"><span class="caract-lbl"><i class="fas fa-hand-paper"></i> Piel</span><span class="caract-val">${m.skinColor||'—'}</span></div>
-      <div class="caract-item"><span class="caract-lbl"><i class="fas fa-arrows-alt-v"></i> Cintura</span><span class="caract-val">${m.waist} cm</span></div>
-      <div class="caract-item"><span class="caract-lbl"><i class="fas fa-circle"></i> Caderas</span><span class="caract-val">${m.hips} cm</span></div>
-      <div class="caract-item"><span class="caract-lbl"><i class="fas fa-circle-notch"></i> Busto</span><span class="caract-val">${m.bust} cm</span></div>`;
+      <div class="caract-item"><span class="caract-lbl"><i class="fas fa-ruler-combined"></i> Medidas</span><span class="caract-val">${m.bust}-${m.waist}-${m.hips}</span></div>`;
   }
 
   /* Tarifas */
