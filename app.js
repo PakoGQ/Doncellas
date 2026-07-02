@@ -3397,21 +3397,48 @@ async function applyWatermark(dataURL) {
 }
 
 /* File upload */
-function handleFileUpload(e) {
-  const grid=document.getElementById('uploadPreviewGrid');
-  if(!grid)return;
-  Array.from(e.target?.files||e.dataTransfer?.files||[]).forEach(file=>{
-    if(!file.type.startsWith('image/')&&!file.type.startsWith('video/'))return;
-    const reader=new FileReader();
-    reader.onload=async ev=>{
-      const item=document.createElement('div');
-      item.className='upload-preview-item';
-      const isVid=file.type.startsWith('video/');
+/* Límites de contenido por banco (fotos / videos).
+   Perfil = galería principal · Redes = contenido casual para el agente. */
+const CONTENT_LIMITS = {
+  perfil: { fotos: 15, videos: 3  },
+  redes:  { fotos: 30, videos: 10 },
+};
+
+function handleFileUpload(e, tipo) {
+  tipo = (tipo === 'redes') ? 'redes' : 'perfil';
+  const cap  = tipo.charAt(0).toUpperCase() + tipo.slice(1);      // Perfil / Redes
+  const grid = document.getElementById('uploadPreviewGrid' + cap);
+  if (!grid) return;
+
+  const limit = CONTENT_LIMITS[tipo];
+  const donde = tipo === 'redes' ? 'Redes' : 'tu galería';
+  /* Cuenta lo que ya está cargado en el grid para respetar el tope */
+  let nFotos  = grid.querySelectorAll('[data-kind="img"]').length;
+  let nVideos = grid.querySelectorAll('[data-kind="video"]').length;
+
+  const files = Array.from(e.target?.files || e.dataTransfer?.files || []);
+  let procesados = 0, rechazados = 0;
+
+  files.forEach(file => {
+    const isVid = file.type.startsWith('video/');
+    const isImg = file.type.startsWith('image/');
+    if (!isImg && !isVid) return;
+    /* Aplica el límite por tipo */
+    if (isVid && nVideos >= limit.videos) { rechazados++; return; }
+    if (isImg && nFotos  >= limit.fotos)  { rechazados++; return; }
+    if (isVid) nVideos++; else nFotos++;
+    procesados++;
+
+    const reader = new FileReader();
+    reader.onload = async ev => {
+      const item = document.createElement('div');
+      item.className = 'upload-preview-item';
+      item.dataset.kind = isVid ? 'video' : 'img';
 
       // Aplicar watermark a imágenes automáticamente
       const src = isVid ? ev.target.result : await applyWatermark(ev.target.result);
 
-      item.innerHTML=`
+      item.innerHTML = `
         ${isVid
           ? `<video src="${src}" style="width:100%;height:100%;object-fit:cover"></video><div class="wm-video-overlay"></div><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center"><i class="fas fa-play" style="color:#fff;font-size:1.5rem"></i></div>`
           : `<img src="${src}" alt="${file.name}" />`}
@@ -3420,15 +3447,23 @@ function handleFileUpload(e) {
     };
     reader.readAsDataURL(file);
   });
-  showToast(`Aplicando marca de agua Doncellas...`,'success');
+
+  if (procesados > 0) showToast('Aplicando marca de agua Doncellas…', 'success');
+  if (rechazados > 0) {
+    showToast(`Límite de ${donde}: ${limit.fotos} fotos y ${limit.videos} videos. ${rechazados} archivo(s) no se agregaron.`, 'error');
+  }
+  /* Permite volver a elegir el mismo archivo si se quita y se re-sube */
+  if (e.target) e.target.value = '';
 }
 
 document.addEventListener('DOMContentLoaded',()=>{
-  const zone=document.getElementById('uploadZone');
-  if(!zone)return;
-  zone.addEventListener('dragover',e=>{e.preventDefault();zone.classList.add('drag-over');});
-  zone.addEventListener('dragleave',()=>zone.classList.remove('drag-over'));
-  zone.addEventListener('drop',e=>{e.preventDefault();zone.classList.remove('drag-over');handleFileUpload(e);});
+  [['uploadZonePerfil','perfil'], ['uploadZoneRedes','redes']].forEach(([id, tipo]) => {
+    const zone = document.getElementById(id);
+    if (!zone) return;
+    zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+    zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+    zone.addEventListener('drop', e => { e.preventDefault(); zone.classList.remove('drag-over'); handleFileUpload(e, tipo); });
+  });
 });
 
 /* ─── Afiliacion ─────────────────────────────────────────── */
