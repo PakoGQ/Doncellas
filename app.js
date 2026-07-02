@@ -1749,15 +1749,10 @@ function buildCatFeatureGrid() {
 function buildAllCatsGrid() {
   const g = document.getElementById('allCatsGrid');
   if (!g) return;
-  const extra = [
-    { name:'Bilingüe',    count:45, icon:'fa-globe' },
-    { name:'Fitness',     count:38, icon:'fa-dumbbell' },
-    { name:'Lujo & VIP',  count:29, icon:'fa-gem' },
-    { name:'Corporativo', count:52, icon:'fa-building' },
-    { name:'Bohemia',     count:18, icon:'fa-palette' },
-    { name:'Deportes',    count:24, icon:'fa-running' },
-  ];
-  [...CATEGORIES, ...extra].forEach(c => {
+  /* Solo la taxonomía oficial (CATEGORIES). Antes se agregaban 6
+     categorías inventadas (Bilingüe, Fitness, Lujo & VIP, Corporativo,
+     Bohemia, Deportes) que no existen en el catálogo → 0 resultados. */
+  CATEGORIES.forEach(c => {
     g.insertAdjacentHTML('beforeend', `
       <a href="modelos.html?cat=${encodeURIComponent(c.name)}" class="zone-card">
         <div class="zone-icon"><i class="fas ${c.icon||'fa-tag'}"></i></div>
