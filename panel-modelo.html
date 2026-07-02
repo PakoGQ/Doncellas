@@ -698,9 +698,9 @@
     <!-- ── Configuración ── -->
     <div class="admin-page" id="page-config">
       <h2 class="admin-page-title">Configuración</h2>
-      <p class="admin-page-sub">Ajustes de cuenta y notificaciones</p>
+      <p class="admin-page-sub">Ajustes de cuenta</p>
 
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem">
+      <div style="display:grid;grid-template-columns:1fr;gap:1.5rem">
         <div class="chart-card">
           <h4 style="margin-bottom:1rem">Credenciales de acceso</h4>
           <p style="font-size:.8rem;color:var(--t2);margin-bottom:1rem">Tus credenciales son gestionadas por el administrador. Para cambiarlas, comunícate con soporte.</p>
@@ -726,7 +726,12 @@
           </div>
           <p style="font-size:.75rem;color:var(--t3);margin-top:.25rem"><i class="fas fa-lock" style="color:var(--gold)"></i> Solo el administrador puede modificar estas credenciales.</p>
         </div>
-        <div class="chart-card">
+        <!-- Notificaciones OCULTAS hasta el agente IA (Mes 2): los toggles no
+             tenían ninguna lógica (ni push del navegador ni persistencia), así
+             que prometían algo que no funciona. Para reactivar: quitar el
+             display:none de esta tarjeta y volver la rejilla de arriba a
+             grid-template-columns:1fr 1fr. -->
+        <div class="chart-card" style="display:none">
           <h4 style="margin-bottom:1rem">Notificaciones</h4>
           <div style="display:flex;flex-direction:column;gap:.75rem">
             <div class="switch-wrap">
