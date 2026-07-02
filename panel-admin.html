@@ -549,6 +549,22 @@
         <input class="form-input" type="number" id="newEdad" placeholder="18+" min="18" />
       </div>
       <div class="form-group">
+        <label class="form-label">Estatura (cm)</label>
+        <input class="form-input" type="number" id="newEstatura" placeholder="Ej. 165" min="140" max="200" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Peso (kg)</label>
+        <input class="form-input" type="number" id="newPeso" placeholder="Ej. 55" min="35" max="120" />
+      </div>
+      <div class="form-group" style="grid-column:span 2">
+        <label class="form-label">Medidas <span style="color:var(--t3);font-weight:400">(busto - cintura - cadera, ej. 90-60-90)</span></label>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.5rem">
+          <input class="form-input" type="number" id="newBusto" placeholder="Busto (cm)" min="60" max="140" />
+          <input class="form-input" type="number" id="newCintura" placeholder="Cintura (cm)" min="45" max="120" />
+          <input class="form-input" type="number" id="newCadera" placeholder="Cadera (cm)" min="60" max="150" />
+        </div>
+      </div>
+      <div class="form-group">
         <label class="form-label">Categorías <span style="color:var(--t3);font-weight:400">(elige una o varias)</span></label>
         <div id="newCatMulti"></div>
       </div>

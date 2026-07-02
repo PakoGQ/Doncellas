@@ -2258,6 +2258,11 @@ window.saveNewModelo = async function() {
   const ojos    = document.getElementById('newOjos')?.value.trim()    || null;
   const cabello = document.getElementById('newCabello')?.value.trim() || null;
   const piel    = document.getElementById('newPiel')?.value.trim()    || null;
+  const estatura = parseInt(document.getElementById('newEstatura')?.value) || null;
+  const peso     = parseInt(document.getElementById('newPeso')?.value)     || null;
+  const busto    = parseInt(document.getElementById('newBusto')?.value)    || null;
+  const cintura  = parseInt(document.getElementById('newCintura')?.value)  || null;
+  const cadera   = parseInt(document.getElementById('newCadera')?.value)   || null;
 
   if (!nombre)   { showToast('El nombre artístico es obligatorio', 'error'); return; }
   if (!username) { showToast('El usuario es obligatorio', 'error'); return; }
@@ -2277,6 +2282,7 @@ window.saveNewModelo = async function() {
         slug, nombre, edad, zona, categoria: cat, plan,
         precio_hora: tarifa, whatsapp: tel, descripcion: desc,
         ojos, cabello, piel,
+        altura: estatura, peso, busto, cintura, cadera,
         disponible: false, activa: true, es_nueva: true,
         tags: cats,
       })
@@ -2311,7 +2317,8 @@ window.saveNewModelo = async function() {
       rating: 5.0, available: false, featured: false, isNew: true, hasVideo: false,
       img: photoUrl(pId), photos: [photoUrl(pId)], tags: cats, plan, promo: null,
       skinColor: piel || 'Morena clara', hairColor: cabello || 'Castaño', eyeColor: ojos || 'Café',
-      bust: 86, waist: 62, hips: 90, whatsapp: tel, descripcion: desc,
+      height: estatura || 165, peso,
+      bust: busto || 86, waist: cintura || 62, hips: cadera || 90, whatsapp: tel, descripcion: desc,
       services: Object.fromEntries(ALL_SERVICES.map(s => [s, { si: false, extra: false }])),
       hidden: false,
     });
@@ -2335,7 +2342,8 @@ window.saveNewModelo = async function() {
 
   /* ── Limpiar formulario tras 3.5 s ── */
   setTimeout(() => {
-    ['newNombre','newEdad','newUsername','newPass','newTarifa','newDesc','newTel','newOjos','newCabello','newPiel']
+    ['newNombre','newEdad','newEstatura','newPeso','newBusto','newCintura','newCadera',
+     'newUsername','newPass','newTarifa','newDesc','newTel','newOjos','newCabello','newPiel']
       .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
     buildCatMultiselect('newCatMulti', []);   // limpiar categorías
     if (box) box.style.display = 'none';
@@ -2688,7 +2696,8 @@ function editModel(id) {
         <div id="edit-cat-multi"></div>
       </div>
       <div class="form-group"><label class="form-label">Tarifa/hr ($MXN)</label><input type="number" class="form-input" id="edit-rate" value="${m.rate}" /></div>
-      <div class="form-group"><label class="form-label">Altura (cm)</label><input type="number" class="form-input" id="edit-height" value="${m.height}" /></div>
+      <div class="form-group"><label class="form-label">Estatura (cm)</label><input type="number" class="form-input" id="edit-height" value="${m.height}" /></div>
+      <div class="form-group"><label class="form-label">Peso (kg)</label><input type="number" class="form-input" id="edit-peso" value="${m.peso||''}" placeholder="Ej. 55" /></div>
       <div class="form-group"><label class="form-label">Nacionalidad</label><input type="text" class="form-input" id="edit-nationality" value="${m.nationality}" /></div>
       <div class="form-group"><label class="form-label">Disponibilidad</label>
         <select class="form-input filter-select" id="edit-available">
@@ -2705,9 +2714,13 @@ function editModel(id) {
       <div class="form-group"><label class="form-label">Color de piel</label>
         <select class="form-input filter-select" id="edit-skinColor">${SKIN_COLORS.map(c=>`<option${c===m.skinColor?' selected':''}>${c}</option>`).join('')}</select>
       </div>
-      <div class="form-group"><label class="form-label">Cintura (cm)</label><input type="number" class="form-input" id="edit-waist" value="${m.waist}" /></div>
-      <div class="form-group"><label class="form-label">Caderas (cm)</label><input type="number" class="form-input" id="edit-hips" value="${m.hips}" /></div>
-      <div class="form-group"><label class="form-label">Busto (cm)</label><input type="number" class="form-input" id="edit-bust" value="${m.bust}" /></div>
+      <div class="form-group" style="grid-column:span 2"><label class="form-label">Medidas <span style="color:var(--t3);font-weight:400">(busto - cintura - cadera, ej. 90-60-90)</span></label>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.5rem">
+          <input type="number" class="form-input" id="edit-bust" value="${m.bust}" placeholder="Busto (cm)" />
+          <input type="number" class="form-input" id="edit-waist" value="${m.waist}" placeholder="Cintura (cm)" />
+          <input type="number" class="form-input" id="edit-hips" value="${m.hips}" placeholder="Cadera (cm)" />
+        </div>
+      </div>
       <div class="form-group"><label class="form-label">Promo — badge (ej. "20% OFF")</label><input type="text" class="form-input" id="edit-promoBadge" value="${m.promo?.badge||''}" placeholder="Vacío = sin promo" /></div>
       <div class="form-group" style="grid-column:span 2"><label class="form-label">Promo — título</label><input type="text" class="form-input" id="edit-promoTitle" value="${m.promo?.title||''}" /></div>
       <div class="form-group" style="grid-column:span 2"><label class="form-label">Promo — descripción</label><input type="text" class="form-input" id="edit-promoDesc" value="${m.promo?.desc||''}" /></div>
@@ -2763,6 +2776,7 @@ function saveEditModel(id) {
   if (editCats.length) { m.cat = editCats[0]; m.tags = editCats; }
   m.rate        = parseInt(g('edit-rate')?.value)      || m.rate;
   m.height      = parseInt(g('edit-height')?.value)    || m.height;
+  m.peso        = parseInt(g('edit-peso')?.value)      || m.peso;
   m.nationality = g('edit-nationality')?.value.trim()  || m.nationality;
   m.available   = g('edit-available')?.value === 'true';
   m.hairColor   = g('edit-hairColor')?.value  || m.hairColor;
