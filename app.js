@@ -395,6 +395,7 @@ function mapEscortToModel(e) {
     suspended:   false, suspendedFrom: null, suspHistory: [],
     promo:       null,
     whatsapp:    e.whatsapp,
+    telegram:    e.telegram,
     descripcion: e.descripcion,
     idiomas:     e.idiomas      || ['Español'],
     plan:        e.plan         || 'Elite',
@@ -2255,7 +2256,10 @@ window.saveNewModelo = async function() {
   const plan   = 'Elite';
   const tarifa = parseInt(document.getElementById('newTarifa')?.value) || 2500;
   const edad   = parseInt(document.getElementById('newEdad')?.value) || 25;
-  const tel    = (document.getElementById('newTel')?.value || '').replace(/\D/g,'');
+  /* Contacto INTERNO (agente ↔ Doncella): WhatsApp y Telegram por separado,
+     no siempre son la misma cuenta. No se muestran al cliente. */
+  const whatsapp = (document.getElementById('newWhatsapp')?.value || '').replace(/\D/g,'') || null;
+  const telegram = document.getElementById('newTelegram')?.value.trim() || null;
   const desc   = document.getElementById('newDesc')?.value.trim() || '';
   const ojos    = document.getElementById('newOjos')?.value.trim()    || null;
   const cabello = document.getElementById('newCabello')?.value.trim() || null;
@@ -2282,7 +2286,7 @@ window.saveNewModelo = async function() {
       .from('escorts')
       .insert({
         slug, nombre, edad, zona, categoria: cat, plan,
-        precio_hora: tarifa, whatsapp: tel, descripcion: desc,
+        precio_hora: tarifa, whatsapp, telegram, descripcion: desc,
         ojos, cabello, piel,
         altura: estatura, peso, busto, cintura, cadera,
         disponible: false, activa: true, es_nueva: true,
@@ -2320,7 +2324,7 @@ window.saveNewModelo = async function() {
       img: photoUrl(pId), photos: [photoUrl(pId)], tags: cats, plan, promo: null,
       skinColor: piel || 'Morena clara', hairColor: cabello || 'Castaño', eyeColor: ojos || 'Café',
       height: estatura || 165, peso,
-      bust: busto || 86, waist: cintura || 62, hips: cadera || 90, whatsapp: tel, descripcion: desc,
+      bust: busto || 86, waist: cintura || 62, hips: cadera || 90, whatsapp, telegram, descripcion: desc,
       services: Object.fromEntries(ALL_SERVICES.map(s => [s, { si: false, extra: false }])),
       hidden: false,
     });
@@ -2345,7 +2349,7 @@ window.saveNewModelo = async function() {
   /* ── Limpiar formulario tras 3.5 s ── */
   setTimeout(() => {
     ['newNombre','newEdad','newEstatura','newPeso','newBusto','newCintura','newCadera',
-     'newUsername','newPass','newTarifa','newDesc','newTel','newOjos','newCabello','newPiel']
+     'newUsername','newPass','newTarifa','newDesc','newWhatsapp','newTelegram','newOjos','newCabello','newPiel']
       .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
     buildCatMultiselect('newCatMulti', []);   // limpiar categorías
     if (box) box.style.display = 'none';
@@ -2718,6 +2722,9 @@ function editModel(id) {
           <input type="number" class="form-input" id="edit-hips" value="${m.hips}" placeholder="Cadera (cm)" />
         </div>
       </div>
+      <div class="form-group" style="grid-column:span 2"><label class="form-label"><i class="fas fa-lock" style="color:var(--gold);font-size:.7rem"></i> Contacto interno <span style="color:var(--t3);font-weight:400">(lo usa el agente para contactar a la Doncella — no se muestra al cliente)</span></label></div>
+      <div class="form-group"><label class="form-label">WhatsApp</label><input type="text" class="form-input" id="edit-whatsapp" value="${m.whatsapp||''}" placeholder="+52 33 1234 5678" /></div>
+      <div class="form-group"><label class="form-label">Telegram</label><input type="text" class="form-input" id="edit-telegram" value="${m.telegram||''}" placeholder="@usuario o +52 33 1234 5678" /></div>
       <div class="form-group"><label class="form-label">Promo — badge (ej. "20% OFF")</label><input type="text" class="form-input" id="edit-promoBadge" value="${m.promo?.badge||''}" placeholder="Vacío = sin promo" /></div>
       <div class="form-group" style="grid-column:span 2"><label class="form-label">Promo — título</label><input type="text" class="form-input" id="edit-promoTitle" value="${m.promo?.title||''}" /></div>
       <div class="form-group" style="grid-column:span 2"><label class="form-label">Promo — descripción</label><input type="text" class="form-input" id="edit-promoDesc" value="${m.promo?.desc||''}" /></div>
@@ -2782,6 +2789,9 @@ function saveEditModel(id) {
   m.waist       = parseInt(g('edit-waist')?.value)     || m.waist;
   m.hips        = parseInt(g('edit-hips')?.value)      || m.hips;
   m.bust        = parseInt(g('edit-bust')?.value)      || m.bust;
+  /* Contacto interno (agente ↔ Doncella). Cadena vacía = borrar el dato. */
+  m.whatsapp    = (g('edit-whatsapp')?.value || '').trim();
+  m.telegram    = (g('edit-telegram')?.value || '').trim();
 
   /* services */
   const newServices = {};
@@ -2809,6 +2819,22 @@ function saveEditModel(id) {
     };
   } else {
     m.promo = null;
+  }
+
+  /* Persistir a Supabase para que el agente lea los datos actualizados
+     (incluye el contacto interno WhatsApp/Telegram). Solo columnas reales
+     de la tabla escorts — la promo vive solo en memoria. */
+  if (window.sbClient) {
+    window.sbClient.from('escorts').update({
+      nombre: m.name, edad: m.age, categoria: m.cat, tags: m.tags,
+      precio_hora: m.rate, altura: m.height, peso: m.peso || null,
+      nacionalidad: m.nationality, disponible: m.available,
+      cabello: m.hairColor, ojos: m.eyeColor, piel: m.skinColor,
+      busto: m.bust, cintura: m.waist, cadera: m.hips,
+      whatsapp: m.whatsapp || null, telegram: m.telegram || null,
+    }).eq('id', id).then(({ error }) => {
+      if (error) showToast('Guardado local, pero Supabase falló: ' + error.message, 'error');
+    });
   }
 
   closeModal('editModelModal');
