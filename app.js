@@ -716,6 +716,32 @@ function animateCount(el, target) {
   }, 22);
 }
 
+/* ─── Teaser tipo Telegram para las cards (elegante, 1 línea) ─── */
+const CARD_TEASERS = [
+  'Elegante, cálida y con una sonrisa que no vas a olvidar.',
+  'Compañía discreta y sofisticada para un momento inolvidable.',
+  'Dulce en el trato, intensa cuando importa. Te va a encantar.',
+  'Trato de novios, presencia impecable y mucha química.',
+  'Sensual, atenta y siempre impecable. Una experiencia premium.',
+  'Conversación deliciosa y una conexión que se siente real.',
+  'Discreta, coqueta y con una energía que atrapa desde el primer momento.',
+  'Belleza natural y un trato que te hace sentir el único.',
+  'Femenina, divertida y con clase. La compañía perfecta.',
+  'Mirada que enamora y una actitud que no te deja indiferente.',
+];
+
+/* Devuelve una descripción corta estilo Telegram para la card.
+   Usa la descripción real de la escort (Supabase) si existe; si no, un teaser elegante. */
+function cardTeaser(m) {
+  if (m.descripcion && m.descripcion.trim()) {
+    const d = m.descripcion.trim().replace(/\s+/g, ' ');
+    const firstSentence = d.split(/(?<=[.!?])\s/)[0];
+    return firstSentence.length <= 110 ? firstSentence
+                                       : d.slice(0, 100).trim() + '…';
+  }
+  return CARD_TEASERS[m.id % CARD_TEASERS.length];
+}
+
 /* ─── Model Card HTML ───────────────────────────────────── */
 function modelCardHTML(m) {
   return `
@@ -748,10 +774,7 @@ function modelCardHTML(m) {
       <div class="model-card-tags">
         ${m.tags.slice(0,3).map(t=>`<span class="tag">${t}</span>`).join('')}
       </div>
-      <div class="model-card-prices">
-        <div><span class="model-card-price-val">${fmtMXN(m.rate)}</span><span class="model-card-price-label">1hr</span></div>
-        <div><span class="model-card-price-val">${fmtMXN(Math.round(m.rate * 1.85))}</span><span class="model-card-price-label">2hr</span></div>
-      </div>
+      <div class="model-card-desc">${cardTeaser(m)}</div>
       <div class="model-card-footer" style="margin-top:.5rem">
         <button class="btn btn-ghost btn-sm" style="font-size:.72rem;padding:.35rem .65rem" onclick="event.stopPropagation();openQuickView(${m.id})">
           <i class="fas fa-eye"></i> Ver
