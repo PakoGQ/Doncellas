@@ -1576,10 +1576,9 @@ function buildHeroSlides() {
       </div>
 
       <div class="hero-recruit-actions">
-        <a href="https://wa.me/523321685023?text=Hola%2C%20quiero%20postularme%20como%20Doncella"
-           target="_blank" rel="noopener"
+        <a href="postular.html"
            onclick="event.stopPropagation()" class="hero-tg-cta">
-          <i class="fab fa-whatsapp"></i>
+          <i class="fas fa-crown"></i>
           <span>Quiero postularme</span>
           <i class="fas fa-arrow-right hero-tg-cta-arrow"></i>
         </a>

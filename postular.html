@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Postúlate como Doncella | Doncellas GDL</title>
+  <meta name="description" content="Envía tu solicitud para formar parte de Doncellas GDL. Comparte tus datos y fotos de forma privada y discreta." />
+  <meta name="robots" content="noindex, follow" />
+  <link rel="canonical" href="https://doncellas.mx/postular.html" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#C9A84C" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Doncellas" />
+  <link rel="apple-touch-icon" href="/assets/icons/icon-192.png" />
+  <style>
+    /* ── Postular hero ── */
+    .post-hero {
+      text-align: center;
+      padding: calc(var(--nav-h) + 3.5rem) 2rem 1.5rem;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+    .post-hero .post-crown {
+      width: 60px; height: 60px; border-radius: 50%;
+      background: rgba(201,168,76,.15); border: 1px solid rgba(201,168,76,.45);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gold); font-size: 1.4rem; margin: 0 auto 1.1rem;
+      box-shadow: 0 0 30px rgba(201,168,76,.28), inset 0 0 16px rgba(201,168,76,.12);
+    }
+    .post-hero h1 { font-size: clamp(1.8rem, 5vw, 2.7rem); margin-bottom: .6rem; }
+    .post-hero p  { color: var(--t2); font-size: .96rem; line-height: 1.7; }
+
+    .post-privacy {
+      display: inline-flex; align-items: center; gap: .5rem;
+      background: rgba(201,168,76,.08); border: 1px solid rgba(201,168,76,.28);
+      border-radius: 999px; padding: .5rem 1rem; margin-top: 1.1rem;
+      font-size: .8rem; color: var(--t2);
+    }
+    .post-privacy i { color: var(--gold); }
+
+    /* ── Form card ── */
+    .post-form-wrap { max-width: 580px; margin: 2rem auto 4rem; padding: 0 1.25rem; }
+    .post-form-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--r-xl, 20px); padding: 2.25rem 2rem;
+    }
+    .post-form-card h2 { font-family: var(--font-serif); font-size: 1.35rem; margin-bottom: .3rem; }
+    .post-form-card .sub { font-size: .84rem; color: var(--t2); margin-bottom: 1.75rem; line-height: 1.5; }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 440px) { .form-row { grid-template-columns: 1fr; gap: 0; } }
+
+    /* ── Upload zone ── */
+    .upload-block { margin-bottom: 1.4rem; }
+    .upload-head {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: .5rem;
+    }
+    .upload-head .form-label { margin: 0; }
+    .upload-count { font-size: .76rem; color: var(--t3); }
+    .upload-count.full { color: var(--gold); }
+    .upload-drop {
+      border: 1.5px dashed rgba(201,168,76,.4);
+      border-radius: var(--r-md);
+      background: rgba(201,168,76,.04);
+      padding: 1.3rem 1rem; text-align: center;
+      cursor: pointer; transition: var(--transition);
+      display: flex; flex-direction: column; align-items: center; gap: .35rem;
+    }
+    .upload-drop:hover { background: rgba(201,168,76,.09); border-color: rgba(201,168,76,.7); }
+    .upload-drop.disabled { opacity: .4; pointer-events: none; }
+    .upload-drop i { font-size: 1.5rem; color: var(--gold); }
+    .upload-drop span { font-size: .85rem; color: var(--t2); }
+    .upload-drop small { font-size: .72rem; color: var(--t3); }
+    .upload-drop input { display: none; }
+
+    .upload-grid { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: .75rem; }
+    .upload-thumb {
+      position: relative; width: 76px; height: 76px; border-radius: var(--r-sm, 10px);
+      overflow: hidden; border: 1px solid var(--border); background: #000;
+      flex-shrink: 0;
+    }
+    .upload-thumb img, .upload-thumb video { width: 100%; height: 100%; object-fit: cover; }
+    .upload-thumb .vid-badge {
+      position: absolute; bottom: 3px; left: 3px;
+      background: rgba(0,0,0,.65); color: #fff; border-radius: 4px;
+      font-size: .6rem; padding: 1px 4px;
+    }
+    .upload-thumb .thumb-remove {
+      position: absolute; top: 3px; right: 3px;
+      width: 20px; height: 20px; border-radius: 50%;
+      background: rgba(0,0,0,.7); color: #fff; border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; font-size: .65rem;
+    }
+    .upload-thumb .thumb-remove:hover { background: var(--red, #e05050); }
+
+    /* ── WhatsApp fallback ── */
+    .wa-alt-btn {
+      display: flex; align-items: center; justify-content: center;
+      gap: .6rem; width: 100%;
+      background: rgba(37,211,102,.1); border: 1px solid rgba(37,211,102,.35);
+      color: #25D366; border-radius: var(--r-md);
+      padding: .85rem 1rem; font-size: .9rem; font-weight: 600;
+      cursor: pointer; transition: var(--transition); text-decoration: none;
+    }
+    .wa-alt-btn:hover { background: rgba(37,211,102,.18); }
+
+    /* ── Success state ── */
+    .post-success {
+      display: none; flex-direction: column; align-items: center;
+      text-align: center; padding: 1.5rem 0 .5rem; gap: .75rem;
+    }
+    .post-success .success-icon { font-size: 3rem; color: var(--green, #25D366); }
+    .post-success h3 { font-family: var(--font-serif); font-size: 1.35rem; }
+    .post-success p { color: var(--t2); font-size: .88rem; line-height: 1.6; }
+
+    .trust-badge { display: flex; align-items: center; gap: .5rem; font-size: .78rem; color: var(--t2); }
+    .trust-badge i { color: var(--gold); }
+
+    @media (max-width: 480px) { .post-form-card { padding: 1.75rem 1.25rem; } }
+  </style>
+</head>
+<body class="page-mobile-min-nav">
+
+<nav class="nav" id="mainNav">
+  <div class="nav-brand">
+    <a href="index.html" class="nav-logo" aria-label="Doncellas"><img src="logo.png" alt="Doncellas" /></a>
+    <span class="nav-brand-title">Doncellas</span>
+    <span class="nav-escorts-label">Escorts</span>
+  </div>
+  <div class="nav-center">
+    <span class="nav-title">Doncellas</span>
+    <span class="nav-tagline">La Elegancia del Placer</span>
+    <ul class="nav-links">
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="modelos.html">Doncellas</a></li>
+      <li><a href="categorias.html">Categorías</a></li>
+      <li><a href="legal.html">Legal</a></li>
+    </ul>
+  </div>
+  <div class="nav-cta">
+    <button class="login-key" onclick="openModal('loginModal')" aria-label="Acceso" title="Acceso"><i class="fas fa-ellipsis-v"></i></button>
+    <button class="nav-menu-btn" id="navMenuBtn" aria-label="Menú"><span></span><span></span><span></span></button>
+  </div>
+  <span class="nav-escorts-mobile">La Elegancia del Placer</span>
+</nav>
+
+<!-- ── HERO ── -->
+<div class="post-hero">
+  <div class="post-crown"><i class="fas fa-crown"></i></div>
+  <h1>Postúlate como <span class="gold">Doncella</span></h1>
+  <p>Cuéntanos de ti y comparte tus fotos. Nuestro equipo revisa cada solicitud de forma privada y te contacta por WhatsApp para los siguientes pasos.</p>
+  <div class="post-privacy"><i class="fas fa-lock"></i> Tus datos y fotos son confidenciales · Solo los ve nuestro equipo</div>
+</div>
+
+<!-- ── FORM ── -->
+<div class="post-form-wrap">
+  <div class="post-form-card">
+
+    <!-- Success state (hidden until submit) -->
+    <div class="post-success" id="postSuccess">
+      <div class="success-icon"><i class="fas fa-check-circle"></i></div>
+      <h3>¡Solicitud enviada!</h3>
+      <p>Gracias por postularte. Nuestro equipo revisará tu información y te contactará por WhatsApp muy pronto.</p>
+      <a href="index.html" class="btn btn-gold" style="margin-top:.5rem;display:inline-flex">
+        <i class="fas fa-home"></i> Ir al inicio
+      </a>
+    </div>
+
+    <!-- Form -->
+    <div id="postForm">
+      <h2>Tu <span class="gold">solicitud</span></h2>
+      <p class="sub">Todos los campos con <span style="color:var(--gold)">*</span> son obligatorios. Sin costo, sin compromiso.</p>
+
+      <div class="form-group">
+        <label class="form-label">Nombre <span style="color:var(--gold)">*</span></label>
+        <input type="text" class="form-input" id="pNombre" placeholder="Nombre o cómo quieres que te llamemos" autocomplete="off" />
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Edad <span style="color:var(--gold)">*</span></label>
+          <input type="number" class="form-input" id="pEdad" placeholder="Ej. 24" min="18" max="65" inputmode="numeric" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Estatura (cm) <span style="color:var(--gold)">*</span></label>
+          <input type="number" class="form-input" id="pEstatura" placeholder="Ej. 168" min="140" max="200" inputmode="numeric" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Medidas <span style="color:var(--gold)">*</span></label>
+        <input type="text" class="form-input" id="pMedidas" placeholder="Ej. 90-60-90 (busto-cintura-cadera)" autocomplete="off" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">WhatsApp de contacto <span style="color:var(--gold)">*</span></label>
+        <input type="tel" class="form-input" id="pWa" placeholder="+52 33 1234 5678" autocomplete="tel" />
+      </div>
+
+      <!-- Fotos -->
+      <div class="upload-block">
+        <div class="upload-head">
+          <label class="form-label"><i class="fas fa-camera" style="color:var(--gold);margin-right:.35rem"></i>Fotos <span style="color:var(--gold)">*</span></label>
+          <span class="upload-count" id="fotoCount">0 / 5</span>
+        </div>
+        <label class="upload-drop" id="fotoDrop">
+          <i class="fas fa-cloud-arrow-up"></i>
+          <span>Toca para agregar fotos</span>
+          <small>Máximo 5 · JPG o PNG · hasta 10 MB c/u</small>
+          <input type="file" id="fotoInput" accept="image/*" multiple />
+        </label>
+        <div class="upload-grid" id="fotoGrid"></div>
+      </div>
+
+      <!-- Videos -->
+      <div class="upload-block">
+        <div class="upload-head">
+          <label class="form-label"><i class="fas fa-video" style="color:var(--gold);margin-right:.35rem"></i>Videos <span style="color:var(--t3);font-weight:400">(opcional)</span></label>
+          <span class="upload-count" id="videoCount">0 / 2</span>
+        </div>
+        <label class="upload-drop" id="videoDrop">
+          <i class="fas fa-clapperboard"></i>
+          <span>Toca para agregar videos</span>
+          <small>Máximo 2 · MP4 o MOV · hasta 60 MB c/u</small>
+          <input type="file" id="videoInput" accept="video/*" multiple />
+        </label>
+        <div class="upload-grid" id="videoGrid"></div>
+      </div>
+
+      <div style="margin:.25rem 0 1.25rem">
+        <label style="display:flex;align-items:flex-start;gap:.6rem;cursor:pointer;font-size:.82rem;color:var(--t2);line-height:1.5">
+          <input type="checkbox" id="pLegal" style="margin-top:.2rem;accent-color:var(--gold)" />
+          <span>Confirmo que soy mayor de 18 años y acepto los <a href="legal.html" style="color:var(--gold)">Términos y Condiciones</a> de Doncellas GDL.</span>
+        </label>
+      </div>
+
+      <button class="btn btn-gold w-full" id="postSubmitBtn" style="justify-content:center" onclick="enviarPostulacion()">
+        <i class="fas fa-paper-plane"></i> Enviar solicitud
+      </button>
+
+      <div style="display:flex;align-items:center;gap:.75rem;margin:1rem 0">
+        <div style="flex:1;height:1px;background:var(--border)"></div>
+        <span style="font-size:.76rem;color:var(--t3)">o si prefieres</span>
+        <div style="flex:1;height:1px;background:var(--border)"></div>
+      </div>
+
+      <a href="https://wa.me/523321685023?text=Hola%2C%20quiero%20postularme%20como%20Doncella"
+         target="_blank" class="wa-alt-btn">
+        <i class="fab fa-whatsapp" style="font-size:1.1rem"></i>
+        Escríbenos directo por WhatsApp
+      </a>
+
+      <div style="display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap;margin-top:1.5rem">
+        <div class="trust-badge"><i class="fas fa-lock"></i> Discreción total</div>
+        <div class="trust-badge"><i class="fas fa-shield-alt"></i> Datos protegidos</div>
+        <div class="trust-badge"><i class="fas fa-user-secret"></i> Sin costo inicial</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── LOGIN MODAL ── -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal">
+    <div class="modal-logo"><img src="logo.png" alt="Doncellas" /></div>
+    <div class="modal-header">
+      <h3 class="modal-title">Iniciar Sesión</h3>
+      <button class="modal-close" onclick="closeModal('loginModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div id="loginError" style="display:none;background:rgba(224,80,80,.12);border:1px solid rgba(224,80,80,.3);border-radius:var(--r-md);padding:.75rem 1rem;margin-bottom:1rem;font-size:.85rem;color:var(--red)"><i class="fas fa-exclamation-circle"></i> Usuario o contraseña incorrectos.</div>
+    <div class="form-group"><label class="form-label">Usuario</label><input type="text" class="form-input" id="loginEmail" placeholder="Ej. valentina" autocomplete="username" /></div>
+    <div class="form-group"><label class="form-label">Contraseña</label><div class="pass-wrap"><input type="password" class="form-input" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()" /><button type="button" class="pass-toggle" aria-label="Mostrar contraseña" onclick="togglePassword(this)"><i class="fas fa-eye"></i></button></div></div>
+    <button class="btn btn-gold w-full" style="justify-content:center;margin-top:.5rem" onclick="doLogin()"><i class="fas fa-sign-in-alt"></i> Entrar</button>
+    <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:.35rem">
+      <button class="btn btn-ghost btn-sm" style="font-size:.75rem" onclick="fillLogin('isabella','modelo123')"><i class="fas fa-user" style="color:var(--gold)"></i> Doncella demo</button>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="nav-logo"><img src="logo.png" alt="Doncellas" /></div>
+      <p>Doncellas verificadas y seleccionadas en Guadalajara.</p>
+    </div>
+    <div>
+      <p class="footer-heading">Plataforma</p>
+      <ul class="footer-links">
+        <li><a href="modelos.html">Doncellas</a></li>
+        <li><a href="categorias.html">Categorías</a></li>
+        <li><a href="membresias.html">Afiliación</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="footer-heading">Para Doncellas</p>
+      <ul class="footer-links">
+        <li><a href="panel-modelo.html">Mi Panel</a></li>
+        <li><a href="postular.html">Postúlate</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="footer-heading">Legal</p>
+      <ul class="footer-links">
+        <li><a href="legal.html">Términos</a></li>
+        <li><a href="legal.html">Privacidad</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Doncellas. Solo mayores de 18 años.</span>
+  </div>
+</footer>
+
+<div class="float-btns">
+  <a href="https://t.me/DoncellasGDLbot" target="_blank" class="float-btn float-btn-telegram" aria-label="Telegram"><i class="fab fa-telegram"></i></a>
+  <a href="https://wa.me/523321685023" target="_blank" class="float-btn float-btn-wa" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Mobile Bottom Navigation -->
+<nav class="bottom-nav" aria-label="Navegación principal">
+  <a href="index.html" class="bottom-nav-item"><i class="fas fa-home"></i><span>Inicio</span></a>
+  <a href="modelos.html" class="bottom-nav-item"><i class="fas fa-users"></i><span>Doncellas</span></a>
+  <a href="categorias.html" class="bottom-nav-item"><i class="fas fa-star"></i><span>Categorías</span></a>
+</nav>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="supabase-config.js"></script>
+<script src="app.js"></script>
+<script>
+/* ═══════════════════════════════════════════════════════════
+   POSTULAR — solicitud con subida de fotos/videos a Supabase
+   Requiere en Supabase (una sola vez):
+     · Storage bucket llamado "solicitudes"
+     · Tabla "solicitudes" + policy de INSERT anónimo
+   (Ver instrucciones que dejó Claude / memoria del proyecto.)
+   ═══════════════════════════════════════════════════════════ */
+const MAX_FOTOS = 5, MAX_VIDEOS = 2;
+const MAX_FOTO_MB = 10, MAX_VIDEO_MB = 60;
+let fotos = [], videos = [];
+
+function pickFiles(input, kind) {
+  const isFoto = kind === 'foto';
+  const arr    = isFoto ? fotos : videos;
+  const max    = isFoto ? MAX_FOTOS : MAX_VIDEOS;
+  const maxMb  = isFoto ? MAX_FOTO_MB : MAX_VIDEO_MB;
+  const type   = isFoto ? 'image/' : 'video/';
+
+  for (const f of input.files) {
+    if (arr.length >= max) { showToast(`Máximo ${max} ${isFoto ? 'fotos' : 'videos'}`, 'error'); break; }
+    if (!f.type.startsWith(type)) { showToast(`Ese archivo no es un ${isFoto ? 'imagen' : 'video'}`, 'error'); continue; }
+    if (f.size > maxMb * 1024 * 1024) { showToast(`Cada ${isFoto ? 'foto' : 'video'} máximo ${maxMb} MB`, 'error'); continue; }
+    arr.push(f);
+  }
+  input.value = '';
+  isFoto ? renderFotos() : renderVideos();
+}
+
+function renderThumbs(arr, gridId, countId, dropId, max, kind) {
+  const grid  = document.getElementById(gridId);
+  const count = document.getElementById(countId);
+  const drop  = document.getElementById(dropId);
+  grid.innerHTML = '';
+  arr.forEach((f, i) => {
+    const url = URL.createObjectURL(f);
+    const div = document.createElement('div');
+    div.className = 'upload-thumb';
+    div.innerHTML = kind === 'foto'
+      ? `<img src="${url}" alt="foto ${i+1}" />`
+      : `<video src="${url}" muted></video><span class="vid-badge"><i class="fas fa-play"></i></span>`;
+    const rm = document.createElement('button');
+    rm.className = 'thumb-remove';
+    rm.type = 'button';
+    rm.innerHTML = '<i class="fas fa-times"></i>';
+    rm.onclick = () => { arr.splice(i, 1); URL.revokeObjectURL(url); kind === 'foto' ? renderFotos() : renderVideos(); };
+    div.appendChild(rm);
+    grid.appendChild(div);
+  });
+  count.textContent = `${arr.length} / ${max}`;
+  count.classList.toggle('full', arr.length >= max);
+  drop.classList.toggle('disabled', arr.length >= max);
+}
+function renderFotos()  { renderThumbs(fotos,  'fotoGrid',  'fotoCount',  'fotoDrop',  MAX_FOTOS,  'foto'); }
+function renderVideos() { renderThumbs(videos, 'videoGrid', 'videoCount', 'videoDrop', MAX_VIDEOS, 'video'); }
+
+document.getElementById('fotoInput').addEventListener('change',  e => pickFiles(e.target, 'foto'));
+document.getElementById('videoInput').addEventListener('change', e => pickFiles(e.target, 'video'));
+
+function _slug(s) { return (s || 'file').toLowerCase().replace(/[^a-z0-9.]+/g, '-').replace(/^-+|-+$/g, '').slice(-40); }
+
+async function _uploadTo(folder, prefix, file, idx) {
+  const ext  = (file.name.split('.').pop() || 'bin').toLowerCase();
+  const path = `${folder}/${prefix}-${idx + 1}-${_slug(file.name)}.${ext}`.replace(/\.+/g, '.');
+  const { error } = await window.sbClient.storage.from('solicitudes').upload(path, file, { upsert: false, contentType: file.type });
+  if (error) throw error;
+  return window.sbClient.storage.from('solicitudes').getPublicUrl(path).data.publicUrl;
+}
+
+async function enviarPostulacion() {
+  const nombre   = document.getElementById('pNombre').value.trim();
+  const edad     = parseInt(document.getElementById('pEdad').value, 10);
+  const estatura = parseInt(document.getElementById('pEstatura').value, 10);
+  const medidas  = document.getElementById('pMedidas').value.trim();
+  const wa       = document.getElementById('pWa').value.trim();
+  const legal    = document.getElementById('pLegal').checked;
+
+  if (!nombre)                       { showToast('Escribe tu nombre', 'error'); return; }
+  if (!edad || edad < 18)            { showToast('Debes ser mayor de 18 años', 'error'); return; }
+  if (!estatura)                     { showToast('Escribe tu estatura', 'error'); return; }
+  if (!medidas)                      { showToast('Escribe tus medidas', 'error'); return; }
+  if (!wa)                           { showToast('Escribe tu WhatsApp de contacto', 'error'); return; }
+  if (fotos.length === 0)            { showToast('Sube al menos una foto', 'error'); return; }
+  if (!legal)                        { showToast('Debes confirmar que eres mayor de 18 años', 'error'); return; }
+
+  const btn = document.getElementById('postSubmitBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Enviando…';
+
+  try {
+    if (!window.sbClient) throw new Error('sin-conexion');
+
+    const folder = `${new Date().toISOString().slice(0,10)}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,7)}`;
+    const fotoUrls  = [];
+    const videoUrls = [];
+
+    for (let i = 0; i < fotos.length; i++)  fotoUrls.push(await _uploadTo(folder, 'foto',  fotos[i],  i));
+    for (let i = 0; i < videos.length; i++) videoUrls.push(await _uploadTo(folder, 'video', videos[i], i));
+
+    const { error } = await window.sbClient.from('solicitudes').insert({
+      nombre, edad, estatura, medidas, whatsapp: wa,
+      fotos: fotoUrls, videos: videoUrls
+    });
+    if (error) throw error;
+
+    document.getElementById('postForm').style.display    = 'none';
+    document.getElementById('postSuccess').style.display = 'flex';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } catch (e) {
+    console.error('Error al enviar solicitud:', e);
+    showToast('No se pudo enviar. Intenta de nuevo o escríbenos por WhatsApp.', 'error');
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar solicitud';
+  }
+}
+</script>
+</body>
+</html>
