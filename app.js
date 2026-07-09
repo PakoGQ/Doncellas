@@ -686,10 +686,10 @@ function goHeroSlide(idx) {
   slides[heroIndex].classList.add('active');
   dots[heroIndex]?.classList.add('active');
   if (content) content.style.opacity = '0';
-  /* hide floating stats en slides que tienen contenido propio (marca, telegram, pagos) */
-  const total = document.querySelectorAll('.hero-slide').length;
-  const isStaticSlide = heroIndex === 0 || heroIndex === 1 || heroIndex === total - 1;
-  if (stats) stats.style.opacity = isStaticSlide ? '0' : '1';
+  /* La barra de stats flotante solo acompaña a las slides de perfil (foto de una modelo);
+     las slides con contenido propio (marca, telegram, whatsapp, agenda, reclutamiento) la ocultan. */
+  const showFloatingStats = slides[heroIndex].classList.contains('hero-slide-profile');
+  if (stats) stats.style.opacity = showFloatingStats ? '1' : '0';
   /* En cada vuelta completa del carrusel (al volver a la slide principal):
      rota el mosaico de marca a otros modelos y los slides de oferta. */
   if (heroIndex === 0) {
@@ -1526,6 +1526,70 @@ function buildHeroSlides() {
       <div class="hero-agenda-note"><i class="fas fa-clock"></i> Respuesta inmediata · Atención 24/7</div>
     </div>`;
   wrap.appendChild(agendaSlide);
+
+  /* ── Slide 6: ¿Quieres ser una de nuestras Doncellas? (reclutamiento) ─── */
+  /* Reutiliza las clases .hero-tg-* (estructura + reglas mobile);
+     .hero-slide-recruit en styles.css las recolorea a dorado (elegante). */
+  const recruitSlide = document.createElement('div');
+  recruitSlide.className = 'hero-slide hero-slide-recruit';
+  recruitSlide.innerHTML = `
+    <div class="hero-tg-bg">
+      <div class="hero-tg-glow-main"></div>
+      <div class="hero-tg-glow-sec"></div>
+      <i class="fas fa-crown hero-tg-float hero-tg-f1"></i>
+      <i class="fas fa-gem hero-tg-float hero-tg-f2"></i>
+      <i class="fas fa-crown hero-tg-float hero-tg-f3"></i>
+      <i class="fas fa-heart hero-tg-float hero-tg-f4"></i>
+      <i class="fas fa-gem hero-tg-float hero-tg-f5"></i>
+      <i class="fas fa-crown hero-tg-float hero-tg-f6"></i>
+    </div>
+
+    <div class="hero-tg-content">
+
+      <div class="hero-tg-top-row">
+        <div class="hero-tg-icon-ring">
+          <i class="fas fa-crown"></i>
+        </div>
+        <div class="hero-tg-channel-tag">
+          <i class="fas fa-gem"></i> Únete a Las Doncellas &nbsp;·&nbsp; Selección exclusiva
+        </div>
+      </div>
+
+      <h2 class="hero-tg-title">
+        ¿Quieres ser una de<br>
+        <em>nuestras Doncellas? <i class="fas fa-crown hero-tg-title-icon"></i></em>
+      </h2>
+
+      <div class="hero-tg-desc-box">
+        <p>Buscamos <strong>mujeres excepcionales</strong> para una plataforma premium.<br>
+        Tú defines tu agenda, tus tarifas y tus límites —<br>
+        nosotros ponemos <em>tecnología, marketing y total discreción</em>.</p>
+      </div>
+
+      <div class="hero-tg-pills">
+        <div class="hero-tg-pill"><i class="fas fa-gem"></i> Sin costo inicial</div>
+        <div class="hero-tg-pill"><i class="fas fa-user-secret"></i> Máxima discreción</div>
+        <div class="hero-tg-pill"><i class="fas fa-calendar-check"></i> Tú controlas tu agenda</div>
+        <div class="hero-tg-pill"><i class="fas fa-bullhorn"></i> Marketing profesional</div>
+        <div class="hero-tg-pill"><i class="fas fa-shield-halved"></i> Clientes verificados</div>
+        <div class="hero-tg-pill"><i class="fas fa-crown"></i> Trato de reina</div>
+      </div>
+
+      <div class="hero-recruit-actions">
+        <a href="https://wa.me/523321685023?text=Hola%2C%20quiero%20postularme%20como%20Doncella"
+           target="_blank" rel="noopener"
+           onclick="event.stopPropagation()" class="hero-tg-cta">
+          <i class="fab fa-whatsapp"></i>
+          <span>Quiero postularme</span>
+          <i class="fas fa-arrow-right hero-tg-cta-arrow"></i>
+        </a>
+        <a href="membresias.html" onclick="event.stopPropagation()" class="hero-recruit-link">
+          Conocer más <i class="fas fa-arrow-right"></i>
+        </a>
+      </div>
+
+    </div>`;
+  wrap.appendChild(recruitSlide);
 
   /* ── Poblar slots de perfil inicialmente ─── */
   refreshOfferSlides();

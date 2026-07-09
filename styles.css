@@ -6267,6 +6267,99 @@ details.faq-item[open] .faq-a {
 }
 
 /* ═══════════════════════════════════════════════════════════
+   HERO SLIDE — ¿QUIERES SER UNA DE NUESTRAS DONCELLAS? (dorado)
+   Reutiliza la estructura .hero-tg-* y la recolorea a dorado elegante.
+   ═══════════════════════════════════════════════════════════ */
+.hero-slide-recruit {
+  background: linear-gradient(150deg, #0a0a0a 0%, #16120a 40%, #241c0d 68%, #0a0a0a 100%);
+  display: block;
+  cursor: default;
+}
+.hero-slide-recruit .hero-tg-glow-main {
+  background: radial-gradient(circle, rgba(201,168,76,.22) 0%, rgba(201,168,76,.07) 45%, transparent 70%);
+}
+.hero-slide-recruit .hero-tg-glow-sec {
+  background: radial-gradient(circle, rgba(201,168,76,.14) 0%, transparent 65%);
+}
+.hero-slide-recruit .hero-tg-float { color: var(--gold); }
+.hero-slide-recruit .hero-tg-icon-ring {
+  background: rgba(201,168,76,.15);
+  border-color: rgba(201,168,76,.45);
+  color: var(--gold);
+  box-shadow: 0 0 30px rgba(201,168,76,.32), inset 0 0 16px rgba(201,168,76,.12);
+  animation: tgGlowPulse 4s ease-in-out infinite;
+}
+.hero-slide-recruit .hero-tg-channel-tag {
+  background: rgba(201,168,76,.12);
+  border-color: rgba(201,168,76,.32);
+  color: var(--gold);
+}
+.hero-slide-recruit .hero-tg-title em {
+  color: var(--gold);
+  background: linear-gradient(90deg, #E9CE7E 0%, #C9A84C 50%, #E9CE7E 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.hero-slide-recruit .hero-tg-title-icon {
+  color: var(--gold);
+  /* el <em> usa text-fill transparent para el degradado; hay que restaurarlo
+     en el ícono o se ve como un cuadro vacío */
+  -webkit-text-fill-color: var(--gold);
+}
+.hero-slide-recruit .hero-tg-desc-box {
+  background: rgba(201,168,76,.07);
+  border-color: rgba(201,168,76,.2);
+  border-left-color: var(--gold);
+}
+.hero-slide-recruit .hero-tg-desc-box strong { color: #fff; }
+.hero-slide-recruit .hero-tg-desc-box em { color: var(--gold); }
+.hero-slide-recruit .hero-tg-pill i { color: var(--gold); }
+.hero-slide-recruit .hero-tg-pill:hover {
+  background: rgba(201,168,76,.15);
+  border-color: rgba(201,168,76,.45);
+}
+.hero-slide-recruit .hero-tg-cta {
+  background: linear-gradient(135deg, #E9CE7E 0%, #C9A84C 55%, #B08D34 100%);
+  color: #1a1206;
+  box-shadow: 0 4px 28px rgba(201,168,76,.42);
+}
+.hero-slide-recruit .hero-tg-cta:hover {
+  box-shadow: 0 10px 40px rgba(201,168,76,.6);
+}
+/* Fila de acciones: CTA principal + link secundario */
+.hero-recruit-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+/* Specificity alta (.hero-slide-recruit .hero-recruit-link) para ganarle a la
+   regla global que oculta enlaces a membresias.html en móvil — aquí es un CTA de
+   reclutamiento intencional, no el link de nav. */
+.hero-slide-recruit .hero-recruit-link {
+  color: var(--gold);
+  font-size: .9rem;
+  font-weight: 600;
+  letter-spacing: .02em;
+  display: inline-flex !important;
+  align-items: center;
+  gap: .4rem;
+  padding: .3rem .2rem;
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s, gap .2s;
+}
+.hero-slide-recruit .hero-recruit-link:hover {
+  border-bottom-color: var(--gold);
+  gap: .6rem;
+}
+@media (max-width: 640px) {
+  .hero-recruit-actions { gap: .5rem; }
+  .hero-slide-recruit .hero-recruit-link { font-size: .72rem; }
+}
+
+/* ═══════════════════════════════════════════════════════════
    HERO SLIDE — AGENDA TU CITA
    ═══════════════════════════════════════════════════════════ */
 .hero-slide-agenda {
