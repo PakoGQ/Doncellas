@@ -61,6 +61,10 @@
     <div class="admin-nav-item" onclick="showAdminPage('resenas')">
       <i class="fas fa-star fa-fw"></i> Reseñas
     </div>
+    <div class="admin-nav-item" onclick="showAdminPage('solicitudes')">
+      <i class="fas fa-crown fa-fw"></i> Solicitudes
+      <span id="solicitudesBadge" style="display:none;margin-left:auto;background:var(--gold);color:#1a1206;font-size:.68rem;font-weight:700;min-width:18px;height:18px;border-radius:9px;padding:0 5px;line-height:18px;text-align:center"></span>
+    </div>
 
     <p class="admin-nav-section">Finanzas</p>
     <div class="admin-nav-item" onclick="showAdminPage('ingresos')">
@@ -510,7 +514,37 @@
       </div>
     </div>
 
+    <!-- ── Solicitudes (reclutamiento) ── -->
+    <div class="admin-page" id="page-solicitudes">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1rem;margin-bottom:1.5rem">
+        <div>
+          <h2 class="admin-page-title">Solicitudes</h2>
+          <p class="admin-page-sub">Postulaciones recibidas desde la página «Postúlate como Doncella»</p>
+        </div>
+        <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap">
+          <select class="form-input" id="solicFiltro" onchange="renderSolicitudes()" style="width:auto;padding:.5rem 1rem">
+            <option value="nueva">Nuevas</option>
+            <option value="aprobada">Aprobadas</option>
+            <option value="rechazada">Rechazadas</option>
+            <option value="all">Todas</option>
+          </select>
+          <button class="btn btn-ghost btn-sm" onclick="loadSolicitudes()"><i class="fas fa-rotate"></i> Actualizar</button>
+        </div>
+      </div>
+      <div id="solicitudesList">
+        <div class="chart-card"><p style="color:var(--t2);text-align:center;padding:2rem"><i class="fas fa-circle-notch fa-spin"></i> Cargando…</p></div>
+      </div>
+    </div>
+
   </main>
+</div>
+
+<!-- Visor de media de solicitud (lightbox) -->
+<div class="modal-overlay" id="solicMediaModal" onclick="if(event.target===this)closeModal('solicMediaModal')">
+  <div class="modal" style="max-width:720px;background:#000;padding:0;overflow:hidden">
+    <button class="modal-close" onclick="closeModal('solicMediaModal')" style="position:absolute;top:.75rem;right:.75rem;z-index:2;background:rgba(0,0,0,.6)"><i class="fas fa-times"></i></button>
+    <div id="solicMediaBody" style="display:flex;align-items:center;justify-content:center;min-height:200px"></div>
+  </div>
 </div>
 
 <!-- Add Modelo Modal -->

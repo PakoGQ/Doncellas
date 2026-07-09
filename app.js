@@ -2511,6 +2511,7 @@ function initAdmin() {
   buildContentGrid();
   buildCatMultiselect('newCatMulti', []);   // categorías de "Agregar Doncella"
   applyDemoData();
+  loadSolicitudes();   // pobla el badge de Solicitudes (y precarga la lista)
 }
 
 function showAdminPage(page) {
@@ -2522,6 +2523,144 @@ function showAdminPage(page) {
   });
   if (page==='ingresos') buildIngresosChart();
   if (page==='contenido') buildContentGrid();
+  if (page==='solicitudes') loadSolicitudes();
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SOLICITUDES (reclutamiento) — lee la tabla `solicitudes` de
+   Supabase (postulaciones enviadas desde postular.html) y permite
+   aprobar / rechazar. Requiere policies de SELECT/UPDATE anón
+   (beta) — blindar con Supabase Auth antes de postulantes reales.
+   ═══════════════════════════════════════════════════════════ */
+let ADMIN_SOLICITUDES = [];
+
+async function loadSolicitudes() {
+  const list = document.getElementById('solicitudesList');
+  if (!window.sbClient) {
+    if (list) list.innerHTML = `<div class="chart-card"><p style="color:var(--t2);text-align:center;padding:2rem">Supabase no está conectado.</p></div>`;
+    return;
+  }
+  if (list) list.innerHTML = `<div class="chart-card"><p style="color:var(--t2);text-align:center;padding:2rem"><i class="fas fa-circle-notch fa-spin"></i> Cargando…</p></div>`;
+  try {
+    const { data, error } = await window.sbClient
+      .from('solicitudes')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (error) throw error;
+    ADMIN_SOLICITUDES = data || [];
+    updateSolicitudesBadge();
+    renderSolicitudes();
+  } catch (e) {
+    console.error('Error al cargar solicitudes:', e);
+    if (list) list.innerHTML = `<div class="chart-card"><p style="color:var(--t2);text-align:center;padding:2rem">No se pudieron cargar las solicitudes.<br><small style="color:var(--t3)">Revisa que exista la tabla <code>solicitudes</code> y su policy de lectura en Supabase.</small></p></div>`;
+  }
+}
+
+function updateSolicitudesBadge() {
+  const badge = document.getElementById('solicitudesBadge');
+  if (!badge) return;
+  const n = ADMIN_SOLICITUDES.filter(s => (s.estado || 'nueva') === 'nueva').length;
+  badge.textContent = n;
+  badge.style.display = n > 0 ? 'inline-block' : 'none';
+}
+
+function _solicFecha(iso) {
+  if (!iso) return '';
+  try {
+    return new Date(iso).toLocaleDateString('es-MX', { day:'2-digit', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' });
+  } catch { return iso; }
+}
+
+function _waLink(num) {
+  const clean = (num || '').replace(/[^0-9]/g, '');
+  const full  = clean.length === 10 ? '52' + clean : clean;
+  return full ? `https://wa.me/${full}` : null;
+}
+
+function renderSolicitudes() {
+  const list = document.getElementById('solicitudesList');
+  if (!list) return;
+  const filtro = document.getElementById('solicFiltro')?.value || 'nueva';
+  const rows = ADMIN_SOLICITUDES.filter(s => filtro === 'all' ? true : (s.estado || 'nueva') === filtro);
+
+  if (!rows.length) {
+    list.innerHTML = `<div class="chart-card"><p style="color:var(--t2);text-align:center;padding:2.5rem">
+      <i class="fas fa-crown" style="color:var(--gold);font-size:1.5rem;display:block;margin-bottom:.5rem;opacity:.6"></i>
+      No hay solicitudes ${filtro === 'nueva' ? 'nuevas' : filtro === 'all' ? '' : filtro+'s'}.</p></div>`;
+    return;
+  }
+
+  list.innerHTML = rows.map(s => {
+    const estado = s.estado || 'nueva';
+    const wa = _waLink(s.whatsapp);
+    const fotos  = Array.isArray(s.fotos)  ? s.fotos  : [];
+    const videos = Array.isArray(s.videos) ? s.videos : [];
+    const estadoPill = estado === 'aprobada'
+      ? `<span class="pill pill-available">Aprobada</span>`
+      : estado === 'rechazada'
+        ? `<span class="pill pill-busy">Rechazada</span>`
+        : `<span class="pill pill-gold">Nueva</span>`;
+
+    const mediaThumbs = [
+      ...fotos.map((u,i)  => `<div class="solic-thumb" onclick="openSolicMedia('img','${encodeURI(u)}')"><img src="${u}" alt="foto ${i+1}" loading="lazy" /></div>`),
+      ...videos.map((u,i) => `<div class="solic-thumb" onclick="openSolicMedia('vid','${encodeURI(u)}')"><video src="${u}#t=0.1" muted preload="metadata"></video><span class="solic-thumb-vid"><i class="fas fa-play"></i></span></div>`)
+    ].join('');
+
+    const acciones = estado === 'nueva'
+      ? `<button class="btn btn-gold btn-sm" onclick="setSolicitudEstado('${s.id}','aprobada')"><i class="fas fa-check"></i> Aprobar</button>
+         <button class="btn btn-ghost btn-sm" style="color:var(--red)" onclick="setSolicitudEstado('${s.id}','rechazada')"><i class="fas fa-times"></i> Rechazar</button>`
+      : `<button class="btn btn-ghost btn-sm" onclick="setSolicitudEstado('${s.id}','nueva')"><i class="fas fa-rotate-left"></i> Marcar como nueva</button>`;
+
+    return `<div class="chart-card solic-card" style="margin-bottom:1rem">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap">
+        <div>
+          <div style="display:flex;align-items:center;gap:.6rem;flex-wrap:wrap">
+            <h3 style="font-family:var(--font-serif);font-size:1.15rem">${s.nombre || 'Sin nombre'}</h3>
+            ${estadoPill}
+          </div>
+          <p style="color:var(--t3);font-size:.75rem;margin-top:.2rem"><i class="fas fa-clock"></i> ${_solicFecha(s.created_at)}</p>
+        </div>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap">${acciones}</div>
+      </div>
+
+      <div style="display:flex;gap:1.5rem;flex-wrap:wrap;margin:.9rem 0;font-size:.85rem;color:var(--t2)">
+        <span><i class="fas fa-birthday-cake" style="color:var(--gold)"></i> ${s.edad ?? '—'} años</span>
+        <span><i class="fas fa-ruler-vertical" style="color:var(--gold)"></i> ${s.estatura ? s.estatura+' cm' : '—'}</span>
+        <span><i class="fas fa-vector-square" style="color:var(--gold)"></i> ${s.medidas || '—'}</span>
+        ${wa
+          ? `<a href="${wa}" target="_blank" rel="noopener" style="color:#25D366"><i class="fab fa-whatsapp"></i> ${s.whatsapp}</a>`
+          : `<span><i class="fab fa-whatsapp"></i> ${s.whatsapp || '—'}</span>`}
+      </div>
+
+      ${mediaThumbs ? `<div class="solic-media">${mediaThumbs}</div>` : '<p style="color:var(--t3);font-size:.8rem">Sin archivos adjuntos.</p>'}
+    </div>`;
+  }).join('');
+}
+
+function openSolicMedia(kind, url) {
+  const body = document.getElementById('solicMediaBody');
+  if (!body) return;
+  body.innerHTML = kind === 'vid'
+    ? `<video src="${decodeURI(url)}" controls autoplay style="max-width:100%;max-height:80vh"></video>`
+    : `<img src="${decodeURI(url)}" alt="foto" style="max-width:100%;max-height:80vh;object-fit:contain" />`;
+  openModal('solicMediaModal');
+}
+
+async function setSolicitudEstado(id, estado) {
+  if (!window.sbClient) return;
+  try {
+    const { error } = await window.sbClient.from('solicitudes').update({ estado }).eq('id', id);
+    if (error) throw error;
+    const s = ADMIN_SOLICITUDES.find(x => String(x.id) === String(id));
+    if (s) s.estado = estado;
+    updateSolicitudesBadge();
+    renderSolicitudes();
+    const msg = estado === 'aprobada' ? 'Solicitud aprobada' : estado === 'rechazada' ? 'Solicitud rechazada' : 'Solicitud marcada como nueva';
+    showToast(msg, 'success');
+  } catch (e) {
+    console.error('Error al actualizar solicitud:', e);
+    showToast('No se pudo actualizar la solicitud', 'error');
+  }
 }
 
 function chartOptions() {
