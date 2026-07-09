@@ -2425,6 +2425,9 @@ window.saveNewModelo = async function() {
 
   showToast(`✅ Cuenta creada para ${nombre}`, 'success');
 
+  /* Si esta alta vino de aprobar una solicitud, márcala como aprobada */
+  _finalizarSolicitudAprobada();
+
   if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-user-plus"></i> Crear cuenta y guardar'; }
 
   /* ── Limpiar formulario tras 3.5 s ── */
@@ -2607,9 +2610,12 @@ function renderSolicitudes() {
     ].join('');
 
     const acciones = estado === 'nueva'
-      ? `<button class="btn btn-gold btn-sm" onclick="setSolicitudEstado('${s.id}','aprobada')"><i class="fas fa-check"></i> Aprobar</button>
+      ? `<button class="btn btn-gold btn-sm" onclick="aprobarSolicitud('${s.id}')"><i class="fas fa-user-check"></i> Aprobar y crear cuenta</button>
          <button class="btn btn-ghost btn-sm" style="color:var(--red)" onclick="setSolicitudEstado('${s.id}','rechazada')"><i class="fas fa-times"></i> Rechazar</button>`
-      : `<button class="btn btn-ghost btn-sm" onclick="setSolicitudEstado('${s.id}','nueva')"><i class="fas fa-rotate-left"></i> Marcar como nueva</button>`;
+      : estado === 'aprobada'
+        ? `<button class="btn btn-ghost btn-sm" onclick="aprobarSolicitud('${s.id}')"><i class="fas fa-user-plus"></i> Crear cuenta de nuevo</button>
+           <button class="btn btn-ghost btn-sm" onclick="setSolicitudEstado('${s.id}','nueva')"><i class="fas fa-rotate-left"></i> Marcar como nueva</button>`
+        : `<button class="btn btn-ghost btn-sm" onclick="setSolicitudEstado('${s.id}','nueva')"><i class="fas fa-rotate-left"></i> Marcar como nueva</button>`;
 
     return `<div class="chart-card solic-card" style="margin-bottom:1rem">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap">
@@ -2660,6 +2666,65 @@ async function setSolicitudEstado(id, estado) {
   } catch (e) {
     console.error('Error al actualizar solicitud:', e);
     showToast('No se pudo actualizar la solicitud', 'error');
+  }
+}
+
+/* Aprobar = abrir "Agregar Doncella" precargado con los datos de la solicitud.
+   Al guardar (saveNewModelo) se marca la solicitud como aprobada. */
+let _aprobandoSolicitudId = null;
+
+function _setVal(id, val) { const el = document.getElementById(id); if (el) el.value = (val ?? '') === '' ? '' : val; }
+
+function aprobarSolicitud(id) {
+  const s = ADMIN_SOLICITUDES.find(x => String(x.id) === String(id));
+  if (!s) { showToast('Solicitud no encontrada', 'error'); return; }
+
+  /* limpiar el form y precargar con los datos de la postulante */
+  ['newNombre','newEdad','newEstatura','newPeso','newBusto','newCintura','newCadera',
+   'newUsername','newPass','newTarifa','newDesc','newWhatsapp','newTelegram','newOjos','newCabello','newPiel']
+    .forEach(fid => _setVal(fid, ''));
+
+  _setVal('newNombre',   s.nombre || '');
+  _setVal('newEdad',     s.edad ?? '');
+  _setVal('newEstatura', s.estatura ?? '');
+  _setVal('newWhatsapp', s.whatsapp || '');
+
+  /* medidas libres "90-60-90" → busto / cintura / cadera */
+  const nums = String(s.medidas || '').match(/\d{2,3}/g) || [];
+  if (nums[0]) _setVal('newBusto',   nums[0]);
+  if (nums[1]) _setVal('newCintura', nums[1]);
+  if (nums[2]) _setVal('newCadera',  nums[2]);
+
+  if (typeof buildCatMultiselect === 'function') buildCatMultiselect('newCatMulti', []);
+  if (typeof autoUsername === 'function') autoUsername();
+
+  const box = document.getElementById('credencialesBox');
+  if (box) box.style.display = 'none';
+
+  _aprobandoSolicitudId = id;
+  openModal('addModeloModal');
+  showToast('Revisa los datos, elige categoría y genera la contraseña', 'info');
+}
+
+/* "Agregar Doncella" normal → asegura que NO quede ligado a una solicitud */
+function openAddModelo() {
+  _aprobandoSolicitudId = null;
+  openModal('addModeloModal');
+}
+
+/* Marca como aprobada la solicitud ligada (llamado al final de saveNewModelo) */
+async function _finalizarSolicitudAprobada() {
+  const id = _aprobandoSolicitudId;
+  _aprobandoSolicitudId = null;
+  if (!id || !window.sbClient) return;
+  try {
+    await window.sbClient.from('solicitudes').update({ estado: 'aprobada' }).eq('id', id);
+    const s = ADMIN_SOLICITUDES.find(x => String(x.id) === String(id));
+    if (s) s.estado = 'aprobada';
+    updateSolicitudesBadge();
+    renderSolicitudes();
+  } catch (e) {
+    console.error('No se pudo marcar la solicitud como aprobada:', e);
   }
 }
 
