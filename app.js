@@ -2638,7 +2638,15 @@ function renderSolicitudes() {
           : `<span><i class="fab fa-whatsapp"></i> ${s.whatsapp || '—'}</span>`}
       </div>
 
-      ${mediaThumbs ? `<div class="solic-media">${mediaThumbs}</div>` : '<p style="color:var(--t3);font-size:.8rem">Sin archivos adjuntos.</p>'}
+      ${(fotos.length || videos.length) ? `
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:.5rem;flex-wrap:wrap;margin-bottom:.5rem">
+          <span style="font-size:.72rem;color:var(--t3);text-transform:uppercase;letter-spacing:.05em">
+            <i class="fas fa-id-card" style="color:var(--gold)"></i> Verificación · ${fotos.length} foto${fotos.length===1?'':'s'} · ${videos.length} video${videos.length===1?'':'s'}
+          </span>
+          <button class="btn btn-ghost btn-sm" onclick="descargarSolicitud('${s.id}')"><i class="fas fa-download"></i> Descargar todo</button>
+        </div>
+        <div class="solic-media">${mediaThumbs}</div>`
+        : '<p style="color:var(--t3);font-size:.8rem">Sin archivos adjuntos.</p>'}
     </div>`;
   }).join('');
 }
@@ -2646,10 +2654,57 @@ function renderSolicitudes() {
 function openSolicMedia(kind, url) {
   const body = document.getElementById('solicMediaBody');
   if (!body) return;
-  body.innerHTML = kind === 'vid'
-    ? `<video src="${decodeURI(url)}" controls autoplay style="max-width:100%;max-height:80vh"></video>`
-    : `<img src="${decodeURI(url)}" alt="foto" style="max-width:100%;max-height:80vh;object-fit:contain" />`;
+  const u = decodeURI(url);
+  const media = kind === 'vid'
+    ? `<video src="${u}" controls autoplay style="max-width:100%;max-height:74vh"></video>`
+    : `<img src="${u}" alt="foto" style="max-width:100%;max-height:74vh;object-fit:contain" />`;
+  body.innerHTML = `<div style="display:flex;flex-direction:column;align-items:center;gap:.5rem;width:100%">
+      ${media}
+      <button class="btn btn-gold btn-sm" style="margin:.3rem 0 .8rem" onclick="descargarArchivo('${encodeURI(u)}')"><i class="fas fa-download"></i> Descargar</button>
+    </div>`;
   openModal('solicMediaModal');
+}
+
+/* ── Descarga de archivos de verificación (para registro del admin) ── */
+const _sleep = ms => new Promise(r => setTimeout(r, ms));
+
+function _extFromUrl(url, def) {
+  const m = decodeURI(url).split('?')[0].match(/\.([a-z0-9]{2,5})$/i);
+  return m ? m[1].toLowerCase() : (def || 'bin');
+}
+
+async function descargarArchivo(url, filename) {
+  const u = decodeURI(url);
+  const name = filename || (decodeURIComponent(u.split('?')[0].split('/').pop()) || 'archivo');
+  try {
+    const res = await fetch(u);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const blob   = await res.blob();
+    const objUrl = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = objUrl; a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(objUrl), 4000);
+  } catch (e) {
+    console.error('Descarga directa falló, abriendo en pestaña:', e);
+    window.open(u, '_blank');   // fallback (p. ej. si CORS lo bloquea)
+  }
+}
+
+async function descargarSolicitud(id) {
+  const s = ADMIN_SOLICITUDES.find(x => String(x.id) === String(id));
+  if (!s) return;
+  const fotos  = Array.isArray(s.fotos)  ? s.fotos  : [];
+  const videos = Array.isArray(s.videos) ? s.videos : [];
+  if (!fotos.length && !videos.length) { showToast('Sin archivos para descargar', 'error'); return; }
+  const base = (s.nombre || 'solicitud').toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'solicitud';
+  showToast('Descargando archivos…', 'info');
+  let i = 1;
+  for (const u of fotos)  { await descargarArchivo(u, `${base}-foto-${i++}.${_extFromUrl(u, 'jpg')}`); await _sleep(400); }
+  let j = 1;
+  for (const u of videos) { await descargarArchivo(u, `${base}-video-${j++}.${_extFromUrl(u, 'mp4')}`); await _sleep(400); }
 }
 
 async function setSolicitudEstado(id, estado) {
