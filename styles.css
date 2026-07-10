@@ -6853,102 +6853,14 @@ details.faq-item[open] .faq-a {
    El PNG ya tiene fondo transparente — sin mix-blend-mode
    ═══════════════════════════════════════════════════════════ */
 
-/* ── Clase reutilizable para overlay watermark (intensa) ── */
-.wm-overlay {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url('watermark.png');
-  background-size: 65%;
-  background-repeat: no-repeat;
-  background-position: center;
-  opacity: 0.72;
-  pointer-events: none;
-  z-index: 8;
-}
-
-/* Cards del grid principal */
-.model-card-img-wrap::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url('watermark.png');
-  background-size: 65%;
-  background-repeat: no-repeat;
-  background-position: center;
-  opacity: 0.72;
-  pointer-events: none;
-  z-index: 6;
-}
-
-/* Hero mosaic strip (slide de marca) */
-.hbm-img-wrap::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url('watermark.png');
-  background-size: 70%;
-  background-repeat: no-repeat;
-  background-position: center;
-  opacity: 0.70;
-  pointer-events: none;
-  z-index: 6;
-}
-
-/* Foto de perfil en perfil.html — discreta para no tapar el cuerpo */
-.profile-carousel::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url('watermark.png');
-  background-size: 22%;
-  background-repeat: no-repeat;
-  background-position: center;
-  opacity: 0.34;
-  filter: blur(0.2px);
-  pointer-events: none;
-  z-index: 5;
-}
-
-/* Hero slides de modelos — tarjeta de foto (desktop) */
-.hero-promo-photo-card::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url('watermark.png');
-  background-size: 65%;
-  background-repeat: no-repeat;
-  background-position: center;
-  opacity: 0.72;
-  pointer-events: none;
-  z-index: 3;
-}
-
-/* Hero slides de modelos — fondo completo: discreta para no tapar el perfil */
-.hero-slide-profile::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url('watermark.png');
-  background-size: 40%;
-  background-repeat: no-repeat;
-  background-position: center bottom 6%;
-  opacity: 0.20;
-  filter: blur(0.5px);
-  pointer-events: none;
-  z-index: 3;
-}
+/* ── Plantillas CSS de marca de agua en FOTOS: RETIRADAS ──────
+   Decisión (10-jul-2026): las fotos ya no llevan plantilla CSS
+   sobrepuesta. Se publican con la marca INCRUSTADA (versión marcada
+   generada al subir → Supabase). Mejor estética + protección real.
+   La clase .wm-overlay queda inerte (por si algún div la usa aún).
+   Los VIDEOS sí conservan overlay CSS (ver .wm-video-overlay) hasta
+   que se marque el video del lado servidor (Tier 3). */
+.wm-overlay { display: none !important; }
 
 /* Videos — overlay CSS (videos no pasan por canvas) */
 .wm-video-overlay {

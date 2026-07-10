@@ -284,6 +284,8 @@ function generateModels() {
       available, featured, isNew,
       img: photoUrl(photoId),
       photos: [photoUrl(photoId), photoUrl(photo2), photoUrl(photo3)],
+      imgOrig: photoUrl(photoId),
+      photosOrig: [photoUrl(photoId), photoUrl(photo2), photoUrl(photo3)],
       hasVideo: i % 7 === 0,
       hairColor, eyeColor, skinColor, waist, hips, bust, peso, nationality,
       services,
@@ -349,10 +351,13 @@ function diasEntre(fromISO, toISO) {
 /* ─── Supabase: mapeo de escort → formato MODELS ───────────── */
 function mapEscortToModel(e) {
   const fotos     = (e.fotos || []).slice().sort((a, b) => a.orden - b.orden);
-  const photoUrls = fotos.filter(f => f.tipo === 'foto').map(f => f.url);
+  const fotosOnly = fotos.filter(f => f.tipo === 'foto');
+  const photoUrls   = fotosOnly.map(f => f.url);               // limpias  → paneles
+  const photoUrlsWm = fotosOnly.map(f => f.url_wm || f.url);   // marcadas → público
   const fallback  = (n) => photoUrl(PHOTO_POOL[(e.id + n) % PHOTO_POOL.length]);
 
-  while (photoUrls.length < 3) photoUrls.push(fallback(photoUrls.length + 1));
+  while (photoUrls.length   < 3) photoUrls.push(fallback(photoUrls.length + 1));
+  while (photoUrlsWm.length < 3) photoUrlsWm.push(photoUrls[photoUrlsWm.length] || fallback(photoUrlsWm.length + 1));
 
   const serviciosMap = {};
   (e.servicios || []).forEach(s => {
@@ -380,8 +385,10 @@ function mapEscortToModel(e) {
     available:   !!e.disponible,
     featured:    !!e.es_destacada,
     isNew:       !!e.es_nueva,
-    img:         photoUrls[0],
-    photos:      photoUrls,
+    img:         photoUrlsWm[0],   // público → versión marcada
+    photos:      photoUrlsWm,
+    imgOrig:     photoUrls[0],     // paneles → versión limpia
+    photosOrig:  photoUrls,
     hasVideo:    fotos.some(f => f.tipo === 'video'),
     hairColor:   e.cabello      || 'Castaño',
     eyeColor:    e.ojos         || 'Café',
@@ -2069,6 +2076,9 @@ function buildMediaGallery() {
     } else {
       mainImg.src = item.src;
     }
+    /* La marca CSS solo se muestra sobre VIDEOS (las fotos ya salen marcadas). */
+    const wmEl = document.getElementById('mainMediaWm');
+    if (wmEl) wmEl.style.display = item.type === 'video' ? 'block' : 'none';
     /* fondo difuminado = misma imagen (poster si es video) */
     if (mainBlur) mainBlur.style.backgroundImage = `url("${item.type === 'video' ? item.poster : item.src}")`;
     if (counter) counter.textContent = `${idx+1} / ${GALLERY_MEDIA.length}`;
@@ -2415,7 +2425,7 @@ window.saveNewModelo = async function() {
     MODELS.unshift({
       id: newId, name: nombre, age: edad, zone: zona, cat, rate: tarifa,
       rating: 5.0, available: false, featured: false, isNew: true, hasVideo: false,
-      img: photoUrl(pId), photos: [photoUrl(pId)], tags: cats, plan, promo: null,
+      img: photoUrl(pId), photos: [photoUrl(pId)], imgOrig: photoUrl(pId), photosOrig: [photoUrl(pId)], tags: cats, plan, promo: null,
       skinColor: piel || 'Morena clara', hairColor: cabello || 'Castaño', eyeColor: ojos || 'Café',
       height: estatura || 165, peso,
       bust: busto || 86, waist: cintura || 62, hips: cadera || 90, whatsapp, telegram, nombreReal, descripcion: desc,
@@ -3005,7 +3015,7 @@ function buildModelosTable() {
     }
     tbody.insertAdjacentHTML('beforeend',`
       <tr data-model-row="${m.id}"${m.suspended?' style="opacity:.55"':''}>
-        <td><div class="table-avatar"><img src="${m.img}" alt="${m.name}" /><div><div class="table-name">${m.name}</div><div class="table-sub">${m.age} años · ${m.nationality}</div></div></div></td>
+        <td><div class="table-avatar"><img src="${m.imgOrig || m.img}" alt="${m.name}" /><div><div class="table-name">${m.name}</div><div class="table-sub">${m.age} años · ${m.nationality}</div></div></div></td>
         <td>${m.cat}</td>
         <td style="font-family:var(--font-serif)">${m.citas}</td>
         <td style="color:var(--gold);font-family:var(--font-serif)">${fmtMXN(m.rate*12)}</td>
@@ -3042,8 +3052,7 @@ function buildContentGrid(filterQ) {
       <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;transition:var(--transition)"
            onmouseenter="this.style.borderColor='var(--border-h)'" onmouseleave="this.style.borderColor='var(--border)'">
         <div style="position:relative;overflow:hidden">
-          <img src="${m.img}" alt="${m.name}" style="width:100%;aspect-ratio:4/3;object-fit:cover" />
-          <div class="wm-overlay"></div>
+          <img src="${m.imgOrig || m.img}" alt="${m.name}" style="width:100%;aspect-ratio:4/3;object-fit:cover" />
           ${m.hidden ? '<div style="position:absolute;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;z-index:9"><span class="pill pill-busy" style="font-size:.7rem"><i class="fas fa-eye-slash"></i> Oculta</span></div>' : ''}
         </div>
         <div style="padding:.85rem">
@@ -3846,25 +3855,27 @@ function _dataURLtoBlob(dataURL) {
   return new Blob([arr], { type: mime });
 }
 
-async function _subirGaleria(blob, escortId, banco, ext, ctype) {
-  const path = `${escortId}/${banco}/${Date.now()}-${Math.random().toString(36).slice(2, 7)}.${ext}`;
+async function _subirGaleria(blob, escortId, banco, kind, ext, ctype) {
+  // kind = 'orig' (limpia) | 'wm' (marcada)
+  const path = `${escortId}/${banco}/${kind}/${Date.now()}-${Math.random().toString(36).slice(2, 7)}.${ext}`;
   const { error } = await window.sbClient.storage.from(GALERIA_BUCKET).upload(path, blob, { contentType: ctype, upsert: false });
   if (error) throw error;
   const url = window.sbClient.storage.from(GALERIA_BUCKET).getPublicUrl(path).data.publicUrl;
   return { path, url };
 }
 
-async function _insertFotoRow(escortId, url, tipo, banco) {
-  const payload = { escort_id: escortId, url, tipo, banco, orden: Date.now() % 100000 };
-  let { data, error } = await window.sbClient.from('fotos').insert(payload).select('id').single();
-  /* si la columna `banco` aún no existe, reintenta sin ella
-     (correr:  alter table fotos add column if not exists banco text default 'perfil';) */
-  if (error && /banco/i.test(error.message || '')) {
-    const { banco: _b, ...rest } = payload;
-    ({ data, error } = await window.sbClient.from('fotos').insert(rest).select('id').single());
+/* Inserta la fila en `fotos`. `url` = original limpio · `url_wm` = copia marcada
+   (null en videos). Si faltan columnas nuevas (url_wm/banco), las va quitando. */
+async function _insertFotoRow(escortId, url, urlWm, tipo, banco) {
+  const payload = { escort_id: escortId, url, url_wm: urlWm, tipo, banco, orden: Date.now() % 100000 };
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const { data, error } = await window.sbClient.from('fotos').insert(payload).select('id').single();
+    if (!error) return data?.id;
+    const msg = error.message || '';
+    if (/url_wm/i.test(msg) && 'url_wm' in payload) { delete payload.url_wm; continue; }
+    if (/banco/i.test(msg)  && 'banco'  in payload) { delete payload.banco;  continue; }
+    throw error;
   }
-  if (error) throw error;
-  return data?.id;
 }
 
 /* File upload */
@@ -3902,33 +3913,37 @@ function handleFileUpload(e, tipo) {
 
     const reader = new FileReader();
     reader.onload = async ev => {
+      const cleanSrc = ev.target.result;   // original SIN marca → así se ve en el panel
+
       const item = document.createElement('div');
       item.className = 'upload-preview-item';
       item.dataset.kind = isVid ? 'video' : 'img';
-
-      // Imágenes → marca de agua INCRUSTADA (canvas). Videos → tal cual.
-      const displaySrc = isVid ? ev.target.result : await applyWatermark(ev.target.result);
-
       item.innerHTML = `
         ${isVid
-          ? `<video src="${displaySrc}" style="width:100%;height:100%;object-fit:cover"></video><div class="wm-video-overlay"></div><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center"><i class="fas fa-play" style="color:#fff;font-size:1.5rem"></i></div>`
-          : `<img src="${displaySrc}" alt="${file.name}" />`}
+          ? `<video src="${cleanSrc}" style="width:100%;height:100%;object-fit:cover"></video><div class="wm-video-overlay"></div><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center"><i class="fas fa-play" style="color:#fff;font-size:1.5rem"></i></div>`
+          : `<img src="${cleanSrc}" alt="${file.name}" />`}
         <button class="upload-preview-remove" onclick="removeContenido(this)"><i class="fas fa-times"></i></button>`;
       grid.appendChild(item);
 
-      /* Persistir a Supabase — la foto ya lleva la marca incrustada.
-         Sin sesión de escort o sin Supabase → queda solo como vista previa (demo). */
+      /* Persistir a Supabase: se guarda el ORIGINAL limpio + (solo fotos) una COPIA
+         con la marca INCRUSTADA para publicar. El panel siempre muestra la limpia.
+         Sin sesión/Supabase → queda solo vista previa (demo). */
       const { escortId } = getSession();
       if (window.sbClient && escortId) {
         try {
-          const blob  = isVid ? file : _dataURLtoBlob(displaySrc);
-          const ext   = isVid ? (file.name.split('.').pop() || 'mp4').toLowerCase() : 'jpg';
-          const ctype = isVid ? (file.type || 'video/mp4') : 'image/jpeg';
-          const { path, url } = await _subirGaleria(blob, escortId, tipo, ext, ctype);
-          const fotoId = await _insertFotoRow(escortId, url, isVid ? 'video' : 'foto', tipo);
+          const ext   = (file.name.split('.').pop() || (isVid ? 'mp4' : 'jpg')).toLowerCase();
+          const ctype = file.type || (isVid ? 'video/mp4' : 'image/jpeg');
+          const clean = await _subirGaleria(file, escortId, tipo, 'orig', ext, ctype);
+          let wmUrl = null, wmPath = '';
+          if (!isVid) {
+            const markedBlob = _dataURLtoBlob(await applyWatermark(cleanSrc));
+            const wm = await _subirGaleria(markedBlob, escortId, tipo, 'wm', 'jpg', 'image/jpeg');
+            wmUrl = wm.url; wmPath = wm.path;
+          }
+          const fotoId = await _insertFotoRow(escortId, clean.url, wmUrl, isVid ? 'video' : 'foto', tipo);
           item.dataset.fotoId = fotoId || '';
-          item.dataset.path   = path;
-          if (!isVid) { const im = item.querySelector('img'); if (im) im.src = url; }
+          item.dataset.path   = clean.path;
+          item.dataset.pathWm = wmPath;
         } catch (err) {
           console.error('No se pudo guardar el contenido:', err);
           showToast('Se ve aquí, pero no se guardó. Revisa el bucket «galeria» en Supabase.', 'error');
@@ -3962,11 +3977,13 @@ async function removeContenido(btn) {
   if (!item) return;
   const fotoId = item.dataset.fotoId;
   const path   = item.dataset.path;
+  const pathWm = item.dataset.pathWm;
   item.remove();
   if (window.sbClient && fotoId) {
     try {
       await window.sbClient.from('fotos').delete().eq('id', fotoId);
-      if (path) await window.sbClient.storage.from(GALERIA_BUCKET).remove([path]);
+      const paths = [path, pathWm].filter(Boolean);
+      if (paths.length) await window.sbClient.storage.from(GALERIA_BUCKET).remove(paths);
     } catch (e) {
       console.error('No se pudo borrar el contenido:', e);
     }
@@ -3994,12 +4011,13 @@ async function loadContenidoBancos() {
     const grid  = document.getElementById('uploadPreviewGrid' + cap);
     if (!grid) return;
     const isVid = row.tipo === 'video';
-    const path  = decodeURIComponent((row.url.split(`/${GALERIA_BUCKET}/`)[1] || '').split('?')[0]);
+    const toPath = u => u ? decodeURIComponent((u.split(`/${GALERIA_BUCKET}/`)[1] || '').split('?')[0]) : '';
     const item  = document.createElement('div');
     item.className = 'upload-preview-item';
     item.dataset.kind   = isVid ? 'video' : 'img';
     item.dataset.fotoId = row.id;
-    item.dataset.path   = path;
+    item.dataset.path   = toPath(row.url);       // limpia
+    item.dataset.pathWm = toPath(row.url_wm);    // marcada
     item.innerHTML = `
       ${isVid
         ? `<video src="${row.url}" style="width:100%;height:100%;object-fit:cover"></video><div class="wm-video-overlay"></div><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center"><i class="fas fa-play" style="color:#fff;font-size:1.5rem"></i></div>`
