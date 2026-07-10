@@ -4609,6 +4609,15 @@ h4 { font-size: clamp(.95rem, 2.2vw, 1.1rem); }
   }
   #mediaThumbs::-webkit-scrollbar { display: none; }
 
+  /* Galería móvil: la foto principal ocupa casi toda la pantalla
+     (llena el alto disponible bajo el nav, menos el título y las
+     miniaturas). object-fit:cover para abarcar todo el espacio. */
+  #mainMediaWrap {
+    aspect-ratio: auto !important;
+    height: calc(100vh - var(--nav-h) - 190px) !important;
+    min-height: 340px;
+  }
+
   /* ── 8. Collapsible calendar (equivalent to .citas-toggle) ── */
   .calendar-collapse-btn {
     padding: 12px 16px;
