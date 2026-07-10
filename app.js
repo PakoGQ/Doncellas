@@ -2540,10 +2540,35 @@ function showAdminPage(page) {
    (beta) — blindar con Supabase Auth antes de postulantes reales.
    ═══════════════════════════════════════════════════════════ */
 let ADMIN_SOLICITUDES = [];
+let SOLICITUDES_ARE_DEMO = false;
+
+/* Solicitudes de ejemplo (solo con DEMO_MODE) para previsualizar la sección
+   mientras no existe la tabla / no hay postulaciones reales. Se reemplazan
+   solas por las reales cuando lleguen. */
+function demoSolicitudes() {
+  const pics = (i, n) => Array.from({ length: n }, (_, k) => photoUrl(PHOTO_POOL[(i + k) % PHOTO_POOL.length], 600, 800));
+  const VID  = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4';
+  const day  = d => new Date(Date.now() - d * 86400000).toISOString();
+  return [
+    { id:'demo-1', nombre:'Regina',   edad:23, estatura:170, medidas:'88-60-90', whatsapp:'3312345678', estado:'nueva',     created_at:day(0), fotos:pics(1,3),  videos:[VID] },
+    { id:'demo-2', nombre:'Ximena',   edad:27, estatura:165, medidas:'92-64-96', whatsapp:'3319876543', estado:'nueva',     created_at:day(1), fotos:pics(4,2),  videos:[] },
+    { id:'demo-3', nombre:'Fernanda', edad:31, estatura:168, medidas:'94-66-98', whatsapp:'3331122334', estado:'nueva',     created_at:day(2), fotos:pics(7,4),  videos:[] },
+    { id:'demo-4', nombre:'Andrea',   edad:22, estatura:172, medidas:'86-58-88', whatsapp:'3345566778', estado:'aprobada',  created_at:day(5), fotos:pics(11,2), videos:[VID] },
+    { id:'demo-5', nombre:'Paola',    edad:29, estatura:160, medidas:'90-62-94', whatsapp:'3350099887', estado:'rechazada', created_at:day(8), fotos:pics(14,1), videos:[] },
+  ];
+}
+
+function _useDemoSolicitudes() {
+  ADMIN_SOLICITUDES = demoSolicitudes();
+  SOLICITUDES_ARE_DEMO = true;
+  updateSolicitudesBadge();
+  renderSolicitudes();
+}
 
 async function loadSolicitudes() {
   const list = document.getElementById('solicitudesList');
   if (!window.sbClient) {
+    if (DEMO_MODE) return _useDemoSolicitudes();
     if (list) list.innerHTML = `<div class="chart-card"><p style="color:var(--t2);text-align:center;padding:2rem">Supabase no está conectado.</p></div>`;
     return;
   }
@@ -2554,11 +2579,14 @@ async function loadSolicitudes() {
       .select('*')
       .order('created_at', { ascending: false });
     if (error) throw error;
+    if ((!data || !data.length) && DEMO_MODE) return _useDemoSolicitudes();
     ADMIN_SOLICITUDES = data || [];
+    SOLICITUDES_ARE_DEMO = false;
     updateSolicitudesBadge();
     renderSolicitudes();
   } catch (e) {
     console.error('Error al cargar solicitudes:', e);
+    if (DEMO_MODE) return _useDemoSolicitudes();
     if (list) list.innerHTML = `<div class="chart-card"><p style="color:var(--t2);text-align:center;padding:2rem">No se pudieron cargar las solicitudes.<br><small style="color:var(--t3)">Revisa que exista la tabla <code>solicitudes</code> y su policy de lectura en Supabase.</small></p></div>`;
   }
 }
@@ -2590,14 +2618,21 @@ function renderSolicitudes() {
   const filtro = document.getElementById('solicFiltro')?.value || 'nueva';
   const rows = ADMIN_SOLICITUDES.filter(s => filtro === 'all' ? true : (s.estado || 'nueva') === filtro);
 
+  const demoBanner = SOLICITUDES_ARE_DEMO
+    ? `<div style="display:flex;align-items:center;gap:.6rem;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);border-radius:var(--r-md);padding:.7rem 1rem;margin-bottom:1rem;font-size:.82rem;color:var(--t2)">
+         <i class="fas fa-flask" style="color:var(--gold)"></i>
+         <span>Ejemplos de <strong>demostración</strong> — se reemplazan solos por las solicitudes reales cuando lleguen.</span>
+       </div>`
+    : '';
+
   if (!rows.length) {
-    list.innerHTML = `<div class="chart-card"><p style="color:var(--t2);text-align:center;padding:2.5rem">
+    list.innerHTML = demoBanner + `<div class="chart-card"><p style="color:var(--t2);text-align:center;padding:2.5rem">
       <i class="fas fa-crown" style="color:var(--gold);font-size:1.5rem;display:block;margin-bottom:.5rem;opacity:.6"></i>
       No hay solicitudes ${filtro === 'nueva' ? 'nuevas' : filtro === 'all' ? '' : filtro+'s'}.</p></div>`;
     return;
   }
 
-  list.innerHTML = rows.map(s => {
+  list.innerHTML = demoBanner + rows.map(s => {
     const estado = s.estado || 'nueva';
     const wa = _waLink(s.whatsapp);
     const fotos  = Array.isArray(s.fotos)  ? s.fotos  : [];
@@ -2712,10 +2747,13 @@ async function descargarSolicitud(id) {
 }
 
 async function setSolicitudEstado(id, estado) {
-  if (!window.sbClient) return;
+  const isDemo = String(id).startsWith('demo-');
   try {
-    const { error } = await window.sbClient.from('solicitudes').update({ estado }).eq('id', id);
-    if (error) throw error;
+    if (!isDemo) {
+      if (!window.sbClient) return;
+      const { error } = await window.sbClient.from('solicitudes').update({ estado }).eq('id', id);
+      if (error) throw error;
+    }
     const s = ADMIN_SOLICITUDES.find(x => String(x.id) === String(id));
     if (s) s.estado = estado;
     updateSolicitudesBadge();
@@ -2775,9 +2813,11 @@ function openAddModelo() {
 async function _finalizarSolicitudAprobada() {
   const id = _aprobandoSolicitudId;
   _aprobandoSolicitudId = null;
-  if (!id || !window.sbClient) return;
+  if (!id) return;
   try {
-    await window.sbClient.from('solicitudes').update({ estado: 'aprobada' }).eq('id', id);
+    if (!String(id).startsWith('demo-') && window.sbClient) {
+      await window.sbClient.from('solicitudes').update({ estado: 'aprobada' }).eq('id', id);
+    }
     const s = ADMIN_SOLICITUDES.find(x => String(x.id) === String(id));
     if (s) s.estado = 'aprobada';
     updateSolicitudesBadge();
