@@ -1931,13 +1931,13 @@ function initPerfil() {
       <div class="caract-item"><span class="caract-lbl"><i class="fas fa-ruler-combined"></i> Medidas</span><span class="caract-val">${m.bust}-${m.waist}-${m.hips}</span></div>`;
   }
 
-  /* Tarifas */
-  const r1 = document.getElementById('rate1h');
-  const r3 = document.getElementById('rate3h');
-  const rd = document.getElementById('rateDay');
-  if (r1) r1.textContent = fmtMXN(m.rate);
-  if (r3) r3.textContent = fmtMXN(Math.round(m.rate * 2.6));
-  if (rd) rd.textContent = fmtMXN(Math.round(m.rate * 7.2));
+  /* Tarifas: 1h · 1:30h · 2h */
+  const r1  = document.getElementById('rate1h');
+  const r90 = document.getElementById('rate90');
+  const r2  = document.getElementById('rate2h');
+  if (r1)  r1.textContent  = fmtMXN(m.rate);
+  if (r90) r90.textContent = fmtMXN(Math.round(m.rate * 1.4 / 50) * 50);
+  if (r2)  r2.textContent  = fmtMXN(Math.round(m.rate * 1.8 / 50) * 50);
 
   /* Servicios */
   const svcList = document.getElementById('serviciosList');
@@ -2889,7 +2889,7 @@ function buildAdminCharts() {
   const c1 = document.getElementById('revenueChart');
   if (c1) new Chart(c1,{ type:'line', data:{ labels:['L','M','X','J','V','S','D'], datasets:[{ data:[3200,4100,3500,5200,6800,5400,3000], borderColor:'#C9A84C', backgroundColor:'rgba(201,168,76,.08)', fill:true, tension:.4, pointBackgroundColor:'#C9A84C', pointRadius:4 }] }, options:chartOptions() });
   const c2 = document.getElementById('distChart');
-  if (c2) new Chart(c2,{ type:'doughnut', data:{ labels:['1 hora','3 horas','Día completo'], datasets:[{ data:[62,28,10], backgroundColor:['#C9A84C','#4CAF82','#5078C9'], borderWidth:0 }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'bottom', labels:{ color:'#A89070', font:{size:11} } } }, cutout:'65%' } });
+  if (c2) new Chart(c2,{ type:'doughnut', data:{ labels:['1 hora','1:30 h','2 horas'], datasets:[{ data:[62,28,10], backgroundColor:['#C9A84C','#4CAF82','#5078C9'], borderWidth:0 }] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'bottom', labels:{ color:'#A89070', font:{size:11} } } }, cutout:'65%' } });
   const c3 = document.getElementById('citasChart');
   if (c3) new Chart(c3,{ type:'bar', data:{ labels:['L','M','X','J','V','S','D'], datasets:[{ data:[1,2,2,2,3,2,1], backgroundColor:'rgba(201,168,76,.4)', borderColor:'#C9A84C', borderWidth:1, borderRadius:4 }] }, options:chartOptions() });
   const c4 = document.getElementById('membChart');
