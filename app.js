@@ -3087,6 +3087,7 @@ function editModel(id) {
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem 1rem">
       <div class="form-group"><label class="form-label">Nombre</label><input type="text" class="form-input" id="edit-name" value="${m.name}" /></div>
       <div class="form-group"><label class="form-label">Edad</label><input type="number" class="form-input" id="edit-age" value="${m.age}" min="18" max="60" /></div>
+      <div class="form-group" style="grid-column:span 2"><label class="form-label">Nombre real <span style="color:var(--t3);font-weight:400">(interno — solo admin, no se muestra al cliente ni a la Doncella)</span></label><input type="text" class="form-input" id="edit-nombre-real" value="${m.nombreReal || ''}" placeholder="Nombre completo real" /></div>
       <div class="form-group" style="grid-column:span 2"><label class="form-label">Categorías <span style="color:var(--t3);font-weight:400">(elige una o varias)</span></label>
         <div id="edit-cat-multi"></div>
       </div>
@@ -3170,6 +3171,7 @@ function saveEditModel(id) {
 
   m.name        = g('edit-name')?.value.trim()        || m.name;
   m.age         = parseInt(g('edit-age')?.value)       || m.age;
+  if (g('edit-nombre-real')) m.nombreReal = g('edit-nombre-real').value.trim() || null;
   m.zone        = g('edit-zone')?.value                || m.zone;
   const editCats = getCatMultiValues('edit-cat-multi');
   if (editCats.length) { m.cat = editCats[0]; m.tags = editCats; }
@@ -3221,15 +3223,24 @@ function saveEditModel(id) {
      (incluye el contacto interno WhatsApp/Telegram). Solo columnas reales
      de la tabla escorts — la promo vive solo en memoria. */
   if (window.sbClient) {
-    window.sbClient.from('escorts').update({
-      nombre: m.name, edad: m.age, categoria: m.cat, tags: m.tags,
+    const upd = {
+      nombre: m.name, nombre_real: m.nombreReal || null, edad: m.age, categoria: m.cat, tags: m.tags,
       descripcion: m.descripcion || null,
       precio_hora: m.rate, altura: m.height, peso: m.peso || null,
       nacionalidad: m.nationality, disponible: m.available,
       cabello: m.hairColor, ojos: m.eyeColor, piel: m.skinColor,
       busto: m.bust, cintura: m.waist, cadera: m.hips,
       whatsapp: m.whatsapp || null, telegram: m.telegram || null,
-    }).eq('id', id).then(({ error }) => {
+    };
+    window.sbClient.from('escorts').update(upd).eq('id', id).then(({ error }) => {
+      /* Si la columna nombre_real aún no existe, reintenta sin ella
+         (correr:  alter table escorts add column if not exists nombre_real text;) */
+      if (error && /nombre_real/i.test(error.message || '')) {
+        const { nombre_real, ...rest } = upd;
+        return window.sbClient.from('escorts').update(rest).eq('id', id).then(({ error: e2 }) => {
+          if (e2) showToast('Guardado local, pero Supabase falló: ' + e2.message, 'error');
+        });
+      }
       if (error) showToast('Guardado local, pero Supabase falló: ' + error.message, 'error');
     });
   }
