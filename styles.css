@@ -2826,6 +2826,26 @@ canvas { width: 100% !important; }
   min-height: 2.3em;
 }
 
+/* ─── Perfil · galería principal en ESCRITORIO ───────────────
+   La foto cabe COMPLETA entre el nav (fijo) y el borde inferior de
+   la pantalla: altura = alto de viewport menos el nav y un respiro,
+   y object-fit:contain para no recortar la imagen. Solo escritorio. */
+@media (min-width: 1024px) {
+  #mainMediaWrap {
+    aspect-ratio: auto !important;
+    height: calc(100vh - var(--nav-h) - 120px);
+    min-height: 380px;
+  }
+  #mainMediaImg,
+  #mainMediaVideo {
+    object-fit: contain !important;
+  }
+  /* Thumbnails: misma altura que la foto para que la columna no quede corta */
+  #mediaThumbs {
+    max-height: calc(100vh - var(--nav-h) - 120px) !important;
+  }
+}
+
 /* ─── Gallery navigation arrows ─────────────────────────── */
 .media-gallery-nav {
   position: absolute;
