@@ -396,6 +396,7 @@ function mapEscortToModel(e) {
     promo:       null,
     whatsapp:    e.whatsapp,
     telegram:    e.telegram,
+    nombreReal:  e.nombre_real || null,
     descripcion: e.descripcion,
     idiomas:     e.idiomas      || ['Español'],
     plan:        e.plan         || 'Elite',
@@ -2329,7 +2330,8 @@ window.autoUsername = function() {
 };
 
 window.saveNewModelo = async function() {
-  const nombre   = document.getElementById('newNombre')?.value.trim();
+  const nombre     = document.getElementById('newNombre')?.value.trim();
+  const nombreReal = document.getElementById('newNombreReal')?.value.trim() || null;
   const username = document.getElementById('newUsername')?.value.trim().toLowerCase();
   const pass     = document.getElementById('newPass')?.value.trim();
   const zona   = 'Guadalajara';   // zona ya no se segmenta: todas cubren la ZMG
@@ -2367,18 +2369,25 @@ window.saveNewModelo = async function() {
   if (window.sbClient) {
     const slug = generarSlug(nombre);
 
-    const { data: escortData, error: escortErr } = await window.sbClient
-      .from('escorts')
-      .insert({
-        slug, nombre, edad, zona, categoria: cat, plan,
-        precio_hora: tarifa, whatsapp, telegram, descripcion: desc,
-        ojos, cabello, piel,
-        altura: estatura, peso, busto, cintura, cadera,
-        disponible: false, activa: true, es_nueva: true,
-        tags: cats,
-      })
-      .select()
-      .single();
+    const payload = {
+      slug, nombre, nombre_real: nombreReal, edad, zona, categoria: cat, plan,
+      precio_hora: tarifa, whatsapp, telegram, descripcion: desc,
+      ojos, cabello, piel,
+      altura: estatura, peso, busto, cintura, cadera,
+      disponible: false, activa: true, es_nueva: true,
+      tags: cats,
+    };
+
+    let { data: escortData, error: escortErr } = await window.sbClient
+      .from('escorts').insert(payload).select().single();
+
+    /* Si la columna nombre_real aún no existe en Supabase, reintenta sin ella
+       (correr:  alter table escorts add column if not exists nombre_real text;) */
+    if (escortErr && /nombre_real/i.test(escortErr.message || '')) {
+      const { nombre_real, ...rest } = payload;
+      ({ data: escortData, error: escortErr } = await window.sbClient
+        .from('escorts').insert(rest).select().single());
+    }
 
     if (escortErr) {
       showToast('Error al crear perfil: ' + escortErr.message, 'error');
@@ -2409,7 +2418,7 @@ window.saveNewModelo = async function() {
       img: photoUrl(pId), photos: [photoUrl(pId)], tags: cats, plan, promo: null,
       skinColor: piel || 'Morena clara', hairColor: cabello || 'Castaño', eyeColor: ojos || 'Café',
       height: estatura || 165, peso,
-      bust: busto || 86, waist: cintura || 62, hips: cadera || 90, whatsapp, telegram, descripcion: desc,
+      bust: busto || 86, waist: cintura || 62, hips: cadera || 90, whatsapp, telegram, nombreReal, descripcion: desc,
       services: Object.fromEntries(ALL_SERVICES.map(s => [s, { si: false, extra: false }])),
       hidden: false,
     });
@@ -2436,7 +2445,7 @@ window.saveNewModelo = async function() {
 
   /* ── Limpiar formulario tras 3.5 s ── */
   setTimeout(() => {
-    ['newNombre','newEdad','newEstatura','newPeso','newBusto','newCintura','newCadera',
+    ['newNombre','newNombreReal','newEdad','newEstatura','newPeso','newBusto','newCintura','newCadera',
      'newUsername','newPass','newTarifa','newDesc','newWhatsapp','newTelegram','newOjos','newCabello','newPiel']
       .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
     buildCatMultiselect('newCatMulti', []);   // limpiar categorías
@@ -2781,10 +2790,11 @@ function aprobarSolicitud(id) {
    'newUsername','newPass','newTarifa','newDesc','newWhatsapp','newTelegram','newOjos','newCabello','newPiel']
     .forEach(fid => _setVal(fid, ''));
 
-  _setVal('newNombre',   s.nombre || '');
-  _setVal('newEdad',     s.edad ?? '');
-  _setVal('newEstatura', s.estatura ?? '');
-  _setVal('newWhatsapp', s.whatsapp || '');
+  _setVal('newNombre',     s.nombre || '');
+  _setVal('newNombreReal', s.nombre || '');   /* el nombre de la solicitud llega como nombre real; el admin ajusta */
+  _setVal('newEdad',       s.edad ?? '');
+  _setVal('newEstatura',   s.estatura ?? '');
+  _setVal('newWhatsapp',   s.whatsapp || '');
 
   /* medidas libres "90-60-90" → busto / cintura / cadera */
   const nums = String(s.medidas || '').match(/\d{2,3}/g) || [];
