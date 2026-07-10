@@ -2826,6 +2826,19 @@ canvas { width: 100% !important; }
   min-height: 2.3em;
 }
 
+/* Relleno difuminado detrás de la foto contenida (evita las franjas negras
+   en fotos verticales — misma imagen ampliada y borrosa, look premium). */
+#mainMediaBlur {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-size: cover;
+  background-position: center;
+  filter: blur(28px) brightness(.45) saturate(1.1);
+  transform: scale(1.18);
+  transition: background-image .25s ease;
+}
+
 /* ─── Perfil · galería principal en ESCRITORIO ───────────────
    La foto cabe COMPLETA entre el nav (fijo) y el borde inferior de
    la pantalla: altura = alto de viewport menos el nav y un respiro,

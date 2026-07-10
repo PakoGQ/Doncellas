@@ -140,7 +140,8 @@
         <!-- Main display with nav arrows -->
         <div style="position:relative">
           <div style="border-radius:var(--r-md);overflow:hidden;background:#000;aspect-ratio:4/3;position:relative" id="mainMediaWrap">
-            <img id="mainMediaImg" src="" alt="Media principal" style="width:100%;height:100%;object-fit:cover;display:block;cursor:zoom-in" onclick="openFullscreen(activeMediaIdx)" />
+            <div id="mainMediaBlur"></div>
+            <img id="mainMediaImg" src="" alt="Media principal" style="width:100%;height:100%;object-fit:cover;display:block;cursor:zoom-in;position:relative;z-index:1" onclick="openFullscreen(activeMediaIdx)" />
             <video id="mainMediaVideo" style="width:100%;height:100%;object-fit:cover;display:none;position:relative;z-index:1" controls></video>
             <div class="wm-overlay" style="z-index:10;pointer-events:none"></div>
             <div id="mainMediaPlayBtn" style="display:none;position:absolute;inset:0;align-items:center;justify-content:center;background:rgba(0,0,0,.4);cursor:pointer;z-index:4" onclick="playMainVideo()">
