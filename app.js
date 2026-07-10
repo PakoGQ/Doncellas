@@ -3618,6 +3618,7 @@ function initPanelModelo() {
   buildAvailWeekGrid();
   buildCatMultiselect('modelCatMulti', ['Universitaria','Fit','Natural']);
   applyDemoData();
+  loadContenidoBancos();   // carga el contenido ya guardado en Supabase
 }
 
 function showModeloPage(page) {
@@ -3830,6 +3831,42 @@ async function applyWatermark(dataURL) {
   });
 }
 
+/* ── Persistencia de contenido en Supabase Storage ──────────
+   Las FOTOS se suben con la marca de agua YA incrustada (canvas),
+   así la protección viaja con el archivo. Los VIDEOS se suben tal
+   cual (marca solo por CSS — incrustarla es Tier 3, server-side). */
+const GALERIA_BUCKET = 'galeria';
+
+function _dataURLtoBlob(dataURL) {
+  const [meta, b64] = dataURL.split(',');
+  const mime = (meta.match(/:(.*?);/) || [])[1] || 'image/jpeg';
+  const bin  = atob(b64);
+  const arr  = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+  return new Blob([arr], { type: mime });
+}
+
+async function _subirGaleria(blob, escortId, banco, ext, ctype) {
+  const path = `${escortId}/${banco}/${Date.now()}-${Math.random().toString(36).slice(2, 7)}.${ext}`;
+  const { error } = await window.sbClient.storage.from(GALERIA_BUCKET).upload(path, blob, { contentType: ctype, upsert: false });
+  if (error) throw error;
+  const url = window.sbClient.storage.from(GALERIA_BUCKET).getPublicUrl(path).data.publicUrl;
+  return { path, url };
+}
+
+async function _insertFotoRow(escortId, url, tipo, banco) {
+  const payload = { escort_id: escortId, url, tipo, banco, orden: Date.now() % 100000 };
+  let { data, error } = await window.sbClient.from('fotos').insert(payload).select('id').single();
+  /* si la columna `banco` aún no existe, reintenta sin ella
+     (correr:  alter table fotos add column if not exists banco text default 'perfil';) */
+  if (error && /banco/i.test(error.message || '')) {
+    const { banco: _b, ...rest } = payload;
+    ({ data, error } = await window.sbClient.from('fotos').insert(rest).select('id').single());
+  }
+  if (error) throw error;
+  return data?.id;
+}
+
 /* File upload */
 /* Límites de contenido por banco (fotos / videos).
    Perfil = galería principal · Redes = contenido casual para el agente. */
@@ -3869,15 +3906,34 @@ function handleFileUpload(e, tipo) {
       item.className = 'upload-preview-item';
       item.dataset.kind = isVid ? 'video' : 'img';
 
-      // Aplicar watermark a imágenes automáticamente
-      const src = isVid ? ev.target.result : await applyWatermark(ev.target.result);
+      // Imágenes → marca de agua INCRUSTADA (canvas). Videos → tal cual.
+      const displaySrc = isVid ? ev.target.result : await applyWatermark(ev.target.result);
 
       item.innerHTML = `
         ${isVid
-          ? `<video src="${src}" style="width:100%;height:100%;object-fit:cover"></video><div class="wm-video-overlay"></div><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center"><i class="fas fa-play" style="color:#fff;font-size:1.5rem"></i></div>`
-          : `<img src="${src}" alt="${file.name}" />`}
-        <button class="upload-preview-remove" onclick="this.closest('.upload-preview-item').remove()"><i class="fas fa-times"></i></button>`;
+          ? `<video src="${displaySrc}" style="width:100%;height:100%;object-fit:cover"></video><div class="wm-video-overlay"></div><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center"><i class="fas fa-play" style="color:#fff;font-size:1.5rem"></i></div>`
+          : `<img src="${displaySrc}" alt="${file.name}" />`}
+        <button class="upload-preview-remove" onclick="removeContenido(this)"><i class="fas fa-times"></i></button>`;
       grid.appendChild(item);
+
+      /* Persistir a Supabase — la foto ya lleva la marca incrustada.
+         Sin sesión de escort o sin Supabase → queda solo como vista previa (demo). */
+      const { escortId } = getSession();
+      if (window.sbClient && escortId) {
+        try {
+          const blob  = isVid ? file : _dataURLtoBlob(displaySrc);
+          const ext   = isVid ? (file.name.split('.').pop() || 'mp4').toLowerCase() : 'jpg';
+          const ctype = isVid ? (file.type || 'video/mp4') : 'image/jpeg';
+          const { path, url } = await _subirGaleria(blob, escortId, tipo, ext, ctype);
+          const fotoId = await _insertFotoRow(escortId, url, isVid ? 'video' : 'foto', tipo);
+          item.dataset.fotoId = fotoId || '';
+          item.dataset.path   = path;
+          if (!isVid) { const im = item.querySelector('img'); if (im) im.src = url; }
+        } catch (err) {
+          console.error('No se pudo guardar el contenido:', err);
+          showToast('Se ve aquí, pero no se guardó. Revisa el bucket «galeria» en Supabase.', 'error');
+        }
+      }
     };
     reader.readAsDataURL(file);
   });
@@ -3899,6 +3955,59 @@ document.addEventListener('DOMContentLoaded',()=>{
     zone.addEventListener('drop', e => { e.preventDefault(); zone.classList.remove('drag-over'); handleFileUpload(e, tipo); });
   });
 });
+
+/* Quitar un contenido: borra del grid y, si estaba persistido, de Supabase. */
+async function removeContenido(btn) {
+  const item = btn.closest('.upload-preview-item');
+  if (!item) return;
+  const fotoId = item.dataset.fotoId;
+  const path   = item.dataset.path;
+  item.remove();
+  if (window.sbClient && fotoId) {
+    try {
+      await window.sbClient.from('fotos').delete().eq('id', fotoId);
+      if (path) await window.sbClient.storage.from(GALERIA_BUCKET).remove([path]);
+    } catch (e) {
+      console.error('No se pudo borrar el contenido:', e);
+    }
+  }
+}
+
+/* Carga en los grids del panel el contenido ya guardado de la escort. */
+async function loadContenidoBancos() {
+  if (!window.sbClient) return;
+  const { escortId } = getSession();
+  if (!escortId) return;
+  let rows = [];
+  try {
+    const { data, error } = await window.sbClient
+      .from('fotos').select('*').eq('escort_id', escortId).order('orden');
+    if (error) throw error;
+    rows = data || [];
+  } catch (e) {
+    console.error('No se pudieron cargar las fotos guardadas:', e);
+    return;
+  }
+  rows.forEach(row => {
+    const banco = (row.banco === 'redes') ? 'redes' : 'perfil';
+    const cap   = banco.charAt(0).toUpperCase() + banco.slice(1);
+    const grid  = document.getElementById('uploadPreviewGrid' + cap);
+    if (!grid) return;
+    const isVid = row.tipo === 'video';
+    const path  = decodeURIComponent((row.url.split(`/${GALERIA_BUCKET}/`)[1] || '').split('?')[0]);
+    const item  = document.createElement('div');
+    item.className = 'upload-preview-item';
+    item.dataset.kind   = isVid ? 'video' : 'img';
+    item.dataset.fotoId = row.id;
+    item.dataset.path   = path;
+    item.innerHTML = `
+      ${isVid
+        ? `<video src="${row.url}" style="width:100%;height:100%;object-fit:cover"></video><div class="wm-video-overlay"></div><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center"><i class="fas fa-play" style="color:#fff;font-size:1.5rem"></i></div>`
+        : `<img src="${row.url}" alt="foto" />`}
+      <button class="upload-preview-remove" onclick="removeContenido(this)"><i class="fas fa-times"></i></button>`;
+    grid.appendChild(item);
+  });
+}
 
 /* ─── Afiliacion ─────────────────────────────────────────── */
 function initMembresias() { /* FAQ handled inline in membresias.html */ }
