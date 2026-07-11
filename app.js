@@ -3408,97 +3408,148 @@ function openModelContent(id) {
   openModal('modelContentModal');
 }
 
+/* Admin — gestor de contenido por escort con bancos PERFIL y REDES,
+   respaldado en Supabase (mismo flujo que el panel de la escort:
+   sube original limpio + copia marcada; el panel muestra la limpia). */
+const MC_HINTS = {
+  perfil: 'Galería pública del perfil. Límite 15 fotos · 3 videos.',
+  redes:  'Contenido casual para los canales/estados (lo usa el agente). Límite 30 fotos · 10 videos.',
+};
+
 function renderModelContent(m) {
   const body = document.getElementById('modelContentBody');
   if (!body) return;
-
-  const photosHTML = (m.photosOrig || m.photos).map((src, i) => `
-    <div style="position:relative;border-radius:var(--r-md);overflow:hidden;background:var(--surface)">
-      <img src="${src}" alt="foto ${i+1}" style="width:100%;aspect-ratio:1;object-fit:cover" />
-      <button onclick="removeModelPhoto(${m.id},${i})"
-              style="position:absolute;top:.4rem;right:.4rem;background:rgba(224,80,80,.9);color:#fff;border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.75rem;z-index:10">
-        <i class="fas fa-times"></i>
-      </button>
-    </div>`).join('');
-
+  window._mcModelId = m.id;
+  window._mcBanco   = 'perfil';
   body.innerHTML = `
-    <div style="margin-bottom:1.5rem">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
-        <h4 style="font-size:.9rem">Fotos del perfil</h4>
-        <label class="btn btn-gold btn-sm" style="cursor:pointer">
-          <i class="fas fa-plus"></i> Agregar foto
-          <input type="file" accept="image/*" multiple style="display:none" onchange="addModelPhotos(${m.id},this)" />
-        </label>
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.75rem">
-        ${photosHTML}
-        <div style="aspect-ratio:1;border:2px dashed var(--border);border-radius:var(--r-md);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.4rem;color:var(--t3);cursor:pointer;transition:var(--transition)"
-             onclick="this.querySelector('input').click()"
-             onmouseenter="this.style.borderColor='var(--gold)'" onmouseleave="this.style.borderColor='var(--border)'">
-          <i class="fas fa-plus" style="font-size:1.2rem"></i>
-          <span style="font-size:.72rem">Agregar</span>
-          <input type="file" accept="image/*" multiple style="display:none" onchange="addModelPhotos(${m.id},this)" />
-        </div>
-      </div>
+    <div style="display:flex;gap:.5rem;margin-bottom:.5rem;border-bottom:1px solid var(--border)">
+      <button class="mc-tab active" onclick="mcSwitchBanco('perfil',this)" style="background:none;border:none;border-bottom:2px solid var(--gold);color:var(--gold);padding:.6rem .9rem;cursor:pointer;font-size:.85rem;font-weight:600"><i class="fas fa-user"></i> Perfil</button>
+      <button class="mc-tab" onclick="mcSwitchBanco('redes',this)" style="background:none;border:none;border-bottom:2px solid transparent;color:var(--t2);padding:.6rem .9rem;cursor:pointer;font-size:.85rem"><i class="fas fa-share-nodes"></i> Redes</button>
     </div>
-    <div style="border-top:1px solid var(--border);padding-top:1.25rem">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
-        <h4 style="font-size:.9rem">Videos</h4>
-        <label class="btn btn-outline btn-sm" style="cursor:pointer">
-          <i class="fas fa-video"></i> Agregar video
-          <input type="file" accept="video/*" style="display:none" onchange="addModelVideo(${m.id},this)" />
-        </label>
-      </div>
-      ${m.hasVideo
-        ? `<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:1rem;display:flex;align-items:center;gap:.75rem">
-             <i class="fas fa-film" style="color:var(--gold);font-size:1.2rem"></i>
-             <div style="flex:1"><div style="font-size:.85rem">video_perfil.mp4</div><div style="font-size:.75rem;color:var(--t3)">Video activo</div></div>
-             <button onclick="removeModelVideo(${m.id})" class="btn btn-ghost btn-sm"><i class="fas fa-trash" style="color:var(--red)"></i></button>
-           </div>`
-        : `<p style="color:var(--t3);font-size:.85rem;text-align:center;padding:1.5rem">Sin videos. Agrega uno para destacar el perfil.</p>`}
-    </div>`;
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin:.75rem 0">
+      <p id="mcHint" style="font-size:.78rem;color:var(--t3);margin:0">${MC_HINTS.perfil}</p>
+      <label class="btn btn-gold btn-sm" style="cursor:pointer;flex-shrink:0">
+        <i class="fas fa-plus"></i> Agregar contenido
+        <input type="file" id="mcInput" accept="image/*,video/*" multiple style="display:none" onchange="mcUpload(this)" />
+      </label>
+    </div>
+    <div id="mcGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:.6rem"></div>`;
+  mcLoadBanco('perfil');
 }
 
-async function addModelPhotos(id, input) {
-  const m = MODELS.find(x => x.id === id);
-  if (!m || !input.files.length) return;
-  const files = Array.from(input.files).slice(0, 6 - m.photos.length);
-  showToast('Aplicando marca de agua...', 'info');
-  const watermarked = await Promise.all(files.map(file =>
-    new Promise(res => {
-      const reader = new FileReader();
-      reader.onload = async ev => res(await applyWatermark(ev.target.result));
-      reader.readAsDataURL(file);
-    })
-  ));
-  watermarked.forEach(url => m.photos.push(url));
-  renderModelContent(m);
-  showToast(`${files.length} foto(s) con marca de agua agregadas`, 'success');
+function mcSwitchBanco(banco, btn) {
+  window._mcBanco = banco;
+  document.querySelectorAll('#modelContentBody .mc-tab').forEach(b => {
+    b.classList.remove('active');
+    b.style.borderBottomColor = 'transparent';
+    b.style.color = 'var(--t2)';
+    b.style.fontWeight = '400';
+  });
+  btn.classList.add('active');
+  btn.style.borderBottomColor = 'var(--gold)';
+  btn.style.color = 'var(--gold)';
+  btn.style.fontWeight = '600';
+  const hint = document.getElementById('mcHint');
+  if (hint) hint.textContent = MC_HINTS[banco];
+  mcLoadBanco(banco);
 }
 
-function removeModelPhoto(id, idx) {
-  const m = MODELS.find(x => x.id === id);
-  if (!m || m.photos.length <= 1) { showToast('Debe quedar al menos 1 foto', 'info'); return; }
-  m.photos.splice(idx, 1);
-  if (idx === 0) m.img = m.photos[0];
-  renderModelContent(m);
-  showToast('Foto eliminada', 'info');
+function _mcToPath(u) { return u ? decodeURIComponent((u.split(`/${GALERIA_BUCKET}/`)[1] || '').split('?')[0]) : ''; }
+
+function mcItemHTML(r) {
+  const isVid = r.tipo === 'video';
+  return `<div class="upload-preview-item" style="aspect-ratio:1" data-foto-id="${r.id}" data-path="${_mcToPath(r.url)}" data-path-wm="${_mcToPath(r.url_wm)}">
+    ${isVid
+      ? `<video src="${r.url}" style="width:100%;height:100%;object-fit:cover"></video><div class="wm-video-overlay"></div><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center"><i class="fas fa-play" style="color:#fff;font-size:1.2rem"></i></div>`
+      : `<img src="${r.url}" alt="contenido" />`}
+    <button class="upload-preview-remove" onclick="removeContenido(this)"><i class="fas fa-times"></i></button>
+  </div>`;
 }
 
-function addModelVideo(id, input) {
-  const m = MODELS.find(x => x.id === id);
-  if (!m || !input.files[0]) return;
-  m.hasVideo = true;
-  renderModelContent(m);
-  showToast('Video agregado', 'success');
+async function mcLoadBanco(banco) {
+  const grid = document.getElementById('mcGrid');
+  const escortId = window._mcModelId;
+  if (!grid) return;
+  if (!window.sbClient) {
+    grid.innerHTML = `<p style="grid-column:1/-1;color:var(--t3);text-align:center;padding:1.5rem">Supabase no conectado — sin contenido guardado (demo).</p>`;
+    return;
+  }
+  grid.innerHTML = `<p style="grid-column:1/-1;color:var(--t3);text-align:center;padding:1.5rem"><i class="fas fa-circle-notch fa-spin"></i> Cargando…</p>`;
+  try {
+    const { data, error } = await window.sbClient.from('fotos').select('*').eq('escort_id', escortId).order('orden');
+    if (banco !== window._mcBanco || escortId !== window._mcModelId) return;   // llegó tarde: se cambió de banco/modelo
+    if (error) throw error;
+    const rows = (data || []).filter(r => (r.banco || 'perfil') === banco);
+    grid.innerHTML = rows.length
+      ? rows.map(mcItemHTML).join('')
+      : `<p style="grid-column:1/-1;color:var(--t3);text-align:center;padding:1.5rem">Sin contenido en «${banco}» todavía.</p>`;
+  } catch (e) {
+    console.error('No se pudo cargar el contenido:', e);
+    grid.innerHTML = `<p style="grid-column:1/-1;color:var(--t3);text-align:center;padding:1.5rem">No se pudo cargar.<br><small>Revisa el bucket «galeria» y la columna <code>banco</code> en Supabase.</small></p>`;
+  }
 }
 
-function removeModelVideo(id) {
-  const m = MODELS.find(x => x.id === id);
-  if (!m) return;
-  m.hasVideo = false;
-  renderModelContent(m);
-  showToast('Video eliminado', 'info');
+function _readDataURL(file) {
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = e => res(e.target.result);
+    r.onerror = rej;
+    r.readAsDataURL(file);
+  });
+}
+
+async function mcUpload(input) {
+  const banco    = window._mcBanco || 'perfil';
+  const escortId = window._mcModelId;
+  const grid     = document.getElementById('mcGrid');
+  const files    = Array.from(input.files || []);
+  input.value = '';
+  if (!files.length) return;
+  if (!window.sbClient || !escortId) { showToast('Sin Supabase: el contenido no se guardará', 'error'); return; }
+
+  const limit = CONTENT_LIMITS[banco] || CONTENT_LIMITS.perfil;
+  let nFotos  = grid.querySelectorAll('[data-kind="img"], img').length;
+  let nVideos = grid.querySelectorAll('video').length;
+
+  for (const file of files) {
+    const isVid = file.type.startsWith('video/');
+    const isImg = file.type.startsWith('image/');
+    if (!isImg && !isVid) continue;
+    if (isVid && nVideos >= limit.videos) { showToast(`Máximo ${limit.videos} videos en ${banco}`, 'error'); continue; }
+    if (isImg && nFotos  >= limit.fotos)  { showToast(`Máximo ${limit.fotos} fotos en ${banco}`, 'error'); continue; }
+    if (isVid) nVideos++; else nFotos++;
+
+    grid.querySelector('p')?.remove();   // quita el estado vacío
+    const cleanSrc = await _readDataURL(file);
+    const item = document.createElement('div');
+    item.className = 'upload-preview-item';
+    item.style.aspectRatio = '1';
+    item.innerHTML = `
+      ${isVid
+        ? `<video src="${cleanSrc}" style="width:100%;height:100%;object-fit:cover"></video><div class="wm-video-overlay"></div><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center"><i class="fas fa-play" style="color:#fff;font-size:1.2rem"></i></div>`
+        : `<img src="${cleanSrc}" alt="contenido" />`}
+      <button class="upload-preview-remove" onclick="removeContenido(this)"><i class="fas fa-times"></i></button>`;
+    grid.appendChild(item);
+
+    try {
+      const ext   = (file.name.split('.').pop() || (isVid ? 'mp4' : 'jpg')).toLowerCase();
+      const ctype = file.type || (isVid ? 'video/mp4' : 'image/jpeg');
+      const clean = await _subirGaleria(file, escortId, banco, 'orig', ext, ctype);
+      let wmUrl = null, wmPath = '';
+      if (!isVid) {
+        const markedBlob = _dataURLtoBlob(await applyWatermark(cleanSrc));
+        const wm = await _subirGaleria(markedBlob, escortId, banco, 'wm', 'jpg', 'image/jpeg');
+        wmUrl = wm.url; wmPath = wm.path;
+      }
+      const fotoId = await _insertFotoRow(escortId, clean.url, wmUrl, isVid ? 'video' : 'foto', banco);
+      item.dataset.fotoId = fotoId || '';
+      item.dataset.path   = clean.path;
+      item.dataset.pathWm = wmPath;
+    } catch (err) {
+      console.error('No se pudo guardar el contenido:', err);
+      showToast('Se ve aquí, pero no se guardó. Revisa el bucket «galeria».', 'error');
+    }
+  }
 }
 
 function buildPendingReviews() {
