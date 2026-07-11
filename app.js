@@ -884,8 +884,7 @@ function buildHeroMosaic() {
   const slot = (m, isMain) => `
     <div class="hm-slot${isMain ? ' hm-main' : ' hm-sm'}"
          onclick="window.location.href='perfil.html?id=${m.id}'">
-      <img src="${m.photos[0]}" alt="${m.name}" loading="${isMain ? 'eager' : 'lazy'}" />
-      <div class="wm-overlay"></div>
+      <img src="${m.photos[0]}" alt="${m.name}" class="wm-bake" loading="${isMain ? 'eager' : 'lazy'}" />
       <div class="hm-overlay">
         <div class="hm-info">
           ${m.available
@@ -941,9 +940,8 @@ function buildDoncellaGallery() {
   escorts.forEach((m, i) => {
     el.insertAdjacentHTML('beforeend', `
       <div class="dg-item" id="dgSlot${i}">
-        <img class="dg-img dg-img-a dg-active" src="" alt="" loading="${i < 2 ? 'eager' : 'lazy'}" />
-        <img class="dg-img dg-img-b" src="" alt="" loading="lazy" />
-        <div class="wm-overlay"></div>
+        <img class="dg-img dg-img-a dg-active wm-bake" src="" alt="" loading="${i < 2 ? 'eager' : 'lazy'}" />
+        <img class="dg-img dg-img-b wm-bake" src="" alt="" loading="lazy" />
         <div class="dg-info">
           <div class="dg-name" id="dgName${i}"></div>
           <div class="dg-status" id="dgStatus${i}">
@@ -1829,7 +1827,7 @@ function buildCatFeatureGrid() {
   CATEGORIES.forEach(c => {
     g.insertAdjacentHTML('beforeend', `
       <a href="modelos.html?cat=${encodeURIComponent(c.name)}" class="cat-hero-card">
-        <img src="${c.img}" alt="${c.name}" loading="lazy" />
+        <img src="${c.img}" alt="${c.name}" class="wm-bake" loading="lazy" />
         <div class="cat-hero-overlay"></div>
         <div class="cat-hero-info">
           <h3>${c.name}</h3>
@@ -2189,7 +2187,7 @@ function buildGalleryFull() {
     } else {
       g.insertAdjacentHTML('beforeend', `
         <div style="position:relative;border-radius:8px;overflow:hidden;aspect-ratio:4/3;cursor:zoom-in" onclick="closeModal('galleryModal');openFullscreen(${i})">
-          <img src="${item.src}" loading="lazy" style="width:100%;height:100%;object-fit:cover" />
+          <img src="${item.src}" class="wm-bake" loading="lazy" style="width:100%;height:100%;object-fit:cover" />
           <div class="wm-overlay"></div>
         </div>`);
     }
@@ -2303,7 +2301,7 @@ function buildSimilarProfiles(currentModel) {
   (similar.length ? similar : MODELS.slice(1,4)).forEach(m => {
     wrap.insertAdjacentHTML('beforeend', `
       <a href="perfil.html?id=${m.id}" style="display:flex;align-items:center;gap:.75rem;padding:.5rem;border-radius:var(--r-md);transition:var(--transition)" onmouseover="this.style.background='var(--surface)'" onmouseout="this.style.background=''">
-        <img src="${m.img}" alt="${m.name}" style="width:44px;height:44px;border-radius:50%;object-fit:cover;border:1px solid var(--border-h)" />
+        <img src="${m.img}" alt="${m.name}" class="wm-bake" style="width:44px;height:44px;border-radius:50%;object-fit:cover;border:1px solid var(--border-h)" />
         <div><div style="font-size:.88rem;font-weight:500">${m.name}</div><div style="font-size:.72rem;color:var(--t2)">${m.cat} · ${fmtMXN(m.rate)}/hr</div></div>
         ${m.available ? '<span class="pill pill-available" style="margin-left:auto;font-size:.58rem">Disponible</span>' : ''}
       </a>`);
@@ -3284,7 +3282,7 @@ function deleteModel(id) {
 
   document.getElementById('confirmDeleteContent').innerHTML = `
     <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.25rem;padding:.75rem;background:var(--surface);border-radius:var(--r-md)">
-      <img src="${m.img}" alt="${m.name}" style="width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid var(--border-h)" />
+      <img src="${m.imgOrig || m.img}" alt="${m.name}" style="width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid var(--border-h)" />
       <div><div style="font-weight:600">${m.name}</div><div style="font-size:.78rem;color:var(--t2)">${m.zone} · ${m.cat}</div></div>
     </div>
     <p style="color:var(--t2);margin-bottom:1.5rem;font-size:.88rem">¿Eliminar este perfil permanentemente? Esta acción no se puede deshacer.</p>
@@ -3414,10 +3412,9 @@ function renderModelContent(m) {
   const body = document.getElementById('modelContentBody');
   if (!body) return;
 
-  const photosHTML = m.photos.map((src, i) => `
+  const photosHTML = (m.photosOrig || m.photos).map((src, i) => `
     <div style="position:relative;border-radius:var(--r-md);overflow:hidden;background:var(--surface)">
       <img src="${src}" alt="foto ${i+1}" style="width:100%;aspect-ratio:1;object-fit:cover" />
-      <div class="wm-overlay"></div>
       <button onclick="removeModelPhoto(${m.id},${i})"
               style="position:absolute;top:.4rem;right:.4rem;background:rgba(224,80,80,.9);color:#fff;border:none;border-radius:50%;width:28px;height:28px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.75rem;z-index:10">
         <i class="fas fa-times"></i>
