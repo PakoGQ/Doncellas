@@ -758,7 +758,7 @@ function modelCardHTML(m) {
        data-rate="${m.rate}" data-rating="${m.rating}" data-available="${m.available}">
     <div class="model-card-img-wrap">
       <div class="card-img-strip" id="strip-${m.id}">
-        ${m.photos.map(p=>`<img src="${p}" alt="${m.name}" loading="lazy" />`).join('')}
+        ${m.photos.map(p=>`<img src="${p}" alt="${m.name}" class="wm-bake" loading="lazy" />`).join('')}
       </div>
       <div class="card-img-overlay"></div>
       <div class="card-top-status">
@@ -1304,7 +1304,7 @@ function _applyProfileSlide(el, m, badgeText) {
   el.style.cssText = `background-image:url('${photoUrl(bgId,1400,900)}');cursor:pointer;text-decoration:none;color:inherit;display:block`;
   el.innerHTML = `
     <div class="hero-overlay"></div>
-    <div class="hero-promo-photo-card"><img src="${m.photos[0]}" alt="${m.name}" loading="lazy" /></div>
+    <div class="hero-promo-photo-card"><img src="${m.photos[0]}" alt="${m.name}" class="wm-bake" loading="lazy" /></div>
     <div class="hero-promo-overlay">
       <div class="hero-promo-badge">${badge}</div>
       <div class="hero-promo-name">${m.name}</div>
@@ -1372,12 +1372,12 @@ function buildHeroSlides() {
     </div>
     <div class="hero-brand-mosaic">
       <div class="hero-brand-mosaic-col">
-        <div class="hbm-img-wrap"><img src="${_mosaicPic(0)}" alt="modelo" /></div>
-        <div class="hbm-img-wrap hbm-mobile-only"><img src="${_mosaicPic(1)}" alt="modelo" /></div>
+        <div class="hbm-img-wrap"><img src="${_mosaicPic(0)}" alt="modelo" class="wm-bake" /></div>
+        <div class="hbm-img-wrap hbm-mobile-only"><img src="${_mosaicPic(1)}" alt="modelo" class="wm-bake" /></div>
       </div>
       <div class="hero-brand-mosaic-col">
-        <div class="hbm-img-wrap"><img src="${_mosaicPic(2)}" alt="modelo" /></div>
-        <div class="hbm-img-wrap hbm-mobile-only"><img src="${_mosaicPic(3)}" alt="modelo" /></div>
+        <div class="hbm-img-wrap"><img src="${_mosaicPic(2)}" alt="modelo" class="wm-bake" /></div>
+        <div class="hbm-img-wrap hbm-mobile-only"><img src="${_mosaicPic(3)}" alt="modelo" class="wm-bake" /></div>
       </div>
     </div>`;
   wrap.appendChild(brandSlide);
@@ -1812,7 +1812,7 @@ function onCatSearch(q) {
     html += `<div class="cat-search-section-lbl" style="border-top:1px solid var(--border);margin-top:.25rem;padding-top:.5rem">Doncellas sugeridas</div>`;
     matchModels.forEach(m => {
       html += `<a href="perfil.html?id=${m.id}" class="cat-search-row">
-        <img src="${m.photos[0]}" class="cat-search-avatar" alt="${m.name}" />
+        <img src="${m.photos[0]}" class="cat-search-avatar wm-bake" alt="${m.name}" />
         <div style="flex:1;min-width:0"><div class="cat-search-name">${m.name}</div><div class="cat-search-sub">${m.cat} · ${m.age} años</div></div>
         ${m.available ? '<span class="pill pill-available" style="font-size:.6rem;flex-shrink:0">Disponible</span>' : ''}
       </a>`;
@@ -1916,7 +1916,7 @@ function initPerfil() {
   const track = document.getElementById('profileCarouselTrack');
   if (track) {
     track.innerHTML = m.photos.map((p, i) =>
-      `<img src="${p}" alt="Foto ${i+1}" class="profile-carousel-slide" />`
+      `<img src="${p}" alt="Foto ${i+1}" class="profile-carousel-slide wm-bake" />`
     ).join('');
     /* Fondo borroso: foto activa como background desenfocado */
     const blurBg = document.getElementById('profileBlurBg');
@@ -2089,7 +2089,7 @@ function buildMediaGallery() {
     const div = document.createElement('div');
     div.className = 'media-thumb' + (i===0 ? ' active' : '');
     div.innerHTML = `
-      <img src="${item.thumb}" alt="Media ${i+1}" loading="lazy" />
+      <img src="${item.thumb}" alt="Media ${i+1}" class="${item.type==='video' ? '' : 'wm-bake'}" loading="lazy" />
       ${item.type==='video' ? `<div class="media-thumb-video-badge"><i class="fas fa-play"></i></div>` : ''}`;
     div.addEventListener('click', () => showMedia(i));
     thumbsWrap.appendChild(div);
@@ -3801,43 +3801,91 @@ function _loadWatermark() {
   });
 }
 
+/* Dibuja la marca sobre un <img> YA cargado y devuelve el JPEG en base64. */
+async function _watermarkFromImage(photo) {
+  const wm = await _loadWatermark();
+  const canvas = document.createElement('canvas');
+  canvas.width  = photo.naturalWidth  || photo.width;
+  canvas.height = photo.naturalHeight || photo.height;
+  const ctx = canvas.getContext('2d');
+  ctx.drawImage(photo, 0, 0);
+  if (wm) {
+    const side = Math.min(canvas.width, canvas.height);
+    const wmW  = Math.round(side * 0.65);
+    const wmH  = Math.round(wmW * (wm.height / wm.width));
+    const wmX  = Math.round((canvas.width  - wmW) / 2);
+    const wmY  = Math.round((canvas.height - wmH) / 2);
+    ctx.globalAlpha = 0.58;
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.drawImage(wm, wmX, wmY, wmW, wmH);
+    ctx.globalAlpha = 1;
+  }
+  return canvas.toDataURL('image/jpeg', 0.92);
+}
+
 /**
  * Aplica la marca de agua Doncellas a una imagen.
  * @param {string} dataURL  – imagen original en base64
  * @returns {Promise<string>} – imagen con watermark en base64
  */
 async function applyWatermark(dataURL) {
-  const wm = await _loadWatermark();
   return new Promise(resolve => {
     const photo = new Image();
-    photo.onload = () => {
-      const canvas = document.createElement('canvas');
-      canvas.width  = photo.width;
-      canvas.height = photo.height;
-      const ctx = canvas.getContext('2d');
-
-      // 1. Dibujar foto original
-      ctx.drawImage(photo, 0, 0);
-
-      if (wm) {
-        // 2. Marca grande centrada: 65% del lado menor para que quepa bien
-        const side   = Math.min(canvas.width, canvas.height);
-        const wmW    = Math.round(side * 0.65);
-        const wmH    = Math.round(wmW * (wm.height / wm.width));
-        const wmX    = Math.round((canvas.width  - wmW) / 2);
-        const wmY    = Math.round((canvas.height - wmH) / 2);
-
-        // 3. PNG con transparencia real — source-over directo
-        ctx.globalAlpha = 0.58;
-        ctx.globalCompositeOperation = 'source-over';
-        ctx.drawImage(wm, wmX, wmY, wmW, wmH);
-        ctx.globalAlpha = 1;
-      }
-
-      resolve(canvas.toDataURL('image/jpeg', 0.92));
-    };
+    photo.onload  = async () => resolve(await _watermarkFromImage(photo));
+    photo.onerror = () => resolve(dataURL);
     photo.src = dataURL;
   });
+}
+
+/* ── Marca al vuelo SOLO PARA DEMO ───────────────────────────
+   Las fotos demo (Unsplash) no tienen copia marcada guardada. Mientras
+   DEMO_MODE=true, se les incrusta la marca en el navegador (canvas) al
+   mostrarlas en el público, para que se vea el resultado. Cuando entren
+   modelos REALES (DEMO_MODE=false) esto se apaga solo y el público usa
+   la copia marcada guardada en Supabase (comportamiento definitivo). */
+function _bakeOne(src) {
+  return new Promise(resolve => {
+    const im = new Image();
+    im.crossOrigin = 'anonymous';
+    im.onload  = async () => { try { resolve(await _watermarkFromImage(im)); } catch (e) { resolve(null); } };
+    im.onerror = () => resolve(null);
+    im.src = src;
+  });
+}
+
+async function bakeDemoWatermarks() {
+  const imgs = document.querySelectorAll('img.wm-bake:not([data-wm-done])');
+  for (const img of imgs) {
+    img.dataset.wmDone = '1';
+    const src = img.getAttribute('src') || '';
+    if (!src || src.startsWith('data:')) continue;      // ya es dato local
+    if (/\/galeria\/.*\/wm\//.test(src)) continue;      // ya marcada (copia real)
+    try {
+      const marked = await _bakeOne(src);
+      if (marked) img.src = marked;                     // dispara el observer pero con data: → se ignora
+    } catch (e) { /* CORS u otro → se queda limpia */ }
+  }
+}
+
+let _wmSweepT = null;
+function initDemoWatermark() {
+  if (!DEMO_MODE) return;   // en vivo: no hay marca al vuelo
+  const sweep = () => { clearTimeout(_wmSweepT); _wmSweepT = setTimeout(bakeDemoWatermarks, 60); };
+  sweep();
+  new MutationObserver(muts => {
+    let touch = false;
+    for (const m of muts) {
+      if (m.type === 'attributes' && m.target.matches?.('img.wm-bake')) {
+        const s = m.target.getAttribute('src') || '';
+        if (!s.startsWith('data:')) { m.target.removeAttribute('data-wm-done'); touch = true; }
+      } else if (m.type === 'childList') {
+        for (const n of m.addedNodes) {
+          if (n.nodeType === 1 && (n.matches?.('img.wm-bake') || n.querySelector?.('img.wm-bake'))) { touch = true; break; }
+        }
+      }
+    }
+    if (touch) sweep();
+  }).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['src'] });
 }
 
 /* ── Persistencia de contenido en Supabase Storage ──────────
@@ -4070,9 +4118,8 @@ window.openQuickView = function(id) {
   content.innerHTML = `
     <div class="qv-grid">
       <div style="position:relative;border-radius:var(--r-lg);overflow:hidden;border:1px solid var(--border)">
-        <img src="${m.img}" alt="${m.name}"
+        <img src="${m.img}" alt="${m.name}" class="wm-bake"
              style="width:100%;aspect-ratio:3/4;object-fit:cover;display:block" />
-        <div class="wm-overlay"></div>
       </div>
       <div style="display:flex;flex-direction:column;gap:.75rem">
         <div>
@@ -4208,4 +4255,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   else if (path==='membresias')   initMembresias();
   else if (path==='panel-admin')  initAdmin();
   else if (path==='panel-modelo') initPanelModelo();
+
+  /* Marca al vuelo SOLO en páginas públicas y SOLO en demo (se apaga con DEMO_MODE=false) */
+  if (!['panel-admin','panel-modelo'].includes(path)) initDemoWatermark();
 });
