@@ -3428,10 +3428,13 @@ function renderModelContent(m) {
     </div>
     <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin:.75rem 0">
       <p id="mcHint" style="font-size:.78rem;color:var(--t3);margin:0">${MC_HINTS.perfil}</p>
-      <label class="btn btn-gold btn-sm" style="cursor:pointer;flex-shrink:0">
-        <i class="fas fa-plus"></i> Agregar contenido
-        <input type="file" id="mcInput" accept="image/*,video/*" multiple style="display:none" onchange="mcUpload(this)" />
-      </label>
+      <div style="display:flex;gap:.5rem;flex-shrink:0">
+        <button class="btn btn-ghost btn-sm" onclick="mcDownloadAll()"><i class="fas fa-download"></i> Descargar todo</button>
+        <label class="btn btn-gold btn-sm" style="cursor:pointer">
+          <i class="fas fa-plus"></i> Agregar contenido
+          <input type="file" id="mcInput" accept="image/*,video/*" multiple style="display:none" onchange="mcUpload(this)" />
+        </label>
+      </div>
     </div>
     <div id="mcGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:.6rem"></div>`;
   mcLoadBanco('perfil');
@@ -3456,13 +3459,16 @@ function mcSwitchBanco(banco, btn) {
 
 function _mcToPath(u) { return u ? decodeURIComponent((u.split(`/${GALERIA_BUCKET}/`)[1] || '').split('?')[0]) : ''; }
 
+const _MC_DL_BTN = `<button onclick="mcDownloadItem(this)" title="Descargar" style="position:absolute;bottom:.3rem;right:.3rem;width:26px;height:26px;border-radius:50%;background:rgba(0,0,0,.7);color:#fff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.68rem;z-index:10"><i class="fas fa-download"></i></button>`;
+
 function mcItemHTML(r) {
   const isVid = r.tipo === 'video';
-  return `<div class="upload-preview-item" style="aspect-ratio:1" data-foto-id="${r.id}" data-path="${_mcToPath(r.url)}" data-path-wm="${_mcToPath(r.url_wm)}">
+  return `<div class="upload-preview-item" style="aspect-ratio:1" data-foto-id="${r.id}" data-url="${r.url}" data-path="${_mcToPath(r.url)}" data-path-wm="${_mcToPath(r.url_wm)}" data-vid="${isVid ? 1 : 0}">
     ${isVid
       ? `<video src="${r.url}" style="width:100%;height:100%;object-fit:cover"></video><div class="wm-video-overlay"></div><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center"><i class="fas fa-play" style="color:#fff;font-size:1.2rem"></i></div>`
       : `<img src="${r.url}" alt="contenido" />`}
     <button class="upload-preview-remove" onclick="removeContenido(this)"><i class="fas fa-times"></i></button>
+    ${_MC_DL_BTN}
   </div>`;
 }
 
@@ -3524,11 +3530,13 @@ async function mcUpload(input) {
     const item = document.createElement('div');
     item.className = 'upload-preview-item';
     item.style.aspectRatio = '1';
+    item.dataset.vid = isVid ? '1' : '0';
     item.innerHTML = `
       ${isVid
         ? `<video src="${cleanSrc}" style="width:100%;height:100%;object-fit:cover"></video><div class="wm-video-overlay"></div><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center"><i class="fas fa-play" style="color:#fff;font-size:1.2rem"></i></div>`
         : `<img src="${cleanSrc}" alt="contenido" />`}
-      <button class="upload-preview-remove" onclick="removeContenido(this)"><i class="fas fa-times"></i></button>`;
+      <button class="upload-preview-remove" onclick="removeContenido(this)"><i class="fas fa-times"></i></button>
+      ${_MC_DL_BTN}`;
     grid.appendChild(item);
 
     try {
@@ -3543,12 +3551,52 @@ async function mcUpload(input) {
       }
       const fotoId = await _insertFotoRow(escortId, clean.url, wmUrl, isVid ? 'video' : 'foto', banco);
       item.dataset.fotoId = fotoId || '';
+      item.dataset.url    = clean.url;
       item.dataset.path   = clean.path;
       item.dataset.pathWm = wmPath;
     } catch (err) {
       console.error('No se pudo guardar el contenido:', err);
       showToast('Se ve aquí, pero no se guardó. Revisa el bucket «galeria».', 'error');
     }
+  }
+}
+
+/* Descarga del contenido (banco Perfil/Redes) — versión LIMPIA (archivo maestro).
+   Reutiliza descargarArchivo/_extFromUrl/_sleep del módulo de solicitudes. */
+function _mcBaseName() {
+  const m = MODELS.find(x => x.id === window._mcModelId);
+  return (m?.name || 'doncella').toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'doncella';
+}
+
+function _mcItemUrl(item) {
+  return item?.dataset.url || item?.querySelector('img,video')?.getAttribute('src') || '';
+}
+
+function mcDownloadItem(btn) {
+  const item = btn.closest('.upload-preview-item');
+  const url  = _mcItemUrl(item);
+  if (!url) { showToast('Este archivo aún no está disponible para descargar', 'error'); return; }
+  const isVid = item.dataset.vid === '1';
+  const idx   = [...item.parentElement.children].filter(c => c.classList.contains('upload-preview-item')).indexOf(item) + 1;
+  const name  = `${_mcBaseName()}-${window._mcBanco}-${isVid ? 'video' : 'foto'}-${idx}.${_extFromUrl(url, isVid ? 'mp4' : 'jpg')}`;
+  descargarArchivo(url, name);
+}
+
+async function mcDownloadAll() {
+  const items = [...document.querySelectorAll('#mcGrid .upload-preview-item')];
+  if (!items.length) { showToast('No hay contenido para descargar', 'error'); return; }
+  const base = _mcBaseName();
+  showToast('Descargando…', 'info');
+  let fi = 1, vi = 1;
+  for (const item of items) {
+    const url = _mcItemUrl(item);
+    if (!url) continue;
+    const isVid = item.dataset.vid === '1';
+    const name  = isVid ? `${base}-${window._mcBanco}-video-${vi++}` : `${base}-${window._mcBanco}-foto-${fi++}`;
+    await descargarArchivo(url, `${name}.${_extFromUrl(url, isVid ? 'mp4' : 'jpg')}`);
+    await _sleep(400);
   }
 }
 
