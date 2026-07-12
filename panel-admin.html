@@ -591,8 +591,13 @@
         <div id="newCatMulti"></div>
       </div>
       <div class="form-group">
-        <label class="form-label">Tarifa por hora (MXN)</label>
-        <input class="form-input" type="number" id="newTarifa" placeholder="Ej. 2500" min="500" />
+        <label class="form-label">Tarifas (MXN)</label>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.5rem">
+          <input class="form-input" type="number" id="newTarifa"   placeholder="1 hora"  min="0" oninput="autoTarifas()" title="Tarifa 1 hora" />
+          <input class="form-input" type="number" id="newTarifa90" placeholder="1:30 h"  min="0" title="Tarifa 1 hora y media" />
+          <input class="form-input" type="number" id="newTarifa2h" placeholder="2 horas" min="0" title="Tarifa 2 horas" />
+        </div>
+        <span style="font-size:.7rem;color:var(--t3)">Si dejas vacías la de 1:30 h y 2 h, se calculan solas (×1.4 y ×1.8).</span>
       </div>
       <div class="form-group">
         <label class="form-label">Color de ojos</label>

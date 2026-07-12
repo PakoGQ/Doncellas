@@ -386,6 +386,8 @@ function mapEscortToModel(e) {
     cat:         e.categoria    || 'VIP',
     tags:        e.tags         || [e.categoria || 'VIP'],
     rate:        e.precio_hora  || 2000,
+    rate90:      e.precio_90    || null,
+    rate2h:      e.precio_2h    || null,
     rating:      parseFloat(e.calificacion) || 5.0,
     reviews:     e.num_resenas  || 0,
     citas:       e.num_citas    || 0,
@@ -1949,8 +1951,8 @@ function initPerfil() {
   const r90 = document.getElementById('rate90');
   const r2  = document.getElementById('rate2h');
   if (r1)  r1.textContent  = fmtMXN(m.rate);
-  if (r90) r90.textContent = fmtMXN(Math.round(m.rate * 1.4 / 50) * 50);
-  if (r2)  r2.textContent  = fmtMXN(Math.round(m.rate * 1.8 / 50) * 50);
+  if (r90) r90.textContent = fmtMXN(m.rate90 || Math.round(m.rate * 1.4 / 50) * 50);
+  if (r2)  r2.textContent  = fmtMXN(m.rate2h || Math.round(m.rate * 1.8 / 50) * 50);
 
   /* Servicios */
   const svcList = document.getElementById('serviciosList');
@@ -2344,6 +2346,48 @@ window.autoUsername = function() {
     .replace(/^\.|\.$/, '');
 };
 
+/* Columnas de `escorts` que pueden NO existir todavía en Supabase (se agregan
+   con ALTER TABLE). Si el guardado falla mencionando una de ellas, se quita del
+   payload y se reintenta, para no perder el resto de los datos. */
+const _ESCORT_OPT_COLS = ['nombre_real', 'precio_90', 'precio_2h', 'telegram', 'peso', 'tags'];
+
+function _stripMissingCols(payload, errMsg) {
+  const out = { ...payload };
+  let changed = false;
+  _ESCORT_OPT_COLS.forEach(c => {
+    if (c in out && new RegExp(c, 'i').test(errMsg || '')) { delete out[c]; changed = true; }
+  });
+  return changed ? out : null;
+}
+
+/* Inserta/actualiza una fila de `escorts` reintentando sin las columnas que
+   Supabase aún no tenga. mode: 'insert' (devuelve {data,error}) | 'update'. */
+async function _saveEscortRow(mode, payload, id) {
+  let attempt = { ...payload };
+  let res;
+  for (let i = 0; i < 5; i++) {
+    res = mode === 'insert'
+      ? await window.sbClient.from('escorts').insert(attempt).select().single()
+      : await window.sbClient.from('escorts').update(attempt).eq('id', id);
+    if (!res.error) return res;
+    const stripped = _stripMissingCols(attempt, res.error.message);
+    if (!stripped) return res;   // error no relacionado a columnas opcionales
+    attempt = stripped;
+  }
+  return res;
+}
+
+/* Sugerencia automática de las tarifas de 1:30 h y 2 h a partir de la de 1 h.
+   Solo rellena los campos que estén VACÍOS (no pisa lo que el admin escriba). */
+window.autoTarifas = function() {
+  const base = parseInt(document.getElementById('newTarifa')?.value);
+  if (!base) return;
+  const r90 = document.getElementById('newTarifa90');
+  const r2h = document.getElementById('newTarifa2h');
+  if (r90 && !r90.value) r90.value = Math.round(base * 1.4 / 50) * 50;
+  if (r2h && !r2h.value) r2h.value = Math.round(base * 1.8 / 50) * 50;
+};
+
 window.saveNewModelo = async function() {
   const nombre     = document.getElementById('newNombre')?.value.trim();
   const nombreReal = document.getElementById('newNombreReal')?.value.trim() || null;
@@ -2356,7 +2400,9 @@ window.saveNewModelo = async function() {
      (El selector Silver/Gold/Elite se retiró de la UI — ver memoria
      membresias-tiers-desactivadas para reactivar los planes.) */
   const plan   = 'Elite';
-  const tarifa = parseInt(document.getElementById('newTarifa')?.value) || 2500;
+  const tarifa   = parseInt(document.getElementById('newTarifa')?.value) || 2500;
+  const tarifa90 = parseInt(document.getElementById('newTarifa90')?.value) || null;
+  const tarifa2h = parseInt(document.getElementById('newTarifa2h')?.value) || null;
   const edad   = parseInt(document.getElementById('newEdad')?.value) || 25;
   /* Contacto INTERNO (agente ↔ Doncella): WhatsApp y Telegram por separado,
      no siempre son la misma cuenta. No se muestran al cliente. */
@@ -2386,23 +2432,17 @@ window.saveNewModelo = async function() {
 
     const payload = {
       slug, nombre, nombre_real: nombreReal, edad, zona, categoria: cat, plan,
-      precio_hora: tarifa, whatsapp, telegram, descripcion: desc,
+      precio_hora: tarifa, precio_90: tarifa90, precio_2h: tarifa2h,
+      whatsapp, telegram, descripcion: desc,
       ojos, cabello, piel,
       altura: estatura, peso, busto, cintura, cadera,
       disponible: false, activa: true, es_nueva: true,
       tags: cats,
     };
 
-    let { data: escortData, error: escortErr } = await window.sbClient
-      .from('escorts').insert(payload).select().single();
-
-    /* Si la columna nombre_real aún no existe en Supabase, reintenta sin ella
-       (correr:  alter table escorts add column if not exists nombre_real text;) */
-    if (escortErr && /nombre_real/i.test(escortErr.message || '')) {
-      const { nombre_real, ...rest } = payload;
-      ({ data: escortData, error: escortErr } = await window.sbClient
-        .from('escorts').insert(rest).select().single());
-    }
+    /* Inserta reintentando sin columnas que Supabase aún no tenga (nombre_real,
+       precio_90, precio_2h…). Correr los ALTER TABLE para que no se pierdan. */
+    let { data: escortData, error: escortErr } = await _saveEscortRow('insert', payload);
 
     if (escortErr) {
       showToast('Error al crear perfil: ' + escortErr.message, 'error');
@@ -2428,7 +2468,7 @@ window.saveNewModelo = async function() {
     const newId  = Math.max(...MODELS.map(m => m.id)) + 1;
     const pId    = PHOTO_POOL[newId % PHOTO_POOL.length];
     MODELS.unshift({
-      id: newId, name: nombre, age: edad, zone: zona, cat, rate: tarifa,
+      id: newId, name: nombre, age: edad, zone: zona, cat, rate: tarifa, rate90: tarifa90, rate2h: tarifa2h,
       rating: 5.0, available: false, featured: false, isNew: true, hasVideo: false,
       img: photoUrl(pId), photos: [photoUrl(pId)], imgOrig: photoUrl(pId), photosOrig: [photoUrl(pId)], tags: cats, plan, promo: null,
       skinColor: piel || 'Morena clara', hairColor: cabello || 'Castaño', eyeColor: ojos || 'Café',
@@ -2461,7 +2501,7 @@ window.saveNewModelo = async function() {
   /* ── Limpiar formulario tras 3.5 s ── */
   setTimeout(() => {
     ['newNombre','newNombreReal','newEdad','newEstatura','newPeso','newBusto','newCintura','newCadera',
-     'newUsername','newPass','newTarifa','newDesc','newWhatsapp','newTelegram','newOjos','newCabello','newPiel']
+     'newUsername','newPass','newTarifa','newTarifa90','newTarifa2h','newDesc','newWhatsapp','newTelegram','newOjos','newCabello','newPiel']
       .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
     buildCatMultiselect('newCatMulti', []);   // limpiar categorías
     if (box) box.style.display = 'none';
@@ -3106,7 +3146,13 @@ function editModel(id) {
         <div id="edit-cat-multi"></div>
       </div>
       <div class="form-group" style="grid-column:span 2"><label class="form-label">Descripción del perfil</label><textarea class="form-input" id="edit-desc" rows="3" placeholder="Sobre mí…">${m.descripcion || ''}</textarea></div>
-      <div class="form-group"><label class="form-label">Tarifa/hr ($MXN)</label><input type="number" class="form-input" id="edit-rate" value="${m.rate}" /></div>
+      <div class="form-group" style="grid-column:span 2"><label class="form-label">Tarifas ($MXN) <span style="color:var(--t3);font-weight:400">(1 h · 1:30 h · 2 h — si dejas vacías las últimas dos, se calculan solas)</span></label>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.5rem">
+          <input type="number" class="form-input" id="edit-rate"   value="${m.rate}"   placeholder="1 hora"  title="Tarifa 1 hora" />
+          <input type="number" class="form-input" id="edit-rate90" value="${m.rate90||''}" placeholder="1:30 h"  title="Tarifa 1 hora y media" />
+          <input type="number" class="form-input" id="edit-rate2h" value="${m.rate2h||''}" placeholder="2 horas" title="Tarifa 2 horas" />
+        </div>
+      </div>
       <div class="form-group"><label class="form-label">Estatura (cm)</label><input type="number" class="form-input" id="edit-height" value="${m.height}" /></div>
       <div class="form-group"><label class="form-label">Peso (kg)</label><input type="number" class="form-input" id="edit-peso" value="${m.peso||''}" placeholder="Ej. 55" /></div>
       <div class="form-group"><label class="form-label">Nacionalidad</label><input type="text" class="form-input" id="edit-nationality" value="${m.nationality}" /></div>
@@ -3254,6 +3300,8 @@ function saveEditModel(id) {
   const editCats = getCatMultiValues('edit-cat-multi');
   if (editCats.length) { m.cat = editCats[0]; m.tags = editCats; }
   m.rate        = parseInt(g('edit-rate')?.value)      || m.rate;
+  m.rate90      = parseInt(g('edit-rate90')?.value)    || null;
+  m.rate2h      = parseInt(g('edit-rate2h')?.value)    || null;
   m.height      = parseInt(g('edit-height')?.value)    || m.height;
   m.peso        = parseInt(g('edit-peso')?.value)      || m.peso;
   m.nationality = g('edit-nationality')?.value.trim()  || m.nationality;
@@ -3304,21 +3352,16 @@ function saveEditModel(id) {
     const upd = {
       nombre: m.name, nombre_real: m.nombreReal || null, edad: m.age, categoria: m.cat, tags: m.tags,
       descripcion: m.descripcion || null,
-      precio_hora: m.rate, altura: m.height, peso: m.peso || null,
+      precio_hora: m.rate, precio_90: m.rate90, precio_2h: m.rate2h,
+      altura: m.height, peso: m.peso || null,
       nacionalidad: m.nationality, disponible: m.available,
       cabello: m.hairColor, ojos: m.eyeColor, piel: m.skinColor,
       busto: m.bust, cintura: m.waist, cadera: m.hips,
       whatsapp: m.whatsapp || null, telegram: m.telegram || null,
     };
-    window.sbClient.from('escorts').update(upd).eq('id', id).then(({ error }) => {
-      /* Si la columna nombre_real aún no existe, reintenta sin ella
-         (correr:  alter table escorts add column if not exists nombre_real text;) */
-      if (error && /nombre_real/i.test(error.message || '')) {
-        const { nombre_real, ...rest } = upd;
-        return window.sbClient.from('escorts').update(rest).eq('id', id).then(({ error: e2 }) => {
-          if (e2) showToast('Guardado local, pero Supabase falló: ' + e2.message, 'error');
-        });
-      }
+    /* Guarda reintentando sin columnas que Supabase aún no tenga
+       (nombre_real, precio_90, precio_2h…). */
+    _saveEscortRow('update', upd, id).then(({ error }) => {
       if (error) showToast('Guardado local, pero Supabase falló: ' + error.message, 'error');
     });
   }
