@@ -38,7 +38,7 @@ const USERS = [
    sesión sobreviva al cerrar la pestaña, el navegador o la PWA.
    Solo se cierra cuando el usuario toca "Cerrar sesión".
    ──────────────────────────────────────────────────────────── */
-const SESSION_KEYS = ['userRole', 'userNombre', 'escortId'];
+const SESSION_KEYS = ['userRole', 'userNombre', 'escortId', 'adminUser', 'adminPass'];
 
 function setSession(role, nombre, escortId) {
   localStorage.setItem('userRole',   role);
@@ -103,6 +103,13 @@ async function doLogin() {
 
       if (data.role === 'admin') {
         setSession('admin', data.nombre || 'Administrador');
+        /* Se guardan las credenciales del admin (solo en su propio equipo)
+           para autorizar las funciones `admin_get/set_credenciales` que leen
+           y escriben la contraseña de cada Doncella. La tabla `usuarios` tiene
+           RLS que bloquea la lectura anónima, así que esas funciones exigen
+           usuario+contraseña de admin para no exponer contraseñas al público. */
+        localStorage.setItem('adminUser', username);
+        localStorage.setItem('adminPass', pass);
         showToast('Bienvenido, Administrador', 'success');
         setTimeout(() => { window.location.href = 'panel-admin.html'; }, 800);
         return;
@@ -2309,10 +2316,10 @@ function buildSimilarProfiles(currentModel) {
 }
 
 /* ─── Admin — nueva modelo con credenciales ─────────────── */
-window.generarPassword = function() {
+window.generarPassword = function(targetId) {
   const chars = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ23456789@#$!';
   const pass = Array.from({length: 12}, () => chars[Math.floor(Math.random() * chars.length)]).join('');
-  const passEl = document.getElementById('newPass');
+  const passEl = document.getElementById(targetId || 'newPass');
   if (passEl) passEl.value = pass;
 };
 
@@ -3110,13 +3117,13 @@ function editModel(id) {
         </select>
       </div>
       <div class="form-group"><label class="form-label">Color de cabello</label>
-        <select class="form-input filter-select" id="edit-hairColor">${HAIR_COLORS.map(c=>`<option${c===m.hairColor?' selected':''}>${c}</option>`).join('')}</select>
+        <input type="text" class="form-input" id="edit-hairColor" value="${(m.hairColor||'').replace(/"/g,'&quot;')}" placeholder="Ej. Castaño oscuro" />
       </div>
       <div class="form-group"><label class="form-label">Color de ojos</label>
-        <select class="form-input filter-select" id="edit-eyeColor">${EYE_COLORS.map(c=>`<option${c===m.eyeColor?' selected':''}>${c}</option>`).join('')}</select>
+        <input type="text" class="form-input" id="edit-eyeColor" value="${(m.eyeColor||'').replace(/"/g,'&quot;')}" placeholder="Ej. Miel" />
       </div>
       <div class="form-group"><label class="form-label">Color de piel</label>
-        <select class="form-input filter-select" id="edit-skinColor">${SKIN_COLORS.map(c=>`<option${c===m.skinColor?' selected':''}>${c}</option>`).join('')}</select>
+        <input type="text" class="form-input" id="edit-skinColor" value="${(m.skinColor||'').replace(/"/g,'&quot;')}" placeholder="Ej. Morena clara" />
       </div>
       <div class="form-group" style="grid-column:span 2"><label class="form-label">Medidas <span style="color:var(--t3);font-weight:400">(busto - cintura - cadera, ej. 90-60-90)</span></label>
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.5rem">
@@ -3133,6 +3140,20 @@ function editModel(id) {
       <div class="form-group" style="grid-column:span 2"><label class="form-label">Promo — descripción</label><input type="text" class="form-input" id="edit-promoDesc" value="${m.promo?.desc||''}" /></div>
       <div class="form-group"><label class="form-label">Descuento (%)</label><input type="number" class="form-input" id="edit-promoDisc" value="${m.promo?.discount||0}" min="0" max="90" /></div>
       <div class="form-group"><label class="form-label">Válido hasta</label><input type="text" class="form-input" id="edit-promoValid" value="${m.promo?.validUntil||''}" placeholder="ej. 31 May 2026" /></div>
+    </div>
+    <!-- Credenciales de acceso (login de la Doncella) -->
+    <div style="border-top:1px solid var(--border);margin:.75rem 0 .5rem;padding-top:.85rem">
+      <p style="font-size:.7rem;color:var(--gold);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.4rem"><i class="fas fa-key"></i> Credenciales de acceso <span style="color:var(--t3);text-transform:none;letter-spacing:0;font-weight:400">(login de la Doncella al panel)</span></p>
+      <p id="edit-cred-status" style="font-size:.72rem;color:var(--t3);margin-bottom:.75rem">Cargando credenciales…</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem 1rem">
+        <div class="form-group"><label class="form-label">Usuario</label><input type="text" class="form-input" id="edit-cred-user" autocomplete="off" placeholder="usuario de acceso" /></div>
+        <div class="form-group"><label class="form-label">Contraseña</label>
+          <div style="display:flex;gap:.4rem;align-items:center">
+            <div class="pass-wrap" style="flex:1"><input type="password" class="form-input" id="edit-cred-pass" autocomplete="new-password" placeholder="••••••••" /><button type="button" class="pass-toggle" aria-label="Mostrar contraseña" onclick="togglePassword(this)"><i class="fas fa-eye"></i></button></div>
+            <button type="button" class="btn btn-ghost btn-sm" onclick="generarPassword('edit-cred-pass')" title="Generar contraseña segura" style="flex-shrink:0"><i class="fas fa-dice"></i></button>
+          </div>
+        </div>
+      </div>
     </div>
     <!-- Servicios -->
     <div style="border-top:1px solid var(--border);margin:.75rem 0 .5rem;padding-top:.85rem">
@@ -3167,7 +3188,57 @@ function editModel(id) {
     </div>`;
 
   buildCatMultiselect('edit-cat-multi', (m.tags && m.tags.length) ? m.tags : [m.cat]);
+  loadEditCredenciales(id);
   openModal('editModelModal');
+}
+
+/* Carga el usuario/contraseña actual de la Doncella dentro del modal de
+   edición. La tabla `usuarios` tiene RLS que bloquea la lectura anónima, así
+   que se lee vía la función `admin_get_credenciales` (SECURITY DEFINER), que
+   exige las credenciales del admin — no expone contraseñas al público.
+   SQL para crearla: ver memoria `admin-credenciales-escort`. */
+async function loadEditCredenciales(id) {
+  const status = document.getElementById('edit-cred-status');
+  const userEl = document.getElementById('edit-cred-user');
+  const passEl = document.getElementById('edit-cred-pass');
+  if (!status || !userEl || !passEl) return;
+
+  const adminUser = localStorage.getItem('adminUser');
+  const adminPass = localStorage.getItem('adminPass');
+
+  if (!window.sbClient) {
+    status.textContent = 'Sin conexión a Supabase — no se pueden ver ni cambiar las credenciales.';
+    userEl.disabled = passEl.disabled = true;
+    return;
+  }
+  if (!adminUser || !adminPass) {
+    status.innerHTML = '<span style="color:var(--warn,#e0a03a)">Vuelve a iniciar sesión para ver o cambiar las credenciales.</span>';
+    userEl.disabled = passEl.disabled = true;
+    return;
+  }
+
+  try {
+    const { data, error } = await window.sbClient.rpc('admin_get_credenciales', {
+      p_admin_user: adminUser, p_admin_pass: adminPass, p_escort_id: id,
+    });
+    const row = Array.isArray(data) ? data[0] : data;
+    if (error) throw error;
+    if (row && (row.username || row.password)) {
+      userEl.value = row.username || '';
+      passEl.value = row.password || '';
+      status.textContent = 'Puedes ver y editar el usuario y la contraseña con los que entra al panel.';
+    } else {
+      status.textContent = 'Esta Doncella aún no tiene credenciales — escribe un usuario y contraseña para crearlas.';
+    }
+  } catch (err) {
+    const msg = (err && err.message) || '';
+    if (/function .*admin_get_credenciales/i.test(msg) || /does not exist/i.test(msg)) {
+      status.innerHTML = '<span style="color:var(--warn,#e0a03a)">Falta crear la función <code>admin_get_credenciales</code> en Supabase (ver instrucciones).</span>';
+    } else {
+      status.innerHTML = '<span style="color:var(--warn,#e0a03a)">No se pudieron cargar las credenciales: ' + msg + '</span>';
+    }
+    userEl.disabled = passEl.disabled = true;
+  }
 }
 
 function saveEditModel(id) {
@@ -3250,6 +3321,35 @@ function saveEditModel(id) {
       }
       if (error) showToast('Guardado local, pero Supabase falló: ' + error.message, 'error');
     });
+  }
+
+  /* Guardar/actualizar credenciales de acceso de la Doncella (tabla `usuarios`).
+     Se escribe vía `admin_set_credenciales` (SECURITY DEFINER, exige credenciales
+     de admin) porque la anon key no puede tocar esa tabla directamente. */
+  const credUserEl = g('edit-cred-user');
+  const credPassEl = g('edit-cred-pass');
+  if (window.sbClient && credUserEl && credPassEl && !credUserEl.disabled) {
+    const newUser = (credUserEl.value || '').trim().toLowerCase();
+    const newPass = (credPassEl.value || '').trim();
+    const adminUser = localStorage.getItem('adminUser');
+    const adminPass = localStorage.getItem('adminPass');
+    if (newUser && newPass && adminUser && adminPass) {
+      window.sbClient.rpc('admin_set_credenciales', {
+        p_admin_user: adminUser, p_admin_pass: adminPass,
+        p_escort_id: id, p_username: newUser, p_password: newPass,
+      }).then(({ error }) => {
+        if (error) {
+          const msg = error.message || '';
+          if (/admin_set_credenciales/i.test(msg) || /does not exist/i.test(msg)) {
+            showToast('Falta crear la función admin_set_credenciales en Supabase (ver instrucciones)', 'error');
+          } else {
+            showToast('No se pudieron guardar las credenciales: ' + msg, 'error');
+          }
+        }
+      });
+    } else if (newUser && !newPass) {
+      showToast('Escribe también una contraseña para guardar las credenciales', 'error');
+    }
   }
 
   closeModal('editModelModal');
