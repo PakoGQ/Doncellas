@@ -166,7 +166,7 @@
 
       <div class="form-group">
         <label class="form-label">Nombre completo <span style="color:var(--gold)">*</span></label>
-        <input type="text" class="form-input" id="pNombre" placeholder="Ej. Nombre Apellidos" autocomplete="off" />
+        <input type="text" class="form-input" id="pNombre" placeholder="Ej. María García López" autocomplete="off" />
       </div>
 
       <div class="form-row">
@@ -180,9 +180,15 @@
         </div>
       </div>
 
-      <div class="form-group">
-        <label class="form-label">Medidas <span style="color:var(--gold)">*</span></label>
-        <input type="text" class="form-input" id="pMedidas" placeholder="Ej. 90-60-90 (busto-cintura-cadera)" autocomplete="off" />
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Medidas <span style="color:var(--gold)">*</span></label>
+          <input type="text" class="form-input" id="pMedidas" placeholder="Ej. 90-60-90 (busto-cintura-cadera)" autocomplete="off" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Peso (kg) <span style="color:var(--t3);font-weight:400">(opcional)</span></label>
+          <input type="number" class="form-input" id="pPeso" placeholder="Ej. 58" min="35" max="150" inputmode="numeric" />
+        </div>
       </div>
 
       <div class="form-group">
@@ -384,6 +390,7 @@ async function enviarPostulacion() {
   const edad     = parseInt(document.getElementById('pEdad').value, 10);
   const estatura = parseInt(document.getElementById('pEstatura').value, 10);
   const medidas  = document.getElementById('pMedidas').value.trim();
+  const peso     = parseInt(document.getElementById('pPeso').value, 10) || null;
   const wa       = document.getElementById('pWa').value.trim();
   const legal    = document.getElementById('pLegal').checked;
 
@@ -409,10 +416,18 @@ async function enviarPostulacion() {
     for (let i = 0; i < fotos.length; i++)  fotoUrls.push(await _uploadTo(folder, 'foto',  fotos[i],  i));
     for (let i = 0; i < videos.length; i++) videoUrls.push(await _uploadTo(folder, 'video', videos[i], i));
 
-    const { error } = await window.sbClient.from('solicitudes').insert({
-      nombre, edad, estatura, medidas, whatsapp: wa,
+    const solicitud = {
+      nombre, edad, estatura, medidas, peso, whatsapp: wa,
       fotos: fotoUrls, videos: videoUrls
-    });
+    };
+    let { error } = await window.sbClient.from('solicitudes').insert(solicitud);
+    /* Si la columna `peso` aún no existe en la tabla, reintenta sin ella
+       para no bloquear el envío (correr: alter table solicitudes add column
+       if not exists peso integer;). */
+    if (error && /peso/i.test(error.message || '')) {
+      const { peso: _omit, ...sinPeso } = solicitud;
+      ({ error } = await window.sbClient.from('solicitudes').insert(sinPeso));
+    }
     if (error) throw error;
 
     document.getElementById('postForm').style.display    = 'none';

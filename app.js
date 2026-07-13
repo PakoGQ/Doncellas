@@ -2614,11 +2614,11 @@ function demoSolicitudes() {
   const VID  = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4';
   const day  = d => new Date(Date.now() - d * 86400000).toISOString();
   return [
-    { id:'demo-1', nombre:'Regina',   edad:23, estatura:170, medidas:'88-60-90', whatsapp:'3312345678', estado:'nueva',     created_at:day(0), fotos:pics(1,3),  videos:[VID] },
-    { id:'demo-2', nombre:'Ximena',   edad:27, estatura:165, medidas:'92-64-96', whatsapp:'3319876543', estado:'nueva',     created_at:day(1), fotos:pics(4,2),  videos:[] },
-    { id:'demo-3', nombre:'Fernanda', edad:31, estatura:168, medidas:'94-66-98', whatsapp:'3331122334', estado:'nueva',     created_at:day(2), fotos:pics(7,4),  videos:[] },
-    { id:'demo-4', nombre:'Andrea',   edad:22, estatura:172, medidas:'86-58-88', whatsapp:'3345566778', estado:'aprobada',  created_at:day(5), fotos:pics(11,2), videos:[VID] },
-    { id:'demo-5', nombre:'Paola',    edad:29, estatura:160, medidas:'90-62-94', whatsapp:'3350099887', estado:'rechazada', created_at:day(8), fotos:pics(14,1), videos:[] },
+    { id:'demo-1', nombre:'Regina',   edad:23, estatura:170, peso:58, medidas:'88-60-90', whatsapp:'3312345678', estado:'nueva',     created_at:day(0), fotos:pics(1,3),  videos:[VID] },
+    { id:'demo-2', nombre:'Ximena',   edad:27, estatura:165, peso:55, medidas:'92-64-96', whatsapp:'3319876543', estado:'nueva',     created_at:day(1), fotos:pics(4,2),  videos:[] },
+    { id:'demo-3', nombre:'Fernanda', edad:31, estatura:168, peso:62, medidas:'94-66-98', whatsapp:'3331122334', estado:'nueva',     created_at:day(2), fotos:pics(7,4),  videos:[] },
+    { id:'demo-4', nombre:'Andrea',   edad:22, estatura:172, peso:60, medidas:'86-58-88', whatsapp:'3345566778', estado:'aprobada',  created_at:day(5), fotos:pics(11,2), videos:[VID] },
+    { id:'demo-5', nombre:'Paola',    edad:29, estatura:160, peso:52, medidas:'90-62-94', whatsapp:'3350099887', estado:'rechazada', created_at:day(8), fotos:pics(14,1), videos:[] },
   ];
 }
 
@@ -2735,6 +2735,7 @@ function renderSolicitudes() {
       <div style="display:flex;gap:1.5rem;flex-wrap:wrap;margin:.9rem 0;font-size:.85rem;color:var(--t2)">
         <span><i class="fas fa-birthday-cake" style="color:var(--gold)"></i> ${s.edad ?? '—'} años</span>
         <span><i class="fas fa-ruler-vertical" style="color:var(--gold)"></i> ${s.estatura ? s.estatura+' cm' : '—'}</span>
+        ${s.peso ? `<span><i class="fas fa-weight-scale" style="color:var(--gold)"></i> ${s.peso} kg</span>` : ''}
         <span><i class="fas fa-vector-square" style="color:var(--gold)"></i> ${s.medidas || '—'}</span>
         ${wa
           ? `<a href="${wa}" target="_blank" rel="noopener" style="color:#25D366"><i class="fab fa-whatsapp"></i> ${s.whatsapp}</a>`
@@ -2849,6 +2850,7 @@ function aprobarSolicitud(id) {
   _setVal('newNombreReal', s.nombre || '');   /* el nombre de la solicitud llega como nombre real; el admin ajusta */
   _setVal('newEdad',       s.edad ?? '');
   _setVal('newEstatura',   s.estatura ?? '');
+  _setVal('newPeso',       s.peso ?? '');
   _setVal('newWhatsapp',   s.whatsapp || '');
 
   /* medidas libres "90-60-90" → busto / cintura / cadera */
