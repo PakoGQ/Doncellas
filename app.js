@@ -1605,6 +1605,38 @@ function buildHeroSlides() {
     </div>`;
   wrap.appendChild(recruitSlide);
 
+  /* ── Slide 7: Pagos (transferencia + tarjeta) ─── */
+  /* Formas de pago definidas el 14-jul-2026. "Tarjeta" a secas: crédito o débito.
+     NO se menciona aquí que el pago sea directo con la Doncella (info interna). */
+  const pagosSlide = document.createElement('div');
+  pagosSlide.className = 'hero-slide hero-slide-pagos';
+  pagosSlide.innerHTML = `
+    <div class="hero-pagos-bg">
+      <div class="hero-pagos-glow"></div>
+      <i class="fas fa-credit-card hero-pagos-float hero-pf1"></i>
+      <i class="fas fa-money-bill-wave hero-pagos-float hero-pf2"></i>
+      <i class="fas fa-university hero-pagos-float hero-pf3"></i>
+    </div>
+    <div class="hero-pagos-content">
+      <div class="hero-brand-label"><i class="fas fa-shield-halved"></i> Pago fácil y seguro</div>
+      <h2 class="hero-pagos-title">Aceptamos <em>Transferencias</em><br>y Pagos con <em>Tarjeta</em></h2>
+
+      <div class="hero-pagos-cards">
+        <span class="hero-pagos-card" title="Visa"><i class="fab fa-cc-visa"></i></span>
+        <span class="hero-pagos-card" title="Mastercard"><i class="fab fa-cc-mastercard"></i></span>
+        <span class="hero-pagos-card" title="American Express"><i class="fab fa-cc-amex"></i></span>
+      </div>
+
+      <p class="hero-pagos-note"><i class="fas fa-check-circle"></i> Aceptamos todas las tarjetas</p>
+
+      <div class="hero-pagos-pills">
+        <div class="hero-pagos-pill"><i class="fas fa-money-bill-wave"></i> Efectivo</div>
+        <div class="hero-pagos-pill"><i class="fas fa-university"></i> Transferencia</div>
+        <div class="hero-pagos-pill"><i class="fas fa-credit-card"></i> Tarjeta</div>
+      </div>
+    </div>`;
+  wrap.appendChild(pagosSlide);
+
   /* ── Poblar slots de perfil inicialmente ─── */
   refreshOfferSlides();
 }

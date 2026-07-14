@@ -2344,14 +2344,16 @@ canvas { width: 100% !important; }
 .hero-slide .hero-brand-content,
 .hero-slide .hero-promo-overlay,
 .hero-slide .hero-tg-content,
-.hero-slide .hero-agenda-content {
+.hero-slide .hero-agenda-content,
+.hero-slide .hero-pagos-content {
   opacity: 0;
   transition: opacity .3s ease;
 }
 .hero-slide.active .hero-brand-content,
 .hero-slide.active .hero-promo-overlay,
 .hero-slide.active .hero-tg-content,
-.hero-slide.active .hero-agenda-content {
+.hero-slide.active .hero-agenda-content,
+.hero-slide.active .hero-pagos-content {
   opacity: 1;
   transition: opacity .6s ease .2s;
 }
@@ -6517,6 +6519,111 @@ details.faq-item[open] .faq-a {
   .hero-agenda-note { font-size: .62rem; }
   .hero-af1 { font-size: 4rem; }
   .hero-af3 { font-size: 5rem; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   HERO — SLIDE DE PAGOS (transferencia + tarjeta)
+   Logos de marca (Visa/Mastercard/Amex) vía Font Awesome brands.
+   ═══════════════════════════════════════════════════════════ */
+.hero-slide-pagos {
+  background: linear-gradient(150deg, #0a0a0a 0%, #14110a 45%, #1c160a 70%, #0a0a0a 100%);
+  display: block;
+  cursor: default;
+}
+.hero-pagos-bg { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.hero-pagos-glow {
+  position: absolute;
+  width: 620px; height: 620px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(201,168,76,.2) 0%, rgba(201,168,76,.06) 45%, transparent 70%);
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  animation: tgGlowPulse 5s ease-in-out infinite;
+}
+.hero-pagos-float { position: absolute; color: var(--gold); pointer-events: none; }
+.hero-pf1 { font-size: 8rem; opacity: .05; top: -1.5rem; left: -1rem;   animation: tgFloat1 10s ease-in-out infinite; }
+.hero-pf2 { font-size: 4.5rem; opacity: .07; bottom: 2rem; right: 6rem; animation: tgFloat2 8s ease-in-out infinite; }
+.hero-pf3 { font-size: 9rem; opacity: .04; bottom: -2rem; right: -2rem; animation: tgFloat3 12s ease-in-out infinite; }
+
+.hero-pagos-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: .9rem 2rem;
+  text-align: center;
+  gap: .75rem;
+}
+.hero-pagos-title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.7rem, 3.8vw, 2.7rem);
+  line-height: 1.2;
+  color: var(--white);
+  letter-spacing: -.01em;
+}
+.hero-pagos-title em { color: var(--gold); font-style: italic; }
+
+/* Logos de las tarjetas */
+.hero-pagos-cards { display: flex; gap: .7rem; flex-wrap: wrap; justify-content: center; }
+.hero-pagos-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 74px;
+  padding: .5rem .85rem;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(201,168,76,.35);
+  border-radius: var(--r-md);
+  backdrop-filter: blur(4px);
+  transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+}
+.hero-pagos-card i {
+  font-size: 2.1rem;
+  color: var(--white);
+  line-height: 1;
+}
+.hero-pagos-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--gold);
+  box-shadow: 0 8px 26px rgba(201,168,76,.28);
+}
+
+.hero-pagos-note {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  font-size: .8rem;
+  color: rgba(255,255,255,.72);
+  letter-spacing: .03em;
+}
+.hero-pagos-note i { color: var(--gold); }
+
+.hero-pagos-pills { display: flex; gap: .5rem; flex-wrap: wrap; justify-content: center; margin-top: .1rem; }
+.hero-pagos-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  padding: .32rem .7rem;
+  font-size: .68rem;
+  color: rgba(255,255,255,.6);
+  background: rgba(255,255,255,.04);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+}
+.hero-pagos-pill i { color: var(--gold); font-size: .68rem; }
+
+@media (max-width: 768px) {
+  .hero-pagos-content { padding: 8px 16px; gap: .5rem; }
+  .hero-pagos-title { font-size: clamp(1.25rem, 5.6vw, 1.65rem); }
+  .hero-pagos-card { min-width: 58px; padding: .4rem .6rem; }
+  .hero-pagos-card i { font-size: 1.6rem; }
+  .hero-pagos-note { font-size: .66rem; }
+  .hero-pagos-pill { font-size: .6rem; padding: .28rem .55rem; }
+  .hero-pf1 { font-size: 4.5rem; }
+  .hero-pf3 { font-size: 5rem; }
 }
 
 /* ═══════════════════════════════════════════════════════════
