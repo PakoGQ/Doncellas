@@ -902,9 +902,7 @@ function toggleExtraLabel(lblId, checked) {
   if (lbl) lbl.style.display = checked ? 'inline-flex' : 'none';
 }
 
-function saveModelServices() {
-  showToast('Servicios guardados correctamente', 'success');
-}
+/* saveModelServices() vive en app.js (persiste a Supabase). */
 
 function toggleAvailability(el) {
   const label = document.getElementById('availableLabel');

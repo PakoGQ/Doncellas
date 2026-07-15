@@ -388,7 +388,8 @@ function mapEscortToModel(e) {
   const serviciosMap = {};
   (e.servicios || []).forEach(s => {
     if (/relaciones/i.test(s.nombre || '')) {
-      serviciosMap['Relaciones'] = { si: s.incluido, modalidad: s.modalidad || 'Ilimitadas' };
+      // La tabla no tiene columna modalidad: se codifica en el nombre ("Relaciones 1 x hora" / "...ilimitadas").
+      serviciosMap['Relaciones'] = { si: s.incluido, modalidad: /hora/i.test(s.nombre || '') ? '1 x Hora' : 'Ilimitadas' };
     } else {
       serviciosMap[s.nombre] = { si: s.incluido, extra: s.tiene_costo_extra };
     }
@@ -3967,6 +3968,63 @@ function loadModelEditForm() {
   set('mp-telegram', me.telegram);
   const cats = (Array.isArray(me.tags) && me.tags.length) ? me.tags : (me.cat ? [me.cat] : []);
   buildCatMultiselect('modelCatMulti', cats);
+  loadModelServices(me);
+}
+/* Servicios: mapeo fila del form (key) ↔ nombre en la tabla `servicios`.
+   Relaciones se maneja aparte (radios de modalidad). */
+const MP_SERVICIOS = [
+  { key: 'nov',  nombre: 'Trato de novios' },
+  { key: 'ocp',  nombre: 'Oral con protección' },
+  { key: 'ocn',  nombre: 'Oral natural' },
+  { key: 'oct',  nombre: 'Oral terminado' },
+  { key: 'mhm',  nombre: 'Tiro MHM' },
+  { key: 'hmh',  nombre: 'Tiro HMH' },
+  { key: 'anal', nombre: 'Anal' },
+];
+function loadModelServices(me) {
+  if (!me || !me.services) return;
+  const svc = me.services;
+  const rel = svc['Relaciones'];
+  const porhora = !!(rel && rel.modalidad === '1 x Hora');
+  const rIli = document.getElementById('msvc-rel-ilimitadas');
+  const rPor = document.getElementById('msvc-rel-porhora');
+  if (rIli && rPor) { rIli.checked = !porhora; rPor.checked = porhora; }
+  const hasFn = typeof toggleExtraCheck === 'function';
+  MP_SERVICIOS.forEach(({ key, nombre }) => {
+    const s = svc[nombre] || {};
+    const siEl = document.getElementById(`msvc-si-${key}`);
+    const exEl = document.getElementById(`msvc-extra-${key}`);
+    if (siEl) { siEl.checked = !!s.si; if (hasFn) toggleExtraCheck(`msvc-extra-${key}`, !!s.si); }
+    if (exEl && s.si) { exEl.checked = !!s.extra; if (typeof toggleExtraLabel === 'function') toggleExtraLabel(`msvc-extra-${key}-lbl`, !!s.extra); }
+  });
+}
+async function saveModelServices() {
+  const { escortId } = getSession();
+  if (!window.sbClient || !escortId) { showToast('No hay sesión de Supabase: no se guardó', 'error'); return; }
+  const eid = Number(escortId);
+  const rows = [], svc = {};
+  // Relaciones: siempre incluido; la modalidad va codificada en el nombre.
+  const porhora = !!document.getElementById('msvc-rel-porhora')?.checked;
+  rows.push({ escort_id: eid, nombre: porhora ? 'Relaciones 1 x hora' : 'Relaciones ilimitadas', incluido: true, tiene_costo_extra: false });
+  svc['Relaciones'] = { si: true, modalidad: porhora ? '1 x Hora' : 'Ilimitadas' };
+  MP_SERVICIOS.forEach(({ key, nombre }) => {
+    const si = !!document.getElementById(`msvc-si-${key}`)?.checked;
+    const extra = si && !!document.getElementById(`msvc-extra-${key}`)?.checked;
+    svc[nombre] = { si, extra };
+    if (si) rows.push({ escort_id: eid, nombre, incluido: true, tiene_costo_extra: extra });
+  });
+  // Reemplazo: borra las de esta Doncella e inserta el set actual.
+  const del = await window.sbClient.from('servicios').delete().eq('escort_id', eid);
+  if (del.error) { showToast('No se guardó: ' + del.error.message, 'error'); return; }
+  const ins = await window.sbClient.from('servicios').insert(rows);
+  if (ins.error) {
+    const hint = /row-level security/i.test(ins.error.message) ? ' (falta la policy RLS de servicios en Supabase)' : '';
+    showToast('No se guardó: ' + ins.error.message + hint, 'error');
+    return;
+  }
+  const me = _mpFindMe();
+  if (me) me.services = svc;
+  showToast('Servicios guardados correctamente', 'success');
 }
 function _mpNum(id) { const v = document.getElementById(id)?.value; return (v === '' || v == null) ? null : Number(v); }
 function _mpStr(id) { const v = document.getElementById(id)?.value; return (v == null) ? null : v.trim(); }
