@@ -447,23 +447,23 @@
           <h4 style="margin-bottom:1rem">Información básica</h4>
           <div class="form-group locked-field">
             <label class="form-label">Nombre artístico</label>
-            <input class="form-input" value="Valentina R." readonly />
+            <input class="form-input" id="mp-nombre" value="Valentina R." readonly />
           </div>
           <div class="form-group">
             <label class="form-label">Descripción</label>
-            <textarea class="form-input" rows="3">Doncella profesional con más de 4 años de experiencia en eventos corporativos y sesiones fotográficas.</textarea>
+            <textarea class="form-input" id="mp-descripcion" rows="3">Doncella profesional con más de 4 años de experiencia en eventos corporativos y sesiones fotográficas.</textarea>
           </div>
           <div class="form-row">
             <div class="form-group">
               <label class="form-label">Edad</label>
-              <input class="form-input" type="number" value="24" />
+              <input class="form-input" id="mp-edad" type="number" value="24" />
             </div>
             <div class="form-group">
               <label class="form-label">Estatura (cm)</label>
-              <input class="form-input" type="number" value="172" />
+              <input class="form-input" id="mp-altura" type="number" value="172" />
             </div>
           </div>
-          <button class="btn btn-gold" onclick="showToast('Perfil actualizado','success')">
+          <button class="btn btn-gold" onclick="saveModelInfo()">
             <i class="fas fa-save"></i> Guardar cambios
           </button>
         </div>
@@ -473,38 +473,38 @@
           <div class="form-row">
             <div class="form-group">
               <label class="form-label">Busto (cm)</label>
-              <input class="form-input" type="number" value="88" />
+              <input class="form-input" id="mp-busto" type="number" value="88" />
             </div>
             <div class="form-group">
               <label class="form-label">Cintura (cm)</label>
-              <input class="form-input" type="number" value="62" />
+              <input class="form-input" id="mp-cintura" type="number" value="62" />
             </div>
           </div>
           <div class="form-row">
             <div class="form-group">
               <label class="form-label">Caderas (cm)</label>
-              <input class="form-input" type="number" value="92" />
+              <input class="form-input" id="mp-cadera" type="number" value="92" />
             </div>
             <div class="form-group">
               <label class="form-label">Peso (kg)</label>
-              <input class="form-input" type="number" value="57" />
+              <input class="form-input" id="mp-peso" type="number" value="57" />
             </div>
           </div>
           <div class="form-row">
             <div class="form-group">
               <label class="form-label">Color de ojos</label>
-              <input class="form-input" type="text" value="Miel" placeholder="Ej. Miel, Café, Verde, Azul…" />
+              <input class="form-input" id="mp-ojos" type="text" value="Miel" placeholder="Ej. Miel, Café, Verde, Azul…" />
             </div>
             <div class="form-group">
               <label class="form-label">Color de cabello</label>
-              <input class="form-input" type="text" value="Castaño" placeholder="Ej. Castaño, Negro, Rubio, Pelirrojo…" />
+              <input class="form-input" id="mp-cabello" type="text" value="Castaño" placeholder="Ej. Castaño, Negro, Rubio, Pelirrojo…" />
             </div>
           </div>
           <div class="form-group">
             <label class="form-label">Color de piel</label>
-            <input class="form-input" type="text" value="Morena clara" placeholder="Ej. Morena clara, Blanca, Canela…" />
+            <input class="form-input" id="mp-piel" type="text" value="Morena clara" placeholder="Ej. Morena clara, Blanca, Canela…" />
           </div>
-          <button class="btn btn-gold" onclick="showToast('Cambios guardados','success')">
+          <button class="btn btn-gold" onclick="saveModelMedidas()">
             <i class="fas fa-save"></i> Guardar cambios
           </button>
         </div>
@@ -664,15 +664,15 @@
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem">
           <div class="form-group">
             <label class="form-label">Tarifa 1 hora (MXN)</label>
-            <input class="form-input" type="number" value="2500" />
+            <input class="form-input" id="mp-rate" type="number" value="2500" />
           </div>
           <div class="form-group">
             <label class="form-label">Tarifa 1:30 h (MXN)</label>
-            <input class="form-input" type="number" value="3500" />
+            <input class="form-input" id="mp-rate90" type="number" value="3500" />
           </div>
           <div class="form-group">
             <label class="form-label">Tarifa 2 horas (MXN)</label>
-            <input class="form-input" type="number" value="4500" />
+            <input class="form-input" id="mp-rate2h" type="number" value="4500" />
           </div>
         </div>
         <div class="form-group">
@@ -682,14 +682,14 @@
         <div class="form-row">
           <div class="form-group">
             <label class="form-label"><i class="fab fa-whatsapp" style="color:#25D366"></i> WhatsApp</label>
-            <input class="form-input" value="+52 33 1234 5678" />
+            <input class="form-input" id="mp-whatsapp" value="+52 33 1234 5678" />
           </div>
           <div class="form-group">
             <label class="form-label"><i class="fab fa-telegram" style="color:#229ED9"></i> Telegram</label>
-            <input class="form-input" value="@valentina_vs" placeholder="@usuario" />
+            <input class="form-input" id="mp-telegram" value="@valentina_vs" placeholder="@usuario" />
           </div>
         </div>
-        <button class="btn btn-gold" onclick="showToast('Tarifas actualizadas','success')">
+        <button class="btn btn-gold" onclick="saveModelTarifas()">
           <i class="fas fa-save"></i> Guardar tarifas
         </button>
       </div>

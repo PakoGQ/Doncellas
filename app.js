@@ -3929,9 +3929,84 @@ function initPanelModelo() {
   buildCitasProximas();
   buildCitasHistorial();
   buildAvailWeekGrid();
-  buildCatMultiselect('modelCatMulti', ['Universitaria','Fit','Natural']);
   applyDemoData();
+  loadModelEditForm();     // llena "Editar Perfil" con los datos reales de la Doncella
   loadContenidoBancos();   // carga el contenido ya guardado en Supabase
+}
+
+/* ─── Panel modelo: "Editar Perfil" (carga + guardado a Supabase) ────────
+   La Doncella logueada (escortId en sesión) edita SU perfil real. Los campos
+   viven en escorts; los servicios (tabla aparte) se conectan en un paso siguiente. */
+function _mpFindMe() {
+  const { escortId } = getSession();
+  if (!escortId) return null;
+  return MODELS.find(m => String(m.id) === String(escortId)) || null;
+}
+function loadModelEditForm() {
+  const me = _mpFindMe();
+  if (!me) {                                   // demo / sin escort real → deja el ejemplo
+    buildCatMultiselect('modelCatMulti', []);
+    return;
+  }
+  const set = (id, v) => { const el = document.getElementById(id); if (el) el.value = (v == null ? '' : v); };
+  set('mp-nombre', me.name);
+  set('mp-descripcion', me.descripcion);
+  set('mp-edad', me.age);
+  set('mp-altura', me.height);
+  set('mp-busto', me.bust);
+  set('mp-cintura', me.waist);
+  set('mp-cadera', me.hips);
+  set('mp-peso', me.peso);
+  set('mp-ojos', me.eyeColor);
+  set('mp-cabello', me.hairColor);
+  set('mp-piel', me.skinColor);
+  set('mp-rate', me.rate);
+  set('mp-rate90', me.rate90);
+  set('mp-rate2h', me.rate2h);
+  set('mp-whatsapp', me.whatsapp);
+  set('mp-telegram', me.telegram);
+  const cats = (Array.isArray(me.tags) && me.tags.length) ? me.tags : (me.cat ? [me.cat] : []);
+  buildCatMultiselect('modelCatMulti', cats);
+}
+function _mpNum(id) { const v = document.getElementById(id)?.value; return (v === '' || v == null) ? null : Number(v); }
+function _mpStr(id) { const v = document.getElementById(id)?.value; return (v == null) ? null : v.trim(); }
+async function _mpSave(payload, okMsg, applyToModel) {
+  const { escortId } = getSession();
+  if (!window.sbClient || !escortId) { showToast('No hay sesión de Supabase: no se guardó', 'error'); return; }
+  const { error } = await _saveEscortRow('update', payload, escortId);
+  if (error) { showToast('No se guardó: ' + error.message, 'error'); return; }
+  const me = _mpFindMe();
+  if (me && applyToModel) applyToModel(me);
+  showToast(okMsg, 'success');
+}
+async function saveModelInfo() {
+  await _mpSave(
+    { descripcion: _mpStr('mp-descripcion'), edad: _mpNum('mp-edad'), altura: _mpNum('mp-altura') },
+    'Perfil actualizado',
+    me => { me.descripcion = _mpStr('mp-descripcion'); me.age = _mpNum('mp-edad') ?? me.age; me.height = _mpNum('mp-altura') ?? me.height; }
+  );
+}
+async function saveModelMedidas() {
+  await _mpSave(
+    { busto: _mpNum('mp-busto'), cintura: _mpNum('mp-cintura'), cadera: _mpNum('mp-cadera'),
+      peso: _mpNum('mp-peso'), ojos: _mpStr('mp-ojos'), cabello: _mpStr('mp-cabello'), piel: _mpStr('mp-piel') },
+    'Medidas y apariencia guardadas',
+    me => { me.bust = _mpNum('mp-busto'); me.waist = _mpNum('mp-cintura'); me.hips = _mpNum('mp-cadera');
+            me.peso = _mpNum('mp-peso'); me.eyeColor = _mpStr('mp-ojos'); me.hairColor = _mpStr('mp-cabello'); me.skinColor = _mpStr('mp-piel'); }
+  );
+}
+async function saveModelTarifas() {
+  const cats = getCatMultiValues('modelCatMulti');
+  const payload = {
+    precio_hora: _mpNum('mp-rate'), precio_90: _mpNum('mp-rate90'), precio_2h: _mpNum('mp-rate2h'),
+    whatsapp: _mpStr('mp-whatsapp'), telegram: _mpStr('mp-telegram')
+  };
+  if (cats.length) { payload.categoria = cats[0]; payload.tags = cats; }
+  await _mpSave(payload, 'Tarifas y contacto guardados', me => {
+    me.rate = _mpNum('mp-rate') ?? me.rate; me.rate90 = _mpNum('mp-rate90'); me.rate2h = _mpNum('mp-rate2h');
+    me.whatsapp = _mpStr('mp-whatsapp'); me.telegram = _mpStr('mp-telegram');
+    if (cats.length) { me.cat = cats[0]; me.tags = cats; }
+  });
 }
 
 function showModeloPage(page) {
