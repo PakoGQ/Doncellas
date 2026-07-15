@@ -1582,7 +1582,7 @@ function buildHeroSlides() {
       </div>
 
       <div class="hero-tg-pills">
-        <div class="hero-tg-pill"><i class="fas fa-gem"></i> Sin costo inicial</div>
+        <div class="hero-tg-pill"><i class="fas fa-hand-holding-heart"></i> Atención personal</div>
         <div class="hero-tg-pill"><i class="fas fa-user-secret"></i> Máxima discreción</div>
         <div class="hero-tg-pill"><i class="fas fa-calendar-check"></i> Tú controlas tu agenda</div>
         <div class="hero-tg-pill"><i class="fas fa-bullhorn"></i> Marketing profesional</div>
