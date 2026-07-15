@@ -312,6 +312,9 @@ let MODELS = generateModels();
                 Registra rango de fechas (desde/hasta) para el cobro de membresía.
    Compartido por origen → el admin lo marca y el sitio público lo lee. */
 const ESTADOS_KEY = 'doncellas_escort_estados';
+/* true cuando MODELS viene de Supabase (fuente real). En ese caso los estados
+   ya vienen en las columnas de la tabla y NO se pisan con localStorage. */
+let MODELS_FROM_SUPABASE = false;
 function loadEscortStates() {
   try { return JSON.parse(localStorage.getItem(ESTADOS_KEY)) || {}; }
   catch (e) { return {}; }
@@ -319,7 +322,20 @@ function loadEscortStates() {
 function saveEscortStates(s) {
   try { localStorage.setItem(ESTADOS_KEY, JSON.stringify(s)); } catch (e) {}
 }
-function persistEscortState(m) {
+/* Persiste el estado de una escort. Con Supabase real → UPDATE a la tabla
+   `escorts` (compartido entre admin y sitio público, y legible por el agente).
+   Si no hay Supabase, o aún no existen las columnas → cae a localStorage. */
+async function persistEscortState(m) {
+  if (window.sbClient && MODELS_FROM_SUPABASE) {
+    const { error } = await window.sbClient.from('escorts').update({
+      hidden:         !!m.hidden,
+      suspended:      !!m.suspended,
+      suspended_from: m.suspendedFrom || null,
+      susp_history:   m.suspHistory || []
+    }).eq('id', m.id);
+    if (!error) return;
+    console.warn('Estado no persistió en Supabase (¿faltan columnas hidden/suspended/suspended_from/susp_history?), usando localStorage:', error.message);
+  }
   const states = loadEscortStates();
   states[m.id] = {
     hidden:        !!m.hidden,
@@ -329,7 +345,10 @@ function persistEscortState(m) {
   };
   saveEscortStates(states);
 }
+/* Overlay de estados desde localStorage. Solo aplica en modo demo: cuando
+   MODELS viene de Supabase, los estados ya los puso mapEscortToModel. */
 function applyEscortStates() {
+  if (MODELS_FROM_SUPABASE) return;
   const states = loadEscortStates();
   MODELS.forEach(m => {
     const s = states[m.id];
@@ -407,8 +426,10 @@ function mapEscortToModel(e) {
     bust:        e.busto        || 88,
     nationality: e.nacionalidad || 'Mexicana',
     services:    Object.keys(serviciosMap).length ? serviciosMap : null,
-    hidden:      false,
-    suspended:   false, suspendedFrom: null, suspHistory: [],
+    hidden:      !!e.hidden,
+    suspended:   !!e.suspended,
+    suspendedFrom: e.suspended_from || null,
+    suspHistory: Array.isArray(e.susp_history) ? e.susp_history : [],
     promo:       null,
     whatsapp:    e.whatsapp,
     telegram:    e.telegram,
@@ -4523,10 +4544,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   const sbModels = await loadModelsFromSupabase();
   if (sbModels && sbModels.length > 0) {
     MODELS = sbModels;
+    MODELS_FROM_SUPABASE = true;
     syncModelAvailabilityWithCitas();
   }
 
-  /* Aplicar estados Oculta/Suspendida guardados (admin → sitio público) */
+  /* Estados Oculta/Suspendida: con Supabase ya vienen en las columnas; en demo
+     se aplican desde localStorage (applyEscortStates hace el guard internamente) */
   applyEscortStates();
 
   const raw  = window.location.pathname.split('/').pop();
