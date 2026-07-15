@@ -1621,19 +1621,29 @@ function buildHeroSlides() {
       <div class="hero-brand-label"><i class="fas fa-shield-halved"></i> Pago fácil y seguro</div>
       <h2 class="hero-pagos-title">Aceptamos <em>Transferencias</em><br>y Pagos con <em>Tarjeta</em></h2>
 
-      <div class="hero-pagos-cards">
-        <span class="hero-pagos-card" title="Visa"><i class="fab fa-cc-visa"></i></span>
-        <span class="hero-pagos-card" title="Mastercard"><i class="fab fa-cc-mastercard"></i></span>
-        <span class="hero-pagos-card" title="American Express"><i class="fab fa-cc-amex"></i></span>
+      <div class="hero-pagos-card-visual">
+        <div class="hpc-shine"></div>
+        <div class="hpc-row hpc-row-top">
+          <span class="hpc-issuer"><i class="fas fa-gem"></i> Doncellas</span>
+          <i class="fas fa-wifi hpc-contactless"></i>
+        </div>
+        <div class="hpc-chip"></div>
+        <div class="hpc-number"><span>5678</span><span>••••</span><span>••••</span><span>3300</span></div>
+        <div class="hpc-row hpc-row-bottom">
+          <span class="hpc-secure"><i class="fas fa-lock"></i> Pago seguro</span>
+          <div class="hpc-brands">
+            <i class="fab fa-cc-visa" title="Visa"></i>
+            <i class="fab fa-cc-mastercard" title="Mastercard"></i>
+            <i class="fab fa-cc-amex" title="American Express"></i>
+          </div>
+        </div>
       </div>
 
-      <p class="hero-pagos-note"><i class="fas fa-check-circle"></i> Aceptamos todas las tarjetas</p>
-
-      <div class="hero-pagos-pills">
-        <div class="hero-pagos-pill"><i class="fas fa-money-bill-wave"></i> Efectivo</div>
-        <div class="hero-pagos-pill"><i class="fas fa-university"></i> Transferencia</div>
-        <div class="hero-pagos-pill"><i class="fas fa-credit-card"></i> Tarjeta</div>
-      </div>
+      <p class="hero-pagos-note">
+        <span><i class="fas fa-check-circle"></i> Aceptamos todas las tarjetas</span>
+        <span class="hero-pagos-note-sep">·</span>
+        <span><i class="fas fa-building-columns"></i> Transferencia bancaria</span>
+      </p>
     </div>`;
   wrap.appendChild(pagosSlide);
 
