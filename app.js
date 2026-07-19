@@ -2628,7 +2628,6 @@ document.addEventListener('click', (e) => {
 /* ─── Admin ─────────────────────────────────────────────── */
 /* ─── Difusión: genera contenido listo para copiar/pegar (Canal WhatsApp, Estados, redes) ─── */
 function _difVisibles()    { return MODELS.filter(m => !m.hidden && !m.suspended); }
-function _difDisponibles() { return _difVisibles().filter(m => m.available); }
 // Contacto del agente (sin precios en el post → genera curiosidad de escribir o entrar al perfil).
 const _DIF_CONTACTO = 'https://wa.me/' + WA_CENTRAL;
 const _DIF_TEASERS = [
@@ -2649,14 +2648,7 @@ function genDifusion(tipo) {
   document.getElementById('difPromoCtrl').style.display     = tipo === 'promo'     ? '' : 'none';
   document.getElementById('difFotos').style.display = 'none';
 
-  if (tipo === 'catalogo') {
-    const disp = _difDisponibles();
-    let t = '🌹 *Doncellas GDL* 🌹\n_La Elegancia del Placer_\n\n✨ Disponibles hoy en Guadalajara:\n\n';
-    t += disp.length ? disp.map(m => `💋 ${m.name} — ${m.age} años · ${m.cat}`).join('\n') : '(sin disponibles en este momento)';
-    t += `\n\n👀 Míralas todas: https://doncellas.mx\n📲 Agenda tu cita aquí: ${_DIF_CONTACTO}\n🔒 100% verificadas y discretas`;
-    out.value = t;
-  }
-  else if (tipo === 'spotlight') {
+  if (tipo === 'spotlight') {
     buildDifusionSelect();
     const sel = document.getElementById('difEscortSel');
     const m = MODELS.find(x => String(x.id) === String(sel.value)) || _difVisibles()[0];
@@ -2664,17 +2656,87 @@ function genDifusion(tipo) {
     const teaser = (m.descripcion && m.descripcion.split('.')[0].trim() + '.') || _DIF_TEASERS[(m.id || 0) % _DIF_TEASERS.length];
     // Estilo Telegram: nombre + gancho + links. SIN tarifas (genera curiosidad de entrar/preguntar).
     out.value = `🌹 *${m.name}* 🌹\n${m.age} años · ${m.cat} · Guadalajara\n\n${teaser}\n\n✨ Ver su perfil: https://doncellas.mx/perfil.html?id=${m.id}\n📲 Agenda tu cita aquí: ${_DIF_CONTACTO}`;
-    const fotos = (m.photos || []).slice(0, 4);
-    if (fotos.length) {
-      document.getElementById('difFotos').style.display = '';
-      document.getElementById('difFotosGrid').innerHTML = fotos.map(u =>
-        `<a href="${u}" target="_blank" rel="noopener" style="display:block"><img src="${u}" alt="foto" style="width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:8px" /></a>`).join('');
-    }
+    difRenderMedia(m);
   }
   else if (tipo === 'promo') {
     const txt = (document.getElementById('difPromoInput')?.value || '').trim();
     out.value = `🔥 *PROMOCIÓN — Doncellas GDL* 🔥\n\n${txt || '(escribe tu promoción arriba)'}\n\n📲 Agenda tu cita aquí: ${_DIF_CONTACTO}\n🌹 doncellas.mx`;
   }
+}
+
+/* Contenido para adjuntar: muestra los bancos PERFIL y REDES de la Doncella
+   (fotos + videos) con checkbox para palomear cuáles usar. Las fotos salen
+   MARCADAS: en vivo se usa la copia `url_wm` de Supabase; en demo se les
+   incrusta la marca al vuelo (clase `wm-bake`, ver initDemoWatermark). */
+const _DIF_DEMO_VID = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4';
+window._difSel = window._difSel || new Set();
+
+function _difMediaItem(url, isVid, key) {
+  const on = window._difSel.has(key);
+  const inner = isVid
+    ? `<video src="${url}#t=0.1" muted preload="metadata" style="width:100%;height:100%;object-fit:cover;display:block"></video>
+       <span class="dif-media-play"><i class="fas fa-play"></i></span>
+       <span class="dif-media-wm">Doncellas</span>`
+    : `<img src="${url}" class="wm-bake" alt="foto" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block" />`;
+  return `<div class="dif-media-item${on ? ' sel' : ''}" data-key="${key}" onclick="difToggleSel(this)">
+    ${inner}
+    <span class="dif-media-check"><i class="fas fa-check"></i></span>
+  </div>`;
+}
+
+async function difRenderMedia(m) {
+  const wrap = document.getElementById('difFotos');
+  const gP = document.querySelector('#difMediaPerfil .dif-media-grid');
+  const gR = document.querySelector('#difMediaRedes .dif-media-grid');
+  if (!wrap || !gP || !gR) return;
+  // Cambió de Doncella → limpia la selección (las fotos son otras)
+  if (window._difMediaEscort !== m.id) { window._difSel = new Set(); window._difMediaEscort = m.id; }
+  wrap.style.display = '';
+  gP.innerHTML = '<p class="dif-media-empty">Cargando…</p>';
+  gR.innerHTML = '';
+
+  let perfil = [], redes = [];
+  // 1) Intenta el contenido REAL de Supabase (trae url_wm + banco + videos)
+  let rows = null;
+  if (window.sbClient) {
+    try {
+      const res = await window.sbClient.from('fotos').select('*').eq('escort_id', m.id).order('orden');
+      rows = res.data || null;
+    } catch (e) { rows = null; }
+  }
+  if (rows && rows.length) {
+    // Foto → versión marcada (url_wm); video → tal cual (marca por overlay).
+    const toItem = r => ({ url: r.tipo === 'video' ? r.url : (r.url_wm || r.url), isVid: r.tipo === 'video' });
+    perfil = rows.filter(r => (r.banco || 'perfil') === 'perfil').map(toItem);
+    redes  = rows.filter(r => r.banco === 'redes').map(toItem);
+  } else {
+    // 2) Demo: usa las fotos del modelo (Perfil) + deriva casuales (Redes) para
+    //    poder probar la selección. La marca se incrusta al vuelo (wm-bake).
+    perfil = (m.photos || []).map(u => ({ url: u, isVid: false }));
+    if (m.hasVideo) perfil.push({ url: _DIF_DEMO_VID, isVid: true });
+    const off = m.id || 0;
+    redes = [0, 1, 2].map(k => ({ url: photoUrl(PHOTO_POOL[(off + k + 7) % PHOTO_POOL.length]), isVid: false }));
+  }
+
+  const render = (list, prefix) => list.length
+    ? list.map((it, i) => _difMediaItem(it.url, it.isVid, `${prefix}-${i}`)).join('')
+    : '<p class="dif-media-empty">Sin contenido en este banco todavía.</p>';
+  gP.innerHTML = render(perfil, `p${m.id}`);
+  gR.innerHTML = render(redes, `r${m.id}`);
+  difUpdateSelCount();
+}
+
+function difToggleSel(el) {
+  const key = el.dataset.key;
+  if (window._difSel.has(key)) { window._difSel.delete(key); el.classList.remove('sel'); }
+  else { window._difSel.add(key); el.classList.add('sel'); }
+  difUpdateSelCount();
+}
+
+function difUpdateSelCount() {
+  const n = window._difSel ? window._difSel.size : 0;
+  const el = document.getElementById('difSelCount');
+  if (el) el.textContent = `${n} seleccionada${n === 1 ? '' : 's'}`;
 }
 function copyDifusion() {
   const out = document.getElementById('difOutput');

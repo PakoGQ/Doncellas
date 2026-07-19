@@ -513,8 +513,7 @@
 
       <!-- Selector de tipo -->
       <div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1.25rem">
-        <button class="btn btn-gold btn-sm" onclick="genDifusion('catalogo')"><i class="fas fa-list"></i> Catálogo de disponibles</button>
-        <button class="btn btn-ghost btn-sm" onclick="genDifusion('spotlight')"><i class="fas fa-star"></i> Presentar una Doncella</button>
+        <button class="btn btn-gold btn-sm" onclick="genDifusion('spotlight')"><i class="fas fa-star"></i> Presentar una Doncella</button>
         <button class="btn btn-ghost btn-sm" onclick="genDifusion('promo')"><i class="fas fa-tag"></i> Promoción</button>
       </div>
 
@@ -535,13 +534,25 @@
           <button class="btn btn-gold btn-sm" onclick="copyDifusion()"><i class="fas fa-copy"></i> Copiar</button>
         </div>
         <textarea id="difOutput" class="form-input" rows="12" style="font-family:inherit;line-height:1.5;white-space:pre-wrap" readonly placeholder="Elige un tipo de arriba y aquí aparece el texto…"></textarea>
-        <p style="font-size:.75rem;color:var(--t3);margin-top:.6rem"><i class="fas fa-info-circle" style="color:var(--gold)"></i> Copia el texto y pégalo en el Canal de WhatsApp. Las fotos que quieras adjuntar están abajo (mantén presionada cada una para guardarla).</p>
+        <p style="font-size:.75rem;color:var(--t3);margin-top:.6rem"><i class="fas fa-info-circle" style="color:var(--gold)"></i> Copia el texto y pégalo en el Canal de WhatsApp. Palomea abajo las fotos/videos que quieras adjuntar.</p>
       </div>
 
-      <!-- Fotos sugeridas (para spotlight) -->
+      <!-- Contenido para adjuntar (bancos Perfil + Redes, con marca de agua) -->
       <div id="difFotos" style="display:none;margin-top:1.25rem">
-        <h4 style="margin-bottom:.75rem"><i class="fas fa-images" style="color:var(--gold)"></i> Fotos para adjuntar</h4>
-        <div id="difFotosGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.75rem"></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;margin-bottom:.35rem">
+          <h4 style="margin:0"><i class="fas fa-images" style="color:var(--gold)"></i> Contenido para adjuntar</h4>
+          <span id="difSelCount" style="font-size:.8rem;color:var(--t2)">0 seleccionadas</span>
+        </div>
+        <p style="font-size:.75rem;color:var(--t3);margin:0 0 1rem">Palomea las fotos/videos que quieras usar (ya llevan marca de agua). Mantén presionada cada una para guardarla y adjuntarla en el Canal de WhatsApp.</p>
+
+        <div id="difMediaPerfil" class="dif-media-block">
+          <h5 class="dif-media-title"><i class="fas fa-star"></i> Perfil</h5>
+          <div class="dif-media-grid"></div>
+        </div>
+        <div id="difMediaRedes" class="dif-media-block" style="margin-top:1.25rem">
+          <h5 class="dif-media-title"><i class="fas fa-share-nodes"></i> Redes</h5>
+          <div class="dif-media-grid"></div>
+        </div>
       </div>
     </div>
 

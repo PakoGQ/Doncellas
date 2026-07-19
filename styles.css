@@ -2815,6 +2815,54 @@ canvas { width: 100% !important; }
   background: rgba(0,0,0,.35); color: #fff; font-size: 1.1rem; pointer-events: none;
 }
 
+/* ─── Difusión: cuadrícula de contenido para adjuntar (Perfil + Redes) ─── */
+.dif-media-title {
+  margin: 0 0 .6rem; font-size: .9rem; color: var(--t1);
+  display: flex; align-items: center; gap: .45rem;
+}
+.dif-media-title i { color: var(--gold); }
+.dif-media-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: .7rem;
+}
+.dif-media-empty {
+  grid-column: 1 / -1; color: var(--t3); font-size: .85rem; text-align: center;
+  padding: 1.2rem; border: 1px dashed var(--border); border-radius: 10px;
+}
+.dif-media-item {
+  position: relative; aspect-ratio: 3/4; border-radius: 10px; overflow: hidden;
+  cursor: pointer; background: #000; border: 2px solid transparent;
+  transition: transform .15s, border-color .15s;
+}
+.dif-media-item:hover { transform: translateY(-2px); }
+.dif-media-item.sel { border-color: var(--gold); }
+.dif-media-item.sel::before {
+  content: ''; position: absolute; inset: 0; z-index: 1;
+  background: rgba(201,168,76,.22); pointer-events: none;
+}
+/* Círculo de palomeo (arriba a la derecha) */
+.dif-media-check {
+  position: absolute; top: 7px; right: 7px; z-index: 2;
+  width: 24px; height: 24px; border-radius: 50%;
+  border: 2px solid #fff; background: rgba(0,0,0,.4);
+  display: flex; align-items: center; justify-content: center;
+  color: transparent; font-size: .7rem; transition: background .15s, color .15s;
+  box-shadow: 0 1px 4px rgba(0,0,0,.4);
+}
+.dif-media-item.sel .dif-media-check {
+  background: var(--gold); border-color: var(--gold); color: #0A0A0A;
+}
+/* Ícono play para videos */
+.dif-media-play {
+  position: absolute; inset: 0; z-index: 1; display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,.3); color: #fff; font-size: 1.4rem; pointer-events: none;
+}
+/* Marca de agua textual sobre el video (los videos no llevan marca incrustada) */
+.dif-media-wm {
+  position: absolute; bottom: 6px; left: 0; right: 0; z-index: 1; text-align: center;
+  font-size: .7rem; font-weight: 600; letter-spacing: .06em; color: rgba(255,255,255,.85);
+  text-shadow: 0 1px 3px rgba(0,0,0,.7); pointer-events: none;
+}
+
 .model-card-desc {
   margin-top: .5rem;
   font-size: .82rem;
