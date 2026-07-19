@@ -2647,6 +2647,7 @@ function genDifusion(tipo) {
   document.getElementById('difSpotlightCtrl').style.display = tipo === 'spotlight' ? '' : 'none';
   document.getElementById('difPromoCtrl').style.display     = tipo === 'promo'     ? '' : 'none';
   document.getElementById('difFotos').style.display = 'none';
+  _difHidePreview();
 
   if (tipo === 'spotlight') {
     buildDifusionSelect();
@@ -2731,6 +2732,7 @@ function difToggleSel(el) {
   if (window._difSel.has(key)) { window._difSel.delete(key); el.classList.remove('sel'); }
   else { window._difSel.add(key); el.classList.add('sel'); }
   difUpdateSelCount();
+  _difHidePreview();   // la selección cambió → la vista previa anterior quedó obsoleta
 }
 
 function difUpdateSelCount() {
@@ -2738,12 +2740,112 @@ function difUpdateSelCount() {
   const el = document.getElementById('difSelCount');
   if (el) el.textContent = `${n} seleccionada${n === 1 ? '' : 's'}`;
 }
+function _difHidePreview() {
+  const pv = document.getElementById('difPreview');
+  if (pv) pv.style.display = 'none';
+}
 function copyDifusion() {
   const out = document.getElementById('difOutput');
   if (!out || !out.value.trim()) { showToast('Primero genera un contenido', 'info'); return; }
   const done = () => showToast('Texto copiado ✅ ya puedes pegarlo', 'success');
   if (navigator.clipboard) navigator.clipboard.writeText(out.value).then(done, () => { out.select(); document.execCommand('copy'); done(); });
   else { out.select(); document.execCommand('copy'); done(); }
+}
+
+/* ─── Generar publicación: junta el texto + las fotos/videos palomeados
+   y arma el post como saldría en el canal (álbum + caption), con la
+   marca de agua ya incrustada. Copia el texto y prepara "Compartir"
+   (Web Share) para mandarlo completo a WhatsApp/Telegram desde el cel. ── */
+function _difEscapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+// Devuelve los medios palomeados (en orden de aparición), con su src ya marcado.
+function _difSelectedMedia() {
+  const items = document.querySelectorAll('#difFotos .dif-media-item');
+  const out = [];
+  items.forEach(it => {
+    if (!window._difSel.has(it.dataset.key)) return;
+    const vid = it.querySelector('video'), img = it.querySelector('img');
+    if (vid) out.push({ src: (vid.getAttribute('src') || '').replace(/#t=.*$/, ''), isVid: true });
+    else if (img) out.push({ src: img.getAttribute('src') || '', isVid: false });
+  });
+  return out;
+}
+// Garantiza que el src lleve la marca de agua: si ya es la copia marcada de
+// Supabase (…/wm/…) o un data: ya incrustado, lo deja; si es una foto limpia
+// (demo/Unsplash), le incrusta la marca al vuelo antes de armar el post.
+async function _difEnsureMarked(src) {
+  if (!src || src.startsWith('data:') || /\/galeria\/.*\/wm\//.test(src)) return src;
+  try { const marked = await _bakeOne(src); return marked || src; } catch { return src; }
+}
+async function generarPublicacion() {
+  const out = document.getElementById('difOutput');
+  const caption = (out?.value || '').trim();
+  if (!caption) { showToast('Primero elige un tipo y genera el texto', 'info'); return; }
+
+  const hayGrid = document.getElementById('difFotos').style.display !== 'none';
+  const media = hayGrid ? _difSelectedMedia() : [];
+  if (hayGrid && !media.length) { showToast('Palomea al menos una foto o video', 'info'); return; }
+
+  // Asegura la marca de agua en cada FOTO seleccionada (los videos no se marcan aquí)
+  for (const m of media) { if (!m.isVid) m.src = await _difEnsureMarked(m.src); }
+
+  // Álbum (estilo Telegram/WhatsApp)
+  const albumHtml = media.length
+    ? `<div class="dif-post-album n${Math.min(media.length, 4)}">` + media.map(m => m.isVid
+        ? `<video src="${m.src}" controls playsinline class="dif-post-media"></video>`
+        : `<img src="${m.src}" class="dif-post-media" alt="foto" />`).join('') + `</div>`
+    : '';
+  // Caption con formato básico (*negritas* → <b>, saltos de línea)
+  const capHtml = `<div class="dif-post-caption">${_difEscapeHtml(caption).replace(/\*(.+?)\*/g, '<b>$1</b>').replace(/\n/g, '<br>')}</div>`;
+
+  document.getElementById('difPost').innerHTML = albumHtml + capHtml;
+  window._difShare = { caption, media };   // para Compartir
+
+  const share = document.getElementById('difShareBtn');
+  const canShare = !!(navigator.share);
+  if (share) share.style.display = canShare ? '' : 'none';
+  const hint = document.getElementById('difPreviewHint');
+  if (hint) hint.innerHTML = canShare
+    ? '<i class="fas fa-info-circle" style="color:var(--gold)"></i> El texto ya se copió. Toca <b>Compartir</b> para enviar la publicación completa (fotos + texto) al Canal de WhatsApp o Telegram.'
+    : '<i class="fas fa-info-circle" style="color:var(--gold)"></i> El texto ya se copió. Guarda las fotos (clic derecho o mantén presionada cada una) y pégalas junto con el texto en el Canal de WhatsApp.';
+
+  const pv = document.getElementById('difPreview');
+  pv.style.display = '';
+  // Copia el texto automáticamente y avisa
+  if (navigator.clipboard) navigator.clipboard.writeText(caption).catch(() => {});
+  showToast('Publicación generada ✅ (texto copiado)', 'success');
+  pv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+async function _difSrcToFile(src, isVid, idx) {
+  let blob;
+  if (src.startsWith('data:')) blob = _dataURLtoBlob(src);
+  else { const r = await fetch(src); blob = await r.blob(); }
+  const type = blob.type || (isVid ? 'video/mp4' : 'image/jpeg');
+  const ext = isVid ? 'mp4' : (type.includes('png') ? 'png' : 'jpg');
+  return new File([blob], `doncellas-${idx + 1}.${ext}`, { type });
+}
+async function compartirPublicacion() {
+  const data = window._difShare;
+  if (!data) { showToast('Primero genera la publicación', 'info'); return; }
+  if (!navigator.share) { copyDifusion(); return; }
+  try {
+    let files = [];
+    if (data.media.length) {
+      files = await Promise.all(data.media.map((m, i) => _difSrcToFile(m.src, m.isVid, i)));
+    }
+    // Algunos navegadores no comparten archivos: valida antes.
+    if (files.length && navigator.canShare && navigator.canShare({ files })) {
+      await navigator.share({ text: data.caption, files });
+    } else {
+      await navigator.share({ text: data.caption });
+      showToast('Se compartió el texto. Adjunta las fotos a mano 🙏', 'info');
+    }
+  } catch (e) {
+    if (e && e.name === 'AbortError') return;   // el usuario canceló
+    showToast('No se pudo compartir aquí; el texto ya está copiado', 'info');
+  }
 }
 
 function initAdmin() {

@@ -527,14 +527,13 @@
         <input class="form-input" id="difPromoInput" placeholder="Tu promoción…" oninput="genDifusion('promo')" style="max-width:420px" />
       </div>
 
-      <!-- Resultado -->
+      <!-- Borrador del texto (editable) -->
       <div class="chart-card" style="margin-top:.5rem">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
-          <h4 style="margin:0"><i class="fas fa-clipboard" style="color:var(--gold)"></i> Texto listo para copiar</h4>
-          <button class="btn btn-gold btn-sm" onclick="copyDifusion()"><i class="fas fa-copy"></i> Copiar</button>
+          <h4 style="margin:0"><i class="fas fa-pen" style="color:var(--gold)"></i> Texto de la publicación</h4>
         </div>
-        <textarea id="difOutput" class="form-input" rows="12" style="font-family:inherit;line-height:1.5;white-space:pre-wrap" readonly placeholder="Elige un tipo de arriba y aquí aparece el texto…"></textarea>
-        <p style="font-size:.75rem;color:var(--t3);margin-top:.6rem"><i class="fas fa-info-circle" style="color:var(--gold)"></i> Copia el texto y pégalo en el Canal de WhatsApp. Palomea abajo las fotos/videos que quieras adjuntar.</p>
+        <textarea id="difOutput" class="form-input" rows="12" style="font-family:inherit;line-height:1.5;white-space:pre-wrap" placeholder="Elige un tipo de arriba y aquí aparece el texto (puedes editarlo)…"></textarea>
+        <p style="font-size:.75rem;color:var(--t3);margin-top:.6rem"><i class="fas fa-info-circle" style="color:var(--gold)"></i> Puedes editar el texto. Abajo palomea las fotos/videos y presiona <b>Generar publicación</b>.</p>
       </div>
 
       <!-- Contenido para adjuntar (bancos Perfil + Redes, con marca de agua) -->
@@ -543,7 +542,7 @@
           <h4 style="margin:0"><i class="fas fa-images" style="color:var(--gold)"></i> Contenido para adjuntar</h4>
           <span id="difSelCount" style="font-size:.8rem;color:var(--t2)">0 seleccionadas</span>
         </div>
-        <p style="font-size:.75rem;color:var(--t3);margin:0 0 1rem">Palomea las fotos/videos que quieras usar (ya llevan marca de agua). Mantén presionada cada una para guardarla y adjuntarla en el Canal de WhatsApp.</p>
+        <p style="font-size:.75rem;color:var(--t3);margin:0 0 1rem">Palomea las fotos/videos que quieras incluir (ya llevan marca de agua).</p>
 
         <div id="difMediaPerfil" class="dif-media-block">
           <h5 class="dif-media-title"><i class="fas fa-star"></i> Perfil</h5>
@@ -553,6 +552,24 @@
           <h5 class="dif-media-title"><i class="fas fa-share-nodes"></i> Redes</h5>
           <div class="dif-media-grid"></div>
         </div>
+      </div>
+
+      <!-- Botón Generar: junta texto + fotos seleccionadas en la publicación -->
+      <div style="margin-top:1.5rem">
+        <button class="btn btn-gold" onclick="generarPublicacion()" style="width:100%;padding:.9rem;font-size:1rem"><i class="fas fa-wand-magic-sparkles"></i> Generar publicación</button>
+      </div>
+
+      <!-- Vista previa de la publicación armada (estilo Telegram/WhatsApp) -->
+      <div id="difPreview" class="chart-card" style="display:none;margin-top:1.25rem">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem">
+          <h4 style="margin:0"><i class="fas fa-square-check" style="color:var(--gold)"></i> Publicación lista</h4>
+          <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+            <button class="btn btn-gold btn-sm" id="difShareBtn" onclick="compartirPublicacion()"><i class="fas fa-share-nodes"></i> Compartir</button>
+            <button class="btn btn-ghost btn-sm" onclick="copyDifusion()"><i class="fas fa-copy"></i> Copiar texto</button>
+          </div>
+        </div>
+        <div id="difPost" class="dif-post"></div>
+        <p id="difPreviewHint" style="font-size:.75rem;color:var(--t3);margin:1rem 0 0"></p>
       </div>
     </div>
 
