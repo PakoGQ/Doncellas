@@ -2629,13 +2629,8 @@ document.addEventListener('click', (e) => {
 /* ─── Difusión: genera contenido listo para copiar/pegar (Canal WhatsApp, Estados, redes) ─── */
 function _difVisibles()    { return MODELS.filter(m => !m.hidden && !m.suspended); }
 function _difDisponibles() { return _difVisibles().filter(m => m.available); }
-function _difMoney(n)      { return n ? '$' + Number(n).toLocaleString('es-MX') : '—'; }
-function _difTarifas(m) {
-  const r1 = m.rate;
-  const r90 = m.rate90 || (r1 ? Math.round(r1 * 1.4 / 50) * 50 : null);
-  const r2  = m.rate2h || (r1 ? Math.round(r1 * 1.8 / 50) * 50 : null);
-  return `1h ${_difMoney(r1)} · 1h30 ${_difMoney(r90)} · 2h ${_difMoney(r2)}`;
-}
+// Contacto del agente (sin precios en el post → genera curiosidad de escribir o entrar al perfil).
+const _DIF_CONTACTO = 'https://wa.me/' + WA_CENTRAL;
 const _DIF_TEASERS = [
   'Elegancia y buena compañía a tu tiempo.',
   'La compañía perfecta para consentirte.',
@@ -2658,7 +2653,7 @@ function genDifusion(tipo) {
     const disp = _difDisponibles();
     let t = '🌹 *Doncellas GDL* 🌹\n_La Elegancia del Placer_\n\n✨ Disponibles hoy en Guadalajara:\n\n';
     t += disp.length ? disp.map(m => `💋 ${m.name} — ${m.age} años · ${m.cat}`).join('\n') : '(sin disponibles en este momento)';
-    t += '\n\n📲 Escríbenos por WhatsApp para agendar 💬\n🔒 100% verificadas y discretas\n✨ doncellas.mx';
+    t += `\n\n👀 Míralas todas: https://doncellas.mx\n📲 Agenda tu cita aquí: ${_DIF_CONTACTO}\n🔒 100% verificadas y discretas`;
     out.value = t;
   }
   else if (tipo === 'spotlight') {
@@ -2667,9 +2662,8 @@ function genDifusion(tipo) {
     const m = MODELS.find(x => String(x.id) === String(sel.value)) || _difVisibles()[0];
     if (!m) { out.value = 'No hay Doncellas cargadas.'; return; }
     const teaser = (m.descripcion && m.descripcion.split('.')[0].trim() + '.') || _DIF_TEASERS[(m.id || 0) % _DIF_TEASERS.length];
-    const est = m.height ? `📏 Estatura ${(m.height / 100).toFixed(2)} m` : '';
-    const med = (m.bust && m.waist && m.hips) ? `${est ? ' · ' : ''}Medidas ${m.bust}-${m.waist}-${m.hips}` : '';
-    out.value = `🌹 *${m.name}* 🌹\n${m.age} años · ${m.cat} · Guadalajara\n\n${teaser}\n\n${est}${med}\n💰 ${_difTarifas(m)}\n\n📲 Escríbenos por WhatsApp para agendar 💬\n✨ Perfil: doncellas.mx/perfil.html?id=${m.id}`;
+    // Estilo Telegram: nombre + gancho + links. SIN tarifas (genera curiosidad de entrar/preguntar).
+    out.value = `🌹 *${m.name}* 🌹\n${m.age} años · ${m.cat} · Guadalajara\n\n${teaser}\n\n✨ Ver su perfil: https://doncellas.mx/perfil.html?id=${m.id}\n📲 Agenda tu cita aquí: ${_DIF_CONTACTO}`;
     const fotos = (m.photos || []).slice(0, 4);
     if (fotos.length) {
       document.getElementById('difFotos').style.display = '';
@@ -2679,7 +2673,7 @@ function genDifusion(tipo) {
   }
   else if (tipo === 'promo') {
     const txt = (document.getElementById('difPromoInput')?.value || '').trim();
-    out.value = `🔥 *PROMOCIÓN — Doncellas GDL* 🔥\n\n${txt || '(escribe tu promoción arriba)'}\n\n📲 Escríbenos por WhatsApp para aprovecharla 💬\n🌹 doncellas.mx`;
+    out.value = `🔥 *PROMOCIÓN — Doncellas GDL* 🔥\n\n${txt || '(escribe tu promoción arriba)'}\n\n📲 Agenda tu cita aquí: ${_DIF_CONTACTO}\n🌹 doncellas.mx`;
   }
 }
 function copyDifusion() {
