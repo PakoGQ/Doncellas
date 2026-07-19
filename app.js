@@ -2626,6 +2626,70 @@ document.addEventListener('click', (e) => {
 });
 
 /* ─── Admin ─────────────────────────────────────────────── */
+/* ─── Difusión: genera contenido listo para copiar/pegar (Canal WhatsApp, Estados, redes) ─── */
+function _difVisibles()    { return MODELS.filter(m => !m.hidden && !m.suspended); }
+function _difDisponibles() { return _difVisibles().filter(m => m.available); }
+function _difMoney(n)      { return n ? '$' + Number(n).toLocaleString('es-MX') : '—'; }
+function _difTarifas(m) {
+  const r1 = m.rate;
+  const r90 = m.rate90 || (r1 ? Math.round(r1 * 1.4 / 50) * 50 : null);
+  const r2  = m.rate2h || (r1 ? Math.round(r1 * 1.8 / 50) * 50 : null);
+  return `1h ${_difMoney(r1)} · 1h30 ${_difMoney(r90)} · 2h ${_difMoney(r2)}`;
+}
+const _DIF_TEASERS = [
+  'Elegancia y buena compañía a tu tiempo.',
+  'La compañía perfecta para consentirte.',
+  'Discreción, clase y una experiencia inolvidable.',
+  'Déjate atender por alguien realmente especial.'
+];
+function buildDifusionSelect() {
+  const sel = document.getElementById('difEscortSel');
+  if (!sel || sel.dataset.built === '1') return;
+  sel.innerHTML = _difVisibles().map(m => `<option value="${m.id}">${m.name}${m.available ? '' : ' (no disp.)'}</option>`).join('');
+  sel.dataset.built = '1';
+}
+function genDifusion(tipo) {
+  const out = document.getElementById('difOutput'); if (!out) return;
+  document.getElementById('difSpotlightCtrl').style.display = tipo === 'spotlight' ? '' : 'none';
+  document.getElementById('difPromoCtrl').style.display     = tipo === 'promo'     ? '' : 'none';
+  document.getElementById('difFotos').style.display = 'none';
+
+  if (tipo === 'catalogo') {
+    const disp = _difDisponibles();
+    let t = '🌹 *Doncellas GDL* 🌹\n_La Elegancia del Placer_\n\n✨ Disponibles hoy en Guadalajara:\n\n';
+    t += disp.length ? disp.map(m => `💋 ${m.name} — ${m.age} años · ${m.cat}`).join('\n') : '(sin disponibles en este momento)';
+    t += '\n\n📲 Escríbenos por WhatsApp para agendar 💬\n🔒 100% verificadas y discretas\n✨ doncellas.mx';
+    out.value = t;
+  }
+  else if (tipo === 'spotlight') {
+    buildDifusionSelect();
+    const sel = document.getElementById('difEscortSel');
+    const m = MODELS.find(x => String(x.id) === String(sel.value)) || _difVisibles()[0];
+    if (!m) { out.value = 'No hay Doncellas cargadas.'; return; }
+    const teaser = (m.descripcion && m.descripcion.split('.')[0].trim() + '.') || _DIF_TEASERS[(m.id || 0) % _DIF_TEASERS.length];
+    const est = m.height ? `📏 Estatura ${(m.height / 100).toFixed(2)} m` : '';
+    const med = (m.bust && m.waist && m.hips) ? `${est ? ' · ' : ''}Medidas ${m.bust}-${m.waist}-${m.hips}` : '';
+    out.value = `🌹 *${m.name}* 🌹\n${m.age} años · ${m.cat} · Guadalajara\n\n${teaser}\n\n${est}${med}\n💰 ${_difTarifas(m)}\n\n📲 Escríbenos por WhatsApp para agendar 💬\n✨ Perfil: doncellas.mx/perfil.html?id=${m.id}`;
+    const fotos = (m.photos || []).slice(0, 4);
+    if (fotos.length) {
+      document.getElementById('difFotos').style.display = '';
+      document.getElementById('difFotosGrid').innerHTML = fotos.map(u =>
+        `<a href="${u}" target="_blank" rel="noopener" style="display:block"><img src="${u}" alt="foto" style="width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:8px" /></a>`).join('');
+    }
+  }
+  else if (tipo === 'promo') {
+    const txt = (document.getElementById('difPromoInput')?.value || '').trim();
+    out.value = `🔥 *PROMOCIÓN — Doncellas GDL* 🔥\n\n${txt || '(escribe tu promoción arriba)'}\n\n📲 Escríbenos por WhatsApp para aprovecharla 💬\n🌹 doncellas.mx`;
+  }
+}
+function copyDifusion() {
+  const out = document.getElementById('difOutput');
+  if (!out || !out.value.trim()) { showToast('Primero genera un contenido', 'info'); return; }
+  const done = () => showToast('Texto copiado ✅ ya puedes pegarlo', 'success');
+  if (navigator.clipboard) navigator.clipboard.writeText(out.value).then(done, () => { out.select(); document.execCommand('copy'); done(); });
+  else { out.select(); document.execCommand('copy'); done(); }
+}
+
 function initAdmin() {
   /* Guardia de acceso: solo 'admin' puede ver este panel. Sin esto,
      cualquiera podría escribir la URL panel-admin.html directamente.

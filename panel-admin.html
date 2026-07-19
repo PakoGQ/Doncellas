@@ -55,6 +55,9 @@
     <div class="admin-nav-item" onclick="showAdminPage('contenido')">
       <i class="fas fa-photo-video fa-fw"></i> Contenido
     </div>
+    <div class="admin-nav-item" onclick="showAdminPage('difusion')">
+      <i class="fas fa-bullhorn fa-fw"></i> Difusión
+    </div>
     <div class="admin-nav-item" onclick="showAdminPage('citas')">
       <i class="fas fa-calendar-alt fa-fw"></i> Citas
     </div>
@@ -503,7 +506,44 @@
       </div>
     </div>
 
+    <!-- ── Difusión (generador de contenido para copiar/pegar) ── -->
+    <div class="admin-page" id="page-difusion">
+      <h2 class="admin-page-title">Difusión</h2>
+      <p class="admin-page-sub">Genera contenido listo para copiar y pegar en el Canal de WhatsApp, Estados, redes, etc.</p>
 
+      <!-- Selector de tipo -->
+      <div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1.25rem">
+        <button class="btn btn-gold btn-sm" onclick="genDifusion('catalogo')"><i class="fas fa-list"></i> Catálogo de disponibles</button>
+        <button class="btn btn-ghost btn-sm" onclick="genDifusion('spotlight')"><i class="fas fa-star"></i> Presentar una Doncella</button>
+        <button class="btn btn-ghost btn-sm" onclick="genDifusion('promo')"><i class="fas fa-tag"></i> Promoción</button>
+      </div>
+
+      <!-- Sub-controles (aparecen según el tipo) -->
+      <div id="difSpotlightCtrl" style="display:none;margin-bottom:1rem">
+        <label class="form-label">Elige la Doncella</label>
+        <select class="form-input" id="difEscortSel" onchange="genDifusion('spotlight')" style="max-width:320px"></select>
+      </div>
+      <div id="difPromoCtrl" style="display:none;margin-bottom:1rem">
+        <label class="form-label">Escribe la promoción (ej. "2x1 los martes", "1ª cita −20%")</label>
+        <input class="form-input" id="difPromoInput" placeholder="Tu promoción…" oninput="genDifusion('promo')" style="max-width:420px" />
+      </div>
+
+      <!-- Resultado -->
+      <div class="chart-card" style="margin-top:.5rem">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
+          <h4 style="margin:0"><i class="fas fa-clipboard" style="color:var(--gold)"></i> Texto listo para copiar</h4>
+          <button class="btn btn-gold btn-sm" onclick="copyDifusion()"><i class="fas fa-copy"></i> Copiar</button>
+        </div>
+        <textarea id="difOutput" class="form-input" rows="12" style="font-family:inherit;line-height:1.5;white-space:pre-wrap" readonly placeholder="Elige un tipo de arriba y aquí aparece el texto…"></textarea>
+        <p style="font-size:.75rem;color:var(--t3);margin-top:.6rem"><i class="fas fa-info-circle" style="color:var(--gold)"></i> Copia el texto y pégalo en el Canal de WhatsApp. Las fotos que quieras adjuntar están abajo (mantén presionada cada una para guardarla).</p>
+      </div>
+
+      <!-- Fotos sugeridas (para spotlight) -->
+      <div id="difFotos" style="display:none;margin-top:1.25rem">
+        <h4 style="margin-bottom:.75rem"><i class="fas fa-images" style="color:var(--gold)"></i> Fotos para adjuntar</h4>
+        <div id="difFotosGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.75rem"></div>
+      </div>
+    </div>
 
     <!-- ── Moderación ── -->
     <div class="admin-page" id="page-moderacion">
