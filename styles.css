@@ -6291,8 +6291,17 @@ details.faq-item[open] .faq-a {
    se vea desde una computadora (donde no se puede tocar el botón), se
    puedan anotar. El valor es seleccionable (user-select:all). ── */
 .hero-datos {
-  display: flex; flex-wrap: wrap; gap: .55rem;
+  display: flex; flex-wrap: wrap; gap: .55rem; justify-content: center;
   margin: 0 0 1.1rem;
+}
+/* Versión grande: el número de WhatsApp del slide "Agenda tu cita", al doble */
+.hero-dato-xl { padding: .7rem 1.4rem; gap: .85rem; }
+.hero-dato-xl > i { font-size: 2rem; }
+.hero-dato-xl .hero-dato-label { font-size: .8rem; }
+.hero-dato-xl .hero-dato-val { font-size: 2.35rem; letter-spacing: .01em; }
+@media (max-width: 768px) {
+  .hero-dato-xl > i { font-size: 1.55rem; }
+  .hero-dato-xl .hero-dato-val { font-size: 1.9rem; }
 }
 .hero-dato {
   display: inline-flex; align-items: center; gap: .6rem;

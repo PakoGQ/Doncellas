@@ -1580,18 +1580,11 @@ function buildHeroSlides() {
         </a>
       </div>
       <div class="hero-datos">
-        <div class="hero-dato">
+        <div class="hero-dato hero-dato-xl">
           <i class="fab fa-whatsapp"></i>
           <div class="hero-dato-text">
             <span class="hero-dato-label">WhatsApp</span>
             <span class="hero-dato-val">+52 33 2168 5023</span>
-          </div>
-        </div>
-        <div class="hero-dato">
-          <i class="fab fa-telegram"></i>
-          <div class="hero-dato-text">
-            <span class="hero-dato-label">Telegram</span>
-            <span class="hero-dato-val">@DoncellasGDLbot</span>
           </div>
         </div>
       </div>
