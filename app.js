@@ -2805,10 +2805,13 @@ async function generarPublicacion() {
   const share = document.getElementById('difShareBtn');
   const canShare = !!(navigator.share);
   if (share) share.style.display = canShare ? '' : 'none';
+  const save = document.getElementById('difSaveBtn');
+  if (save) save.style.display = media.length ? '' : 'none';   // solo si hay fotos que guardar
   const hint = document.getElementById('difPreviewHint');
-  if (hint) hint.innerHTML = canShare
-    ? '<i class="fas fa-info-circle" style="color:var(--gold)"></i> El texto ya se copió. Toca <b>Compartir</b> para enviar la publicación completa (fotos + texto) al Canal de WhatsApp o Telegram.'
-    : '<i class="fas fa-info-circle" style="color:var(--gold)"></i> El texto ya se copió. Guarda las fotos (clic derecho o mantén presionada cada una) y pégalas junto con el texto en el Canal de WhatsApp.';
+  if (hint) hint.innerHTML =
+    '<i class="fas fa-info-circle" style="color:var(--gold)"></i> El texto ya se copió. '
+    + '<b>Canal de WhatsApp:</b> toca <b>Guardar fotos</b>, abre tu canal y adjúntalas + pega el texto (WhatsApp no deja publicar en canales desde «Compartir»). '
+    + (canShare ? '<b>Telegram / Estados / chats:</b> usa <b>Compartir</b> para mandar todo de un jalón.' : '');
 
   const pv = document.getElementById('difPreview');
   pv.style.display = '';
@@ -2846,6 +2849,31 @@ async function compartirPublicacion() {
     if (e && e.name === 'AbortError') return;   // el usuario canceló
     showToast('No se pudo compartir aquí; el texto ya está copiado', 'info');
   }
+}
+
+// Guarda las fotos/videos marcados en el dispositivo (para adjuntarlos a mano
+// en el Canal de WhatsApp, que no acepta publicar desde el menú «Compartir»).
+async function guardarFotos() {
+  const data = window._difShare;
+  if (!data || !data.media.length) { showToast('Primero genera la publicación con fotos', 'info'); return; }
+  let n = 0;
+  for (let i = 0; i < data.media.length; i++) {
+    const m = data.media[i];
+    try {
+      let blob;
+      if (m.src.startsWith('data:')) blob = _dataURLtoBlob(m.src);
+      else { const r = await fetch(m.src); blob = await r.blob(); }
+      const ext = m.isVid ? 'mp4' : ((blob.type || '').includes('png') ? 'png' : 'jpg');
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = `doncellas-${i + 1}.${ext}`;
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 5000);
+      n++;
+      await new Promise(res => setTimeout(res, 350));   // separa las descargas (el móvil las agrupa mejor)
+    } catch (e) { /* una foto falló → sigue con las demás */ }
+  }
+  showToast(n ? `${n} archivo(s) guardado(s) 📥` : 'No se pudieron guardar', n ? 'success' : 'error');
 }
 
 function initAdmin() {
