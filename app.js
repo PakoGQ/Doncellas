@@ -1465,6 +1465,16 @@ function buildHeroSlides() {
         <div class="hero-tg-pill"><i class="fab fa-telegram"></i> Gratis para siempre</div>
       </div>
 
+      <div class="hero-datos">
+        <div class="hero-dato">
+          <i class="fab fa-telegram"></i>
+          <div class="hero-dato-text">
+            <span class="hero-dato-label">Búscanos en Telegram como</span>
+            <span class="hero-dato-val">@DoncellasGDL</span>
+          </div>
+        </div>
+      </div>
+
       <a href="https://t.me/DoncellasGDL" target="_blank" rel="noopener"
          onclick="event.stopPropagation()" class="hero-tg-cta">
         <i class="fab fa-telegram"></i>
@@ -1522,6 +1532,16 @@ function buildHeroSlides() {
         <div class="hero-tg-pill"><i class="fas fa-user-secret"></i> 100% discreto</div>
       </div>
 
+      <div class="hero-datos">
+        <div class="hero-dato">
+          <i class="fab fa-whatsapp"></i>
+          <div class="hero-dato-text">
+            <span class="hero-dato-label">Canal de WhatsApp · búscalo como</span>
+            <span class="hero-dato-val">Doncellas GDL</span>
+          </div>
+        </div>
+      </div>
+
       <a href="https://whatsapp.com/channel/0029VbDPTUj2975CWmcAST1n"
          target="_blank" rel="noopener"
          onclick="event.stopPropagation()" class="hero-tg-cta">
@@ -1558,6 +1578,22 @@ function buildHeroSlides() {
            class="hero-agenda-btn hero-agenda-btn-tg">
           <i class="fab fa-telegram"></i> <span>Agendar por Telegram</span>
         </a>
+      </div>
+      <div class="hero-datos">
+        <div class="hero-dato">
+          <i class="fab fa-whatsapp"></i>
+          <div class="hero-dato-text">
+            <span class="hero-dato-label">WhatsApp</span>
+            <span class="hero-dato-val">+52 33 2168 5023</span>
+          </div>
+        </div>
+        <div class="hero-dato">
+          <i class="fab fa-telegram"></i>
+          <div class="hero-dato-text">
+            <span class="hero-dato-label">Telegram</span>
+            <span class="hero-dato-val">@DoncellasGDLbot</span>
+          </div>
+        </div>
       </div>
       <div class="hero-agenda-note"><i class="fas fa-clock"></i> Respuesta inmediata · Atención 24/7</div>
     </div>`;

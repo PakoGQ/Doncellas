@@ -6286,6 +6286,38 @@ details.faq-item[open] .faq-a {
 }
 
 /* CTA */
+/* ─── Datos de contacto VISIBLES en el hero ───────────────────────────
+   Muestran el número/nombre real en grande y legible para que, aunque
+   se vea desde una computadora (donde no se puede tocar el botón), se
+   puedan anotar. El valor es seleccionable (user-select:all). ── */
+.hero-datos {
+  display: flex; flex-wrap: wrap; gap: .55rem;
+  margin: 0 0 1.1rem;
+}
+.hero-dato {
+  display: inline-flex; align-items: center; gap: .6rem;
+  background: rgba(0,0,0,.32);
+  border: 1.5px solid rgba(255,255,255,.5);
+  border-radius: 12px; padding: .5rem .9rem;
+}
+.hero-dato > i { font-size: 1.15rem; color: #fff; }
+.hero-dato-text { display: flex; flex-direction: column; line-height: 1.15; min-width: 0; }
+.hero-dato-label {
+  font-size: .66rem; text-transform: uppercase; letter-spacing: .08em;
+  color: rgba(255,255,255,.82); font-weight: 600;
+}
+.hero-dato-val {
+  font-size: 1.18rem; font-weight: 800; color: #fff;
+  letter-spacing: .02em; user-select: all; white-space: nowrap;
+}
+@media (max-width: 768px) {
+  .hero-datos { gap: .45rem; margin-bottom: .8rem; }
+  .hero-dato { padding: .4rem .7rem; border-radius: 10px; }
+  .hero-dato > i { font-size: 1rem; }
+  .hero-dato-val { font-size: 1rem; }
+  .hero-dato-label { font-size: .6rem; }
+}
+
 .hero-tg-cta {
   display: inline-flex;
   align-items: center;
