@@ -1478,8 +1478,7 @@ function buildHeroSlides() {
   /* ── Slide 4: Canal de WhatsApp ─── */
   /* Reutiliza las clases .hero-tg-* (mismos estilos + reglas mobile);
      el bloque .hero-slide-whatsapp en styles.css las recolorea a verde.
-     NOTA: el Canal de WhatsApp aún no existe → el CTA va al chat de
-     WhatsApp Business. Cambiar el href al canal cuando esté creado. */
+     El CTA va al Canal de WhatsApp (@DoncellasGDL). */
   const waSlide = document.createElement('div');
   waSlide.className = 'hero-slide hero-slide-whatsapp';
   waSlide.innerHTML = `
@@ -1523,7 +1522,7 @@ function buildHeroSlides() {
         <div class="hero-tg-pill"><i class="fas fa-user-secret"></i> 100% discreto</div>
       </div>
 
-      <a href="https://wa.me/523321685023?text=Hola%2C%20quiero%20recibir%20novedades%20y%20disponibilidad%20de%20Doncellas"
+      <a href="https://whatsapp.com/channel/0029VbDPTUj2975CWmcAST1n"
          target="_blank" rel="noopener"
          onclick="event.stopPropagation()" class="hero-tg-cta">
         <i class="fab fa-whatsapp"></i>
