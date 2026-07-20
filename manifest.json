@@ -1,6 +1,6 @@
 {
-  "name": "Finanzas",
-  "short_name": "Finanzas",
+  "name": "Financel",
+  "short_name": "Financel",
   "description": "Resumen y seguimiento de tus finanzas personales",
   "start_url": "/index.html",
   "display": "standalone",
