@@ -1,11 +1,11 @@
 {
-  "name": "Doncellas",
-  "short_name": "Doncellas",
-  "description": "Escorts verificadas y seleccionadas en Guadalajara",
+  "name": "Finanzas",
+  "short_name": "Finanzas",
+  "description": "Resumen y seguimiento de tus finanzas personales",
   "start_url": "/index.html",
   "display": "standalone",
-  "background_color": "#0A0A0A",
-  "theme_color": "#C9A84C",
+  "background_color": "#0b1c2c",
+  "theme_color": "#0f2438",
   "orientation": "portrait",
   "icons": [
     { "src": "assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
