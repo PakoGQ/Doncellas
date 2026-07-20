@@ -2833,12 +2833,10 @@ async function generarPublicacion() {
   const share = document.getElementById('difShareBtn');
   const canShare = !!(navigator.share);
   if (share) share.style.display = canShare ? '' : 'none';
-  const save = document.getElementById('difSaveBtn');
-  if (save) save.style.display = media.length ? '' : 'none';   // solo si hay fotos que guardar
   const hint = document.getElementById('difPreviewHint');
   if (hint) hint.innerHTML =
     '<i class="fas fa-info-circle" style="color:var(--gold)"></i> El texto ya se copió. '
-    + '<b>Canal de WhatsApp:</b> toca <b>Guardar fotos</b>, abre tu canal y adjúntalas + pega el texto (WhatsApp no deja publicar en canales desde «Compartir»). '
+    + '<b>Canal de WhatsApp:</b> usa <b>Guardar fotos</b> (arriba), abre tu canal y adjúntalas + pega el texto (WhatsApp no deja publicar en canales desde «Compartir»). '
     + (canShare ? '<b>Telegram / Estados / chats:</b> usa <b>Compartir</b> para mandar todo de un jalón.' : '');
 
   const pv = document.getElementById('difPreview');
@@ -2879,14 +2877,13 @@ async function compartirPublicacion() {
   }
 }
 
-// Guarda las fotos/videos marcados en el dispositivo (para adjuntarlos a mano
-// en el Canal de WhatsApp, que no acepta publicar desde el menú «Compartir»).
-async function guardarFotos() {
-  const data = window._difShare;
-  if (!data || !data.media.length) { showToast('Primero genera la publicación con fotos', 'info'); return; }
+// Descarga al dispositivo una lista de medios (ya marcados), uno por uno.
+// Sirve para adjuntarlos a mano en el Canal de WhatsApp, que no acepta
+// publicar desde el menú «Compartir».
+async function _difDownloadMedia(media) {
   let n = 0;
-  for (let i = 0; i < data.media.length; i++) {
-    const m = data.media[i];
+  for (let i = 0; i < media.length; i++) {
+    const m = media[i];
     try {
       let blob;
       if (m.src.startsWith('data:')) blob = _dataURLtoBlob(m.src);
@@ -2902,6 +2899,16 @@ async function guardarFotos() {
     } catch (e) { /* una foto falló → sigue con las demás */ }
   }
   showToast(n ? `${n} archivo(s) guardado(s) 📥` : 'No se pudieron guardar', n ? 'success' : 'error');
+}
+
+// Botón "Guardar fotos" del recuadro de contenido: guarda las palomeadas
+// (con marca de agua incrustada), sin necesidad de generar la publicación.
+async function difGuardarSeleccion() {
+  if (document.getElementById('difFotos').style.display === 'none') { showToast('Elige una Doncella primero', 'info'); return; }
+  const media = _difSelectedMedia();
+  if (!media.length) { showToast('Palomea al menos una foto o video', 'info'); return; }
+  for (const m of media) { if (!m.isVid) m.src = await _difEnsureMarked(m.src); }   // asegura la marca
+  await _difDownloadMedia(media);
 }
 
 function initAdmin() {
