@@ -56,12 +56,12 @@
   <img src="logo.png" alt="Doncellas" class="pwa-install-mark" />
   <div class="pwa-install-copy">
     <strong>Instala Doncellas</strong>
-    <span>en tu celular — rápida y sin distracciones</span>
   </div>
   <button class="pwa-install-cta" id="pwaInstallBtn" type="button">Instalar</button>
   <button class="pwa-install-close" id="pwaDismissBtn" type="button" aria-label="Cerrar banner de instalación">
     <i class="fas fa-times"></i>
   </button>
+  <span class="pwa-install-note"><i class="fas fa-user-secret"></i> La imagen y el nombre cambiarán al instalar para mayor discreción</span>
 </div>
 
 <!-- ── Navigation ── -->
@@ -448,14 +448,40 @@
   const pwaInstalled = window.matchMedia('(display-mode: standalone)').matches ||
                        window.navigator.standalone === true;
 
+  /* El banner incluye la nota de discreción, que ocupa 1 o 2 líneas según el
+     ancho de la pantalla. Publicamos su altura real en --pwa-banner-h para que
+     el nav y el hero se recorran justo lo necesario (styles.css la consume). */
+  const syncPwaBannerH = () => {
+    if (!pwaBanner) return;
+    const on = pwaBanner.classList.contains('is-visible');
+    const h  = on ? Math.ceil(pwaBanner.getBoundingClientRect().height) : 0;
+    document.documentElement.style.setProperty('--pwa-banner-h', h + 'px');
+    /* El CSS trae offsets fijos (44/52px) que asumían un banner de una línea.
+       Los aplicamos aquí con la altura medida para que el nav no quede tapado. */
+    const nav  = document.getElementById('mainNav');
+    const hero = document.querySelector('.hero');
+    if (nav) {
+      if (on) nav.style.setProperty('top', h + 'px', 'important');
+      else    nav.style.removeProperty('top');
+    }
+    if (hero) {
+      if (on) hero.style.setProperty('margin-top', h + 'px', 'important');
+      else    hero.style.removeProperty('margin-top');
+    }
+  };
+  const showPwaBanner = () => { pwaBanner.classList.add('is-visible'); syncPwaBannerH(); };
+  const hidePwaBanner = () => { pwaBanner.classList.remove('is-visible'); syncPwaBannerH(); };
+
   if (pwaBanner && !pwaDismissed && !pwaInstalled) {
-    pwaBanner.classList.add('is-visible');
+    showPwaBanner();
   }
+  window.addEventListener('resize', syncPwaBannerH);
+  window.addEventListener('load', () => setTimeout(syncPwaBannerH, 60));  // tras cargar fuentes/iconos
 
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPWAPrompt = e;
-    if (pwaBanner && !pwaDismissed && !pwaInstalled) pwaBanner.classList.add('is-visible');
+    if (pwaBanner && !pwaDismissed && !pwaInstalled) showPwaBanner();
   });
 
   if (pwaInstall) {
@@ -465,7 +491,7 @@
         const choice = await deferredPWAPrompt.userChoice;
         if (choice.outcome === 'accepted') {
           localStorage.setItem('pwaBannerDismissedAt', Date.now().toString());
-          pwaBanner.classList.remove('is-visible');
+          hidePwaBanner();
         }
         deferredPWAPrompt = null;
       } else {
@@ -476,7 +502,7 @@
   if (pwaDismiss) {
     pwaDismiss.addEventListener('click', () => {
       localStorage.setItem('pwaBannerDismissedAt', Date.now().toString());
-      pwaBanner.classList.remove('is-visible');
+      hidePwaBanner();
     });
   }
 
